@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme.SearchView" parent="Widget.AppCompat.SearchView">
+        <!-- 밑줄 제거 -->
+        <item name="android:background">@null</item>
+    </style>
+</resources>

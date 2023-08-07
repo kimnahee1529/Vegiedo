@@ -20,7 +20,6 @@
     </ImageView>
 
     <TextView
-        android:id="@+id/textView7"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -51,7 +50,7 @@
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="92dp"
+        android:layout_marginStart="76dp"
         android:gravity="center"
         android:text="@string/모든걸먹는토끼2"
         android:textColor="@color/black"
@@ -65,7 +64,7 @@
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="88dp"
+        android:layout_marginEnd="80dp"
         android:gravity="center"
         android:text="@string/모든걸먹는토끼4"
         android:textColor="@color/black"
@@ -76,7 +75,7 @@
         app:layout_constraintVertical_bias="0.495"></TextView>
 
     <TextView
-        android:id="@+id/textView6"
+        android:id="@+id/tt_complete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="다음"
@@ -88,7 +87,7 @@
         tools:layout_editor_absoluteY="666dp"></TextView>
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/tt_back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="다음에 선택하기"
@@ -125,7 +124,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/btn_toogle"
                 android:checked="false"
-                android:textColor="@drawable/btn_togle_text"
+                android:textColor="@drawable/btn_togle_text_color"
                 android:textOff="@string/프루테리언"
                 android:textOn="@string/프루테리언"></ToggleButton>
 
@@ -136,9 +135,9 @@
                 android:layout_weight="1"
                 android:background="@drawable/btn_toogle"
                 android:checked="false"
-                android:textColor="@drawable/btn_togle_text"
-                android:textOff="@string/프루테리언"
-                android:textOn="@string/프루테리언"></ToggleButton>
+                android:textColor="@drawable/btn_togle_text_color"
+                android:textOff="@string/비건"
+                android:textOn="@string/비건"></ToggleButton>
 
             <ToggleButton
                 android:layout_width="100dp"
@@ -147,9 +146,9 @@
                 android:layout_weight="1"
                 android:background="@drawable/btn_toogle"
                 android:checked="false"
-                android:textColor="@drawable/btn_togle_text"
-                android:textOff="@string/프루테리언"
-                android:textOn="@string/프루테리언"></ToggleButton>
+                android:textColor="@drawable/btn_togle_text_color"
+                android:textOff="@string/락토"
+                android:textOn="@string/락토"></ToggleButton>
 
         </LinearLayout>
 
@@ -171,9 +170,9 @@
                 android:layout_weight="1"
                 android:background="@drawable/btn_toogle"
                 android:checked="false"
-                android:textColor="@drawable/btn_togle_text"
-                android:textOff="@string/프루테리언"
-                android:textOn="@string/프루테리언"></ToggleButton>
+                android:textColor="@drawable/btn_togle_text_color"
+                android:textOff="@string/오보"
+                android:textOn="@string/오보"></ToggleButton>
 
             <ToggleButton
                 android:layout_width="100dp"
@@ -182,9 +181,9 @@
                 android:layout_weight="1"
                 android:background="@drawable/btn_toogle"
                 android:checked="false"
-                android:textColor="@drawable/btn_togle_text"
-                android:textOff="@string/프루테리언"
-                android:textOn="@string/프루테리언"></ToggleButton>
+                android:textColor="@drawable/btn_togle_text_color"
+                android:textOff="@string/락토오보"
+                android:textOn="@string/락토오보"></ToggleButton>
 
             <ToggleButton
                 android:layout_width="100dp"
@@ -193,9 +192,9 @@
                 android:layout_weight="1"
                 android:background="@drawable/btn_toogle"
                 android:checked="false"
-                android:textColor="@drawable/btn_togle_text"
-                android:textOff="@string/프루테리언"
-                android:textOn="@string/프루테리언"></ToggleButton>
+                android:textColor="@drawable/btn_togle_text_color"
+                android:textOff="@string/페스코"
+                android:textOn="@string/페스코"></ToggleButton>
 
         </LinearLayout>
 
@@ -216,9 +215,9 @@
                 android:layout_weight="1"
                 android:background="@drawable/btn_toogle"
                 android:checked="false"
-                android:textColor="@drawable/btn_togle_text"
-                android:textOff="@string/프루테리언"
-                android:textOn="@string/프루테리언"></ToggleButton>
+                android:textColor="@drawable/btn_togle_text_color"
+                android:textOff="@string/폴로"
+                android:textOn="@string/폴로"></ToggleButton>
 
             <ToggleButton
                 android:layout_width="100dp"
@@ -227,9 +226,9 @@
                 android:layout_weight="1"
                 android:background="@drawable/btn_toogle"
                 android:checked="false"
-                android:textColor="@drawable/btn_togle_text"
-                android:textOff="@string/프루테리언"
-                android:textOn="@string/프루테리언"></ToggleButton>
+                android:textColor="@drawable/btn_togle_text_color"
+                android:textOff="@string/키토"
+                android:textOn="@string/키토"></ToggleButton>
 
             <ToggleButton
                 android:layout_width="100dp"
@@ -238,9 +237,9 @@
                 android:layout_weight="1"
                 android:background="@drawable/btn_toogle"
                 android:checked="false"
-                android:textColor="@drawable/btn_togle_text"
-                android:textOff="@string/프루테리언"
-                android:textOn="@string/프루테리언"></ToggleButton>
+                android:textColor="@drawable/btn_togle_text_color"
+                android:textOff="@string/글루텐프리"
+                android:textOn="@string/글루텐프리"></ToggleButton>
 
         </LinearLayout>
     </LinearLayout>

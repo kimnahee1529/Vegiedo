@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="60dp"
+       android:orientation="vertical"
+       android:layout_gravity="center"
+       android:gravity="center"
+       android:layout_marginTop="20dp"
+       android:background="@drawable/bolder_tool_bar">
+
+      <androidx.appcompat.widget.Toolbar
+          android:layout_width="350dp"
+          android:layout_height="40dp"
+          android:layout_gravity="center"
+          android:gravity="center_vertical"
+          android:elevation="8dp"
+          android:background="@drawable/bolder_tool_bar">
+
+         <androidx.appcompat.widget.SearchView
+             android:layout_width="250dp"
+             android:layout_height="wrap_content"
+             android:gravity="center"
+             app:iconifiedByDefault="false"
+             app:searchIcon="@null"
+             app:queryHint="풀 뜯으러 가보실까요?"
+             android:background="@drawable/bolder_tool_bar"
+             app:queryBackground="@android:color/transparent">
+
+         </androidx.appcompat.widget.SearchView>
+
+         <ImageButton
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:background="@drawable/sliders_horizontal"
+             android:layout_gravity="end"
+             android:layout_marginRight="25dp"></ImageButton>
+
+      </androidx.appcompat.widget.Toolbar>
+
+
+   </LinearLayout>
+
+   <ScrollView
+       android:layout_width="match_parent"
+       android:layout_height="match_parent">
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:orientation="vertical"
+          android:layout_gravity="center_horizontal">
+
+         <FrameLayout
+             android:layout_width="350dp"
+             android:layout_height="250dp"
+             android:layout_gravity="center"
+             android:foregroundGravity="center_horizontal">
+
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/viewpager"
+                android:layout_width="350dp"
+                android:layout_height="250dp"
+                android:layout_gravity="center_horizontal"
+                android:foregroundGravity="center"
+                android:scaleType="fitXY"
+                android:clipToPadding="false"
+                android:clipChildren="false">
+
+            </androidx.viewpager2.widget.ViewPager2>
+
+<!--            <com.google.android.material.progressindicator.CircularProgressIndicator-->
+<!--                android:id="@+id/indicator"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="30dp"-->
+<!--                android:layout_gravity="center|bottom"-->
+<!--                android:foregroundGravity="center_horizontal">-->
+
+<!--            </com.google.android.material.progressindicator.CircularProgressIndicator>-->
+
+         </FrameLayout>
+
+         <LinearLayout
+             android:layout_width="350dp"
+             android:layout_height="match_parent"
+             android:layout_gravity="center">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rc_home"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            </androidx.recyclerview.widget.RecyclerView>
+
+         </LinearLayout>
+
+
+
+      </LinearLayout>
+
+   </ScrollView>
+
+
+
+
+
+</LinearLayout>
