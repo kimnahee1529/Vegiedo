@@ -103,8 +103,8 @@
                 android:background="@drawable/btn_toogle"
                 android:checked="false"
                 android:textColor="@drawable/btn_togle_text_color"
-                android:textOff="@string/프루테리언"
-                android:textOn="@string/프루테리언"></ToggleButton>
+                android:textOff="@string/tag1"
+                android:textOn="@string/tag1"></ToggleButton>
 
             <ToggleButton
                 android:layout_width="100dp"
@@ -114,8 +114,8 @@
                 android:background="@drawable/btn_toogle"
                 android:checked="false"
                 android:textColor="@drawable/btn_togle_text_color"
-                android:textOff="@string/비건"
-                android:textOn="@string/비건"></ToggleButton>
+                android:textOff="@string/tag2"
+                android:textOn="@string/tag2"></ToggleButton>
 
             <ToggleButton
                 android:layout_width="100dp"
@@ -125,8 +125,8 @@
                 android:background="@drawable/btn_toogle"
                 android:checked="false"
                 android:textColor="@drawable/btn_togle_text_color"
-                android:textOff="@string/락토"
-                android:textOn="@string/락토"></ToggleButton>
+                android:textOff="@string/tag3"
+                android:textOn="@string/tag3"></ToggleButton>
 
         </LinearLayout>
 
@@ -149,8 +149,8 @@
                 android:background="@drawable/btn_toogle"
                 android:checked="false"
                 android:textColor="@drawable/btn_togle_text_color"
-                android:textOff="@string/오보"
-                android:textOn="@string/오보"></ToggleButton>
+                android:textOff="@string/tag4"
+                android:textOn="@string/tag5"></ToggleButton>
 
             <ToggleButton
                 android:layout_width="100dp"
@@ -160,8 +160,8 @@
                 android:background="@drawable/btn_toogle"
                 android:checked="false"
                 android:textColor="@drawable/btn_togle_text_color"
-                android:textOff="@string/락토오보"
-                android:textOn="@string/락토오보"></ToggleButton>
+                android:textOff="@string/tag5"
+                android:textOn="@string/tag5"></ToggleButton>
 
             <ToggleButton
                 android:layout_width="100dp"
@@ -171,8 +171,8 @@
                 android:background="@drawable/btn_toogle"
                 android:checked="false"
                 android:textColor="@drawable/btn_togle_text_color"
-                android:textOff="@string/페스코"
-                android:textOn="@string/페스코"></ToggleButton>
+                android:textOff="@string/tag6"
+                android:textOn="@string/tag6"></ToggleButton>
 
         </LinearLayout>
 
@@ -194,8 +194,8 @@
                 android:background="@drawable/btn_toogle"
                 android:checked="false"
                 android:textColor="@drawable/btn_togle_text_color"
-                android:textOff="@string/폴로"
-                android:textOn="@string/폴로"></ToggleButton>
+                android:textOff="@string/tag7"
+                android:textOn="@string/tag7"></ToggleButton>
 
             <ToggleButton
                 android:layout_width="100dp"
@@ -205,8 +205,8 @@
                 android:background="@drawable/btn_toogle"
                 android:checked="false"
                 android:textColor="@drawable/btn_togle_text_color"
-                android:textOff="@string/키토"
-                android:textOn="@string/키토"></ToggleButton>
+                android:textOff="@string/tag8"
+                android:textOn="@string/tag8"></ToggleButton>
 
             <ToggleButton
                 android:layout_width="100dp"
@@ -216,8 +216,8 @@
                 android:background="@drawable/btn_toogle"
                 android:checked="false"
                 android:textColor="@drawable/btn_togle_text_color"
-                android:textOff="@string/글루텐프리"
-                android:textOn="@string/글루텐프리"></ToggleButton>
+                android:textOff="@string/tag9"
+                android:textOn="@string/tag9"></ToggleButton>
 
         </LinearLayout>
 
@@ -231,8 +231,9 @@
         android:textColor="#333333"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.889"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="40dp"
+        android:layout_marginRight="40dp"
         tools:layout_editor_absoluteY="666dp"></TextView>
 
     <TextView
@@ -242,9 +243,9 @@
         android:text="다음에 선택하기"
         android:textColor="#999999"
         android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.119"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        android:layout_margin="40dp"
         tools:layout_editor_absoluteY="666dp"></TextView>
 
 

@@ -1,4 +1,4 @@
-package com.devinsight.vegiedo.view;
+package com.devinsight.vegiedo.view.home;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,11 +9,11 @@ import androidx.fragment.app.Fragment;
 
 import com.devinsight.vegiedo.R;
 
-public class Fragment_1 extends Fragment {
+public class BannerFragment1 extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.activity_home_viewpager2_item, container, false);
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_home_viewpager_item, container, false);
 
         return rootView;
     }

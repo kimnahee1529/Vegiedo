@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.devinsight.vegiedo.R;
-import com.devinsight.vegiedo.view.HomeMainActivity;
+import com.devinsight.vegiedo.view.MainActivity;
 
 public class SelectTagActivity extends AppCompatActivity {
 
@@ -26,7 +26,7 @@ public class SelectTagActivity extends AppCompatActivity {
         tt_complete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), HomeMainActivity.class);
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
                 finish();
             }

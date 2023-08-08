@@ -16,14 +16,20 @@
 
     <string name="관심태그를3개이상">관심태그를 3개이상 눌러주세요!</string>
 
-    <string name="프루테리언">#프루테리언</string>
-    <string name="비건">#비건</string>
-    <string name="락토">#락토</string>
-    <string name="오보">#오보</string>
-    <string name="락토오보">#락토 오보</string>
-    <string name="페스코">#페스코</string>
-    <string name="폴로">#폴로</string>
-    <string name="키토">#키토</string>
-    <string name="글루텐프리">#글루텐프리</string>
+    <string name="tag1">#프루테리언</string>
+    <string name="tag2">#비건</string>
+    <string name="tag3">#락토</string>
+    <string name="tag4">#오보</string>
+    <string name="tag5">#락토 오보</string>
+    <string name="tag6">#페스코</string>
+    <string name="tag7">#폴로</string>
+    <string name="tag8">#키토</string>
+    <string name="tag9">#글루텐프리</string>
+
+    <string name="review">솔직 리뷰</string>
+    <string name="storeName">가게이름</string>
+    <string name="storeTag">#태그</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

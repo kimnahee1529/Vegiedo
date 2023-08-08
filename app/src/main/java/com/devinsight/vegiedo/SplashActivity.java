@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
-import com.devinsight.vegiedo.view.HomeMainActivity;
 import com.devinsight.vegiedo.view.login.LoginMainActivity;
 
 public class SplashActivity extends AppCompatActivity {
