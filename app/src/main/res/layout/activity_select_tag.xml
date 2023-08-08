@@ -15,9 +15,7 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.315">
-
-    </ImageView>
+        app:layout_constraintVertical_bias="0.315"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -31,7 +29,7 @@
         app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.495"></TextView>
+        app:layout_constraintVertical_bias="0.495"/>
 
     <TextView
         android:id="@+id/textView8"
@@ -44,7 +42,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.46"
-        tools:layout_editor_absoluteX="-2dp"></TextView>
+        tools:layout_editor_absoluteX="-2dp"/>
 
     <TextView
         android:id="@+id/textView3"
@@ -58,7 +56,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.495"></TextView>
+        app:layout_constraintVertical_bias="0.495"/>
 
     <TextView
         android:id="@+id/textView4"
@@ -72,7 +70,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.495"></TextView>
+        app:layout_constraintVertical_bias="0.495"/>
 
 
 
@@ -104,7 +102,7 @@
                 android:checked="false"
                 android:textColor="@drawable/btn_togle_text_color"
                 android:textOff="@string/tag1"
-                android:textOn="@string/tag1"></ToggleButton>
+                android:textOn="@string/tag1"/>
 
             <ToggleButton
                 android:layout_width="100dp"
@@ -115,7 +113,7 @@
                 android:checked="false"
                 android:textColor="@drawable/btn_togle_text_color"
                 android:textOff="@string/tag2"
-                android:textOn="@string/tag2"></ToggleButton>
+                android:textOn="@string/tag2"/>
 
             <ToggleButton
                 android:layout_width="100dp"
@@ -126,7 +124,7 @@
                 android:checked="false"
                 android:textColor="@drawable/btn_togle_text_color"
                 android:textOff="@string/tag3"
-                android:textOn="@string/tag3"></ToggleButton>
+                android:textOn="@string/tag3"/>
 
         </LinearLayout>
 
@@ -150,7 +148,7 @@
                 android:checked="false"
                 android:textColor="@drawable/btn_togle_text_color"
                 android:textOff="@string/tag4"
-                android:textOn="@string/tag5"></ToggleButton>
+                android:textOn="@string/tag4"/>
 
             <ToggleButton
                 android:layout_width="100dp"
@@ -161,7 +159,7 @@
                 android:checked="false"
                 android:textColor="@drawable/btn_togle_text_color"
                 android:textOff="@string/tag5"
-                android:textOn="@string/tag5"></ToggleButton>
+                android:textOn="@string/tag5"/>
 
             <ToggleButton
                 android:layout_width="100dp"
@@ -172,8 +170,7 @@
                 android:checked="false"
                 android:textColor="@drawable/btn_togle_text_color"
                 android:textOff="@string/tag6"
-                android:textOn="@string/tag6"></ToggleButton>
-
+                android:textOn="@string/tag6"/>
         </LinearLayout>
 
         <LinearLayout
@@ -195,7 +192,7 @@
                 android:checked="false"
                 android:textColor="@drawable/btn_togle_text_color"
                 android:textOff="@string/tag7"
-                android:textOn="@string/tag7"></ToggleButton>
+                android:textOn="@string/tag7"/>
 
             <ToggleButton
                 android:layout_width="100dp"
@@ -206,7 +203,7 @@
                 android:checked="false"
                 android:textColor="@drawable/btn_togle_text_color"
                 android:textOff="@string/tag8"
-                android:textOn="@string/tag8"></ToggleButton>
+                android:textOn="@string/tag8"/>
 
             <ToggleButton
                 android:layout_width="100dp"
@@ -217,7 +214,7 @@
                 android:checked="false"
                 android:textColor="@drawable/btn_togle_text_color"
                 android:textOff="@string/tag9"
-                android:textOn="@string/tag9"></ToggleButton>
+                android:textOn="@string/tag9"/>
 
         </LinearLayout>
 
@@ -234,7 +231,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="40dp"
         android:layout_marginRight="40dp"
-        tools:layout_editor_absoluteY="666dp"></TextView>
+        tools:layout_editor_absoluteY="666dp"/>
 
     <TextView
         android:id="@+id/tt_back"
@@ -246,7 +243,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_margin="40dp"
-        tools:layout_editor_absoluteY="666dp"></TextView>
+        tools:layout_editor_absoluteY="666dp"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

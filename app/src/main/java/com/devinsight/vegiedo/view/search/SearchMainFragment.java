@@ -33,6 +33,11 @@ public class SearchMainFragment extends Fragment implements SearchFragmentAdapte
 
     }
 
+    public static SearchMainFragment instance(){
+        return new SearchMainFragment();
+    }
+
+
     public static SearchMainFragment newInstance(String param1, String param2) {
         SearchMainFragment fragment = new SearchMainFragment();
         Bundle args = new Bundle();
@@ -41,6 +46,10 @@ public class SearchMainFragment extends Fragment implements SearchFragmentAdapte
         fragment.setArguments(args);
         return fragment;
     }
+
+
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,4 +88,6 @@ public class SearchMainFragment extends Fragment implements SearchFragmentAdapte
     public void onSearchItemClick(SearchStoreData searchData) {
         Toast.makeText(getContext(),searchData.getStoreName() + " is clicked ",Toast.LENGTH_SHORT).show();
     }
+
+
 }
