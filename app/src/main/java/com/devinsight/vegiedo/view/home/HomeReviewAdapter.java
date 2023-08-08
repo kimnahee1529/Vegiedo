@@ -1,7 +1,6 @@
-package com.devinsight.vegiedo.view;
+package com.devinsight.vegiedo.view.home;
 
 import android.content.Context;
-import android.content.pm.LauncherActivityInfo;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,19 +12,20 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.devinsight.vegiedo.R;
+import com.devinsight.vegiedo.view.HomeReviewData;
 
 import java.util.ArrayList;
 
 public class HomeReviewAdapter extends RecyclerView.Adapter<HomeReviewAdapter.ReviewViewHolder>{
 
-    private ArrayList<HomeReviewItem> reviewList;
+    private ArrayList<HomeReviewData> reviewList;
     Context context;
-    protected ItemListner mListner;
+    protected reviewItemListner reviewItemListner;
 
-    public HomeReviewAdapter(Context context, ArrayList<HomeReviewItem> reviewList, ItemListner itemListner){
+    public HomeReviewAdapter(Context context, ArrayList<HomeReviewData> reviewList, reviewItemListner itemListner){
         this.reviewList = reviewList;
         this.context = context;
-        this.mListner = itemListner;
+        this.reviewItemListner = itemListner;
     }
 
     @NonNull
@@ -53,7 +53,7 @@ public class HomeReviewAdapter extends RecyclerView.Adapter<HomeReviewAdapter.Re
         private TextView storeTag1;
         private TextView storeTag2;
         private TextView storeTag3;
-        HomeReviewItem reviewItem;
+        HomeReviewData reviewItem;
 
         public ReviewViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -67,7 +67,7 @@ public class HomeReviewAdapter extends RecyclerView.Adapter<HomeReviewAdapter.Re
             storeTag3 = itemView.findViewById(R.id.store_tag3);
 
         }
-        public void setData(HomeReviewItem reviewItem){
+        public void setData(HomeReviewData reviewItem){
             this.reviewItem = reviewItem;
 
             storeImage.setImageResource(reviewItem.getStoreImage());
@@ -80,13 +80,13 @@ public class HomeReviewAdapter extends RecyclerView.Adapter<HomeReviewAdapter.Re
 
         @Override
         public void onClick(View view) {
-            if(mListner != null){
-                mListner.onItemClick(reviewItem);
+            if(reviewItemListner != null){
+                reviewItemListner.onItemClick(reviewItem);
             }
         }
     }
 
-    public interface ItemListner {
-        void onItemClick(HomeReviewItem item);
+    public interface reviewItemListner {
+        void onItemClick(HomeReviewData item);
     }
 }

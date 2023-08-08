@@ -1,8 +1,6 @@
 package com.devinsight.vegiedo.view;
 
-import android.graphics.drawable.Drawable;
-
-public class HomeReviewItem {
+public class HomeReviewData {
 
     private int storeImage;
     private String storeName;
@@ -10,7 +8,7 @@ public class HomeReviewItem {
     private int storeTag2;
     private int storeTag3;
 
-    public HomeReviewItem(int storeImage, String storeName, int storeTag1, int storeTag2, int storeTag3) {
+    public HomeReviewData(int storeImage, String storeName, int storeTag1, int storeTag2, int storeTag3) {
         this.storeImage = storeImage;
         this.storeName = storeName;
         this.storeTag1 = storeTag1;

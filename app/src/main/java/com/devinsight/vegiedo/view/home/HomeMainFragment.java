@@ -15,22 +15,23 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.devinsight.vegiedo.R;
-import com.devinsight.vegiedo.view.HomeReviewAdapter;
-import com.devinsight.vegiedo.view.HomeReviewItem;
+import com.devinsight.vegiedo.view.HomeReviewData;
 
 import java.util.ArrayList;
 
-public class HomeMainFragment extends Fragment implements HomeReviewAdapter.ItemListner {
+public class HomeMainFragment extends Fragment implements HomeReviewAdapter.reviewItemListner {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private String mParam1;
     private String mParam2;
+//  뷰페이저
     private ViewPager2 viewPager;
-    private HomeFragmentAdapter bannerAdapter;
+    private HomeBannerAdapter bannerAdapter;
+//  리사이클러뷰
     private RecyclerView recyclerView;
     private HomeReviewAdapter reviewAdapter;
-    private ArrayList<HomeReviewItem> reviewList;
+    private ArrayList<HomeReviewData> reviewList;
 
     public HomeMainFragment() {
 
@@ -61,19 +62,21 @@ public class HomeMainFragment extends Fragment implements HomeReviewAdapter.Item
         Log.d("main home frag","onCreateView");
         View view = inflater.inflate(R.layout.fragment_main_home, container, false);
 
+//      홈화면 상단 배너
         viewPager = view.findViewById(R.id.viewpager);
-        bannerAdapter = new HomeFragmentAdapter(this);
+        bannerAdapter = new HomeBannerAdapter(this);
         viewPager.setAdapter(bannerAdapter);
 
-        recyclerView = view.findViewById(R.id.review_home);
+//      리뷰 항목
+        recyclerView = view.findViewById(R.id.recycler_review_home);
         reviewList = new ArrayList<>();
 
-        reviewList.add(new HomeReviewItem(R.drawable.ic_launcher_background, "Little Forest", R.string.tag1, R.string.tag2, R.string.tag3));
-        reviewList.add(new HomeReviewItem(R.drawable.ic_launcher_background, "Little Forest", R.string.tag1, R.string.tag2, R.string.tag3));
-        reviewList.add(new HomeReviewItem(R.drawable.ic_launcher_background, "Little Forest", R.string.tag1, R.string.tag2, R.string.tag3));
-        reviewList.add(new HomeReviewItem(R.drawable.ic_launcher_background, "Little Forest", R.string.tag1, R.string.tag2, R.string.tag3));
-        reviewList.add(new HomeReviewItem(R.drawable.ic_launcher_background, "Little Forest", R.string.tag1, R.string.tag2, R.string.tag3));
-        reviewList.add(new HomeReviewItem(R.drawable.ic_launcher_background, "Little Forest", R.string.tag1, R.string.tag2, R.string.tag3));
+        reviewList.add(new HomeReviewData(R.drawable.ic_launcher_background, "Little Forest", R.string.tag1, R.string.tag2, R.string.tag3));
+        reviewList.add(new HomeReviewData(R.drawable.ic_launcher_background, "Little Forest", R.string.tag1, R.string.tag2, R.string.tag3));
+        reviewList.add(new HomeReviewData(R.drawable.ic_launcher_background, "Little Forest", R.string.tag1, R.string.tag2, R.string.tag3));
+        reviewList.add(new HomeReviewData(R.drawable.ic_launcher_background, "Little Forest", R.string.tag1, R.string.tag2, R.string.tag3));
+        reviewList.add(new HomeReviewData(R.drawable.ic_launcher_background, "Little Forest", R.string.tag1, R.string.tag2, R.string.tag3));
+        reviewList.add(new HomeReviewData(R.drawable.ic_launcher_background, "Little Forest", R.string.tag1, R.string.tag2, R.string.tag3));
 
 
         reviewAdapter = new HomeReviewAdapter(getContext(), reviewList, this);
@@ -85,7 +88,7 @@ public class HomeMainFragment extends Fragment implements HomeReviewAdapter.Item
     }
 
     @Override
-    public void onItemClick(HomeReviewItem item) {
+    public void onItemClick(HomeReviewData item) {
         Toast.makeText(getContext(), item.getStoreName() + " is clicked ", Toast.LENGTH_SHORT).show();
     }
 }

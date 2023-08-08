@@ -2,11 +2,10 @@ package com.devinsight.vegiedo.view.home;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-public class HomeFragmentAdapter extends FragmentStateAdapter {
-    public HomeFragmentAdapter(@NonNull Fragment fragment) {
+public class HomeBannerAdapter extends FragmentStateAdapter {
+    public HomeBannerAdapter(@NonNull Fragment fragment) {
         super(fragment);
     }
 

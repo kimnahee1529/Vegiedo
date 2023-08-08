@@ -63,7 +63,7 @@
             </TextView>
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/review_home"
+                android:id="@+id/recycler_review_home"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
