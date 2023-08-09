@@ -5,6 +5,11 @@ public class SearchStoreData {
     private String storeName;
     private String storeAddress;
 
+    public SearchStoreData(int storeImage, String storeName, String storeAddress) {
+        this.storeImage = storeImage;
+        this.storeName = storeName;
+        this.storeAddress = storeAddress;
+    }
     public int getStoreImage() {
         return storeImage;
     }
@@ -29,9 +34,5 @@ public class SearchStoreData {
         this.storeAddress = storeAddress;
     }
 
-    public SearchStoreData(int storeImage, String storeName, String storeAddress) {
-        this.storeImage = storeImage;
-        this.storeName = storeName;
-        this.storeAddress = storeAddress;
-    }
+
 }

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:gravity="center_horizontal"
+    android:padding="5dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/tt_recomanded_tag"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:text="@string/추천태그"
+            android:textSize="12sp"
+            android:textColor="@color/black"
+            android:gravity="center_vertical"
+            android:paddingRight="10dp"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintLeft_toRightOf="@id/tt_recomanded_tag">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="25dp"
+                android:textSize="12sp"
+                android:layout_marginRight="6dp"
+                android:gravity="center"
+                android:background="@drawable/btn_toogle"
+                android:textColor="@color/black"
+                android:text="@string/tag1"
+                />
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="25dp"
+                android:textSize="12sp"
+                android:layout_marginRight="6dp"
+                android:gravity="center"
+                android:background="@drawable/btn_toogle"
+                android:textColor="@color/black"
+                android:text="@string/tag2"/>
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="25dp"
+                android:textSize="12sp"
+                android:layout_marginRight="6dp"
+                android:gravity="center"
+                android:background="@drawable/btn_toogle"
+                android:textColor="@color/black"
+                android:text="@string/tag3"/>
+
+        </LinearLayout>
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_store_list"
+        android:layout_marginTop="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+
+</LinearLayout>

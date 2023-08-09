@@ -1,4 +1,4 @@
-package com.devinsight.vegiedo.view.map;
+package com.devinsight.vegiedo.view;
 
 import android.os.Bundle;
 
@@ -9,9 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.devinsight.vegiedo.R;
+import com.devinsight.vegiedo.view.search.SearchMainFragment;
 
-public class MapMainFragment extends Fragment {
-
+public class StoreListMainFragment extends Fragment {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -20,12 +20,16 @@ public class MapMainFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public MapMainFragment() {
-        // Required empty public constructor
+    public static StoreListMainFragment instance(){
+        return new StoreListMainFragment();
     }
 
-    public static MapMainFragment newInstance(String param1, String param2) {
-        MapMainFragment fragment = new MapMainFragment();
+    public StoreListMainFragment() {
+
+    }
+
+    public static StoreListMainFragment newInstance(String param1, String param2) {
+        StoreListMainFragment fragment = new StoreListMainFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -46,6 +50,6 @@ public class MapMainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_main_map, container, false);
+        return inflater.inflate(R.layout.fragment_store_list_main, container, false);
     }
 }

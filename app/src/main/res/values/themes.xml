@@ -14,6 +14,9 @@
         <!-- Customize your theme here. -->
         <!-- 상단바 없애기 -->
         <item name="windowNoTitle">true</item>
+        <!-- 시스템바를 백그라운드에 그린다.-->
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+
     </style>
 
 

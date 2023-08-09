@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardview_store_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="25dp"
+        app:cardElevation="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageView
+            android:layout_width="350dp"
+            android:layout_height="150dp"
+            android:scaleType="centerCrop"
+            android:background="@drawable/sample"
+            android:gravity="center_horizontal"
+            app:cardUseCompatPadding="true">
+        </ImageView>
+
+        <ToggleButton
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/btn_togle_like"
+            android:layout_margin="15dp"
+            android:checked="false"
+            android:textOn=""
+            android:textOff=""
+            android:layout_gravity="bottom|end"/>
+
+    </androidx.cardview.widget.CardView>
+    <TextView
+        android:id="@+id/map_card_store_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="가게이름"
+        android:layout_marginTop="10dp"
+        android:textSize="16sp"
+        android:textColor="@color/black"
+        app:layout_constraintTop_toBottomOf="@id/cardview_store_image"
+        app:layout_constraintStart_toStartOf="@id/cardview_store_image"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="거리"
+        android:textColor="#B3B3B3"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        app:layout_constraintLeft_toRightOf="@+id/map_card_store_name"
+        app:layout_constraintTop_toBottomOf="@id/cardview_store_image"
+        app:layout_constraintBaseline_toBaselineOf="@id/map_card_store_name"/>
+    <TextView
+        android:id="@+id/map_store_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="가게주소"
+        android:textSize="12sp"
+        android:textColor="@color/black"
+        android:layout_marginTop="5dp"
+        app:layout_constraintTop_toBottomOf="@id/map_card_store_name"
+        app:layout_constraintStart_toStartOf="@id/cardview_store_image"/>
+
+    <LinearLayout
+        android:id="@+id/rating_reviews"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/cardview_store_image"
+        app:layout_constraintTop_toBottomOf="@id/map_store_address"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="5dp"
+        >
+        <RatingBar
+            android:id="@+id/map_ratingbar_star"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/Widget.AppCompat.RatingBar.Small"
+            android:numStars="5"
+            android:stepSize="1.0"
+            android:layout_gravity="center"
+            />
+        <TextView
+            android:id="@+id/map_store_reviewes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="43 reviewrs"
+            android:textSize="12sp"
+            android:textColor="#FC840D"
+            android:layout_marginLeft="10dp"
+            />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="5dp"
+        app:layout_constraintEnd_toEndOf="@id/cardview_store_image"
+        app:layout_constraintTop_toBottomOf="@id/rating_reviews">
+
+        <TextView
+            android:layout_width="80dp"
+            android:layout_height="25dp"
+            android:textSize="12sp"
+            android:layout_marginRight="6dp"
+            android:gravity="center"
+            android:background="@drawable/btn_green"
+            android:textColor="#FFFFFF"
+            android:text="@string/tag1"
+            />
+
+        <TextView
+            android:layout_width="80dp"
+            android:layout_height="25dp"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:background="@drawable/btn_green"
+            android:textColor="#FFFFFF"
+            android:text="@string/tag2"/>
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     Fragment searchFilterFragment;
     Fragment storeListPageFragment;
     Fragment mapMainFragment;
+    Fragment storeListMainFragment;
 
 
     @Override
@@ -46,27 +47,27 @@ public class MainActivity extends AppCompatActivity {
 //      Fragment
         homeMainFragment = new HomeMainFragment();
         mapMainFragment = new MapMainFragment();
-//        searchMainFragment = new SearchMainFragment();
         searchFilterFragment = new SearchFilterFragment();
+
 
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 if (item.getItemId() == R.id.nav_community) {
-                    transaction.replace(R.id.frame, homeMainFragment).commit();
+                    transaction.replace(R.id.frame, homeMainFragment).addToBackStack(null).commit();
 
                     return true;
                 } else if (item.getItemId() == R.id.nav_home) {
-                    transaction.replace(R.id.frame, homeMainFragment).commit();
+                    transaction.replace(R.id.frame, homeMainFragment).addToBackStack(null).commit();
 
                     return true;
                 } else if (item.getItemId() == R.id.nav_map) {
-                    transaction.replace(R.id.frame, mapMainFragment).commit();
+                    transaction.replace(R.id.frame, mapMainFragment).addToBackStack(null).commit();
 
                     return true;
                 } else if (item.getItemId() == R.id.nav_user) {
-                    transaction.replace(R.id.frame, homeMainFragment).commit();
+                    transaction.replace(R.id.frame, homeMainFragment).addToBackStack(null).commit();
 
                     return true;
                 }
@@ -85,17 +86,16 @@ public class MainActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                openSearchMainFragment();
+                openStoreListMainFragment();
                 return false;
             }
-
             @Override
             public boolean onQueryTextChange(String newText) {
                 return false;
             }
         });
-
     }
+
 
     private void openSearchMainFragment() {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -107,7 +107,20 @@ public class MainActivity extends AppCompatActivity {
         } else {
             transaction.show(searchMainFragment);
         }
+        transaction.addToBackStack(null)
+                .commit();
+    }
 
+    private void openStoreListMainFragment() {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        StoreListMainFragment storeListhMainFragment = (StoreListMainFragment) getSupportFragmentManager().findFragmentByTag("StoreListhMainFragment");
+
+        if (storeListMainFragment == null) {
+            storeListhMainFragment = StoreListMainFragment.instance();
+            transaction.add(R.id.frame, storeListhMainFragment, "StoreListhMainFragment");
+        } else {
+            transaction.show(storeListhMainFragment);
+        }
         transaction.addToBackStack(null)
                 .commit();
     }

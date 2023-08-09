@@ -14,6 +14,7 @@
         <ImageView
             android:layout_width="350dp"
             android:layout_height="240dp"
+            android:scaleType="centerCrop"
             android:background="@drawable/sample"
             android:gravity="center_horizontal"
             app:cardUseCompatPadding="true">

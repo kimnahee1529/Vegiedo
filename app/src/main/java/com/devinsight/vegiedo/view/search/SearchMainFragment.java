@@ -64,7 +64,7 @@ public class SearchMainFragment extends Fragment implements SearchFragmentAdapte
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.d("search frag","onCreateView");
-        View view = inflater.inflate(R.layout.fragment_search_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_search_list_main, container, false);
 
         recyclerView = view.findViewById(R.id.recycler_search_page);
         storeList = new ArrayList<>();

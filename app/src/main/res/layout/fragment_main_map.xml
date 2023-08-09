@@ -6,37 +6,44 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btn_map_storePage"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_margin="20dp"
         app:backgroundTint="#FFFFFF"
+        app:fabCustomSize="45dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:tint="@null"
         android:src="@drawable/ic_map_store_list">
 
     </com.google.android.material.floatingactionbutton.FloatingActionButton>
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btn_map_myLocation"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginRight="20dp"
         android:layout_marginBottom="10dp"
         app:backgroundTint="#FFFFFF"
+        app:fabCustomSize="45dp"
         app:layout_constraintBottom_toTopOf="@id/btn_map_storePage"
         app:layout_constraintEnd_toEndOf="parent"
-        android:src="@drawable/locate_fixed"
+        app:tint="@null"
+        android:src="@drawable/ic_my_location"
         >
 
     </com.google.android.material.floatingactionbutton.FloatingActionButton>
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btn_map_like"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginRight="20dp"
         android:layout_marginBottom="10dp"
         app:backgroundTint="#FFFFFF"
+        app:fabCustomSize="45dp"
         app:layout_constraintBottom_toTopOf="@id/btn_map_myLocation"
         app:layout_constraintEnd_toEndOf="parent"
+        app:tint="@null"
+        android:src="@drawable/ic_heart_default"
         >
 
     </com.google.android.material.floatingactionbutton.FloatingActionButton>
