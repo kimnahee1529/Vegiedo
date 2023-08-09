@@ -16,8 +16,8 @@
         <item name="windowNoTitle">true</item>
         <!-- 시스템바를 백그라운드에 그린다.-->
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+<!--        <item name="windowActionBar">false</item>-->
+        <item name="android:windowLightStatusBar">true</item>
 
     </style>
-
-
 </resources>
