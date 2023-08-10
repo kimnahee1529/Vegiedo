@@ -9,13 +9,15 @@
 
     <!--  여기부터 -->
 
-    <androidx.core.widget.NestedScrollView
+    <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:fillViewport="true">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
@@ -23,6 +25,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
+
 
                 <View
                     android:id="@+id/black_recta"
@@ -32,6 +35,9 @@
                     android:layout_alignParentTop="true"
                     android:background="#66000000"
                     tools:ignore="MissingConstraints" />
+
+                <!-- img_sheep ImageView -->
+
 
                 <ImageView
                     android:id="@+id/circle1"
@@ -44,6 +50,17 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent" />
 
+                <ImageView
+                    android:id="@+id/img_sheep"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/img_sheep"
+                    app:layout_constraintTop_toTopOf="@+id/circle1"
+                    app:layout_constraintBottom_toBottomOf="@+id/circle1"
+                    app:layout_constraintStart_toStartOf="@+id/circle1"
+                    app:layout_constraintEnd_toEndOf="@+id/circle1"
+                    app:layout_constraintVertical_bias="0.5" />
+
                 <TextView
                     android:id="@+id/some_id"
                     android:layout_width="wrap_content"
@@ -55,15 +72,14 @@
                     android:text="맛있다 메에에엥"
                     app:layout_constraintEnd_toEndOf="@id/black_recta"
                     app:layout_constraintTop_toTopOf="@id/black_recta" />
-
-
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:background="@drawable/white_rec_n">
 
                 <LinearLayout
                     android:layout_width="248dp"
@@ -102,22 +118,22 @@
                             <ImageView
                                 android:layout_width="17dp"
                                 android:layout_height="17dp"
-                                android:src="@drawable/enablestar" />
+                                android:src="@drawable/full_star" />
 
                             <ImageView
                                 android:layout_width="17dp"
                                 android:layout_height="17dp"
-                                android:src="@drawable/enablestar" />
+                                android:src="@drawable/full_star" />
 
                             <ImageView
                                 android:layout_width="17dp"
                                 android:layout_height="17dp"
-                                android:src="@drawable/enablestar" />
+                                android:src="@drawable/full_star" />
 
                             <ImageView
                                 android:layout_width="17dp"
                                 android:layout_height="17dp"
-                                android:src="@drawable/enablestar" />
+                                android:src="@drawable/full_star" />
 
                             <ImageView
                                 android:layout_width="17dp"
@@ -291,74 +307,19 @@
 
             <!--  ScrollView -->
 
-
-
-
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/store_recycle_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:scrollbarFadeDuration="0"
+                android:scrollbarSize="5dp"
+                android:scrollbarThumbVertical="@android:color/darker_gray"
+                android:scrollbars="vertical"/>
 
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:scrollbarFadeDuration="0"
-        android:scrollbarSize="5dp"
-        android:scrollbarThumbVertical="@android:color/darker_gray"
-        android:scrollbars="vertical"/>
-
-    <!--  ScrollView가 여기로 오면 RecyclerView 연결이 안됨 -->
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="@android:color/transparent">
-
-        <LinearLayout
-            android:id="@+id/linearLayout1"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_alignParentBottom="true"
-            android:elevation="20dp">
-
-            <ImageView
-                android:id="@+id/homeTap"
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:src="@drawable/nav_messages_square" />
-
-            <ImageView
-                android:id="@+id/tipTap"
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:src="@drawable/nav_home" />
-
-            <ImageView
-                android:id="@+id/talkTap"
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:src="@drawable/nav_marker" />
-
-            <ImageView
-                android:id="@+id/bookmarkTap"
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:src="@drawable/nav_user_circle" />
-        </LinearLayout>
-
-    </RelativeLayout>
-
-
 
 
 </LinearLayout>
