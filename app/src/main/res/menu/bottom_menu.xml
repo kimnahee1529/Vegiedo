@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/nav_community"
+        app:showAsAction="always"
+        android:enabled="true"
+        android:icon="@drawable/nav_messages_square"
+        android:title="Write" />
+    <item
+        android:id="@+id/nav_home"
+        app:showAsAction="always"
+        android:enabled="true"
+        android:icon="@drawable/nav_home"
+        android:title="Maps"/>
+
+    <item
+        android:id="@+id/nav_map"
+        app:showAsAction="always"
+        android:enabled="true"
+        android:icon="@drawable/nav_marker"
+        android:title="Record">
+    </item>
+
+    <item
+        android:id="@+id/nav_user"
+        app:showAsAction="always"
+        android:enabled="true"
+        android:icon="@drawable/nav_user_circle"
+        android:title="Setting">
+    </item>
+
+</menu>
