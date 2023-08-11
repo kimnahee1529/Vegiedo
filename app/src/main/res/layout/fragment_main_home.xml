@@ -22,7 +22,7 @@
              android:foregroundGravity="center_horizontal">
 
             <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/viewpager"
+                android:id="@+id/viewpager_home"
                 android:layout_width="350dp"
                 android:layout_height="250dp"
                 android:layout_gravity="center_horizontal"

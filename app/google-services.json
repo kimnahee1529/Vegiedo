@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "505975847219",
+    "project_id": "vegiedo-aos",
+    "storage_bucket": "vegiedo-aos.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:505975847219:android:7ae17bb470ee7a8a112646",
+        "android_client_info": {
+          "package_name": "com.devinsight.vegiedo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "505975847219-akf3lcqdpu046mg64cmbbb7kohqu9g7r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD5aPDBJHn80Lx3iiCl_ogyTse5ZhzlC3k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "505975847219-akf3lcqdpu046mg64cmbbb7kohqu9g7r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

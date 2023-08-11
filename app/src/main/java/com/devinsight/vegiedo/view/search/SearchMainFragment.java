@@ -33,6 +33,11 @@ public class SearchMainFragment extends Fragment implements SearchFragmentAdapte
 
     }
 
+    public static SearchMainFragment instance(){
+        return new SearchMainFragment();
+    }
+
+
     public static SearchMainFragment newInstance(String param1, String param2) {
         SearchMainFragment fragment = new SearchMainFragment();
         Bundle args = new Bundle();
@@ -41,6 +46,10 @@ public class SearchMainFragment extends Fragment implements SearchFragmentAdapte
         fragment.setArguments(args);
         return fragment;
     }
+
+
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,7 +64,7 @@ public class SearchMainFragment extends Fragment implements SearchFragmentAdapte
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.d("search frag","onCreateView");
-        View view = inflater.inflate(R.layout.fragment_search_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_search_list_main, container, false);
 
         recyclerView = view.findViewById(R.id.recycler_search_page);
         storeList = new ArrayList<>();
@@ -79,4 +88,6 @@ public class SearchMainFragment extends Fragment implements SearchFragmentAdapte
     public void onSearchItemClick(SearchStoreData searchData) {
         Toast.makeText(getContext(),searchData.getStoreName() + " is clicked ",Toast.LENGTH_SHORT).show();
     }
+
+
 }

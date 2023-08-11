@@ -63,7 +63,7 @@ public class HomeMainFragment extends Fragment implements HomeReviewAdapter.revi
         View view = inflater.inflate(R.layout.fragment_main_home, container, false);
 
 //      홈화면 상단 배너
-        viewPager = view.findViewById(R.id.viewpager);
+        viewPager = view.findViewById(R.id.viewpager_home);
         bannerAdapter = new HomeBannerAdapter(this);
         viewPager.setAdapter(bannerAdapter);
 

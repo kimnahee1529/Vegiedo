@@ -33,7 +33,7 @@
         tools:layout_editor_absoluteX="0dp"></TextView>
 
     <EditText
-        android:layout_width="380dp"
+        android:layout_width="360dp"
         android:layout_height="45dp"
         android:gravity="center"
         android:hint="모든걸먹는토끼430"
