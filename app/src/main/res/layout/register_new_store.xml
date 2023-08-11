@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@+id/imagetext3"
+        android:layout_marginTop="35dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="330dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView7"
+            app:layout_constraintVertical_bias="0.287">
+
+            <ToggleButton
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/btn_toogle"
+                android:checked="false"
+                android:textColor="@drawable/btn_togle_text_color"
+                android:textOff="@string/tag1"
+                android:textOn="@string/tag1"/>
+
+            <ToggleButton
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/btn_toogle"
+                android:checked="false"
+                android:textColor="@drawable/btn_togle_text_color"
+                android:textOff="@string/tag2"
+                android:textOn="@string/tag2"/>
+
+            <ToggleButton
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/btn_toogle"
+                android:checked="false"
+                android:textColor="@drawable/btn_togle_text_color"
+                android:textOff="@string/tag3"
+                android:textOn="@string/tag3"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="330dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView7"
+            app:layout_constraintVertical_bias="0.444">
+
+            <ToggleButton
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/btn_toogle"
+                android:checked="false"
+                android:textColor="@drawable/btn_togle_text_color"
+                android:textOff="@string/tag4"
+                android:textOn="@string/tag5"/>
+
+            <ToggleButton
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/btn_toogle"
+                android:checked="false"
+                android:textColor="@drawable/btn_togle_text_color"
+                android:textOff="@string/tag5"
+                android:textOn="@string/tag5"/>
+
+            <ToggleButton
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/btn_toogle"
+                android:checked="false"
+                android:textColor="@drawable/btn_togle_text_color"
+                android:textOff="@string/tag6"
+                android:textOn="@string/tag6"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="330dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView7"
+            app:layout_constraintVertical_bias="0.129">
+
+            <ToggleButton
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/btn_toogle"
+                android:checked="false"
+                android:textColor="@drawable/btn_togle_text_color"
+                android:textOff="@string/tag7"
+                android:textOn="@string/tag7"/>
+
+            <ToggleButton
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/btn_toogle"
+                android:checked="false"
+                android:textColor="@drawable/btn_togle_text_color"
+                android:textOff="@string/tag8"
+                android:textOn="@string/tag8"/>
+
+            <ToggleButton
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/btn_toogle"
+                android:checked="false"
+                android:textColor="@drawable/btn_togle_text_color"
+                android:textOff="@string/tag9"
+                android:textOn="@string/tag9"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/imagetext3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="태그 *"
+        android:textColor="@color/black"
+        android:layout_marginTop="32dp"
+        app:layout_constraintStart_toStartOf="@+id/main_image6"
+        app:layout_constraintTop_toBottomOf="@+id/main_image6" />
+
+    <TextView
+        android:id="@+id/imagetext4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="40dp"
+        android:text="완료"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <ImageView
+        android:id="@+id/main_image6"
+        android:layout_width="85dp"
+        android:layout_height="85dp"
+        android:src="@drawable/ic_launcher_background"
+        android:layout_marginTop="25dp"
+        app:layout_constraintStart_toStartOf="@+id/imagetext2"
+        app:layout_constraintTop_toBottomOf="@+id/imagetext2" />
+
+    <TextView
+        android:id="@+id/imagetext2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="사진"
+        android:textColor="@color/black"
+        android:layout_marginTop="32dp"
+        app:layout_constraintStart_toStartOf="@+id/editText2"
+        app:layout_constraintTop_toBottomOf="@+id/editText2" />
+
+    <ImageView
+        android:id="@+id/backwardBtn2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="32dp"
+        android:src="@drawable/backward"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/service_question1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="16dp"
+        android:text="상호명 *"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/backwardBtn2" />
+
+    <EditText
+        android:id="@+id/editText1"
+        android:layout_width="350dp"
+        android:layout_height="30dp"
+        android:background="@drawable/et_custom_n"
+        android:layout_marginTop="15dp"
+        app:layout_constraintStart_toStartOf="@+id/service_question1"
+        app:layout_constraintTop_toBottomOf="@+id/service_question1" />
+
+    <EditText
+        android:id="@+id/editText2"
+        android:layout_width="350dp"
+        android:layout_height="30dp"
+        android:background="@drawable/et_custom_n"
+        android:layout_marginTop="15dp"
+        app:layout_constraintStart_toStartOf="@+id/service_question2"
+        app:layout_constraintTop_toBottomOf="@+id/service_question2" />
+
+    <TextView
+        android:id="@+id/service_question2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="주소 *"
+        android:textColor="@color/black"
+        android:layout_marginTop="32dp"
+        app:layout_constraintStart_toStartOf="@+id/editText1"
+        app:layout_constraintTop_toBottomOf="@+id/editText1" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
