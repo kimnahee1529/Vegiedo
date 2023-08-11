@@ -34,5 +34,18 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    <!-- dialog string -->
+    <string name="accept_reporting">폐점가게 신고가 접수되었습니다.\n확인 후 처리하도록 하겠습니다. 감사합니다.</string>
+    <string name="delete_review_question">리뷰를 삭제하시겠어요?</string>
+    <string name="input_title">제목을 입력 해주세요!</string>
+    <string name="input_content">내용을 입력 해주세요!</string>
+    <string name="delete_text_question">글을 삭제하시겠어요?</string>
+    <string name="profile_image_question">어떤 프로필 사진을 사용하고 싶나요?</string>
+    <string name="withdrawal_question">회원 탈퇴 하시겠어요.......?? 진짜??</string>
+    <string name="input_blank">모든 빈칸을 입력해주세요.</string>
+    <string name="complete_new_store_registration">신규 가게 등록 요청이 완료되었습니다.</string>
+    <string name="push_3tag">태그를 3개이상 눌러주세요!</string>
+    <string name="stamp_book">스탬프북</string>
+
 
 </resources>
