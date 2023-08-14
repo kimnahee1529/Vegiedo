@@ -39,11 +39,14 @@ dependencies {
 
 //   카드뷰
     implementation 'androidx.cardview:cardview:1.0.0'
+
 //   뷰페이저
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
 
 //   애드몹
     implementation 'com.google.android.gms:play-services-ads:22.2.0'
 
-
+//  네이버 지도
+    implementation ("com.naver.maps:map-sdk:3.17.0")
+    implementation("com.google.android.gms:play-services-location:21.0.1")
 }
