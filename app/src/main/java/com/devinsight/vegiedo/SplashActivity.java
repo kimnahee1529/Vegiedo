@@ -7,14 +7,16 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import com.devinsight.vegiedo.view.login.LoginMainActivity;
+import com.kakao.sdk.common.KakaoSdk;
 
 public class SplashActivity extends AppCompatActivity {
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override

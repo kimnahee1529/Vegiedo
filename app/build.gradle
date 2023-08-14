@@ -1,5 +1,6 @@
 plugins {
     id 'com.android.application'
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -37,13 +38,27 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
-//   카드뷰
-    implementation 'androidx.cardview:cardview:1.0.0'
-//   뷰페이저
-    implementation 'androidx.viewpager2:viewpager2:1.0.0'
 
-//   애드몹
+//  애드몹
     implementation 'com.google.android.gms:play-services-ads:22.2.0'
+//  카카오톡 관련
+    implementation "com.kakao.sdk:v2-all:2.15.0"
+    implementation "com.kakao.sdk:v2-user:2.15.0"
+//  구글로그인
+    implementation(platform("com.google.firebase:firebase-bom:32.2.2"))
+    implementation("com.google.firebase:firebase-analytics")
+    implementation 'com.google.android.gms:play-services-auth:20.2.0'
+//  파이어베이스
+    implementation 'com.google.firebase:firebase-auth:22.1.1'
+    implementation 'com.google.firebase:firebase-core:21.1.1'
+//  카드뷰
+    implementation 'androidx.cardview:cardview:1.0.0'
+//  뷰페이저
+    implementation 'androidx.viewpager2:viewpager2:1.0.0'
+    implementation 'com.google.android.gms:play-services-ads:22.2.0'
+//  프로필 그리기 글라이더
+    implementation 'com.github.bumptech.glide:glide:4.12.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
 
 
 }
