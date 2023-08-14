@@ -14,7 +14,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "505975847219-akf3lcqdpu046mg64cmbbb7kohqu9g7r.apps.googleusercontent.com",
+          "client_id": "505975847219-1jofgbrec7co0nlth2cflhhclbfaaagl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.devinsight.vegiedo",
+            "certificate_hash": "30e22aba4e20cfe1c04a206add9930dcdf724203"
+          }
+        },
+        {
+          "client_id": "505975847219-mov8ltkf0d4b2apr0lo4nc03faj9si8c.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
