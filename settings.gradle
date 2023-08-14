@@ -11,6 +11,12 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         maven { url 'https://devrepo.kakao.com/nexus/content/groups/public/' }
+        jcenter() // Warning: this repository is going to shut down soon
+        repositories {
+            maven {
+                url "https://naver.jfrog.io/artifactory/maven/"
+            }
+        }
     }
 }
 rootProject.name = "vegiedo"

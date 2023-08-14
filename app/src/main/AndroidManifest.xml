@@ -9,6 +9,10 @@
         android:name="com.kakao.sdk.AppKey"
         android:value="988056d0eaff3cc6abe70cdb9da63b80"/>
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".view.login.VEGIEDO"
         android:allowBackup="true"
@@ -20,6 +24,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Vegiedo"
         tools:targetApi="31">
+
+        <meta-data
+            android:name="com.naver.maps.map.CLIENT_ID"
+            android:value="g3rcpfm3dn" />
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
