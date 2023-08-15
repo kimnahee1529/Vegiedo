@@ -12,7 +12,7 @@
 
 
         <TextView
-            android:id="@+id/textView16"
+            android:id="@+id/withdrawal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="40dp"
@@ -25,7 +25,7 @@
             app:layout_constraintVertical_bias="0.05" />
 
         <TextView
-            android:id="@+id/textView15"
+            android:id="@+id/logout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
@@ -167,7 +167,7 @@
             app:layout_constraintVertical_bias="0.516" />
 
         <TextView
-            android:id="@+id/textView10"
+            android:id="@+id/new_store_register_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="40dp"
@@ -217,7 +217,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView9" />
+            app:layout_constraintTop_toBottomOf="@+id/stamp_book_text" />
 
         <View
             android:id="@+id/rectangle_5"
@@ -240,7 +240,7 @@
             android:background="@drawable/white_rec_n"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="@+id/rectangle_5"
-            app:layout_constraintVertical_bias="0.148"
+            app:layout_constraintVertical_bias="0.184"
             tools:layout_editor_absoluteX="0dp" />
 
         <ImageView
@@ -284,6 +284,7 @@
             app:layout_constraintVertical_bias="0.944" />
 
         <ImageView
+            android:id="@+id/mypage_camera"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/camera"
@@ -309,6 +310,7 @@
         <!-- Auto layout, variables, and unit scale are not yet supported -->
 
         <ImageView
+            android:id="@+id/change_nickname_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -319,7 +321,7 @@
             app:layout_constraintTop_toBottomOf="@+id/imageView3" />
 
         <TextView
-            android:id="@+id/textView9"
+            android:id="@+id/stamp_book_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="67dp"
@@ -339,7 +341,7 @@
             android:src="@drawable/arrow_right"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@+id/textView9"
+            app:layout_constraintStart_toEndOf="@+id/stamp_book_text"
             app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
 
