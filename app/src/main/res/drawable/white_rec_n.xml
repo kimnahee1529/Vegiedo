@@ -2,7 +2,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:aapt="http://schemas.android.com/aapt"
     android:width="390dp"
-    android:height="65dp"
+    android:height="80dp"
     android:viewportWidth="390"
     android:viewportHeight="65"
     >
