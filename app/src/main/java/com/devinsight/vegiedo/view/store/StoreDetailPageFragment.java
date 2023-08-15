@@ -23,7 +23,7 @@ public class StoreDetailPageFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private StoreDetailPageAdapter adapter;
-    private List<Item> items;
+    private List<UserReviewItem> userReviewItems;
 
     public StoreDetailPageFragment() {
         // Required empty public constructor
@@ -47,14 +47,14 @@ public class StoreDetailPageFragment extends Fragment {
     }
 
     private void populateData() {
-        items = new ArrayList<>();
+        userReviewItems = new ArrayList<>();
         for (int i = 0; i < ITEMS_COUNT; i++) {
-            items.add(createItem(i));
+            userReviewItems.add(createItem(i));
         }
     }
 
-    private Item createItem(int index) {
-        return new Item(Item.ItemType.STORE_DETAIL_PAGE, "Title " + index,
+    private UserReviewItem createItem(int index) {
+        return new UserReviewItem(UserReviewItem.ItemType.STORE_DETAIL_PAGE, "Title " + index,
                 R.drawable.full_star, R.drawable.full_star, R.drawable.full_star, R.drawable.full_star, R.drawable.empty_star,
                 "Description 1", R.drawable.ic_launcher_background, R.drawable.ic_launcher_background, R.drawable.ic_launcher_background, R.drawable.ic_launcher_background, R.drawable.ic_launcher_background);
     }
@@ -62,7 +62,7 @@ public class StoreDetailPageFragment extends Fragment {
     private void setupRecyclerView() {
         recyclerView.setNestedScrollingEnabled(false);
 
-        adapter = new StoreDetailPageAdapter(items);
+        adapter = new StoreDetailPageAdapter(userReviewItems);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
     }

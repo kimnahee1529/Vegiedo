@@ -1,16 +1,22 @@
 package com.devinsight.vegiedo.view.store;
 
-public class Item {
+import java.util.ArrayList;
+
+public class UserReviewItem {
     public enum ItemType {
         TYPE_ONE,
         TYPE_TWO,
         STORE_DETAIL_PAGE
     }
 
+
+
     private ItemType itemType;
     private String title;
     private String description;
     private String content;
+    private ArrayList<String> userReviewImageUrlList;
+
 
     private int imageResource1;
     private int imageResource2;
@@ -24,7 +30,7 @@ public class Item {
     private int imageResource10;
 
 
-    public Item(ItemType itemType, String title, int imageResource6, int imageResource7, int imageResource8, int imageResource9, int imageResource10, String content, int imageResource1, int imageResource2, int imageResource3, int imageResource4, int imageResource5) {
+    public UserReviewItem(ItemType itemType, String title, int imageResource6, int imageResource7, int imageResource8, int imageResource9, int imageResource10, String content, int imageResource1, int imageResource2, int imageResource3, int imageResource4, int imageResource5) {
         this.itemType = itemType;
         this.title = title;
         this.content = content;
@@ -95,6 +101,10 @@ public class Item {
 
     public int getImageResource10() {
         return imageResource10;
+    }
+
+    public void setItemType(ItemType itemType) {
+        this.itemType = itemType;
     }
 
 }

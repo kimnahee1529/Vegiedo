@@ -16,22 +16,22 @@ import java.util.List;
 
 public class StoreDetailPageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private List<Item> itemList;
+    private List<UserReviewItem> userReviewItemList;
 
-    public StoreDetailPageAdapter(List<Item> itemList) {
-        this.itemList = itemList;
+    public StoreDetailPageAdapter(List<UserReviewItem> userReviewItemList) {
+        this.userReviewItemList = userReviewItemList;
     }
 
     @Override
     public int getItemViewType(int position) {
-        return itemList.get(position).getItemType().ordinal();
+        return userReviewItemList.get(position).getItemType().ordinal();
     }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        if (viewType == Item.ItemType.STORE_DETAIL_PAGE.ordinal()){
+        if (viewType == UserReviewItem.ItemType.STORE_DETAIL_PAGE.ordinal()){
             View view = inflater.inflate(R.layout.store_detail_item, parent, false);
             return new ViewHolderTypeThree(view);
         }
@@ -40,26 +40,26 @@ public class StoreDetailPageAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        Item item = itemList.get(position);
+        UserReviewItem userReviewItem = userReviewItemList.get(position);
         if (holder instanceof ViewHolderTypeThree) {
-            ((ViewHolderTypeThree) holder).title.setText(item.getTitle());
-            ((ViewHolderTypeThree) holder).imageView1.setImageResource(item.getImageResource1());
-            ((ViewHolderTypeThree) holder).imageView2.setImageResource(item.getImageResource2());
-            ((ViewHolderTypeThree) holder).imageView3.setImageResource(item.getImageResource3());
-            ((ViewHolderTypeThree) holder).imageView4.setImageResource(item.getImageResource4());
-            ((ViewHolderTypeThree) holder).imageView5.setImageResource(item.getImageResource5());
-            ((ViewHolderTypeThree) holder).star1.setImageResource(item.getImageResource6());
-            ((ViewHolderTypeThree) holder).star2.setImageResource(item.getImageResource7());
-            ((ViewHolderTypeThree) holder).star3.setImageResource(item.getImageResource8());
-            ((ViewHolderTypeThree) holder).star4.setImageResource(item.getImageResource9());
-            ((ViewHolderTypeThree) holder).star5.setImageResource(item.getImageResource10());
+            ((ViewHolderTypeThree) holder).title.setText(userReviewItem.getTitle());
+            ((ViewHolderTypeThree) holder).imageView1.setImageResource(userReviewItem.getImageResource1());
+            ((ViewHolderTypeThree) holder).imageView2.setImageResource(userReviewItem.getImageResource2());
+            ((ViewHolderTypeThree) holder).imageView3.setImageResource(userReviewItem.getImageResource3());
+            ((ViewHolderTypeThree) holder).imageView4.setImageResource(userReviewItem.getImageResource4());
+            ((ViewHolderTypeThree) holder).imageView5.setImageResource(userReviewItem.getImageResource5());
+            ((ViewHolderTypeThree) holder).star1.setImageResource(userReviewItem.getImageResource6());
+            ((ViewHolderTypeThree) holder).star2.setImageResource(userReviewItem.getImageResource7());
+            ((ViewHolderTypeThree) holder).star3.setImageResource(userReviewItem.getImageResource8());
+            ((ViewHolderTypeThree) holder).star4.setImageResource(userReviewItem.getImageResource9());
+            ((ViewHolderTypeThree) holder).star5.setImageResource(userReviewItem.getImageResource10());
 
         }
     }
 
     @Override
     public int getItemCount() {
-        return itemList.size();
+        return userReviewItemList.size();
     }
 
 
