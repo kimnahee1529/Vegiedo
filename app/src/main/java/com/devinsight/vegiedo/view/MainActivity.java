@@ -11,10 +11,12 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 
 import com.devinsight.vegiedo.R;
 import com.devinsight.vegiedo.view.home.HomeMainFragment;
 import com.devinsight.vegiedo.view.map.MapMainFragment;
+import com.devinsight.vegiedo.view.mypage.MyPageFragment;
 import com.devinsight.vegiedo.view.search.SearchFilterFragment;
 import com.devinsight.vegiedo.view.search.SearchMainFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -26,12 +28,14 @@ public class MainActivity extends AppCompatActivity {
     BottomNavigationView bottomNavigationView;
     ImageButton btn_filter;
     SearchView searchView;
+    LinearLayout topSearch;
     Fragment homeMainFragment;
     Fragment searchMainFragment;
     Fragment searchFilterFragment;
     Fragment storeListPageFragment;
     Fragment mapMainFragment;
     Fragment storeListMainFragment;
+    Fragment myPageFragment;
 
 
     @Override
@@ -42,12 +46,14 @@ public class MainActivity extends AppCompatActivity {
         btn_filter = findViewById(R.id.btn_filter);
         searchView = findViewById(R.id.searchView);
         bottomNavigationView = findViewById(R.id.bottom_navigation);
+        topSearch = findViewById(R.id.top_search);
 
 
 //      Fragment
         homeMainFragment = new HomeMainFragment();
         mapMainFragment = new MapMainFragment();
         searchFilterFragment = new SearchFilterFragment();
+        myPageFragment = new MyPageFragment();
 
 
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
@@ -59,15 +65,18 @@ public class MainActivity extends AppCompatActivity {
 
                     return true;
                 } else if (item.getItemId() == R.id.nav_home) {
+                    topSearch.setVisibility(View.VISIBLE);
                     transaction.replace(R.id.frame, homeMainFragment).addToBackStack(null).commit();
 
                     return true;
                 } else if (item.getItemId() == R.id.nav_map) {
+                    topSearch.setVisibility(View.VISIBLE);
                     transaction.replace(R.id.frame, mapMainFragment).addToBackStack(null).commit();
 
                     return true;
                 } else if (item.getItemId() == R.id.nav_user) {
-                    transaction.replace(R.id.frame, homeMainFragment).addToBackStack(null).commit();
+                    topSearch.setVisibility(View.GONE);
+                    transaction.replace(R.id.frame, myPageFragment).addToBackStack(null).commit();
 
                     return true;
                 }
