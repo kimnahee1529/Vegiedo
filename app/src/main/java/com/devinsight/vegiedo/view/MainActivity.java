@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 if (item.getItemId() == R.id.nav_community) {
+                    topSearch.setVisibility(View.VISIBLE);
                     transaction.replace(R.id.frame, homeMainFragment).addToBackStack(null).commit();
 
                     return true;
