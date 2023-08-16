@@ -2,22 +2,22 @@
     <!-- Base application theme. -->
     <style name="Theme.Vegiedo" parent="Theme.AppCompat.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <userReviewItem name="colorPrimary">@color/purple_500</userReviewItem>
-        <userReviewItem name="colorPrimaryVariant">@color/purple_700</userReviewItem>
-        <userReviewItem name="colorOnPrimary">@color/white</userReviewItem>
+        <item name="colorPrimary">@color/purple_500</item>
+        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
-        <userReviewItem name="colorSecondary">@color/teal_200</userReviewItem>
-        <userReviewItem name="colorSecondaryVariant">@color/teal_700</userReviewItem>
-        <userReviewItem name="colorOnSecondary">@color/black</userReviewItem>
+        <item name="colorSecondary">@color/teal_200</item>
+        <item name="colorSecondaryVariant">@color/teal_700</item>
+        <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
-        <userReviewItem name="android:statusBarColor">#FFFFFF</userReviewItem>
+        <item name="android:statusBarColor">#FFFFFF</item>
         <!-- Customize your theme here. -->
         <!-- 상단바 없애기 -->
-        <userReviewItem name="windowNoTitle">true</userReviewItem>
+        <item name="windowNoTitle">true</item>
         <!-- 시스템바를 백그라운드에 그린다.-->
-        <userReviewItem name="android:windowDrawsSystemBarBackgrounds">true</userReviewItem>
-<!--        <userReviewItem name="windowActionBar">false</userReviewItem>-->
-        <userReviewItem name="android:windowLightStatusBar">true</userReviewItem>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <!--        <item name="windowActionBar">false</item>-->
+        <item name="android:windowLightStatusBar">true</item>
 
     </style>
 </resources>
