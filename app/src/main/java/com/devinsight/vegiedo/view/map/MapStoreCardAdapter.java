@@ -1,4 +1,4 @@
-package com.devinsight.vegiedo.view;
+package com.devinsight.vegiedo.view.map;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -14,6 +14,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.devinsight.vegiedo.R;
+import com.devinsight.vegiedo.data.request.map.MapStoreCardData;
 
 import java.util.ArrayList;
 

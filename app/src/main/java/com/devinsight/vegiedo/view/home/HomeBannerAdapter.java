@@ -14,7 +14,7 @@ public class HomeBannerAdapter extends FragmentStateAdapter {
     public Fragment createFragment(int position) {
         switch(position){
             case 0:
-                    return new BannerFragment1();
+                return new BannerFragment1();
             case 1:
                 return new BannerFragment1();
             case 2:

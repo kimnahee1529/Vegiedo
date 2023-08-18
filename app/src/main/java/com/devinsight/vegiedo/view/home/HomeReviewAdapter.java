@@ -12,7 +12,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.devinsight.vegiedo.R;
-import com.devinsight.vegiedo.view.HomeReviewData;
+import com.devinsight.vegiedo.data.request.home.HomeReviewData;
 
 import java.util.ArrayList;
 

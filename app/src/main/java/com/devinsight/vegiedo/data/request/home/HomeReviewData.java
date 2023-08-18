@@ -1,4 +1,4 @@
-package com.devinsight.vegiedo.view;
+package com.devinsight.vegiedo.data.request.home;
 
 public class HomeReviewData {
 

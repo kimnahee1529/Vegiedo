@@ -22,7 +22,7 @@
             android:gravity="center"
             android:textColor="@color/black"
             android:padding="18dp"
-            android:text="@string/관심태그를3개이상" />
+            android:text="@string/select_three_or_more" />
 
 
     </LinearLayout>

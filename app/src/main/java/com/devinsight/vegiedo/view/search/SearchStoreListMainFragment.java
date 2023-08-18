@@ -1,4 +1,4 @@
-package com.devinsight.vegiedo.view;
+package com.devinsight.vegiedo.view.search;
 
 import android.os.Bundle;
 
@@ -9,9 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.devinsight.vegiedo.R;
-import com.devinsight.vegiedo.view.search.SearchMainFragment;
 
-public class StoreListMainFragment extends Fragment {
+public class SearchStoreListMainFragment extends Fragment {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -20,16 +19,16 @@ public class StoreListMainFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public static StoreListMainFragment instance(){
-        return new StoreListMainFragment();
+    public static SearchStoreListMainFragment instance(){
+        return new SearchStoreListMainFragment();
     }
 
-    public StoreListMainFragment() {
+    public SearchStoreListMainFragment() {
 
     }
 
-    public static StoreListMainFragment newInstance(String param1, String param2) {
-        StoreListMainFragment fragment = new StoreListMainFragment();
+    public static SearchStoreListMainFragment newInstance(String param1, String param2) {
+        SearchStoreListMainFragment fragment = new SearchStoreListMainFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);

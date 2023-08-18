@@ -11,18 +11,18 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.devinsight.vegiedo.R;
-import com.devinsight.vegiedo.view.SearchStoreData;
+import com.devinsight.vegiedo.data.request.search.SearchStoreSummaryData;
 
 import java.util.ArrayList;
 
 public class SearchFragmentAdapter extends RecyclerView.Adapter<SearchFragmentAdapter.SearchViewHolder>{
 
-    private ArrayList<SearchStoreData> storeList;
+    private ArrayList<SearchStoreSummaryData> storeList;
     Context context;
 
     protected searchItemListner searchItemListner;
 
-    public SearchFragmentAdapter(Context context, ArrayList<SearchStoreData> storeList, searchItemListner searchItemListner){
+    public SearchFragmentAdapter(Context context, ArrayList<SearchStoreSummaryData> storeList, searchItemListner searchItemListner){
         this.storeList = storeList;
         this.context = context;
     }
@@ -51,7 +51,7 @@ public class SearchFragmentAdapter extends RecyclerView.Adapter<SearchFragmentAd
         private TextView searchStoreName;
         private TextView searchStoreAddress;
         private View viewLine;
-        SearchStoreData searchData;
+        SearchStoreSummaryData searchData;
         public SearchViewHolder(@NonNull View itemView) {
             super(itemView);
 
@@ -62,7 +62,7 @@ public class SearchFragmentAdapter extends RecyclerView.Adapter<SearchFragmentAd
             viewLine = itemView.findViewById(R.id.view_line);
         }
 
-        public void setSearchData(SearchStoreData searchData){
+        public void setSearchData(SearchStoreSummaryData searchData){
             this.searchData = searchData;
 
             searchStoreImage.setImageResource(searchData.getStoreImage());
@@ -80,7 +80,7 @@ public class SearchFragmentAdapter extends RecyclerView.Adapter<SearchFragmentAd
     }
 
     public interface searchItemListner{
-        void onSearchItemClick(SearchStoreData searchData);
+        void onSearchItemClick(SearchStoreSummaryData searchData);
     }
 
 }

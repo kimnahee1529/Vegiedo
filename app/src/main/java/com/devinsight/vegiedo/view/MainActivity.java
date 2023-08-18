@@ -7,7 +7,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
@@ -19,6 +18,7 @@ import com.devinsight.vegiedo.view.map.MapMainFragment;
 import com.devinsight.vegiedo.view.mypage.MyPageFragment;
 import com.devinsight.vegiedo.view.search.SearchFilterFragment;
 import com.devinsight.vegiedo.view.search.SearchMainFragment;
+import com.devinsight.vegiedo.view.search.SearchStoreListMainFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
@@ -123,10 +123,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void openStoreListMainFragment() {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        StoreListMainFragment storeListhMainFragment = (StoreListMainFragment) getSupportFragmentManager().findFragmentByTag("StoreListhMainFragment");
+        SearchStoreListMainFragment storeListhMainFragment = (SearchStoreListMainFragment) getSupportFragmentManager().findFragmentByTag("StoreListhMainFragment");
 
         if (storeListMainFragment == null) {
-            storeListhMainFragment = StoreListMainFragment.instance();
+            storeListhMainFragment = SearchStoreListMainFragment.instance();
             transaction.add(R.id.frame, storeListhMainFragment, "StoreListhMainFragment");
         } else {
             transaction.show(storeListhMainFragment);

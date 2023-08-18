@@ -132,7 +132,7 @@
                     android:layout_height="25dp"
                     android:background="@drawable/btn_green"
                     android:gravity="center"
-                    android:text="@string/tag1"
+                    android:text="@string/tag_fruittarian"
                     android:textColor="#FFFFFF"
                     android:textSize="12sp" />
 
@@ -142,7 +142,7 @@
                     android:layout_height="25dp"
                     android:background="@drawable/btn_green"
                     android:gravity="center"
-                    android:text="@string/tag2"
+                    android:text="@string/tag_vegan"
                     android:textColor="#FFFFFF"
                     android:textSize="12sp" />
 

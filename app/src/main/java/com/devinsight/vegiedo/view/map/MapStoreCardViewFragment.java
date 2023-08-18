@@ -1,4 +1,4 @@
-package com.devinsight.vegiedo.view;
+package com.devinsight.vegiedo.view.map;
 
 import android.os.Bundle;
 
@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.devinsight.vegiedo.R;
+import com.devinsight.vegiedo.data.request.map.MapStoreCardData;
 
 import java.util.ArrayList;
 

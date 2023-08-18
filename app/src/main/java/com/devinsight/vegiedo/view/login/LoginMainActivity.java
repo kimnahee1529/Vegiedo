@@ -105,7 +105,7 @@ public class LoginMainActivity extends AppCompatActivity {
 //                googleLogin();
                 Intent signInIntent = mGoogleSignInClient.getSignInIntent();
                 googleLoginLauncher.launch(signInIntent);
-                Log.d("로그인 성공", "");
+                Log.d("로그인 성공","");
                 Intent intent = new Intent(getApplicationContext(), NickNameActivity.class);
                 startActivity(intent);
                 finish();

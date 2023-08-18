@@ -1,4 +1,4 @@
-package com.devinsight.vegiedo.view;
+package com.devinsight.vegiedo.data.request.map;
 
 public class MapStoreCardData {
 
