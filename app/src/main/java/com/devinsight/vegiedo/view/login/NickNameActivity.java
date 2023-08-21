@@ -17,7 +17,6 @@ public class NickNameActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_nickname);
-
         tt_next = findViewById(R.id.tt_next);
         tt_next.setOnClickListener(new View.OnClickListener() {
             @Override

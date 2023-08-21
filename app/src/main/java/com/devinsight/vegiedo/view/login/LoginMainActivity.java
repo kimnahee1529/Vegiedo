@@ -20,7 +20,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.devinsight.vegiedo.ConstLoginTokenType;
 import com.devinsight.vegiedo.R;
+import com.devinsight.vegiedo.repository.pref.AuthPrefRepository;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -44,6 +46,10 @@ public class LoginMainActivity extends AppCompatActivity {
     private static final String TAG = "LOGIN";
     private GoogleSignInClient mGoogleSignInClient;
 
+    /* 로그인 토큰 저장 관련*/
+    ConstLoginTokenType constLoginTokenType;
+    AuthPrefRepository authPrefRepository;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,12 +59,13 @@ public class LoginMainActivity extends AppCompatActivity {
         btn_kakaoLogin = findViewById(R.id.btn_kakaoLogin);
         btn_googleLogin = findViewById(R.id.btn_googleLogin);
 
+        authPrefRepository = new AuthPrefRepository(this);
+
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-
 
 
         // 카카오톡이 설치되어 있는지 확인하는 메서드 , 카카오에서 제공함. 콜백 객체를 이용합.
@@ -71,6 +78,7 @@ public class LoginMainActivity extends AppCompatActivity {
                 if (oAuthToken != null) {
                     // 토큰이 전달된다면 로그인이 성공한 것이고 토큰이 전달되지 않으면 로그인 실패한다.
 //                    updateKakaoLoginUi();
+                    getKakaoAuth();
                     Intent intent = new Intent(getApplicationContext(), NickNameActivity.class);
                     startActivity(intent);
                     finish();
@@ -96,6 +104,7 @@ public class LoginMainActivity extends AppCompatActivity {
                     // 카카오톡이 설치되어 있지 않다면
                     UserApiClient.getInstance().loginWithKakaoAccount(LoginMainActivity.this, callback);
                 }
+
             }
         });
 
@@ -105,7 +114,7 @@ public class LoginMainActivity extends AppCompatActivity {
 //                googleLogin();
                 Intent signInIntent = mGoogleSignInClient.getSignInIntent();
                 googleLoginLauncher.launch(signInIntent);
-                Log.d("로그인 성공","");
+                Log.d("로그인 성공", "");
                 Intent intent = new Intent(getApplicationContext(), NickNameActivity.class);
                 startActivity(intent);
                 finish();
@@ -172,6 +181,24 @@ public class LoginMainActivity extends AppCompatActivity {
 //            }
 //        });
 //    }
+
+    public void getKakaoAuth(){
+        UserApiClient.getInstance().me(new Function2<User, Throwable, Unit>() {
+            @Override
+            public Unit invoke(User user, Throwable throwable) {
+                if(throwable != null) {
+                    Log.e("Login error", throwable.toString());
+                    return  null;
+                }
+
+                Long kakaoAuth = user.getId();
+                authPrefRepository.saveAuthToken("KAKAO", kakaoAuth.toString());
+                return null;
+            }
+        });
+    }
+
+
 
     private void getAppKeyHash() {
         try {
