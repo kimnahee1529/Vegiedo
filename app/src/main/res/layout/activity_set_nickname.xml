@@ -33,6 +33,7 @@
         tools:layout_editor_absoluteX="0dp"></TextView>
 
     <EditText
+        android:id="@+id/et_input_nick_name"
         android:layout_width="360dp"
         android:layout_height="45dp"
         android:gravity="center"

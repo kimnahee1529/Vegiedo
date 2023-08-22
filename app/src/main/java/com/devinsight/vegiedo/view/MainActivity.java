@@ -6,6 +6,7 @@ import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -55,6 +56,9 @@ public class MainActivity extends AppCompatActivity {
         searchFilterFragment = new SearchFilterFragment();
         myPageFragment = new MyPageFragment();
 
+        Intent intent = getIntent();
+        int homeFrg = intent.getIntExtra("home",0);
+
 
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
@@ -65,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
                     transaction.replace(R.id.frame, homeMainFragment).addToBackStack(null).commit();
 
                     return true;
-                } else if (item.getItemId() == R.id.nav_home) {
+                } else if (item.getItemId() == R.id.nav_home || item.getItemId() == homeFrg) {
                     topSearch.setVisibility(View.VISIBLE);
                     transaction.replace(R.id.frame, homeMainFragment).addToBackStack(null).commit();
 

@@ -6,10 +6,10 @@ public class UserData {
 
     private Long userId;
     private String userName;
-    private int userProfile;
+    private String userProfile;
     private List<String> userTagList;
 
-    public UserData(Long userId, String userName, int userProfile, List<String> userTagList) {
+    public UserData(Long userId, String userName, String userProfile, List<String> userTagList) {
         this.userId = userId;
         this.userName = userName;
         this.userProfile = userProfile;
@@ -32,11 +32,11 @@ public class UserData {
         this.userName = userName;
     }
 
-    public int getUserProfile() {
+    public String getUserProfile() {
         return userProfile;
     }
 
-    public void setUserProfile(int userProfile) {
+    public void setUserProfile(String userProfile) {
         this.userProfile = userProfile;
     }
 

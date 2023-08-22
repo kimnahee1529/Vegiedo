@@ -12,18 +12,18 @@ import com.devinsight.vegiedo.view.MainActivity;
 
 public class SelectTagActivity extends AppCompatActivity {
 
-    private TextView tt_complete;
-    private TextView tt_back;
+    private TextView btn_complete;
+    private TextView btn_back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_tag);
 
-        tt_complete = findViewById(R.id.tt_complete);
-        tt_back = findViewById(R.id.tt_back);
+        btn_complete = findViewById(R.id.tt_complete);
+        btn_back = findViewById(R.id.tt_back);
 
-        tt_complete.setOnClickListener(new View.OnClickListener() {
+        btn_complete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
@@ -32,7 +32,7 @@ public class SelectTagActivity extends AppCompatActivity {
             }
         });
 
-        tt_back.setOnClickListener(new View.OnClickListener() {
+        btn_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), NickNameActivity.class);

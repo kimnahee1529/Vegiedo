@@ -7,14 +7,14 @@ import com.google.gson.Gson;
 
 public class AuthPrefRepository {
 
-    private static final String LOGIN_TOKEN = "login_token";
+    private static final String LOGIN_INFO = "login_info";
     private String LOGIN_TYPE_KEY = "login_token";
 
     private SharedPreferences sharedPreferences;
     private Gson gson;
 
     public AuthPrefRepository(Context context){
-        sharedPreferences = context.getSharedPreferences(LOGIN_TOKEN,Context.MODE_PRIVATE);
+        sharedPreferences = context.getSharedPreferences(LOGIN_INFO,Context.MODE_PRIVATE);
         gson = new Gson();
     }
 
@@ -23,7 +23,7 @@ public class AuthPrefRepository {
     }
 
     public String getAuthToken(String loginType){
-        return sharedPreferences.getString(loginType,null);
+        return sharedPreferences.getString(loginType, null);
     }
 
     public void removeAuthToken(String loginType){
