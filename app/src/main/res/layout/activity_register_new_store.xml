@@ -160,8 +160,8 @@
         android:text="태그 *"
         android:textColor="@color/black"
         android:layout_marginTop="32dp"
-        app:layout_constraintStart_toStartOf="@+id/main_image6"
-        app:layout_constraintTop_toBottomOf="@+id/main_image6" />
+        app:layout_constraintStart_toStartOf="@+id/storeImageView"
+        app:layout_constraintTop_toBottomOf="@+id/storeImageView" />
 
     <TextView
         android:id="@+id/imagetext4"
@@ -175,11 +175,21 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <ImageView
-        android:id="@+id/main_image6"
+        android:id="@+id/store_image_plus_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/plus"
+        app:layout_constraintBottom_toBottomOf="@+id/storeImageView"
+        app:layout_constraintEnd_toEndOf="@+id/storeImageView"
+        app:layout_constraintStart_toStartOf="@+id/storeImageView"
+        app:layout_constraintTop_toTopOf="@+id/storeImageView" />
+
+    <ImageView
+        android:id="@+id/storeImageView"
         android:layout_width="85dp"
         android:layout_height="85dp"
-        android:src="@drawable/ic_launcher_background"
         android:layout_marginTop="25dp"
+        android:background="@drawable/dashed_border"
         app:layout_constraintStart_toStartOf="@+id/imagetext2"
         app:layout_constraintTop_toBottomOf="@+id/imagetext2" />
 
@@ -192,6 +202,7 @@
         android:layout_marginTop="32dp"
         app:layout_constraintStart_toStartOf="@+id/address_edit_text"
         app:layout_constraintTop_toBottomOf="@+id/address_edit_text" />
+
 
     <ImageView
         android:id="@+id/backwardBtn2"
@@ -215,7 +226,7 @@
         app:layout_constraintTop_toBottomOf="@+id/backwardBtn2" />
 
     <EditText
-        android:id="@+id/editText1"
+        android:id="@+id/store_name_edit_text"
         android:layout_width="350dp"
         android:layout_height="32dp"
         android:background="@drawable/et_custom_n"
@@ -240,8 +251,8 @@
         android:text="주소 *"
         android:textColor="@color/black"
         android:layout_marginTop="32dp"
-        app:layout_constraintStart_toStartOf="@+id/editText1"
-        app:layout_constraintTop_toBottomOf="@+id/editText1" />
+        app:layout_constraintStart_toStartOf="@+id/store_name_edit_text"
+        app:layout_constraintTop_toBottomOf="@+id/store_name_edit_text" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
