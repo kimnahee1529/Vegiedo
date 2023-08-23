@@ -30,10 +30,9 @@ public class NickNameActivity extends AppCompatActivity {
 
     private TextView btn_next;
     private EditText et_input_nick_name;
-    private LoginViewModel viewModel;
-
+    /* 뷰모델 */
+    private NickNameViewModel viewModel;
     boolean isAvaiableName;
-    String userName;
     private Dialog dialog;
     private UserPrefRepository userPrefRepository;
 
@@ -60,10 +59,14 @@ public class NickNameActivity extends AppCompatActivity {
                 return null;
             }
         };
+
         /* 필터 적용*/
         et_input_nick_name.setFilters(new InputFilter[]{filter});
+
+
         /* 뷰모델 */
-        viewModel = new ViewModelProvider(this).get(LoginViewModel.class);
+        viewModel = new ViewModelProvider(this).get(NickNameViewModel.class);
+
         /* text 내용 및 길이 입력받기*/
         et_input_nick_name.addTextChangedListener(new TextWatcher() {
             @Override

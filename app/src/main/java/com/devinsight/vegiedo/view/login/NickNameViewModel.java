@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.devinsight.vegiedo.data.request.login.NickNameStatus;
 
-public class LoginViewModel extends ViewModel {
+public class NickNameViewModel extends ViewModel {
 
     private MutableLiveData<NickNameStatus> nickNameLiveData = new MutableLiveData<>();
 

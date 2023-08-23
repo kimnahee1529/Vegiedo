@@ -14,7 +14,8 @@
     <string name="three_more">3개 이상</string>
     <string name="let_click"> 눌러주세요!</string>
 
-    <string name="select_three_or_more">관심태그를 3개이상 눌러주세요!</string>
+    <string name="select_three_or_more">관심태그를 3개 이상 눌러주세요!</string>
+    <string name="select_at_filter">"필터링에서 언제든지 다시 설정할 수 있어요!"</string>
 
     <string name="tag_fruittarian">#프루테리언</string>
     <string name="tag_vegan">#비건</string>
