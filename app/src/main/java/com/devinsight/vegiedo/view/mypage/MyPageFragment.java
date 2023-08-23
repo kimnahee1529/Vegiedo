@@ -96,21 +96,11 @@ public class MyPageFragment extends Fragment {
         newStoreRegisterText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RegisterNewStoreFragment registerFragment = new RegisterNewStoreFragment();
-
-                // FragmentTransaction 시작
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-
-                // 현재 fragment를 RegisterNewStoreFragment로 교체
-                transaction.replace(R.id.frame, registerFragment); // 'fragment_container'는 해당 Fragment를 추가하거나 교체할 레이아웃의 ID입니다. 이 이름을 실제 사용하는 이름으로 변경해야 합니다.
-
-                // (선택사항) 백스택에 추가
-                transaction.addToBackStack(null);
-
-                // 변경사항 커밋
-                transaction.commit();
+                Intent intent = new Intent(getActivity(), RegisterNewStoreActivity.class);
+                startActivity(intent);
             }
         });
+
 
         //로그아웃 텍스트 클릭
         TextView logoutText = rootView.findViewById(R.id.logout); // 가정: logout 텍스트의 ID는 logout입니다.

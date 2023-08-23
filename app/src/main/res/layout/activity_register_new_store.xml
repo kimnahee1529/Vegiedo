@@ -190,8 +190,8 @@
         android:text="사진"
         android:textColor="@color/black"
         android:layout_marginTop="32dp"
-        app:layout_constraintStart_toStartOf="@+id/editText2"
-        app:layout_constraintTop_toBottomOf="@+id/editText2" />
+        app:layout_constraintStart_toStartOf="@+id/address_edit_text"
+        app:layout_constraintTop_toBottomOf="@+id/address_edit_text" />
 
     <ImageView
         android:id="@+id/backwardBtn2"
@@ -217,17 +217,18 @@
     <EditText
         android:id="@+id/editText1"
         android:layout_width="350dp"
-        android:layout_height="30dp"
+        android:layout_height="32dp"
         android:background="@drawable/et_custom_n"
         android:layout_marginTop="15dp"
         app:layout_constraintStart_toStartOf="@+id/service_question1"
         app:layout_constraintTop_toBottomOf="@+id/service_question1" />
 
     <EditText
-        android:id="@+id/editText2"
+        android:id="@+id/address_edit_text"
         android:layout_width="350dp"
-        android:layout_height="30dp"
+        android:layout_height="32dp"
         android:background="@drawable/et_custom_n"
+        android:focusable="false"
         android:layout_marginTop="15dp"
         app:layout_constraintStart_toStartOf="@+id/service_question2"
         app:layout_constraintTop_toBottomOf="@+id/service_question2" />
