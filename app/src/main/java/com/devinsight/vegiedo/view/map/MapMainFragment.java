@@ -2,6 +2,7 @@ package com.devinsight.vegiedo.view.map;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import androidx.fragment.app.Fragment;
 
 import com.devinsight.vegiedo.R;
 import com.naver.maps.geometry.LatLng;
+import com.naver.maps.map.CameraUpdate;
 import com.naver.maps.map.LocationTrackingMode;
 import com.naver.maps.map.MapView;
 import com.naver.maps.map.NaverMap;
@@ -67,12 +69,18 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
         this.naverMap = naverMap;
 
         naverMap.setLocationSource(locationSource);
-        naverMap.setLocationTrackingMode(LocationTrackingMode.Follow);
+        LatLng defaultPosition = new LatLng(37.498095, 127.027610); //강남역
+        naverMap.moveCamera(CameraUpdate.scrollTo(defaultPosition));
+        naverMap.setLocationTrackingMode(LocationTrackingMode.NoFollow);
+
+        currentLocationMarker.setPosition(defaultPosition);
+        currentLocationMarker.setMap(naverMap); // 마커를 지도에 추가
+        currentLocationMarker.setIconTintColor(Color.RED);
 
         naverMap.addOnLocationChangeListener(location -> {
             LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-            currentLocationMarker.setPosition(currentLatLng);
-            currentLocationMarker.setMap(naverMap);
+//            currentLocationMarker.setPosition(currentLatLng);
+//            currentLocationMarker.setMap(naverMap);
         });
     }
 
