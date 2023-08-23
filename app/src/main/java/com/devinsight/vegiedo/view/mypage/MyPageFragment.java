@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,8 +28,9 @@ import com.devinsight.vegiedo.R;
 import com.devinsight.vegiedo.view.login.LoginMainActivity;
 import com.devinsight.vegiedo.view.login.NickNameActivity;
 
-//TODO : 로그아웃 기능 구현해야 함
+// TODO : 로그아웃 기능 구현해야 함
 public class MyPageFragment extends Fragment {
+    private static final int REQUEST_IMAGE_PICK = 101;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -166,6 +168,11 @@ public class MyPageFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getActivity(), "기본이미지 선택하셨습니다.", Toast.LENGTH_SHORT).show();
+
+                ImageView myImageView = getActivity().findViewById(R.id.imageView);
+                // 해당 ImageView에 img_sheep 이미지를 설정
+                myImageView.setImageResource(R.drawable.img_sheep);
+
                 dialog.dismiss();
             }
         });
@@ -174,7 +181,8 @@ public class MyPageFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getActivity(), "앨범에서 이미지를 선택하세요.", Toast.LENGTH_SHORT).show();
-                 dialog.dismiss();  // Uncomment if you want the dialog to close after selecting album image
+                ImagePickerUtil.selectImageFromGallery(MyPageFragment.this, REQUEST_IMAGE_PICK);
+                dialog.dismiss();  // Uncomment if you want the dialog to close after selecting album image
             }
         });
 
@@ -236,4 +244,26 @@ public class MyPageFragment extends Fragment {
         });
         dialog.show();
     }
+
+//    private void selectImageFromGallery() {
+//        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//        startActivityForResult(intent, REQUEST_IMAGE_PICK);
+//    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_IMAGE_PICK && resultCode == Activity.RESULT_OK) {
+
+            if (data != null) {
+
+                ImageView myImageView = getActivity().findViewById(R.id.imageView);
+                android.net.Uri selectedImageUri = data.getData();
+                myImageView.setImageURI(selectedImageUri);
+
+            }
+        }
+    }
+
 }
