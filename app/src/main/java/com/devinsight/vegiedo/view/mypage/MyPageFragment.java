@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,8 +28,9 @@ import com.devinsight.vegiedo.R;
 import com.devinsight.vegiedo.view.login.LoginMainActivity;
 import com.devinsight.vegiedo.view.login.NickNameActivity;
 
-//TODO : 로그아웃 기능 구현해야 함
+// TODO : 로그아웃 기능 구현해야 함
 public class MyPageFragment extends Fragment {
+    private static final int REQUEST_IMAGE_PICK = 101;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -37,8 +39,11 @@ public class MyPageFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_my_page, container, false);
 
         // Find the mypage_camera view and set a click listener on it
-        View mypageCamera = rootView.findViewById(R.id.mypage_camera);
-        View mypagePencil = rootView.findViewById(R.id.change_nickname_image);
+        ImageView mypageCamera = rootView.findViewById(R.id.my_page_camera_image);
+        ImageView mypagePencil = rootView.findViewById(R.id.my_page_change_nickname_image);
+
+        mypageCamera.setVisibility(View.VISIBLE);
+
 
         //프로필 사진 변경
         mypageCamera.setOnClickListener(new View.OnClickListener() {
@@ -96,24 +101,14 @@ public class MyPageFragment extends Fragment {
         newStoreRegisterText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RegisterNewStoreFragment registerFragment = new RegisterNewStoreFragment();
-
-                // FragmentTransaction 시작
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-
-                // 현재 fragment를 RegisterNewStoreFragment로 교체
-                transaction.replace(R.id.frame, registerFragment); // 'fragment_container'는 해당 Fragment를 추가하거나 교체할 레이아웃의 ID입니다. 이 이름을 실제 사용하는 이름으로 변경해야 합니다.
-
-                // (선택사항) 백스택에 추가
-                transaction.addToBackStack(null);
-
-                // 변경사항 커밋
-                transaction.commit();
+                Intent intent = new Intent(getActivity(), RegisterNewStoreActivity.class);
+                startActivity(intent);
             }
         });
 
+
         //로그아웃 텍스트 클릭
-        TextView logoutText = rootView.findViewById(R.id.logout); // 가정: logout 텍스트의 ID는 logout입니다.
+        TextView logoutText = rootView.findViewById(R.id.logout_text); // 가정: logout 텍스트의 ID는 logout입니다.
 
         logoutText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,7 +132,7 @@ public class MyPageFragment extends Fragment {
             }
         });
 
-        TextView withdrawal = rootView.findViewById(R.id.withdrawal);  // 가정: withdrawal의 ID는 withdrawal입니다.
+        TextView withdrawal = rootView.findViewById(R.id.withdrawal_text);  // 가정: withdrawal의 ID는 withdrawal입니다.
 
         withdrawal.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -176,6 +171,11 @@ public class MyPageFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getActivity(), "기본이미지 선택하셨습니다.", Toast.LENGTH_SHORT).show();
+
+                ImageView myImageView = getActivity().findViewById(R.id.my_page_profile_image);
+                // 해당 ImageView에 img_sheep 이미지를 설정
+                myImageView.setImageResource(R.drawable.img_sheep);
+
                 dialog.dismiss();
             }
         });
@@ -184,7 +184,8 @@ public class MyPageFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getActivity(), "앨범에서 이미지를 선택하세요.", Toast.LENGTH_SHORT).show();
-                 dialog.dismiss();  // Uncomment if you want the dialog to close after selecting album image
+                ImagePickerUtil.selectImageFromGallery(MyPageFragment.this, REQUEST_IMAGE_PICK);
+                dialog.dismiss();  // Uncomment if you want the dialog to close after selecting album image
             }
         });
 
@@ -246,4 +247,26 @@ public class MyPageFragment extends Fragment {
         });
         dialog.show();
     }
+
+//    private void selectImageFromGallery() {
+//        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//        startActivityForResult(intent, REQUEST_IMAGE_PICK);
+//    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_IMAGE_PICK && resultCode == Activity.RESULT_OK) {
+
+            if (data != null) {
+
+                ImageView myImageView = getActivity().findViewById(R.id.my_page_profile_image);
+                android.net.Uri selectedImageUri = data.getData();
+                myImageView.setImageURI(selectedImageUri);
+
+            }
+        }
+    }
+
 }

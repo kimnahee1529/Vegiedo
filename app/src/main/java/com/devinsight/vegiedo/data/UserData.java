@@ -1,4 +1,4 @@
-package com.devinsight.vegiedo.Data;
+package com.devinsight.vegiedo.data;
 
 import java.util.ArrayList;
 import java.util.List;
