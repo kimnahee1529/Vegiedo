@@ -24,6 +24,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.bumptech.glide.Glide;
 import com.devinsight.vegiedo.R;
 import com.devinsight.vegiedo.view.login.LoginMainActivity;
 import com.devinsight.vegiedo.view.login.NickNameActivity;
@@ -263,8 +264,11 @@ public class MyPageFragment extends Fragment {
 
                 ImageView myImageView = getActivity().findViewById(R.id.my_page_profile_image);
                 android.net.Uri selectedImageUri = data.getData();
-                myImageView.setImageURI(selectedImageUri);
-
+//                myImageView.setImageURI(selectedImageUri);
+                Glide.with(this)
+                        .load(selectedImageUri)
+                        .circleCrop()  // 원형 이미지로 변환
+                        .into(myImageView);
             }
         }
     }

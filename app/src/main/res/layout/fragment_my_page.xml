@@ -246,8 +246,8 @@
 
         <ImageView
             android:id="@+id/my_page_profile_background"
-            android:layout_width="130dp"
-            android:layout_height="130dp"
+            android:layout_width="125dp"
+            android:layout_height="125dp"
             android:layout_marginStart="140dp"
             android:layout_marginEnd="141dp"
             android:layout_marginBottom="392dp"
@@ -262,8 +262,8 @@
 
         <ImageView
             android:id="@+id/my_page_profile_image"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
+            android:layout_width="125dp"
+            android:layout_height="125dp"
             app:layout_constraintBottom_toBottomOf="@+id/my_page_profile_background"
             app:layout_constraintEnd_toEndOf="@+id/my_page_profile_background"
             app:layout_constraintStart_toStartOf="@+id/my_page_profile_background"
