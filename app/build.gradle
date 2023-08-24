@@ -3,9 +3,16 @@ plugins {
     id("com.google.gms.google-services")
 }
 
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
 android {
     namespace 'com.devinsight.vegiedo'
     compileSdk 33
+
+    buildFeatures {
+        buildConfig true
+    }
 
     defaultConfig {
         applicationId "com.devinsight.vegiedo"
@@ -15,6 +22,11 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField "String", "GOOGLE_CLIENT_ID", '"google_client_id"'
+        buildConfigField "String", "GOOGLE_CLIENT_SECRET", '"google_client_secret"'
+
+
     }
 
     buildTypes {
