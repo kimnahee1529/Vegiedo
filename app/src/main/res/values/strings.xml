@@ -1,36 +1,37 @@
 <resources>
     <string name="app_name">vegiedo</string>
-    <string name="vegiedo에오신것을">VEGIEDO에 오신 것을</string>
-    <string name="환영해요">환영해요!</string>
-    <string name="간편로그인">간편로그인으로 시작할까요?</string>
-    <string name="닉네임">닉네임을 설정해주세요</string>
+    <string name="come_in_vegiedo">VEGIEDO에 오신 것을</string>
+    <string name="welcom">환영해요!</string>
+    <string name="easy_login">간편로그인으로 시작할까요?</string>
+    <string name="set_nickname">닉네임을 설정해주세요</string>
 
-    <string name="닉네임최소글자">닉네임은 최소 2글자 이상 입력하셔야해요!</string>
-    <string name="누군가쓰고">누군가 쓰고있는 닉네입 입니다.</string>
-    <string name="다시적어">다시 적어주세요!</string>
+    <string name="min_char">닉네임은 최소 2글자 이상 입력하셔야해요!</string>
+    <string name="duplication_name">누군가 쓰고있는 닉네입 입니다.</string>
+    <string name="try_again">다시 적어주세요!</string>
 
-    <string name="모든걸먹는토끼">모든걸먹는토끼430님</string>
-    <string name="모든걸먹는토끼2">관심 태그를  </string>
-    <string name="모든걸먹는토끼3">3개 이상</string>
-    <string name="모든걸먹는토끼4"> 눌러주세요!</string>
+    <string name="hey_rabbit">모든걸먹는토끼430님</string>
+    <string name="interested_tag">관심 태그를  </string>
+    <string name="three_more">3개 이상</string>
+    <string name="let_click"> 눌러주세요!</string>
 
-    <string name="관심태그를3개이상">관심태그를 3개이상 눌러주세요!</string>
+    <string name="select_three_or_more">관심태그를 3개 이상 눌러주세요!</string>
+    <string name="select_at_filter">"필터링에서 언제든지 다시 설정할 수 있어요!"</string>
 
-    <string name="tag1">#프루테리언</string>
-    <string name="tag2">#비건</string>
-    <string name="tag3">#락토</string>
-    <string name="tag4">#오보</string>
-    <string name="tag5">#락토 오보</string>
-    <string name="tag6">#페스코</string>
-    <string name="tag7">#폴로</string>
-    <string name="tag8">#키토</string>
-    <string name="tag9">#글루텐프리</string>
+    <string name="tag_fruittarian">#프루테리언</string>
+    <string name="tag_vegan">#비건</string>
+    <string name="tag_lacto">#락토</string>
+    <string name="tag_ovo">#오보</string>
+    <string name="tag_lacto_ovo">#락토 오보</string>
+    <string name="tag_pescatarian">#페스코</string>
+    <string name="tag_pollo">#폴로</string>
+    <string name="tag_keto">#키토</string>
+    <string name="tag_gluten_free">#글루텐프리</string>
 
     <string name="review">솔직 리뷰</string>
     <string name="storeName">가게이름</string>
     <string name="storeTag">#태그</string>
 
-    <string name="추천태그">추천태그</string>
+    <string name="recommended_tag">추천태그</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
