@@ -266,7 +266,15 @@ public class SelectTagActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (userTagList != null && userTagList.size() >= 3) {
-                    userPrefRepository.saveUserTags(userTagList);
+                    if(userPrefRepository.loadTagList() == null ){
+                        userPrefRepository.saveUserTags(userTagList);
+                        Log.d("태그","저장됨");
+                    } else{
+                        userPrefRepository.removeTagList();
+                        Log.d("태그","삭제됨");
+                        userPrefRepository.saveUserTags(userTagList);
+                        Log.d("태그","저장됨 2 ");
+                    }
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);
                     finish();

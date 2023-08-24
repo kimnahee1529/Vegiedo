@@ -15,7 +15,7 @@ import java.util.List;
 
 public class UserPrefRepository {
 
-    private static final String USER_INFO = "use_info";
+    private static final String USER_INFO = "user_info";
     private String USER_TAG_KEY = "user_tags"; // json으로 불러오기 위해 필요한 키 ( KEY, json) -> json의 내용 ( DataClass)이 KEY 값에 따라 불려온다.
 
     private SharedPreferences sharedPreferences;
@@ -36,13 +36,18 @@ public class UserPrefRepository {
         sharedPreferences.edit().putString(USER_TAG_KEY, json).apply();
     }
 
-    public ArrayList<String> loadTagList(List<String> tagList){
+    public ArrayList<String> loadTagList(){
         String json = sharedPreferences.getString(USER_TAG_KEY, null);
         if( json != null ) {
             Type type = new TypeToken<ArrayList<String>>() {}.getType();
             return gson.fromJson(json, type);
         }
         return new ArrayList<>();
+    }
+
+    public void removeTagList(){
+        sharedPreferences.edit().remove(USER_TAG_KEY).apply();
+
     }
 
     public void clearUserInfo(){
