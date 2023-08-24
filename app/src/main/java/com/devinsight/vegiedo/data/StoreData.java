@@ -1,4 +1,4 @@
-package com.devinsight.vegiedo.Data;
+package com.devinsight.vegiedo.data;
 
 public class StoreData {
     String storeName;
