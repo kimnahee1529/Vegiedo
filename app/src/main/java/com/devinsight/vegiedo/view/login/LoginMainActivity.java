@@ -1,13 +1,8 @@
 package com.devinsight.vegiedo.view.login;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -17,16 +12,9 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.devinsight.vegiedo.BuildConfig;
 import com.devinsight.vegiedo.ConstLoginTokenType;
-import com.devinsight.vegiedo.GoogleLoginRequestDTO;
-import com.devinsight.vegiedo.GoogleLoginResponseDTO;
 import com.devinsight.vegiedo.R;
-import com.devinsight.vegiedo.RetrofitClient;
 import com.devinsight.vegiedo.data.request.login.UserInfoTag;
 import com.devinsight.vegiedo.repository.pref.AuthPrefRepository;
 import com.devinsight.vegiedo.repository.pref.UserPrefRepository;
@@ -49,11 +37,7 @@ import com.kakao.sdk.user.model.User;
 import java.security.MessageDigest;
 
 import kotlin.Unit;
-import kotlin.jvm.functions.Function1;
 import kotlin.jvm.functions.Function2;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class LoginMainActivity extends AppCompatActivity {
 
