@@ -30,8 +30,6 @@ public class SplashActivity extends AppCompatActivity {
         authPrefRepository = new AuthPrefRepository(this);
         userPrefRepository = new UserPrefRepository(this);
 
-        loginCheck();
-
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
@@ -46,16 +44,15 @@ public class SplashActivity extends AppCompatActivity {
     private void loginCheck() {
         String kakaoAuth = authPrefRepository.getAuthToken("KAKAO");
         homeMainFragment = new HomeMainFragment();
+        Intent intent;
         if (kakaoAuth != null) {
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            intent = new Intent(getApplicationContext(), MainActivity.class);
             intent.putExtra("home", R.id.nav_home);
-            startActivity(intent);
-            finish();
-        } else if (kakaoAuth == null) {
-            Intent intent = new Intent(getApplicationContext(), LoginMainActivity.class);
-            startActivity(intent);
-            finish();
+        } else {
+            intent = new Intent(getApplicationContext(), LoginMainActivity.class);
         }
+        startActivity(intent);
+        finish();
     }
 
     public void loadUserInfo(){

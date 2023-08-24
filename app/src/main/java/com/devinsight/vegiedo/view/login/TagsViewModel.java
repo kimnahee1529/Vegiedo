@@ -6,12 +6,6 @@ import androidx.lifecycle.ViewModel;
 
 import com.devinsight.vegiedo.data.request.login.TagStatus;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 public class TagsViewModel extends ViewModel {
 //    private final MutableLiveData<List<String>> tagLiveData = new MutableLiveData<>();
 //    private Map<Integer, MutableLiveData<Boolean>> toggleStatesLiveData = new HashMap<>();
@@ -36,7 +30,7 @@ public class TagsViewModel extends ViewModel {
         tagStatusLiveData.setValue(tagStatus);
     }
 
-    public LiveData<TagStatus> getTagStatusLieveData(){
+    public LiveData<TagStatus> getTagStatusLiveData(){
         return tagStatusLiveData;
     }
 

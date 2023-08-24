@@ -8,7 +8,7 @@ import com.google.gson.Gson;
 public class AuthPrefRepository {
 
     private static final String LOGIN_INFO = "login_info";
-    private String LOGIN_TYPE_KEY = "login_token";
+    private static final String LOGIN_TYPE_KEY = "login_token";
 
     private SharedPreferences sharedPreferences;
     private Gson gson;

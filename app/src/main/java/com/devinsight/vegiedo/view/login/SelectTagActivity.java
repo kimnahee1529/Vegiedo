@@ -221,7 +221,7 @@ public class SelectTagActivity extends AppCompatActivity {
             }
         });
 
-        viewModel.getTagStatusLieveData().observe(this, new Observer<TagStatus>() {
+        viewModel.getTagStatusLiveData().observe(this, new Observer<TagStatus>() {
             @Override
             public void onChanged(TagStatus tagStatus) {
                 if (tagStatus.isStatus()) {
@@ -231,7 +231,6 @@ public class SelectTagActivity extends AppCompatActivity {
                 } else if (userTagList != null && !tagStatus.isStatus()) {
                     String userTagToRemove = tagStatus.getContent();  // 삭제하고자 하는 태그의 값
                     int indexToRemove = userTagList.indexOf(userTagToRemove);  // 해당 태그의 인덱스를 찾습니다.
-
                     if (indexToRemove != -1) {  // 만약 해당 태그가 리스트에 있다면
                         userTagList.remove(indexToRemove);  // 해당 인덱스의 태그를 제거합니다.
                         Log.d("리스트 삭제", "태그 : " + userTagList);
@@ -241,20 +240,23 @@ public class SelectTagActivity extends AppCompatActivity {
         });
 
 
-//        viewModel.getTagStatusLieveData().observe(this, new Observer<TagStatus>() {
+//        viewModel.getTagStatusLiveData().observe(this, new Observer<TagStatus>() {
 //            @Override
 //            public void onChanged(TagStatus tagStatus) {
 //                if (tagStatus.isStatus()) {
 //                    String userTag = tagStatus.getContent();
 //                    userTagList.add(userTag);
 //                    Log.d("리스트 추가","태그 : " + userTagList);
-//                } else if (userTagList != null && tagStatus.isStatus() == false){
-//                    for( String tag : userTagList){
-//                        if ( userTagList.contains(tag) && tagStatus.getContent() == tag){
-//                            userTagList.remove(tag);
-//                            Log.d("리스트 추가","태그 : " + userTagList);
+//                } else {
+//                    if(userTagList != null){
+//                        for( String tag : userTagList){
+//                            if ( userTagList.contains(tag) && tagStatus.getContent() == tag){
+//                                userTagList.remove(tag);
+//                                Log.d("리스트 추가","태그 : " + userTagList);
+//                            }
 //                        }
 //                    }
+//
 //                }
 //            }
 //        });
