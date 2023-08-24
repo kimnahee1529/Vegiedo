@@ -3,6 +3,7 @@ package com.devinsight.vegiedo.view;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -28,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     BottomNavigationView bottomNavigationView;
     ImageButton btn_filter;
     SearchView searchView;
-    LinearLayout topSearch;
+    Toolbar toolBar;
     Fragment homeMainFragment;
     Fragment searchMainFragment;
     Fragment searchFilterFragment;
@@ -46,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         btn_filter = findViewById(R.id.btn_filter);
         searchView = findViewById(R.id.searchView);
         bottomNavigationView = findViewById(R.id.bottom_navigation);
-        topSearch = findViewById(R.id.top_search);
+        toolBar = findViewById(R.id.toolBar);
 
 
 //      Fragment
@@ -61,22 +62,22 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 if (item.getItemId() == R.id.nav_community) {
-                    topSearch.setVisibility(View.VISIBLE);
+                    toolBar.setVisibility(View.VISIBLE);
                     transaction.replace(R.id.frame, homeMainFragment).addToBackStack(null).commit();
 
                     return true;
                 } else if (item.getItemId() == R.id.nav_home) {
-                    topSearch.setVisibility(View.VISIBLE);
+                    toolBar.setVisibility(View.VISIBLE);
                     transaction.replace(R.id.frame, homeMainFragment).addToBackStack(null).commit();
 
                     return true;
                 } else if (item.getItemId() == R.id.nav_map) {
-                    topSearch.setVisibility(View.VISIBLE);
+                    toolBar.setVisibility(View.VISIBLE);
                     transaction.replace(R.id.frame, mapMainFragment).addToBackStack(null).commit();
 
                     return true;
                 } else if (item.getItemId() == R.id.nav_user) {
-                    topSearch.setVisibility(View.GONE);
+                    toolBar.setVisibility(View.GONE);
                     transaction.replace(R.id.frame, myPageFragment).addToBackStack(null).commit();
 
                     return true;
