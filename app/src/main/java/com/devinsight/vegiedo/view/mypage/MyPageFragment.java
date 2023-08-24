@@ -39,8 +39,11 @@ public class MyPageFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_my_page, container, false);
 
         // Find the mypage_camera view and set a click listener on it
-        View mypageCamera = rootView.findViewById(R.id.mypage_camera);
-        View mypagePencil = rootView.findViewById(R.id.change_nickname_image);
+        ImageView mypageCamera = rootView.findViewById(R.id.my_page_camera_image);
+        ImageView mypagePencil = rootView.findViewById(R.id.my_page_change_nickname_image);
+
+        mypageCamera.setVisibility(View.VISIBLE);
+
 
         //프로필 사진 변경
         mypageCamera.setOnClickListener(new View.OnClickListener() {
@@ -105,7 +108,7 @@ public class MyPageFragment extends Fragment {
 
 
         //로그아웃 텍스트 클릭
-        TextView logoutText = rootView.findViewById(R.id.logout); // 가정: logout 텍스트의 ID는 logout입니다.
+        TextView logoutText = rootView.findViewById(R.id.logout_text); // 가정: logout 텍스트의 ID는 logout입니다.
 
         logoutText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,7 +132,7 @@ public class MyPageFragment extends Fragment {
             }
         });
 
-        TextView withdrawal = rootView.findViewById(R.id.withdrawal);  // 가정: withdrawal의 ID는 withdrawal입니다.
+        TextView withdrawal = rootView.findViewById(R.id.withdrawal_text);  // 가정: withdrawal의 ID는 withdrawal입니다.
 
         withdrawal.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -169,7 +172,7 @@ public class MyPageFragment extends Fragment {
             public void onClick(View v) {
                 Toast.makeText(getActivity(), "기본이미지 선택하셨습니다.", Toast.LENGTH_SHORT).show();
 
-                ImageView myImageView = getActivity().findViewById(R.id.imageView);
+                ImageView myImageView = getActivity().findViewById(R.id.my_page_profile_image);
                 // 해당 ImageView에 img_sheep 이미지를 설정
                 myImageView.setImageResource(R.drawable.img_sheep);
 
@@ -258,7 +261,7 @@ public class MyPageFragment extends Fragment {
 
             if (data != null) {
 
-                ImageView myImageView = getActivity().findViewById(R.id.imageView);
+                ImageView myImageView = getActivity().findViewById(R.id.my_page_profile_image);
                 android.net.Uri selectedImageUri = data.getData();
                 myImageView.setImageURI(selectedImageUri);
 

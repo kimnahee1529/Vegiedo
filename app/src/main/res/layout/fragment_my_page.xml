@@ -12,7 +12,7 @@
 
 
         <TextView
-            android:id="@+id/withdrawal"
+            android:id="@+id/withdrawal_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="40dp"
@@ -21,24 +21,24 @@
             android:textColor="@color/black"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/vector_8"
+            app:layout_constraintTop_toBottomOf="@+id/my_page_gray_line6"
             app:layout_constraintVertical_bias="0.05" />
 
         <TextView
-            android:id="@+id/logout"
+            android:id="@+id/logout_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:layout_marginStart="40dp"
             android:text="로그아웃"
             android:textColor="@color/black"
-            app:layout_constraintBottom_toTopOf="@+id/vector_8"
+            app:layout_constraintBottom_toTopOf="@+id/my_page_gray_line6"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/vector_6"
+            app:layout_constraintTop_toBottomOf="@+id/my_page_gray_line5"
             app:layout_constraintVertical_bias="0.536" />
 
         <View
-            android:id="@+id/vector_8"
+            android:id="@+id/my_page_gray_line6"
             android:layout_width="362dp"
             android:layout_height="1dp"
             android:layout_alignParentTop="true"
@@ -48,23 +48,23 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.51"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/vector_6" />
+            app:layout_constraintTop_toBottomOf="@+id/my_page_gray_line5" />
 
         <TextView
-            android:id="@+id/textView14"
+            android:id="@+id/open_source_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:layout_marginStart="40dp"
             android:text="오픈소스"
             android:textColor="@color/black"
-            app:layout_constraintBottom_toTopOf="@+id/vector_6"
+            app:layout_constraintBottom_toTopOf="@+id/my_page_gray_line5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/vector_4"
+            app:layout_constraintTop_toBottomOf="@+id/my_page_gray_line4"
             app:layout_constraintVertical_bias="0.542" />
 
         <View
-            android:id="@+id/vector_6"
+            android:id="@+id/my_page_gray_line5"
             android:layout_width="362dp"
             android:layout_height="1dp"
             android:layout_alignParentTop="true"
@@ -74,48 +74,48 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.51"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/vector_4" />
+            app:layout_constraintTop_toBottomOf="@+id/my_page_gray_line4" />
 
         <ImageView
-            android:id="@+id/imageView11"
+            android:id="@+id/arrow5_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="11dp"
             android:src="@drawable/arrow_right"
-            app:layout_constraintBottom_toTopOf="@+id/vector_6"
+            app:layout_constraintBottom_toTopOf="@+id/my_page_gray_line5"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.864"
-            app:layout_constraintStart_toEndOf="@+id/textView14"
-            app:layout_constraintTop_toBottomOf="@+id/vector_4"
+            app:layout_constraintStart_toEndOf="@+id/open_source_text"
+            app:layout_constraintTop_toBottomOf="@+id/my_page_gray_line4"
             app:layout_constraintVertical_bias="1.0" />
 
         <TextView
-            android:id="@+id/textView12"
+            android:id="@+id/policy_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:layout_marginStart="40dp"
             android:text="약관정책"
             android:textColor="@color/black"
-            app:layout_constraintBottom_toTopOf="@+id/vector_4"
+            app:layout_constraintBottom_toTopOf="@+id/my_page_gray_line4"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/vector_3"
+            app:layout_constraintTop_toBottomOf="@+id/my_page_gray_line3"
             app:layout_constraintVertical_bias="0.47" />
 
         <ImageView
-            android:id="@+id/imageView9"
+            android:id="@+id/arrow4_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="40dp"
             android:layout_marginBottom="11dp"
             android:src="@drawable/arrow_right"
-            app:layout_constraintBottom_toTopOf="@+id/vector_4"
+            app:layout_constraintBottom_toTopOf="@+id/my_page_gray_line4"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/vector_3"
+            app:layout_constraintTop_toBottomOf="@+id/my_page_gray_line3"
             app:layout_constraintVertical_bias="1.0" />
 
         <View
-            android:id="@+id/vector_4"
+            android:id="@+id/my_page_gray_line4"
             android:layout_width="362dp"
             android:layout_height="1dp"
             android:layout_alignParentTop="true"
@@ -125,23 +125,23 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.51"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/vector_3" />
+            app:layout_constraintTop_toBottomOf="@+id/my_page_gray_line3" />
 
         <TextView
-            android:id="@+id/textView11"
+            android:id="@+id/inquiry_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:layout_marginStart="40dp"
             android:text="문의기능"
             android:textColor="@color/black"
-            app:layout_constraintBottom_toTopOf="@+id/vector_3"
+            app:layout_constraintBottom_toTopOf="@+id/my_page_gray_line3"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/vector_2"
+            app:layout_constraintTop_toBottomOf="@+id/my_page_gray_line2"
             app:layout_constraintVertical_bias="0.413" />
 
         <View
-            android:id="@+id/vector_3"
+            android:id="@+id/my_page_gray_line3"
             android:layout_width="362dp"
             android:layout_height="1dp"
             android:layout_alignParentTop="true"
@@ -151,19 +151,19 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.51"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/vector_2" />
+            app:layout_constraintTop_toBottomOf="@+id/my_page_gray_line2" />
 
         <ImageView
-            android:id="@+id/imageView8"
+            android:id="@+id/arrow3_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:layout_marginBottom="11dp"
             android:layout_marginEnd="40dp"
             android:src="@drawable/arrow_right"
-            app:layout_constraintBottom_toTopOf="@+id/vector_3"
+            app:layout_constraintBottom_toTopOf="@+id/my_page_gray_line3"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/vector_2"
+            app:layout_constraintTop_toBottomOf="@+id/my_page_gray_line2"
             app:layout_constraintVertical_bias="0.516" />
 
         <TextView
@@ -174,13 +174,13 @@
             android:layout_marginTop="15dp"
             android:text="신규 가게 등록"
             android:textColor="@color/black"
-            app:layout_constraintBottom_toTopOf="@+id/vector_2"
+            app:layout_constraintBottom_toTopOf="@+id/my_page_gray_line2"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/vector_"
+            app:layout_constraintTop_toBottomOf="@+id/my_page_gray_line1"
             app:layout_constraintVertical_bias="0.454" />
 
         <View
-            android:id="@+id/vector_2"
+            android:id="@+id/my_page_gray_line2"
             android:layout_width="362dp"
             android:layout_height="1dp"
             android:layout_alignParentTop="true"
@@ -190,22 +190,22 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.489"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/vector_" />
+            app:layout_constraintTop_toBottomOf="@+id/my_page_gray_line1" />
 
         <ImageView
-            android:id="@+id/imageView7"
+            android:id="@+id/arrow2_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:layout_marginBottom="11dp"
             android:layout_marginEnd="40dp"
             android:src="@drawable/arrow_right"
-            app:layout_constraintBottom_toTopOf="@+id/vector_2"
+            app:layout_constraintBottom_toTopOf="@+id/my_page_gray_line2"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/vector_" />
+            app:layout_constraintTop_toBottomOf="@+id/my_page_gray_line1" />
 
         <View
-            android:id="@+id/vector_"
+            android:id="@+id/my_page_gray_line1"
             android:layout_width="362dp"
             android:layout_height="1dp"
             android:layout_alignParentTop="true"
@@ -220,7 +220,7 @@
             app:layout_constraintTop_toBottomOf="@+id/stamp_book_text" />
 
         <View
-            android:id="@+id/rectangle_5"
+            android:id="@+id/my_page_green_background"
             android:layout_width="match_parent"
             android:layout_height="152dp"
             android:layout_alignParentLeft="true"
@@ -232,71 +232,65 @@
 
 
         <View
-            android:id="@+id/white_rec"
+            android:id="@+id/my_page_white_rec"
             android:layout_width="match_parent"
             android:layout_height="65dp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:background="@drawable/white_rec_n"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/rectangle_5"
+            app:layout_constraintTop_toTopOf="@+id/my_page_green_background"
             app:layout_constraintVertical_bias="0.184"
             tools:layout_editor_absoluteX="0dp" />
 
         <ImageView
-            android:id="@+id/profile_background"
+            android:id="@+id/my_page_profile_background"
             android:layout_width="130dp"
             android:layout_height="130dp"
             android:layout_marginStart="140dp"
             android:layout_marginEnd="141dp"
             android:layout_marginBottom="392dp"
             android:src="@drawable/profile_circle"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/rectangle_5"
+            app:layout_constraintTop_toTopOf="@+id/my_page_green_background"
             app:layout_constraintVertical_bias="0.244" />
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/my_page_profile_image"
             android:layout_width="120dp"
             android:layout_height="120dp"
-            android:src="@drawable/img_sheep"
-            app:layout_constraintBottom_toBottomOf="@+id/profile_background"
-            app:layout_constraintEnd_toEndOf="@+id/profile_background"
-            app:layout_constraintStart_toStartOf="@+id/profile_background"
-            app:layout_constraintTop_toTopOf="@+id/profile_background"
+            app:layout_constraintBottom_toBottomOf="@+id/my_page_profile_background"
+            app:layout_constraintEnd_toEndOf="@+id/my_page_profile_background"
+            app:layout_constraintStart_toStartOf="@+id/my_page_profile_background"
+            app:layout_constraintTop_toTopOf="@+id/my_page_profile_background"
             app:layout_constraintVertical_bias="1.0" />
 
         <ImageView
-            android:id="@+id/imageView3"
+            android:id="@+id/my_page_camera_background"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_marginTop="160dp"
             android:layout_marginBottom="17dp"
             android:src="@drawable/profile_circle"
-            app:layout_constraintBottom_toTopOf="@+id/textView6"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.414"
-            app:layout_constraintStart_toStartOf="@+id/profile_background"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.944" />
+            app:layout_constraintBottom_toTopOf="@+id/my_page_nickname"
+            app:layout_constraintEnd_toEndOf="@+id/my_page_profile_background" />
 
         <ImageView
-            android:id="@+id/mypage_camera"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/my_page_camera_image"
+            android:layout_width="25dp"
+            android:layout_height="23dp"
             android:src="@drawable/camera"
-            app:layout_constraintBottom_toBottomOf="@+id/imageView3"
-            app:layout_constraintEnd_toEndOf="@+id/imageView3"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="@+id/imageView3"
-            app:layout_constraintTop_toTopOf="@+id/imageView3"
-            app:layout_constraintVertical_bias="0.5" />
+            app:layout_constraintBottom_toBottomOf="@+id/my_page_camera_background"
+            app:layout_constraintEnd_toEndOf="@+id/my_page_camera_background"
+            app:layout_constraintStart_toStartOf="@+id/my_page_camera_background"
+            app:layout_constraintTop_toTopOf="@+id/my_page_camera_background" />
 
         <TextView
-            android:id="@+id/textView6"
+            android:id="@+id/my_page_nickname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -304,21 +298,21 @@
             android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/profile_background" />
+            app:layout_constraintTop_toBottomOf="@+id/my_page_profile_background"/>
 
 
         <!-- Auto layout, variables, and unit scale are not yet supported -->
 
         <ImageView
-            android:id="@+id/change_nickname_image"
+            android:id="@+id/my_page_change_nickname_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:src="@drawable/pencil"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.047"
-            app:layout_constraintStart_toEndOf="@+id/textView6"
-            app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+            app:layout_constraintStart_toEndOf="@+id/my_page_nickname"
+            app:layout_constraintTop_toBottomOf="@+id/my_page_camera_background" />
 
         <TextView
             android:id="@+id/stamp_book_text"
@@ -330,9 +324,10 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.111"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView6" />
+            app:layout_constraintTop_toBottomOf="@+id/my_page_nickname" />
 
         <ImageView
+            android:id="@+id/arrow1_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="67dp"
@@ -342,7 +337,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toEndOf="@+id/stamp_book_text"
-            app:layout_constraintTop_toBottomOf="@+id/textView6" />
+            app:layout_constraintTop_toBottomOf="@+id/my_page_nickname" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
