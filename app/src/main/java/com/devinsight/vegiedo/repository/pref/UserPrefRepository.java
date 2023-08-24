@@ -26,7 +26,7 @@ public class UserPrefRepository {
         sharedPreferences = context.getSharedPreferences(USER_INFO,Context.MODE_PRIVATE);
         gson = new Gson();
     }
-
+    /* 첫번째 파라미터 : 정보 타입, 두번째 파라미터 : 가져올 내용*/
     public void saveUserInfo(String userInfoType, String value){
         sharedPreferences.edit().putString(userInfoType, value).apply();
 
@@ -35,6 +35,11 @@ public class UserPrefRepository {
         String json = gson.toJson(tagList);
         sharedPreferences.edit().putString(USER_TAG_KEY, json).apply();
     }
+
+    public String loadUserInfo(String userInfoType){
+        return sharedPreferences.getString(userInfoType, null);
+    }
+
 
     public ArrayList<String> loadTagList(){
         String json = sharedPreferences.getString(USER_TAG_KEY, null);
