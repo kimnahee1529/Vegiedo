@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.devinsight.vegiedo.R;
-import com.devinsight.vegiedo.view.HomeReviewData;
+import com.devinsight.vegiedo.data.request.home.HomeReviewData;
 
 import java.util.ArrayList;
 
@@ -25,10 +25,10 @@ public class HomeMainFragment extends Fragment implements HomeReviewAdapter.revi
     private static final String ARG_PARAM2 = "param2";
     private String mParam1;
     private String mParam2;
-//  뷰페이저
+    //  뷰페이저
     private ViewPager2 viewPager;
     private HomeBannerAdapter bannerAdapter;
-//  리사이클러뷰
+    //  리사이클러뷰
     private RecyclerView recyclerView;
     private HomeReviewAdapter reviewAdapter;
     private ArrayList<HomeReviewData> reviewList;
@@ -71,12 +71,12 @@ public class HomeMainFragment extends Fragment implements HomeReviewAdapter.revi
         recyclerView = view.findViewById(R.id.recycler_review_home);
         reviewList = new ArrayList<>();
 
-        reviewList.add(new HomeReviewData(R.drawable.ic_launcher_background, "Little Forest", R.string.tag1, R.string.tag2, R.string.tag3));
-        reviewList.add(new HomeReviewData(R.drawable.ic_launcher_background, "Little Forest", R.string.tag1, R.string.tag2, R.string.tag3));
-        reviewList.add(new HomeReviewData(R.drawable.ic_launcher_background, "Little Forest", R.string.tag1, R.string.tag2, R.string.tag3));
-        reviewList.add(new HomeReviewData(R.drawable.ic_launcher_background, "Little Forest", R.string.tag1, R.string.tag2, R.string.tag3));
-        reviewList.add(new HomeReviewData(R.drawable.ic_launcher_background, "Little Forest", R.string.tag1, R.string.tag2, R.string.tag3));
-        reviewList.add(new HomeReviewData(R.drawable.ic_launcher_background, "Little Forest", R.string.tag1, R.string.tag2, R.string.tag3));
+        reviewList.add(new HomeReviewData(R.drawable.ic_launcher_background, "Little Forest", R.string.tag_fruittarian, R.string.tag_vegan, R.string.tag_lacto));
+        reviewList.add(new HomeReviewData(R.drawable.ic_launcher_background, "Little Forest", R.string.tag_fruittarian, R.string.tag_vegan, R.string.tag_lacto));
+        reviewList.add(new HomeReviewData(R.drawable.ic_launcher_background, "Little Forest", R.string.tag_fruittarian, R.string.tag_vegan, R.string.tag_lacto));
+        reviewList.add(new HomeReviewData(R.drawable.ic_launcher_background, "Little Forest", R.string.tag_fruittarian, R.string.tag_vegan, R.string.tag_lacto));
+        reviewList.add(new HomeReviewData(R.drawable.ic_launcher_background, "Little Forest", R.string.tag_fruittarian, R.string.tag_vegan, R.string.tag_lacto));
+        reviewList.add(new HomeReviewData(R.drawable.ic_launcher_background, "Little Forest", R.string.tag_fruittarian, R.string.tag_vegan, R.string.tag_lacto));
 
 
         reviewAdapter = new HomeReviewAdapter(getContext(), reviewList, this);
@@ -87,8 +87,10 @@ public class HomeMainFragment extends Fragment implements HomeReviewAdapter.revi
         return view;
     }
 
+
     @Override
     public void onItemClick(HomeReviewData item) {
         Toast.makeText(getContext(), item.getStoreName() + " is clicked ", Toast.LENGTH_SHORT).show();
     }
+
 }

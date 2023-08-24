@@ -33,8 +33,8 @@
                 android:background="@drawable/btn_toogle"
                 android:checked="false"
                 android:textColor="@drawable/btn_togle_text_color"
-                android:textOff="@string/tag1"
-                android:textOn="@string/tag1"/>
+                android:textOff="@string/tag_fruittarian"
+                android:textOn="@string/tag_fruittarian"/>
 
             <ToggleButton
                 android:layout_width="100dp"
@@ -44,8 +44,8 @@
                 android:background="@drawable/btn_toogle"
                 android:checked="false"
                 android:textColor="@drawable/btn_togle_text_color"
-                android:textOff="@string/tag2"
-                android:textOn="@string/tag2"/>
+                android:textOff="@string/tag_vegan"
+                android:textOn="@string/tag_vegan"/>
 
             <ToggleButton
                 android:layout_width="100dp"
@@ -55,8 +55,8 @@
                 android:background="@drawable/btn_toogle"
                 android:checked="false"
                 android:textColor="@drawable/btn_togle_text_color"
-                android:textOff="@string/tag3"
-                android:textOn="@string/tag3"/>
+                android:textOff="@string/tag_lacto"
+                android:textOn="@string/tag_lacto"/>
 
         </LinearLayout>
 
@@ -79,8 +79,8 @@
                 android:background="@drawable/btn_toogle"
                 android:checked="false"
                 android:textColor="@drawable/btn_togle_text_color"
-                android:textOff="@string/tag4"
-                android:textOn="@string/tag5"/>
+                android:textOff="@string/tag_ovo"
+                android:textOn="@string/tag_ovo"/>
 
             <ToggleButton
                 android:layout_width="100dp"
@@ -90,8 +90,8 @@
                 android:background="@drawable/btn_toogle"
                 android:checked="false"
                 android:textColor="@drawable/btn_togle_text_color"
-                android:textOff="@string/tag5"
-                android:textOn="@string/tag5"/>
+                android:textOff="@string/tag_lacto_ovo"
+                android:textOn="@string/tag_lacto_ovo"/>
 
             <ToggleButton
                 android:layout_width="100dp"
@@ -101,8 +101,8 @@
                 android:background="@drawable/btn_toogle"
                 android:checked="false"
                 android:textColor="@drawable/btn_togle_text_color"
-                android:textOff="@string/tag6"
-                android:textOn="@string/tag6"/>
+                android:textOff="@string/tag_pescatarian"
+                android:textOn="@string/tag_pescatarian"/>
 
         </LinearLayout>
 
@@ -124,8 +124,8 @@
                 android:background="@drawable/btn_toogle"
                 android:checked="false"
                 android:textColor="@drawable/btn_togle_text_color"
-                android:textOff="@string/tag7"
-                android:textOn="@string/tag7"/>
+                android:textOff="@string/tag_pollo"
+                android:textOn="@string/tag_pollo"/>
 
             <ToggleButton
                 android:layout_width="100dp"
@@ -135,8 +135,8 @@
                 android:background="@drawable/btn_toogle"
                 android:checked="false"
                 android:textColor="@drawable/btn_togle_text_color"
-                android:textOff="@string/tag8"
-                android:textOn="@string/tag8"/>
+                android:textOff="@string/tag_keto"
+                android:textOn="@string/tag_keto"/>
 
             <ToggleButton
                 android:layout_width="100dp"
@@ -146,8 +146,8 @@
                 android:background="@drawable/btn_toogle"
                 android:checked="false"
                 android:textColor="@drawable/btn_togle_text_color"
-                android:textOff="@string/tag9"
-                android:textOn="@string/tag9"/>
+                android:textOff="@string/tag_gluten_free"
+                android:textOn="@string/tag_gluten_free" />
 
         </LinearLayout>
 

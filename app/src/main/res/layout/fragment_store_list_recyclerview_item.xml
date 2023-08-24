@@ -112,7 +112,7 @@
             android:gravity="center"
             android:background="@drawable/btn_green"
             android:textColor="#FFFFFF"
-            android:text="@string/tag1"
+            android:text="@string/tag_fruittarian"
             />
 
         <TextView
@@ -122,7 +122,7 @@
             android:gravity="center"
             android:background="@drawable/btn_green"
             android:textColor="#FFFFFF"
-            android:text="@string/tag2"/>
+            android:text="@string/tag_vegan"/>
 
     </LinearLayout>
 

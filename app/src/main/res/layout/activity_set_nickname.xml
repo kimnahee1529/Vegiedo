@@ -24,7 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="@string/닉네임"
+        android:text="@string/set_nickname"
         android:textColor="@color/black"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -33,6 +33,7 @@
         tools:layout_editor_absoluteX="0dp"></TextView>
 
     <EditText
+        android:id="@+id/et_input_nick_name"
         android:layout_width="360dp"
         android:layout_height="45dp"
         android:gravity="center"

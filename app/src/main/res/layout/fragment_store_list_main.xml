@@ -15,7 +15,7 @@
             android:id="@+id/tt_recomanded_tag"
             android:layout_width="wrap_content"
             android:layout_height="25dp"
-            android:text="@string/추천태그"
+            android:text="@string/recommended_tag"
             android:textSize="12sp"
             android:textColor="@color/black"
             android:gravity="center_vertical"
@@ -35,7 +35,7 @@
                 android:gravity="center"
                 android:background="@drawable/btn_toogle"
                 android:textColor="@color/black"
-                android:text="@string/tag1"
+                android:text="@string/tag_fruittarian"
                 />
 
             <TextView
@@ -46,7 +46,7 @@
                 android:gravity="center"
                 android:background="@drawable/btn_toogle"
                 android:textColor="@color/black"
-                android:text="@string/tag2"/>
+                android:text="@string/tag_vegan"/>
 
             <TextView
                 android:layout_width="80dp"
@@ -56,7 +56,7 @@
                 android:gravity="center"
                 android:background="@drawable/btn_toogle"
                 android:textColor="@color/black"
-                android:text="@string/tag3"/>
+                android:text="@string/tag_lacto"/>
 
         </LinearLayout>
 

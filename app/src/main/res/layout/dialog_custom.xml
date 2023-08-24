@@ -9,20 +9,21 @@
         android:layout_height="160dp"
         android:layout_gravity="center"
         android:orientation="vertical"
-        android:background="@drawable/bolder_radius_20"
+        android:background="@drawable/dialog_background_round"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
+            android:id="@+id/dialog"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:gravity="center"
             android:textColor="@color/black"
             android:padding="18dp"
-            android:text="@string/관심태그를3개이상" />
+            android:text="@string/select_three_or_more" />
 
 
     </LinearLayout>

@@ -18,11 +18,12 @@
         app:layout_constraintVertical_bias="0.315"/>
 
     <TextView
+        android:id="@+id/tt_select_tag"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="3개 이상"
-        android:textColor="#C6021A"
+        android:text="@string/select_three_or_more"
+        android:textColor="@color/black"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -36,42 +37,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="@string/모든걸먹는토끼"
+        android:text="@string/hey_rabbit"
         android:textColor="@color/black"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.46"
         tools:layout_editor_absoluteX="-2dp"/>
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="76dp"
-        android:gravity="center"
-        android:text="@string/모든걸먹는토끼2"
-        android:textColor="@color/black"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.495"/>
-
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="80dp"
-        android:gravity="center"
-        android:text="@string/모든걸먹는토끼4"
-        android:textColor="@color/black"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.495"/>
-
 
 
     <LinearLayout
@@ -94,6 +66,7 @@
             app:layout_constraintVertical_bias="0.287">
 
             <ToggleButton
+                android:id="@+id/tag_fruittarian"
                 android:layout_width="100dp"
                 android:layout_height="40dp"
                 android:layout_margin="5dp"
@@ -101,10 +74,11 @@
                 android:background="@drawable/btn_toogle"
                 android:checked="false"
                 android:textColor="@drawable/btn_togle_text_color"
-                android:textOff="@string/tag1"
-                android:textOn="@string/tag1"/>
+                android:textOff="@string/tag_fruittarian"
+                android:textOn="@string/tag_fruittarian"/>
 
             <ToggleButton
+                android:id="@+id/tag_vegan"
                 android:layout_width="100dp"
                 android:layout_height="40dp"
                 android:layout_margin="5dp"
@@ -112,10 +86,11 @@
                 android:background="@drawable/btn_toogle"
                 android:checked="false"
                 android:textColor="@drawable/btn_togle_text_color"
-                android:textOff="@string/tag2"
-                android:textOn="@string/tag2"/>
+                android:textOff="@string/tag_vegan"
+                android:textOn="@string/tag_vegan"/>
 
             <ToggleButton
+                android:id="@+id/tag_lacto"
                 android:layout_width="100dp"
                 android:layout_height="40dp"
                 android:layout_margin="5dp"
@@ -123,8 +98,8 @@
                 android:background="@drawable/btn_toogle"
                 android:checked="false"
                 android:textColor="@drawable/btn_togle_text_color"
-                android:textOff="@string/tag3"
-                android:textOn="@string/tag3"/>
+                android:textOff="@string/tag_lacto"
+                android:textOn="@string/tag_lacto"/>
 
         </LinearLayout>
 
@@ -140,6 +115,7 @@
             app:layout_constraintVertical_bias="0.444">
 
             <ToggleButton
+                android:id="@+id/tag_ovo"
                 android:layout_width="100dp"
                 android:layout_height="40dp"
                 android:layout_margin="5dp"
@@ -147,10 +123,11 @@
                 android:background="@drawable/btn_toogle"
                 android:checked="false"
                 android:textColor="@drawable/btn_togle_text_color"
-                android:textOff="@string/tag4"
-                android:textOn="@string/tag4"/>
+                android:textOff="@string/tag_ovo"
+                android:textOn="@string/tag_ovo"/>
 
             <ToggleButton
+                android:id="@+id/tag_lacto_ovo"
                 android:layout_width="100dp"
                 android:layout_height="40dp"
                 android:layout_margin="5dp"
@@ -158,10 +135,11 @@
                 android:background="@drawable/btn_toogle"
                 android:checked="false"
                 android:textColor="@drawable/btn_togle_text_color"
-                android:textOff="@string/tag5"
-                android:textOn="@string/tag5"/>
+                android:textOff="@string/tag_lacto_ovo"
+                android:textOn="@string/tag_lacto_ovo"/>
 
             <ToggleButton
+                android:id="@+id/tag_pesca"
                 android:layout_width="100dp"
                 android:layout_height="40dp"
                 android:layout_margin="5dp"
@@ -169,8 +147,8 @@
                 android:background="@drawable/btn_toogle"
                 android:checked="false"
                 android:textColor="@drawable/btn_togle_text_color"
-                android:textOff="@string/tag6"
-                android:textOn="@string/tag6"/>
+                android:textOff="@string/tag_pescatarian"
+                android:textOn="@string/tag_pescatarian"/>
         </LinearLayout>
 
         <LinearLayout
@@ -184,6 +162,7 @@
             app:layout_constraintVertical_bias="0.129">
 
             <ToggleButton
+                android:id="@+id/tag_pollo"
                 android:layout_width="100dp"
                 android:layout_height="40dp"
                 android:layout_margin="5dp"
@@ -191,10 +170,11 @@
                 android:background="@drawable/btn_toogle"
                 android:checked="false"
                 android:textColor="@drawable/btn_togle_text_color"
-                android:textOff="@string/tag7"
-                android:textOn="@string/tag7"/>
+                android:textOff="@string/tag_pollo"
+                android:textOn="@string/tag_pollo"/>
 
             <ToggleButton
+                android:id="@+id/tag_keto"
                 android:layout_width="100dp"
                 android:layout_height="40dp"
                 android:layout_margin="5dp"
@@ -202,10 +182,11 @@
                 android:background="@drawable/btn_toogle"
                 android:checked="false"
                 android:textColor="@drawable/btn_togle_text_color"
-                android:textOff="@string/tag8"
-                android:textOn="@string/tag8"/>
+                android:textOff="@string/tag_keto"
+                android:textOn="@string/tag_keto"/>
 
             <ToggleButton
+                android:id="@+id/tag_gluten"
                 android:layout_width="100dp"
                 android:layout_height="40dp"
                 android:layout_margin="5dp"
@@ -213,8 +194,8 @@
                 android:background="@drawable/btn_toogle"
                 android:checked="false"
                 android:textColor="@drawable/btn_togle_text_color"
-                android:textOff="@string/tag9"
-                android:textOn="@string/tag9"/>
+                android:textOff="@string/tag_gluten_free"
+                android:textOn="@string/tag_gluten_free"/>
 
         </LinearLayout>
 
