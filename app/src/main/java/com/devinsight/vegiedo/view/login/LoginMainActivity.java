@@ -1,25 +1,19 @@
 package com.devinsight.vegiedo.view.login;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.devinsight.vegiedo.ConstLoginTokenType;
 import com.devinsight.vegiedo.R;
 import com.devinsight.vegiedo.data.request.login.UserInfoTag;
@@ -30,15 +24,21 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 import com.kakao.sdk.auth.model.OAuthToken;
 import com.kakao.sdk.user.UserApiClient;
 import com.kakao.sdk.user.model.User;
 
+
 import java.security.MessageDigest;
 
 import kotlin.Unit;
-import kotlin.jvm.functions.Function1;
 import kotlin.jvm.functions.Function2;
 
 public class LoginMainActivity extends AppCompatActivity {
@@ -47,6 +47,8 @@ public class LoginMainActivity extends AppCompatActivity {
     private ImageView btn_googleLogin;
     private static final String TAG = "LOGIN";
     private GoogleSignInClient mGoogleSignInClient;
+    private GoogleSignInAccount googleSignInAccount;
+    private FirebaseAuth googleAuth;
 
     /* 로그인 토큰 저장 관련*/
     ConstLoginTokenType constLoginTokenType;
@@ -59,17 +61,12 @@ public class LoginMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_main);
 
+
         btn_kakaoLogin = findViewById(R.id.btn_kakaoLogin);
         btn_googleLogin = findViewById(R.id.btn_googleLogin);
 
         authPrefRepository = new AuthPrefRepository(this);
         userPrefRepository = new UserPrefRepository(this);
-
-
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
 
         // 카카오톡이 설치되어 있는지 확인하는 메서드 , 카카오에서 제공함. 콜백 객체를 이용합.
@@ -98,7 +95,7 @@ public class LoginMainActivity extends AppCompatActivity {
             }
         };
 
-        // 로그인 버튼 클릭 리스너
+        // 카카오 로그인 버튼 클릭 리스너
         btn_kakaoLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -114,79 +111,84 @@ public class LoginMainActivity extends AppCompatActivity {
             }
         });
 
+        /* 앱에 필요한 사용자 데이터를 요청하도록 로그인 옵션을 설정한다. */
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.GOOGLE_CLIENT_KEY))
+                .requestEmail()
+                .build();
+
+        /* GoogleSignInOption을 사용해 GoogleSignClient 객체 생성*/
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+        googleAuth = FirebaseAuth.getInstance();
+
+
+        /* 구글 로그인 */
         btn_googleLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                googleLogin();
-                Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-                googleLoginLauncher.launch(signInIntent);
-                Log.d("로그인 성공", "");
-                Intent intent = new Intent(getApplicationContext(), NickNameActivity.class);
-                startActivity(intent);
-                finish();
+                googleSignInAccount = GoogleSignIn.getLastSignedInAccount(LoginMainActivity.this);
+                googleSignIn();
+                Log.d("구글 로그인 1", "googleSignIn(): 성공 ");
             }
         });
-
-
-        // 로그아읏 버튼
-//        btn_kakaoLogin.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                UserApiClient.getInstance().logout(new Function1<Throwable, Unit>() {
-//                    @Override
-//                    public Unit invoke(Throwable throwable) {
-//                        updateKakaoLoginUi();
-//                        return null;
-//                    }
-//                });
-//            }
-//        });
-//
-//        updateKakaoLoginUi();
     }
 
-//    private void updateKakaoLoginUi() {
-//
-//        // 로그인 여부에 따른 UI 설정
-//        UserApiClient.getInstance().me(new Function2<User, Throwable, Unit>() {
-//            @Override
-//            public Unit invoke(User user, Throwable throwable) {
-//
-//                if (user != null) {
-//
-//                    // 유저의 아이디
-//                    Log.d(TAG, "invoke: id =" + user.getId());
-//                    // 유저의 이메일
-//                    Log.d(TAG, "invoke: email =" + user.getKakaoAccount().getEmail());
-//                    // 유저의 닉네임
-//                    Log.d(TAG, "invoke: nickname =" + user.getKakaoAccount().getProfile().getNickname());
-//                    // 유저의 성별
-//                    Log.d(TAG, "invoke: gender =" + user.getKakaoAccount().getGender());
-//                    // 유저의 연령대
-//                    Log.d(TAG, "invoke: age=" + user.getKakaoAccount().getAgeRange());
-//
-//
-//                    // 유저 닉네임 세팅해주기
-////                    nickName.setText(user.getKakaoAccount().getProfile().getNickname());
-////                    // 유저 프로필 사진 세팅해주기
-////                    Glide.with(profileImage).load(user.getKakaoAccount().getProfile().getThumbnailImageUrl()).circleCrop().into(profileImage);
-////                    Log.d(TAG, "invoke: profile = "+user.getKakaoAccount().getProfile().getThumbnailImageUrl());
-////
-////                    // 로그인이 되어있으면
-////                    loginButton.setVisibility(View.GONE);
-////                    logoutButton.setVisibility(View.VISIBLE);
-//                } else {
-//                    // 로그인 되어있지 않으면
-////                    nickName.setText(null);
-////                    profileImage.setImageBitmap(null);
-////
-////                    loginButton.setVisibility(View.VISIBLE);
-////                    logoutButton.setVisibility(View.GONE);
-//                }
-//                return null;
-//            }
-//        });
-//    }
+
+    private void googleSignIn() {
+        Intent signIntent = mGoogleSignInClient.getSignInIntent();
+        startActivityForResult(signIntent, 123);
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 123) {
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            try {
+                GoogleSignInAccount account = task.getResult(ApiException.class);
+                firebaseAuthWithGoogle(account.getIdToken());
+                handleSignInResult(task);
+            } catch (ApiException e) {
+                Log.d("실패", "실패!!!!!!!!!!!");
+            }
+
+        }
+    }
+
+    private void firebaseAuthWithGoogle(String idToken) {
+        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
+        googleAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            String firebaseToken = task.getResult().getUser().getIdToken(false).getResult().getToken();
+                            FirebaseUser user = googleAuth.getCurrentUser();
+                            authPrefRepository.saveAuthToken("GOOGLE", firebaseToken);
+
+                            Intent intent = new Intent(getApplicationContext(), NickNameActivity.class);
+                            startActivity(intent);
+                            finish();
+                            Log.d("토큰입니다", "토큰입니다" + firebaseToken);
+                        }
+                    }
+                });
+    }
+
+    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
+        try {
+            GoogleSignInAccount act = completedTask.getResult(ApiException.class);
+            if (act != null) {
+                firebaseAuthWithGoogle(act.getIdToken());
+                Uri userProfile = act.getPhotoUrl();
+                Log.d("사용자 프로필", "구글 프로필 " + userProfile);
+                userPrefRepository.saveUserInfo(UserInfoTag.USER_PROFILE.getInfoType(), userProfile.toString());
+            }
+        } catch (ApiException e) {
+
+        }
+    }
 
     public void getKakaoAuth(String kakaoAuth) {
         UserApiClient.getInstance().me(new Function2<User, Throwable, Unit>() {
@@ -196,7 +198,6 @@ public class LoginMainActivity extends AppCompatActivity {
                     Log.e("Login error", throwable.toString());
                     return null;
                 }
-
                 String userProfile = user.getKakaoAccount().getProfile().getProfileImageUrl();
                 userPrefRepository.saveUserInfo(UserInfoTag.USER_PROFILE.getInfoType(), userProfile);
                 authPrefRepository.saveAuthToken("KAKAO", kakaoAuth);
@@ -221,39 +222,6 @@ public class LoginMainActivity extends AppCompatActivity {
         } catch (Exception e) {
             Log.e("Name not found", e.toString());
         }
+
     }
-
-    public void googleLogin() {
-        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        googleLoginLauncher.launch(signInIntent);
-    }
-
-    private final ActivityResultLauncher<Intent> googleLoginLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult result) {
-                    if (result.getResultCode() == Activity.RESULT_OK) {
-                        Intent data = result.getData();
-                        Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-                        getGoogleInfo(task);
-                    }
-                }
-            });
-
-    private void getGoogleInfo(Task<GoogleSignInAccount> completedTask) {
-        String TAG = "구글 로그인 결과";
-        try {
-            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-            Log.d(TAG, account.getId());
-            Log.d(TAG, account.getFamilyName());
-            Log.d(TAG, account.getGivenName());
-            Log.d(TAG, account.getEmail());
-
-//            name.setText(account.getEmail());
-//            Toast.makeText(getApplicationContext(),"로그인 성공!",Toast.LENGTH_SHORT).show();
-        } catch (ApiException e) {
-            Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
-        }
-    }
-
 }
