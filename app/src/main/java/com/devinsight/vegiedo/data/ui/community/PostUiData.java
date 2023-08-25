@@ -1,6 +1,6 @@
-package com.devinsight.vegiedo.data.request.community;
+package com.devinsight.vegiedo.data.ui.community;
 
-public class PostData {
+public class PostUiData {
     private String writeProfileImage;
     private String postingTitle;
     private String writeName;

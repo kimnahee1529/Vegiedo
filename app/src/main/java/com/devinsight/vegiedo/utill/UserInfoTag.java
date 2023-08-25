@@ -1,4 +1,4 @@
-package com.devinsight.vegiedo.data.request.login;
+package com.devinsight.vegiedo.utill;
 
 public enum UserInfoTag {
 

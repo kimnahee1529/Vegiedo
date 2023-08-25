@@ -1,6 +1,6 @@
-package com.devinsight.vegiedo.data.request.mypage;
+package com.devinsight.vegiedo.data.ui.mypage;
 
-public class NewStoreRegisterData {
+public class NewStoreRegisterUiData {
     private String storeName;
     private String Address;
     private String Image;

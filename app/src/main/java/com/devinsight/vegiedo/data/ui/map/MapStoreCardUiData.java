@@ -1,6 +1,6 @@
-package com.devinsight.vegiedo.data.request.map;
+package com.devinsight.vegiedo.data.ui.map;
 
-public class MapStoreCardData {
+public class MapStoreCardUiData {
 
 
     private int storeImage;
@@ -13,7 +13,7 @@ public class MapStoreCardData {
     private String address;
     private boolean like;
 
-    public MapStoreCardData(int storeImage, int storeTag1, int storeTag2, int reviewer, int starlating, int distance, String storeName, String address, boolean like) {
+    public MapStoreCardUiData(int storeImage, int storeTag1, int storeTag2, int reviewer, int starlating, int distance, String storeName, String address, boolean like) {
         this.storeImage = storeImage;
         this.storeTag1 = storeTag1;
         this.storeTag2 = storeTag2;

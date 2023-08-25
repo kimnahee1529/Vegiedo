@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.devinsight.vegiedo.R;
-import com.devinsight.vegiedo.data.request.search.SearchStorSummaryeData;
+import com.devinsight.vegiedo.data.ui.search.SearchStorSummaryeUiData;
 
 import java.util.ArrayList;
 
@@ -27,7 +27,7 @@ public class SearchMainFragment extends Fragment implements SearchFragmentAdapte
 
     private RecyclerView recyclerView;
     private SearchFragmentAdapter searchAdapter;
-    private ArrayList<SearchStorSummaryeData> storeList;
+    private ArrayList<SearchStorSummaryeUiData> storeList;
 
     public SearchMainFragment() {
 
@@ -69,12 +69,12 @@ public class SearchMainFragment extends Fragment implements SearchFragmentAdapte
         recyclerView = view.findViewById(R.id.recycler_search_page);
         storeList = new ArrayList<>();
 
-        storeList.add(new SearchStorSummaryeData(R.drawable.ic_launcher_background,"Little Forest","집이최고야"));
-        storeList.add(new SearchStorSummaryeData(R.drawable.ic_launcher_background,"Little Forest","집이최고야"));
-        storeList.add(new SearchStorSummaryeData(R.drawable.ic_launcher_background,"Little Forest","집이최고야"));
-        storeList.add(new SearchStorSummaryeData(R.drawable.ic_launcher_background,"Little Forest","집이최고야"));
-        storeList.add(new SearchStorSummaryeData(R.drawable.ic_launcher_background,"Little Forest","집이최고야"));
-        storeList.add(new SearchStorSummaryeData(R.drawable.ic_launcher_background,"Little Forest","집이최고야"));
+        storeList.add(new SearchStorSummaryeUiData(R.drawable.ic_launcher_background,"Little Forest","집이최고야"));
+        storeList.add(new SearchStorSummaryeUiData(R.drawable.ic_launcher_background,"Little Forest","집이최고야"));
+        storeList.add(new SearchStorSummaryeUiData(R.drawable.ic_launcher_background,"Little Forest","집이최고야"));
+        storeList.add(new SearchStorSummaryeUiData(R.drawable.ic_launcher_background,"Little Forest","집이최고야"));
+        storeList.add(new SearchStorSummaryeUiData(R.drawable.ic_launcher_background,"Little Forest","집이최고야"));
+        storeList.add(new SearchStorSummaryeUiData(R.drawable.ic_launcher_background,"Little Forest","집이최고야"));
 
         searchAdapter = new SearchFragmentAdapter(getContext(),storeList,this);
         recyclerView.setAdapter(searchAdapter);
@@ -85,7 +85,7 @@ public class SearchMainFragment extends Fragment implements SearchFragmentAdapte
     }
 
     @Override
-    public void onSearchItemClick(SearchStorSummaryeData searchData) {
+    public void onSearchItemClick(SearchStorSummaryeUiData searchData) {
         Toast.makeText(getContext(),searchData.getStoreName() + " is clicked ",Toast.LENGTH_SHORT).show();
     }
 

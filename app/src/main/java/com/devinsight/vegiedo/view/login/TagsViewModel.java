@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.devinsight.vegiedo.data.request.login.TagStatus;
+import com.devinsight.vegiedo.data.ui.login.TagStatus;
 
 public class TagsViewModel extends ViewModel {
 //    private final MutableLiveData<List<String>> tagLiveData = new MutableLiveData<>();

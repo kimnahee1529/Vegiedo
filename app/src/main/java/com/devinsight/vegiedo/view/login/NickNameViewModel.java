@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.devinsight.vegiedo.data.request.login.NickNameStatus;
+import com.devinsight.vegiedo.data.ui.login.NickNameStatus;
 
 public class NickNameViewModel extends ViewModel {
 

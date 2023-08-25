@@ -3,8 +3,6 @@ package com.devinsight.vegiedo.repository.pref;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.devinsight.vegiedo.data.request.login.UserData;
-import com.devinsight.vegiedo.data.request.login.VeganTag;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 

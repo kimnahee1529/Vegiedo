@@ -1,6 +1,6 @@
-package com.devinsight.vegiedo.data.request.store;
+package com.devinsight.vegiedo.data.ui.store;
 
-public class StoreDetailData {
+public class StoreDetailUiData {
     private String userName;
     private String userProfileImage;
     private int numOfHeart;

@@ -14,17 +14,17 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.devinsight.vegiedo.R;
-import com.devinsight.vegiedo.data.request.map.MapStoreCardData;
+import com.devinsight.vegiedo.data.ui.map.MapStoreCardUiData;
 
 import java.util.ArrayList;
 
 public class MapStoreCardAdapter extends RecyclerView.Adapter<MapStoreCardAdapter.cardViewHolder> {
 
-    private ArrayList<MapStoreCardData> cardDataList;
+    private ArrayList<MapStoreCardUiData> cardDataList;
     Context context;
     protected mapCardItemListner mapCardItemListner;
 
-    public MapStoreCardAdapter(Context context, ArrayList<MapStoreCardData> cardList, mapCardItemListner itemListner ){
+    public MapStoreCardAdapter(Context context, ArrayList<MapStoreCardUiData> cardList, mapCardItemListner itemListner ){
         this.cardDataList = cardList;
         this.context = context;
         this.mapCardItemListner = itemListner;
@@ -59,7 +59,7 @@ public class MapStoreCardAdapter extends RecyclerView.Adapter<MapStoreCardAdapte
         private TextView distance;
         private TextView reviewers;
         private ToggleButton like;
-        MapStoreCardData cardData;
+        MapStoreCardUiData cardData;
 
 
         public cardViewHolder(@NonNull View itemView) {
@@ -77,7 +77,7 @@ public class MapStoreCardAdapter extends RecyclerView.Adapter<MapStoreCardAdapte
             like = itemView.findViewById(R.id.btn_map_store_like);
         }
 
-        public void setData(MapStoreCardData cardData){
+        public void setData(MapStoreCardUiData cardData){
             this.cardData = cardData;
 
             storeImage.setImageResource(cardData.getStoreImage());
@@ -100,6 +100,6 @@ public class MapStoreCardAdapter extends RecyclerView.Adapter<MapStoreCardAdapte
     }
 
     public interface mapCardItemListner{
-        void onCardClick(MapStoreCardData item);
+        void onCardClick(MapStoreCardUiData item);
     }
 }

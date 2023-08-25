@@ -16,7 +16,7 @@ import android.widget.ImageView;
 
 import com.devinsight.vegiedo.ConstLoginTokenType;
 import com.devinsight.vegiedo.R;
-import com.devinsight.vegiedo.data.request.login.UserInfoTag;
+import com.devinsight.vegiedo.utill.UserInfoTag;
 import com.devinsight.vegiedo.repository.pref.AuthPrefRepository;
 import com.devinsight.vegiedo.repository.pref.UserPrefRepository;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;

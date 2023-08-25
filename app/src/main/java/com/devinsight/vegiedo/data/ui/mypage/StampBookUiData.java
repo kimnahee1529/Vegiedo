@@ -1,6 +1,6 @@
-package com.devinsight.vegiedo.data.request.mypage;
+package com.devinsight.vegiedo.data.ui.mypage;
 
-public class StampBookData {
+public class StampBookUiData {
     private String storeImage;
     private String storeTitle;
     private String storeAddress;

@@ -11,18 +11,18 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.devinsight.vegiedo.R;
-import com.devinsight.vegiedo.data.request.search.SearchStorSummaryeData;
+import com.devinsight.vegiedo.data.ui.search.SearchStorSummaryeUiData;
 
 import java.util.ArrayList;
 
 public class SearchFragmentAdapter extends RecyclerView.Adapter<SearchFragmentAdapter.SearchViewHolder>{
 
-    private ArrayList<SearchStorSummaryeData> storeList;
+    private ArrayList<SearchStorSummaryeUiData> storeList;
     Context context;
 
     protected searchItemListner searchItemListner;
 
-    public SearchFragmentAdapter(Context context, ArrayList<SearchStorSummaryeData> storeList, searchItemListner searchItemListner){
+    public SearchFragmentAdapter(Context context, ArrayList<SearchStorSummaryeUiData> storeList, searchItemListner searchItemListner){
         this.storeList = storeList;
         this.context = context;
     }
@@ -51,7 +51,7 @@ public class SearchFragmentAdapter extends RecyclerView.Adapter<SearchFragmentAd
         private TextView searchStoreName;
         private TextView searchStoreAddress;
         private View viewLine;
-        SearchStorSummaryeData searchData;
+        SearchStorSummaryeUiData searchData;
         public SearchViewHolder(@NonNull View itemView) {
             super(itemView);
 
@@ -62,7 +62,7 @@ public class SearchFragmentAdapter extends RecyclerView.Adapter<SearchFragmentAd
             viewLine = itemView.findViewById(R.id.view_line);
         }
 
-        public void setSearchData(SearchStorSummaryeData searchData){
+        public void setSearchData(SearchStorSummaryeUiData searchData){
             this.searchData = searchData;
 
             searchStoreImage.setImageResource(searchData.getStoreImage());
@@ -80,7 +80,7 @@ public class SearchFragmentAdapter extends RecyclerView.Adapter<SearchFragmentAd
     }
 
     public interface searchItemListner{
-        void onSearchItemClick(SearchStorSummaryeData searchData);
+        void onSearchItemClick(SearchStorSummaryeUiData searchData);
     }
 
 }

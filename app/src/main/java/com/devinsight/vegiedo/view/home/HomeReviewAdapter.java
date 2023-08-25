@@ -12,17 +12,17 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.devinsight.vegiedo.R;
-import com.devinsight.vegiedo.data.request.home.HomeReviewData;
+import com.devinsight.vegiedo.data.ui.home.HomeReviewUiData;
 
 import java.util.ArrayList;
 
 public class HomeReviewAdapter extends RecyclerView.Adapter<HomeReviewAdapter.ReviewViewHolder>{
 
-    private ArrayList<HomeReviewData> reviewList;
+    private ArrayList<HomeReviewUiData> reviewList;
     Context context;
     protected reviewItemListner reviewItemListner;
 
-    public HomeReviewAdapter(Context context, ArrayList<HomeReviewData> reviewList, reviewItemListner itemListner){
+    public HomeReviewAdapter(Context context, ArrayList<HomeReviewUiData> reviewList, reviewItemListner itemListner){
         this.reviewList = reviewList;
         this.context = context;
         this.reviewItemListner = itemListner;
@@ -53,7 +53,7 @@ public class HomeReviewAdapter extends RecyclerView.Adapter<HomeReviewAdapter.Re
         private TextView storeTag1;
         private TextView storeTag2;
         private TextView storeTag3;
-        HomeReviewData reviewItem;
+        HomeReviewUiData reviewItem;
 
         public ReviewViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -67,7 +67,7 @@ public class HomeReviewAdapter extends RecyclerView.Adapter<HomeReviewAdapter.Re
             storeTag3 = itemView.findViewById(R.id.store_tag3);
 
         }
-        public void setData(HomeReviewData reviewItem){
+        public void setData(HomeReviewUiData reviewItem){
             this.reviewItem = reviewItem;
 
             storeImage.setImageResource(reviewItem.getStoreImage());
@@ -87,7 +87,7 @@ public class HomeReviewAdapter extends RecyclerView.Adapter<HomeReviewAdapter.Re
     }
 
     public interface reviewItemListner {
-        void onItemClick(HomeReviewData item);
+        void onItemClick(HomeReviewUiData item);
 
     }
 

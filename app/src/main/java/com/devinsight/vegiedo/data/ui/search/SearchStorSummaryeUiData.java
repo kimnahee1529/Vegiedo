@@ -1,11 +1,11 @@
-package com.devinsight.vegiedo.data.request.search;
+package com.devinsight.vegiedo.data.ui.search;
 
-public class SearchStorSummaryeData {
+public class SearchStorSummaryeUiData {
     private int storeImage;
     private String storeName;
     private String storeAddress;
 
-    public SearchStorSummaryeData(int storeImage, String storeName, String storeAddress) {
+    public SearchStorSummaryeUiData(int storeImage, String storeName, String storeAddress) {
         this.storeImage = storeImage;
         this.storeName = storeName;
         this.storeAddress = storeAddress;

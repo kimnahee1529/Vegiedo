@@ -1,6 +1,6 @@
-package com.devinsight.vegiedo.data.request.home;
+package com.devinsight.vegiedo.data.ui.home;
 
-public class HomeReviewData {
+public class HomeReviewUiData {
 
     private int storeImage;
     private String storeName;
@@ -8,7 +8,7 @@ public class HomeReviewData {
     private int storeTag2;
     private int storeTag3;
 
-    public HomeReviewData(int storeImage, String storeName, int storeTag1, int storeTag2, int storeTag3) {
+    public HomeReviewUiData(int storeImage, String storeName, int storeTag1, int storeTag2, int storeTag3) {
         this.storeImage = storeImage;
         this.storeName = storeName;
         this.storeTag1 = storeTag1;

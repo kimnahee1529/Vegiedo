@@ -1,6 +1,6 @@
-package com.devinsight.vegiedo.data.request.community;
+package com.devinsight.vegiedo.data.ui.community;
 
-public class GeneralPostData {
+public class GeneralPostUiData {
     private String bannerImage;
     private String postingImage;
     private String postingTitle;

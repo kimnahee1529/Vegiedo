@@ -20,8 +20,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.devinsight.vegiedo.R;
-import com.devinsight.vegiedo.data.request.login.NickNameStatus;
-import com.devinsight.vegiedo.data.request.login.UserInfoTag;
+import com.devinsight.vegiedo.data.ui.login.NickNameStatus;
+import com.devinsight.vegiedo.utill.UserInfoTag;
 import com.devinsight.vegiedo.repository.pref.UserPrefRepository;
 
 import java.util.regex.Pattern;

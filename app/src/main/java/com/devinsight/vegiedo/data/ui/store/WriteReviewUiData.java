@@ -1,6 +1,6 @@
-package com.devinsight.vegiedo.data.request.store;
+package com.devinsight.vegiedo.data.ui.store;
 
-public class WriteReviewData {
+public class WriteReviewUiData {
     private String review;
     private int numOfStar;
     private String storePicture;

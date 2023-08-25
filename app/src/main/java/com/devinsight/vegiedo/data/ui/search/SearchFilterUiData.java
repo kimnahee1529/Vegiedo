@@ -1,8 +1,8 @@
-package com.devinsight.vegiedo.data.request.search;
+package com.devinsight.vegiedo.data.ui.search;
 
 import java.util.List;
 
-public class SearchFilterData {
+public class SearchFilterUiData {
     private int searchAreaRange;
     private List<String> searchTagList;
     private double latitude;

@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.devinsight.vegiedo.R;
-import com.devinsight.vegiedo.data.request.map.MapStoreCardData;
+import com.devinsight.vegiedo.data.ui.map.MapStoreCardUiData;
 
 import java.util.ArrayList;
 
@@ -29,7 +29,7 @@ public class MapStoreCardViewFragment extends Fragment implements MapStoreCardAd
     private MapStoreCardAdapter cardAdapter;
 
     private RecyclerView recyclerView;
-    private ArrayList<MapStoreCardData> cardDataList;
+    private ArrayList<MapStoreCardUiData> cardDataList;
 
     public MapStoreCardViewFragment() {
         // Required empty public constructor
@@ -65,7 +65,7 @@ public class MapStoreCardViewFragment extends Fragment implements MapStoreCardAd
     }
 
     @Override
-    public void onCardClick(MapStoreCardData item) {
+    public void onCardClick(MapStoreCardUiData item) {
         Toast.makeText(getContext(), item.getStoreName() + " is clicked", Toast.LENGTH_SHORT).show();
     }
 }

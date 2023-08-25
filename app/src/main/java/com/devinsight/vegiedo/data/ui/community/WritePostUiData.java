@@ -1,6 +1,6 @@
-package com.devinsight.vegiedo.data.request.community;
+package com.devinsight.vegiedo.data.ui.community;
 
-public class WritePostData {
+public class WritePostUiData {
     private String title;
     private String review;
     private int numOfStar;

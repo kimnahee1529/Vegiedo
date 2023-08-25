@@ -20,8 +20,8 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.devinsight.vegiedo.R;
-import com.devinsight.vegiedo.data.request.login.TagStatus;
-import com.devinsight.vegiedo.data.request.login.VeganTag;
+import com.devinsight.vegiedo.data.ui.login.TagStatus;
+import com.devinsight.vegiedo.utill.VeganTag;
 import com.devinsight.vegiedo.repository.pref.UserPrefRepository;
 import com.devinsight.vegiedo.view.MainActivity;
 

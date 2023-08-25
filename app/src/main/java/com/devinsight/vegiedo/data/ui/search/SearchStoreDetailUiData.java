@@ -1,6 +1,6 @@
-package com.devinsight.vegiedo.data.request.search;
+package com.devinsight.vegiedo.data.ui.search;
 
-public class SearchStoreDetailData {
+public class SearchStoreDetailUiData {
     private int storeImage;
     private int storeTag1;
     private int storeTag2;
