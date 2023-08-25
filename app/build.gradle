@@ -63,6 +63,7 @@ dependencies {
 //  파이어베이스
     implementation 'com.google.firebase:firebase-auth:22.1.1'
     implementation 'com.google.firebase:firebase-core:21.1.1'
+    implementation("com.google.android.gms:play-services-auth:20.6.0")
 //  카드뷰
     implementation 'androidx.cardview:cardview:1.0.0'
 //  뷰페이저

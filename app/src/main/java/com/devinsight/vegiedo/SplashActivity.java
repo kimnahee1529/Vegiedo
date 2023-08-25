@@ -43,9 +43,10 @@ public class SplashActivity extends AppCompatActivity {
 
     private void loginCheck() {
         String kakaoAuth = authPrefRepository.getAuthToken("KAKAO");
+        String googleAuth = authPrefRepository.getAuthToken("GOOGLE");
         homeMainFragment = new HomeMainFragment();
         Intent intent;
-        if (kakaoAuth != null) {
+        if (( kakaoAuth != null) || (googleAuth != null)) {
             intent = new Intent(getApplicationContext(), MainActivity.class);
             intent.putExtra("home", R.id.nav_home);
         } else {
@@ -53,6 +54,7 @@ public class SplashActivity extends AppCompatActivity {
         }
         startActivity(intent);
         finish();
+
     }
 
     public void loadUserInfo(){

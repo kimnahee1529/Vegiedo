@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
@@ -28,6 +29,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.kakao.sdk.auth.model.OAuthToken;
 import com.kakao.sdk.user.UserApiClient;
@@ -45,7 +47,7 @@ public class LoginMainActivity extends AppCompatActivity {
     private ImageView btn_googleLogin;
     private static final String TAG = "LOGIN";
     private GoogleSignInClient mGoogleSignInClient;
-
+    private GoogleSignInAccount googleSignInAccount;
     private FirebaseAuth googleAuth;
 
     /* 로그인 토큰 저장 관련*/
@@ -124,6 +126,7 @@ public class LoginMainActivity extends AppCompatActivity {
         btn_googleLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                googleSignInAccount = GoogleSignIn.getLastSignedInAccount(LoginMainActivity.this);
                 googleSignIn();
                 Log.d("구글 로그인 1", "googleSignIn(): 성공 ");
             }
@@ -145,6 +148,7 @@ public class LoginMainActivity extends AppCompatActivity {
             try {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 firebaseAuthWithGoogle(account.getIdToken());
+                handleSignInResult(task);
             } catch (ApiException e) {
                 Log.d("실패", "실패!!!!!!!!!!!");
             }
@@ -160,7 +164,9 @@ public class LoginMainActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             String firebaseToken = task.getResult().getUser().getIdToken(false).getResult().getToken();
+                            FirebaseUser user = googleAuth.getCurrentUser();
                             authPrefRepository.saveAuthToken("GOOGLE", firebaseToken);
+
                             Intent intent = new Intent(getApplicationContext(), NickNameActivity.class);
                             startActivity(intent);
                             finish();
@@ -168,6 +174,20 @@ public class LoginMainActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
+        try {
+            GoogleSignInAccount act = completedTask.getResult(ApiException.class);
+            if (act != null) {
+                firebaseAuthWithGoogle(act.getIdToken());
+                Uri userProfile = act.getPhotoUrl();
+                Log.d("사용자 프로필", "구글 프로필 " + userProfile);
+                userPrefRepository.saveUserInfo(UserInfoTag.USER_PROFILE.getInfoType(), userProfile.toString());
+            }
+        } catch (ApiException e) {
+
+        }
     }
 
     public void getKakaoAuth(String kakaoAuth) {
@@ -202,6 +222,6 @@ public class LoginMainActivity extends AppCompatActivity {
         } catch (Exception e) {
             Log.e("Name not found", e.toString());
         }
-    }
 
+    }
 }
