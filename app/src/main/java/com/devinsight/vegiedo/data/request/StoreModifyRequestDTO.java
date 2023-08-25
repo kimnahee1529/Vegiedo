@@ -4,13 +4,23 @@ import com.devinsight.vegiedo.utill.VeganTag;
 
 import java.util.List;
 
-public class StoreRegisterRequestDTO {
+public class StoreModifyRequestDTO {
+
     private String storeName;
     private String address;
-    private List<String> images;
+    private String detailAddress;
     private List<VeganTag> tags;
     private float x;
     private float y;
+
+    public StoreModifyRequestDTO(String storeName, String address, String detailAddress, List<VeganTag> tags, float x, float y) {
+        this.storeName = storeName;
+        this.address = address;
+        this.detailAddress = detailAddress;
+        this.tags = tags;
+        this.x = x;
+        this.y = y;
+    }
 
     public String getStoreName() {
         return storeName;
@@ -28,12 +38,12 @@ public class StoreRegisterRequestDTO {
         this.address = address;
     }
 
-    public List<String> getImages() {
-        return images;
+    public String getDetailAddress() {
+        return detailAddress;
     }
 
-    public void setImages(List<String> images) {
-        this.images = images;
+    public void setDetailAddress(String detailAddress) {
+        this.detailAddress = detailAddress;
     }
 
     public List<VeganTag> getTags() {
@@ -57,15 +67,6 @@ public class StoreRegisterRequestDTO {
     }
 
     public void setY(float y) {
-        this.y = y;
-    }
-
-    public StoreRegisterRequestDTO(String storeName, String address, List<String> images, List<VeganTag> tags, float x, float y) {
-        this.storeName = storeName;
-        this.address = address;
-        this.images = images;
-        this.tags = tags;
-        this.x = x;
         this.y = y;
     }
 }

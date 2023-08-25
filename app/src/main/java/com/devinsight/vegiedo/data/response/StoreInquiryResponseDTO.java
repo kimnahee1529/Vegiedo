@@ -2,37 +2,37 @@ package com.devinsight.vegiedo.data.response;
 
 import java.util.List;
 
-public class StoreListData {
+public class StoreInquiryResponseDTO {
 
-    private String storeId;
+    private Long storeId;
     private String storeName;
     private String address;
     private String detailAddress;
-    private int distance;
-    private List<String> tags;
     private int stars;
     private boolean like;
+    private boolean stamp;
+    private List<String> images;
     private float x;
     private float y;
 
-    public StoreListData(String storeId, String storeName, String address, String detailAddress, int distance, List<String> tags, int stars, boolean like, float x, float y) {
+    public StoreInquiryResponseDTO(Long storeId, String storeName, String address, String detailAddress, int stars, boolean like, boolean stamp, List<String> images, float x, float y) {
         this.storeId = storeId;
         this.storeName = storeName;
         this.address = address;
         this.detailAddress = detailAddress;
-        this.distance = distance;
-        this.tags = tags;
         this.stars = stars;
         this.like = like;
+        this.stamp = stamp;
+        this.images = images;
         this.x = x;
         this.y = y;
     }
 
-    public String getStoreId() {
+    public Long getStoreId() {
         return storeId;
     }
 
-    public void setStoreId(String storeId) {
+    public void setStoreId(Long storeId) {
         this.storeId = storeId;
     }
 
@@ -60,22 +60,6 @@ public class StoreListData {
         this.detailAddress = detailAddress;
     }
 
-    public int getDistance() {
-        return distance;
-    }
-
-    public void setDistance(int distance) {
-        this.distance = distance;
-    }
-
-    public List<String> getTags() {
-        return tags;
-    }
-
-    public void setTags(List<String> tags) {
-        this.tags = tags;
-    }
-
     public int getStars() {
         return stars;
     }
@@ -90,6 +74,22 @@ public class StoreListData {
 
     public void setLike(boolean like) {
         this.like = like;
+    }
+
+    public boolean getStamp() {
+        return stamp;
+    }
+
+    public void setStamp(boolean stamp) {
+        this.stamp = stamp;
+    }
+
+    public List<String> getImages() {
+        return images;
+    }
+
+    public void setImages(List<String> images) {
+        this.images = images;
     }
 
     public float getX() {
