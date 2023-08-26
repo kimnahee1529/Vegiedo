@@ -2,13 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.devinsight.vegiedo">
+
     <uses-permission android:name="android.permission.INTERNET" />
+
     <meta-data
         android:name="com.google.android.gms.version"
         android:value="@integer/google_play_services_version" />
     <meta-data
         android:name="com.kakao.sdk.AppKey"
-        android:value="988056d0eaff3cc6abe70cdb9da63b80"/>
+        android:value="988056d0eaff3cc6abe70cdb9da63b80" />
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -29,20 +31,16 @@
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
             android:value="g3rcpfm3dn" />
-
-
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-3940256099942544~3347511713"/>
+            android:value="ca-app-pub-3940256099942544~3347511713" />
 
         <activity
             android:name=".view.mypage.SearchActivity"
             android:exported="false" />
-
         <activity
             android:name=".view.mypage.RegisterNewStoreActivity"
             android:exported="false" />
-
         <activity
             android:name=".view.MainActivity"
             android:exported="false" />
