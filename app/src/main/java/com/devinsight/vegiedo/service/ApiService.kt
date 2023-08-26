@@ -1,4 +1,6 @@
 package com.devinsight.vegiedo.service
 
-class ApiService {
+public interface ApiService {
+
+
 }
