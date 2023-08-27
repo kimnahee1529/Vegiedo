@@ -2,27 +2,20 @@ package com.devinsight.vegiedo.data.response;
 
 import java.util.List;
 
-public class PostInquiryResponseDTO {
-    private Long postId;
-    private String postTitle;
+public class ReviewListData {
+
+    private Long reviewId;
     private String userName;
+    private Integer stars;
     private String content;
     private List<String> images;
 
-    public Long getPostId() {
-        return postId;
+    public Long getReviewId() {
+        return reviewId;
     }
 
-    public void setPostId(Long postId) {
-        this.postId = postId;
-    }
-
-    public String getPostTitle() {
-        return postTitle;
-    }
-
-    public void setPostTitle(String postTitle) {
-        this.postTitle = postTitle;
+    public void setReviewId(Long reviewId) {
+        this.reviewId = reviewId;
     }
 
     public String getUserName() {
@@ -31,6 +24,14 @@ public class PostInquiryResponseDTO {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public Integer getStars() {
+        return stars;
+    }
+
+    public void setStars(Integer stars) {
+        this.stars = stars;
     }
 
     public String getContent() {
@@ -49,10 +50,10 @@ public class PostInquiryResponseDTO {
         this.images = images;
     }
 
-    public PostInquiryResponseDTO(Long postId, String postTitle, String userName, String content, List<String> images) {
-        this.postId = postId;
-        this.postTitle = postTitle;
+    public ReviewListData(Long reviewId, String userName, Integer stars, String content, List<String> images) {
+        this.reviewId = reviewId;
         this.userName = userName;
+        this.stars = stars;
         this.content = content;
         this.images = images;
     }

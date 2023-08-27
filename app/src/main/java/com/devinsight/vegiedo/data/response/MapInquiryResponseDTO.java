@@ -1,23 +1,20 @@
 package com.devinsight.vegiedo.data.response;
 
 import java.util.List;
+import java.util.Map;
+
 public class MapInquiryResponseDTO {
-    private List<Map> stores;
+    private List<MapStoreListData> stores;
 
-    public static class Map {
-        private Long storeId;
-        private String storeName;
-        private String address;
-        private String detailAddress;
-        private Double distance;  // 이 데이터 타입은 'm' 단위로 제공되는 거리를 나타내기 위해 사용됩니다.
-        private List<String> tags;
-        private Double stars;  // 별점은 소수점이 포함될 수 있으므로 Double로 표현합니다.
-        private Boolean like;
-        private Double x;      // x 좌표
-        private Double y;      // y 좌표
-
-        // ... getters, setters
+    public List<MapStoreListData> getStores() {
+        return stores;
     }
 
-    // ... getters, setters
+    public void setStores(List<MapStoreListData> stores) {
+        this.stores = stores;
+    }
+
+    public MapInquiryResponseDTO(List<MapStoreListData> stores) {
+        this.stores = stores;
+    }
 }
