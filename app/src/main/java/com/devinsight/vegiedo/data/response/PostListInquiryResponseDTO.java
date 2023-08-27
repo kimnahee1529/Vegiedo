@@ -5,16 +5,17 @@ import java.util.List;
 
 // 1. 게시글 리스트 조회 응답
 public class PostListInquiryResponseDTO {
-    private List<Post> posts;
+    private List<PostListData> posts;
 
-    public static class Post {
-        private Long postId;
-        private String postTitle;
-        private String userName;
-        private Date createdAt;
-        private Boolean like;
-        // Getters, Setters, Constructors...
+    public PostListInquiryResponseDTO(List<PostListData> posts) {
+        this.posts = posts;
     }
 
-    // Getters, Setters, Constructors...
+    public List<PostListData> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(List<PostListData> posts) {
+        this.posts = posts;
+    }
 }

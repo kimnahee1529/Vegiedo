@@ -1,5 +1,7 @@
 package com.devinsight.vegiedo.data.response;
 
+import com.devinsight.vegiedo.utill.VeganTag;
+
 import java.util.List;
 
 public class StoreInquiryResponseDTO {
@@ -7,26 +9,13 @@ public class StoreInquiryResponseDTO {
     private Long storeId;
     private String storeName;
     private String address;
-    private String detailAddress;
-    private int stars;
+    private Integer stars;
+    private List<String> tags;
     private boolean like;
     private boolean stamp;
     private List<String> images;
-    private float x;
-    private float y;
-
-    public StoreInquiryResponseDTO(Long storeId, String storeName, String address, String detailAddress, int stars, boolean like, boolean stamp, List<String> images, float x, float y) {
-        this.storeId = storeId;
-        this.storeName = storeName;
-        this.address = address;
-        this.detailAddress = detailAddress;
-        this.stars = stars;
-        this.like = like;
-        this.stamp = stamp;
-        this.images = images;
-        this.x = x;
-        this.y = y;
-    }
+    private float latitude;
+    private float longitude;
 
     public Long getStoreId() {
         return storeId;
@@ -52,20 +41,20 @@ public class StoreInquiryResponseDTO {
         this.address = address;
     }
 
-    public String getDetailAddress() {
-        return detailAddress;
-    }
-
-    public void setDetailAddress(String detailAddress) {
-        this.detailAddress = detailAddress;
-    }
-
-    public int getStars() {
+    public Integer getStars() {
         return stars;
     }
 
-    public void setStars(int stars) {
+    public void setStars(Integer stars) {
         this.stars = stars;
+    }
+
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
     }
 
     public boolean isLike() {
@@ -76,7 +65,7 @@ public class StoreInquiryResponseDTO {
         this.like = like;
     }
 
-    public boolean getStamp() {
+    public boolean isStamp() {
         return stamp;
     }
 
@@ -92,19 +81,32 @@ public class StoreInquiryResponseDTO {
         this.images = images;
     }
 
-    public float getX() {
-        return x;
+    public float getLatitude() {
+        return latitude;
     }
 
-    public void setX(float x) {
-        this.x = x;
+    public void setLatitude(float latitude) {
+        this.latitude = latitude;
     }
 
-    public float getY() {
-        return y;
+    public float getLongitude() {
+        return longitude;
     }
 
-    public void setY(float y) {
-        this.y = y;
+    public void setLongitude(float longitude) {
+        this.longitude = longitude;
+    }
+
+    public StoreInquiryResponseDTO(Long storeId, String storeName, String address, Integer stars, List<String> tags, boolean like, boolean stamp, List<String> images, float latitude, float longitude) {
+        this.storeId = storeId;
+        this.storeName = storeName;
+        this.address = address;
+        this.stars = stars;
+        this.tags = tags;
+        this.like = like;
+        this.stamp = stamp;
+        this.images = images;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 }

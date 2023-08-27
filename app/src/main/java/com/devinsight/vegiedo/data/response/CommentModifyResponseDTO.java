@@ -1,6 +1,6 @@
 package com.devinsight.vegiedo.data.response;
 
-public class CommentListData {
+public class CommentModifyResponseDTO {
 
     private Long commentId;
     private String content;
@@ -39,7 +39,7 @@ public class CommentListData {
         this.createdAt = createdAt;
     }
 
-    public CommentListData(Long commentId, String content, String userName, String createdAt) {
+    public CommentModifyResponseDTO(Long commentId, String content, String userName, String createdAt) {
         this.commentId = commentId;
         this.content = content;
         this.userName = userName;

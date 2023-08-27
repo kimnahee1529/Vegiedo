@@ -9,8 +9,8 @@ public class StoreRegisterRequestDTO {
     private String address;
     private List<String> images;
     private List<VeganTag> tags;
-    private float x;
-    private float y;
+    private float latitude;
+    private float longitude;
 
     public String getStoreName() {
         return storeName;
@@ -44,28 +44,28 @@ public class StoreRegisterRequestDTO {
         this.tags = tags;
     }
 
-    public float getX() {
-        return x;
+    public float getLatitude() {
+        return latitude;
     }
 
-    public void setX(float x) {
-        this.x = x;
+    public void setLatitude(float latitude) {
+        this.latitude = latitude;
     }
 
-    public float getY() {
-        return y;
+    public float getLongitude() {
+        return longitude;
     }
 
-    public void setY(float y) {
-        this.y = y;
+    public void setLongitude(float longitude) {
+        this.longitude = longitude;
     }
 
-    public StoreRegisterRequestDTO(String storeName, String address, List<String> images, List<VeganTag> tags, float x, float y) {
+    public StoreRegisterRequestDTO(String storeName, String address, List<String> images, List<VeganTag> tags, float latitude, float longitude) {
         this.storeName = storeName;
         this.address = address;
         this.images = images;
         this.tags = tags;
-        this.x = x;
-        this.y = y;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 }

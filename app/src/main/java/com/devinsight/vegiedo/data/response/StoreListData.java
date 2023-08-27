@@ -12,21 +12,8 @@ public class StoreListData {
     private List<String> tags;
     private int stars;
     private boolean like;
-    private float x;
-    private float y;
-
-    public StoreListData(String storeId, String storeName, String address, String detailAddress, int distance, List<String> tags, int stars, boolean like, float x, float y) {
-        this.storeId = storeId;
-        this.storeName = storeName;
-        this.address = address;
-        this.detailAddress = detailAddress;
-        this.distance = distance;
-        this.tags = tags;
-        this.stars = stars;
-        this.like = like;
-        this.x = x;
-        this.y = y;
-    }
+    private float latitude;
+    private float longitude;
 
     public String getStoreId() {
         return storeId;
@@ -92,19 +79,32 @@ public class StoreListData {
         this.like = like;
     }
 
-    public float getX() {
-        return x;
+    public float getLatitude() {
+        return latitude;
     }
 
-    public void setX(float x) {
-        this.x = x;
+    public void setLatitude(float latitude) {
+        this.latitude = latitude;
     }
 
-    public float getY() {
-        return y;
+    public float getLongitude() {
+        return longitude;
     }
 
-    public void setY(float y) {
-        this.y = y;
+    public void setLongitude(float longitude) {
+        this.longitude = longitude;
+    }
+
+    public StoreListData(String storeId, String storeName, String address, String detailAddress, int distance, List<String> tags, int stars, boolean like, float latitude, float longitude) {
+        this.storeId = storeId;
+        this.storeName = storeName;
+        this.address = address;
+        this.detailAddress = detailAddress;
+        this.distance = distance;
+        this.tags = tags;
+        this.stars = stars;
+        this.like = like;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 }

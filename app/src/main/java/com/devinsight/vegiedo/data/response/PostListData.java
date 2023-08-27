@@ -1,13 +1,13 @@
 package com.devinsight.vegiedo.data.response;
 
-import java.util.List;
+import java.util.Date;
 
-public class PostInquiryResponseDTO {
+public class PostListData {
     private Long postId;
     private String postTitle;
     private String userName;
-    private String content;
-    private List<String> images;
+    private String createdAt;
+    private Boolean like;
 
     public Long getPostId() {
         return postId;
@@ -33,27 +33,27 @@ public class PostInquiryResponseDTO {
         this.userName = userName;
     }
 
-    public String getContent() {
-        return content;
+    public String getCreatedAt() {
+        return createdAt;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
     }
 
-    public List<String> getImages() {
-        return images;
+    public Boolean getLike() {
+        return like;
     }
 
-    public void setImages(List<String> images) {
-        this.images = images;
+    public void setLike(Boolean like) {
+        this.like = like;
     }
 
-    public PostInquiryResponseDTO(Long postId, String postTitle, String userName, String content, List<String> images) {
+    public PostListData(Long postId, String postTitle, String userName, String createdAt, Boolean like) {
         this.postId = postId;
         this.postTitle = postTitle;
         this.userName = userName;
-        this.content = content;
-        this.images = images;
+        this.createdAt = createdAt;
+        this.like = like;
     }
 }

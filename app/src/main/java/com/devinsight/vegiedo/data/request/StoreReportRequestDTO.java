@@ -1,11 +1,11 @@
 package com.devinsight.vegiedo.data.request;
 
-public class StoreReportsRequestDTO {
+public class StoreReportRequestDTO {
 
     private String reportType;
     private String opinion;
 
-    public StoreReportsRequestDTO(String reportType, String opinion) {
+    public StoreReportRequestDTO(String reportType, String opinion) {
         this.reportType = reportType;
         this.opinion = opinion;
     }
