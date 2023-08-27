@@ -27,7 +27,7 @@
         app:layout_constraintTop_toBottomOf="@+id/backwardBtn" />
 
     <EditText
-        android:id="@+id/editText3"
+        android:id="@+id/community_writing_title_text"
         android:layout_width="0dp"
         android:layout_height="30dp"
         android:layout_marginEnd="4dp"
@@ -46,13 +46,13 @@
         android:text="내용"
         android:textColor="@color/black"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText3" />
+        app:layout_constraintTop_toBottomOf="@+id/community_writing_title_text" />
 
     <EditText
-        android:id="@+id/editText2"
+        android:id="@+id/community_writing_content_text"
         android:layout_width="0dp"
         android:layout_height="300dp"
-        android:layout_marginTop="14dp"
+        android:layout_marginTop="12dp"
         android:background="@drawable/et_custom_n"
         android:gravity="top"
         android:hint="하고 싶은 이야기가 무엇인가요?"
@@ -61,14 +61,14 @@
         app:layout_constraintTop_toBottomOf="@+id/service_question" />
 
     <TextView
-        android:id="@+id/text2"
+        android:id="@+id/community_string_length"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:text="0자/1000자"
         android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText2" />
+        app:layout_constraintTop_toBottomOf="@+id/community_writing_content_text" />
 
     <TextView
         android:id="@+id/imagetext"
@@ -79,7 +79,7 @@
         android:text="사진"
         android:textColor="@color/black"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text2" />
+        app:layout_constraintTop_toBottomOf="@+id/community_string_length" />
 
     <HorizontalScrollView
         android:layout_width="0dp"
@@ -95,60 +95,65 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/main_image"
+                android:id="@+id/store_image_plus_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/plus"
+                app:layout_constraintBottom_toBottomOf="@+id/main_image1"
+                app:layout_constraintEnd_toEndOf="@+id/main_image1"
+                app:layout_constraintStart_toStartOf="@+id/main_image1"
+                app:layout_constraintTop_toTopOf="@+id/main_image1" />
+
+            <ImageView
+                android:id="@+id/main_image1"
                 android:layout_width="85dp"
                 android:layout_height="85dp"
-                android:src="@drawable/ic_launcher_background"
-                app:layout_constraintTop_toTopOf="parent"
+                android:background="@drawable/dashed_border"
                 app:layout_constraintStart_toStartOf="parent"
-                tools:srcCompat="@tools:sample/avatars" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
                 android:id="@+id/main_image2"
                 android:layout_width="85dp"
                 android:layout_height="85dp"
+                android:background="@drawable/dashed_border"
                 android:layout_marginStart="30dp"
-                android:src="@drawable/ic_launcher_background"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/main_image"
-                tools:srcCompat="@tools:sample/avatars" />
+                app:layout_constraintStart_toEndOf="@+id/main_image1"/>
 
             <ImageView
                 android:id="@+id/main_image3"
                 android:layout_width="85dp"
                 android:layout_height="85dp"
+                android:background="@drawable/dashed_border"
                 android:layout_marginStart="30dp"
-                android:src="@drawable/ic_launcher_background"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/main_image2"
-                tools:srcCompat="@tools:sample/avatars" />
+                app:layout_constraintStart_toEndOf="@+id/main_image2"/>
 
             <ImageView
                 android:id="@+id/main_image4"
                 android:layout_width="85dp"
                 android:layout_height="85dp"
+                android:background="@drawable/dashed_border"
                 android:layout_marginStart="30dp"
-                android:src="@drawable/ic_launcher_background"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/main_image3"
-                tools:srcCompat="@tools:sample/avatars" />
+                app:layout_constraintStart_toEndOf="@+id/main_image3" />
 
             <ImageView
                 android:id="@+id/main_image5"
                 android:layout_width="85dp"
                 android:layout_height="85dp"
+                android:background="@drawable/dashed_border"
                 android:layout_marginStart="30dp"
-                android:src="@drawable/ic_launcher_background"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/main_image4"
-                tools:srcCompat="@tools:sample/avatars" />
+                app:layout_constraintStart_toEndOf="@+id/main_image4" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </HorizontalScrollView>
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/community_writing_register_button"
         android:layout_width="57dp"
         android:layout_height="38dp"
         android:layout_marginEnd="4dp"

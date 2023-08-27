@@ -15,6 +15,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import com.devinsight.vegiedo.R;
+import com.devinsight.vegiedo.view.community.WritingFragment;
 import com.devinsight.vegiedo.view.home.HomeMainFragment;
 import com.devinsight.vegiedo.view.map.MapMainFragment;
 import com.devinsight.vegiedo.view.mypage.MyPageFragment;
@@ -37,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     Fragment mapMainFragment;
     Fragment storeListMainFragment;
     Fragment myPageFragment;
+    Fragment writingTest;
 
 
     @Override
@@ -56,6 +58,8 @@ public class MainActivity extends AppCompatActivity {
         searchFilterFragment = new SearchFilterFragment();
         myPageFragment = new MyPageFragment();
 
+        writingTest = new WritingFragment();
+
 
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
@@ -63,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 if (item.getItemId() == R.id.nav_community) {
                     toolBar.setVisibility(View.VISIBLE);
-                    transaction.replace(R.id.frame, homeMainFragment).addToBackStack(null).commit();
+                    transaction.replace(R.id.frame, writingTest).addToBackStack(null).commit();
 
                     return true;
                 } else if (item.getItemId() == R.id.nav_home) {
