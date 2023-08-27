@@ -14,8 +14,8 @@ public interface MapApiService {
     @GET("/maps/stores")
     Call<MapInquiryResponseDTO> getStoresOnMap(
             @Query("tags") List<String> tags,
-            @Query("x") Double x,
-            @Query("y") Double y,
+            @Query("latitude") Double x,
+            @Query("longitude") Double y,
             @Query("distance") String distance,
             @Query("keyword") String keyword
     );

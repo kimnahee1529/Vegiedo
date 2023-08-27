@@ -6,16 +6,8 @@ public class PostListData {
     private Long postId;
     private String postTitle;
     private String userName;
-    private Date createdAt;
+    private String createdAt;
     private Boolean like;
-
-    public PostListData(Long postId, String postTitle, String userName, Date createdAt, Boolean like) {
-        this.postId = postId;
-        this.postTitle = postTitle;
-        this.userName = userName;
-        this.createdAt = createdAt;
-        this.like = like;
-    }
 
     public Long getPostId() {
         return postId;
@@ -41,11 +33,11 @@ public class PostListData {
         this.userName = userName;
     }
 
-    public Date getCreatedAt() {
+    public String getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
     }
 
@@ -54,6 +46,14 @@ public class PostListData {
     }
 
     public void setLike(Boolean like) {
+        this.like = like;
+    }
+
+    public PostListData(Long postId, String postTitle, String userName, String createdAt, Boolean like) {
+        this.postId = postId;
+        this.postTitle = postTitle;
+        this.userName = userName;
+        this.createdAt = createdAt;
         this.like = like;
     }
 }

@@ -9,17 +9,17 @@ public class StoreModifyRequestDTO {
     private String storeName;
     private String address;
     private String detailAddress;
-    private List<VeganTag> tags;
-    private float x;
-    private float y;
+    private List<String> tags;
+    private float latitude;
+    private float longitude;
 
-    public StoreModifyRequestDTO(String storeName, String address, String detailAddress, List<VeganTag> tags, float x, float y) {
+    public StoreModifyRequestDTO(String storeName, String address, String detailAddress, List<String> tags, float latitude, float longitude) {
         this.storeName = storeName;
         this.address = address;
         this.detailAddress = detailAddress;
         this.tags = tags;
-        this.x = x;
-        this.y = y;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public String getStoreName() {
@@ -46,27 +46,27 @@ public class StoreModifyRequestDTO {
         this.detailAddress = detailAddress;
     }
 
-    public List<VeganTag> getTags() {
+    public List<String> getTags() {
         return tags;
     }
 
-    public void setTags(List<VeganTag> tags) {
+    public void setTags(List<String> tags) {
         this.tags = tags;
     }
 
-    public float getX() {
-        return x;
+    public float getLatitude() {
+        return latitude;
     }
 
-    public void setX(float x) {
-        this.x = x;
+    public void setLatitude(float latitude) {
+        this.latitude = latitude;
     }
 
-    public float getY() {
-        return y;
+    public float getLongitude() {
+        return longitude;
     }
 
-    public void setY(float y) {
-        this.y = y;
+    public void setLongitude(float longitude) {
+        this.longitude = longitude;
     }
 }
