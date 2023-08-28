@@ -199,6 +199,7 @@ public class LoginMainActivity extends AppCompatActivity {
                 /* 커스텀 토큰을 로컬에 저장합니다.*/
                 authPrefRepository.saveAuthToken("GOOGLE", customToken);
             }
+
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 Log.e("구글 파이어 베이스 토큰 보내기", "실패" + t.getMessage());
@@ -252,16 +253,16 @@ public class LoginMainActivity extends AppCompatActivity {
                     return null;
                 }
 
-                Call<Void> call = RetrofitClient.getUserApiService().registerUser(kakaoAuth,"KAKAO");
+                Call<Void> call = RetrofitClient.getUserApiService().registerUser(kakaoAuth, "KAKAO");
                 call.enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
-                        Log.e("KAKAO","연동성공" + kakaoAuth);
+                        Log.e("KAKAO", "연동성공" + kakaoAuth);
                     }
 
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) {
-                        Log.e("KAKAO","연동 실패" + t.getMessage());
+                        Log.e("KAKAO", "연동 실패" + t.getMessage());
                     }
                 });
 

@@ -34,6 +34,8 @@
 
             </androidx.viewpager2.widget.ViewPager2>
 
+
+
 <!--            <com.google.android.material.progressindicator.CircularProgressIndicator-->
 <!--                android:id="@+id/indicator"-->
 <!--                android:layout_width="match_parent"-->
@@ -44,6 +46,15 @@
 <!--            </com.google.android.material.progressindicator.CircularProgressIndicator>-->
 
          </FrameLayout>
+
+         <com.devinsight.vegiedo.view.home.CircleIndicator
+             android:id="@+id/home_indicator"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_gravity="center_horizontal"
+             android:layout_marginTop="15dp">
+
+         </com.devinsight.vegiedo.view.home.CircleIndicator>
 
          <LinearLayout
              android:layout_width="350dp"

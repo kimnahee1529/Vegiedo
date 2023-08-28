@@ -79,18 +79,44 @@ public class HomeMainFragment extends Fragment implements HomeReviewAdapter.revi
 
         bannerList = new ArrayList<>();
         bannerList.add(new HomeBannerData("https://cdn2.thecatapi.com/images/4gd.gif"));
-        bannerList.add(new HomeBannerData("https://cdn2.thecatapi.com/images/4gd.gif"));
-        bannerList.add(new HomeBannerData("https://cdn2.thecatapi.com/images/4gd.gif"));
-        bannerList.add(new HomeBannerData("https://cdn2.thecatapi.com/images/4gd.gif"));
+        bannerList.add(new HomeBannerData("https://cdn2.thecatapi.com/images/OmNwBvvUm.jpg"));
+        bannerList.add(new HomeBannerData("https://cdn2.thecatapi.com/images/MTUwMjU0OQ.jpg"));
+        bannerList.add(new HomeBannerData("https://cdn2.thecatapi.com/images/fG-wtktoL.jpg"));
 
         bannerAdapter = new HomeBannerAdapter(getContext(), bannerList);
         viewPager.setAdapter(bannerAdapter);
+
+        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                super.onPageScrolled(position, positionOffset, positionOffsetPixels);
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+
+                CircleIndicator circleIndicator = view.findViewById(R.id.home_indicator);
+                circleIndicator.selectDot(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                super.onPageScrollStateChanged(state);
+
+            }
+        });
+
+        CircleIndicator circleIndicator = view.findViewById(R.id.home_indicator);
+        circleIndicator.createDotPanel(bannerList.size(), R.drawable.indicator_dot_off, R.drawable.indicator_dot_on, 0);
+
+
 
         final Handler handler = new Handler();
         final Runnable Update = new Runnable() {
             @Override
             public void run() {
-                if(currentPage == 3) {
+                if(currentPage == bannerList.size()) {
                     currentPage = 0;
                 }
                 viewPager.setCurrentItem(currentPage++, true);
@@ -104,6 +130,8 @@ public class HomeMainFragment extends Fragment implements HomeReviewAdapter.revi
                 handler.post(Update);
             }
         }, DELAY_MS, PERIOD_MS);
+
+
 
 
 //      리뷰 항목
