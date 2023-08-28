@@ -1,10 +1,14 @@
 package com.devinsight.vegiedo.data.response;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 public class CommentInquiryResponseDTO {
 
-    private List<CommentListData> comments;
+    @Expose
+    @SerializedName("comments")private List<CommentListData> comments;
 
     public List<CommentListData> getComments() {
         return comments;

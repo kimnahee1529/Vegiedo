@@ -1,14 +1,22 @@
 package com.devinsight.vegiedo.data.response;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 public class ReviewListData {
 
-    private Long reviewId;
-    private String userName;
-    private Integer stars;
-    private String content;
-    private List<String> images;
+    @Expose
+    @SerializedName("reviewId")private Long reviewId;
+    @Expose
+    @SerializedName("userName")private String userName;
+    @Expose
+    @SerializedName("stars")private Integer stars;
+    @Expose
+    @SerializedName("content")private String content;
+    @Expose
+    @SerializedName("images")private List<String> images;
 
     public Long getReviewId() {
         return reviewId;

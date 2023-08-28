@@ -1,13 +1,21 @@
 package com.devinsight.vegiedo.data.response;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import java.util.Date;
 
 public class PostListData {
-    private Long postId;
-    private String postTitle;
-    private String userName;
-    private Date createdAt;
-    private Boolean like;
+    @Expose
+    @SerializedName("postId")private Long postId;
+    @Expose
+    @SerializedName("postTitle")private String postTitle;
+    @Expose
+    @SerializedName("userName")private String userName;
+    @Expose
+    @SerializedName("createdAt")private Date createdAt;
+    @Expose
+    @SerializedName("like")private Boolean like;
 
     public PostListData(Long postId, String postTitle, String userName, Date createdAt, Boolean like) {
         this.postId = postId;

@@ -1,10 +1,14 @@
 package com.devinsight.vegiedo.data.response;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 // ReviewInquiryResponseDTO (리뷰 조회 응답 데이터)
 public class ReviewListInquiryResponseDTO {
-    private List<ReviewListData> reviews;
+    @Expose
+    @SerializedName("storeId") private List<ReviewListData> reviews;
 
     public List<ReviewListData> getReviews() {
         return reviews;

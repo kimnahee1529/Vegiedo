@@ -1,9 +1,13 @@
 package com.devinsight.vegiedo.data.response;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 public class ReportsInquiryResponseDTO {
-    private List<Report> reports;
+    @Expose
+    @SerializedName("")private List<Report> reports;
 
     public List<Report> getReports() {
         return reports;
