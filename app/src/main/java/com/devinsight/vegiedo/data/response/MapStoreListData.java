@@ -14,11 +14,11 @@ public class MapStoreListData {
     @Expose
     @SerializedName("address")private String address;
     @Expose
-    @SerializedName("distance") private Double distance;  // 이 데이터 타입은 'm' 단위로 제공되는 거리를 나타내기 위해 사용됩니다.
+    @SerializedName("distance") private Integer distance;  // 이 데이터 타입은 'm' 단위로 제공되는 거리를 나타내기 위해 사용됩니다.
     @Expose
     @SerializedName("tags")private List<String> tags;
     @Expose
-    @SerializedName("stars") private Double stars;  // 별점은 소수점이 포함될 수 있으므로 Double로 표현합니다.
+    @SerializedName("stars") private Integer stars;  // 별점은 소수점이 포함될 수 있으므로 Double로 표현합니다.
     @Expose
     @SerializedName("like")private Boolean like;
     @Expose
@@ -50,11 +50,11 @@ public class MapStoreListData {
         this.address = address;
     }
 
-    public Double getDistance() {
+    public Integer getDistance() {
         return distance;
     }
 
-    public void setDistance(Double distance) {
+    public void setDistance(Integer distance) {
         this.distance = distance;
     }
 
@@ -66,11 +66,11 @@ public class MapStoreListData {
         this.tags = tags;
     }
 
-    public Double getStars() {
+    public Integer getStars() {
         return stars;
     }
 
-    public void setStars(Double stars) {
+    public void setStars(Integer stars) {
         this.stars = stars;
     }
 
@@ -98,7 +98,7 @@ public class MapStoreListData {
         this.longitude = longitude;
     }
 
-    public MapStoreListData(Long storeId, String storeName, String address, Double distance, List<String> tags, Double stars, Boolean like, float latitude, float longitude) {
+    public MapStoreListData(Long storeId, String storeName, String address, Integer distance, List<String> tags, Integer stars, Boolean like, float latitude, float longitude) {
         this.storeId = storeId;
         this.storeName = storeName;
         this.address = address;
