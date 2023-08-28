@@ -1,21 +1,35 @@
 package com.devinsight.vegiedo.data.response;
 
 import com.devinsight.vegiedo.utill.VeganTag;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
 public class StoreInquiryResponseDTO {
 
-    private Long storeId;
-    private String storeName;
-    private String address;
-    private Integer stars;
-    private List<String> tags;
-    private boolean like;
-    private boolean stamp;
-    private List<String> images;
-    private float latitude;
-    private float longitude;
+    @Expose
+    @SerializedName("storeId")private Long storeId;
+    @Expose
+    @SerializedName("storeName")private String storeName;
+    @Expose
+    @SerializedName("address")private String address;
+    @Expose
+    @SerializedName("stars")private Integer stars;
+    @Expose
+    @SerializedName("tags")private List<String> tags;
+
+    @Expose
+    @SerializedName("latitude")private float latitude;
+    @Expose
+    @SerializedName("longitude")private float longitude;
+    @Expose
+    @SerializedName("like")private boolean like;
+    @Expose
+    @SerializedName("stamp")private boolean stamp;
+    @Expose
+    @SerializedName("reviewContent")private List<String> images;
+
 
     public Long getStoreId() {
         return storeId;

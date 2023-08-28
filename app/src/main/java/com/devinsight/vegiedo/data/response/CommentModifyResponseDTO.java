@@ -1,11 +1,18 @@
 package com.devinsight.vegiedo.data.response;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 public class CommentModifyResponseDTO {
 
-    private Long commentId;
-    private String content;
-    private String userName;
-    private String createdAt;
+    @Expose
+    @SerializedName("commentId")private Long commentId;
+    @Expose
+    @SerializedName("content")private String content;
+    @Expose
+    @SerializedName("userName")private String userName;
+    @Expose
+    @SerializedName("createdAt")private String createdAt;
 
     public Long getCommentId() {
         return commentId;
