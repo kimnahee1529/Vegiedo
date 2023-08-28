@@ -22,6 +22,7 @@ public interface UserApiService {
     //회원가입
     @POST("/users/{provider}")
     Call<Void> registerUser(
+            @Header("Authorization") String token,
             @Path("provider") String provider
     );
 
