@@ -64,15 +64,15 @@ public class SelectTagActivity extends AppCompatActivity {
         btn_later = findViewById(R.id.tt_back);
         tt_selet_tag = findViewById(R.id.tt_select_tag);
 
-        ToggleButton tagFruittarian = findViewById(VeganTag.TAG_FRUITTARIAN.getTagId());
-        ToggleButton tagVegan = findViewById(VeganTag.TAG_VEGAN.getTagId());
-        ToggleButton taglacto = findViewById(VeganTag.TAG_LACTO.getTagId());
-        ToggleButton tagOvo = findViewById(VeganTag.TAG_OVO.getTagId());
-        ToggleButton taglactoOvo = findViewById(VeganTag.TAG_LACTO_OVO.getTagId());
-        ToggleButton tagPesca = findViewById(VeganTag.TAG_PESCA.getTagId());
-        ToggleButton tagPollo = findViewById(VeganTag.TAG_POLLO.getTagId());
-        ToggleButton tagKeto = findViewById(VeganTag.TAG_KETO.getTagId());
-        ToggleButton tagGluten = findViewById(VeganTag.TAG_GLUTEN.getTagId());
+        ToggleButton tagFruittarian = findViewById(VeganTag.FRUITTARIAN.getTagId());
+        ToggleButton tagVegan = findViewById(VeganTag.VEGAN.getTagId());
+        ToggleButton taglacto = findViewById(VeganTag.LACTO.getTagId());
+        ToggleButton tagOvo = findViewById(VeganTag.OVO.getTagId());
+        ToggleButton taglactoOvo = findViewById(VeganTag.LACTO_OVO.getTagId());
+        ToggleButton tagPesca = findViewById(VeganTag.PESCO.getTagId());
+        ToggleButton tagPollo = findViewById(VeganTag.POLLO.getTagId());
+        ToggleButton tagKeto = findViewById(VeganTag.KETO.getTagId());
+        ToggleButton tagGluten = findViewById(VeganTag.GLUTEN_FREE.getTagId());
 
 
         /* 3개 미만 선택 시 글자 색 변경*/
@@ -95,7 +95,7 @@ public class SelectTagActivity extends AppCompatActivity {
         tagFruittarian.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                String tagContent = VeganTag.TAG_FRUITTARIAN.getTagContent();
+                String tagContent = VeganTag.FRUITTARIAN.getTagContent();
                 viewModel.tagContent(isChecked, tagContent, compoundButton.getId());
             }
         });
@@ -104,7 +104,7 @@ public class SelectTagActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
 
-                String tagContent = VeganTag.TAG_VEGAN.getTagContent();
+                String tagContent = VeganTag.VEGAN.getTagContent();
                 viewModel.tagContent(isChecked, tagContent, compoundButton.getId());
 
             }
@@ -113,7 +113,7 @@ public class SelectTagActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
 
-                String tagContent = VeganTag.TAG_LACTO.getTagContent();
+                String tagContent = VeganTag.LACTO.getTagContent();
                 viewModel.tagContent(isChecked, tagContent, compoundButton.getId());
 
 
@@ -123,7 +123,7 @@ public class SelectTagActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
 
-                String tagContent = VeganTag.TAG_OVO.getTagContent();
+                String tagContent = VeganTag.OVO.getTagContent();
                 viewModel.tagContent(isChecked, tagContent, compoundButton.getId());
 
             }
@@ -132,7 +132,7 @@ public class SelectTagActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
 
-                String tagContent = VeganTag.TAG_LACTO_OVO.getTagContent();
+                String tagContent = VeganTag.LACTO_OVO.getTagContent();
                 viewModel.tagContent(isChecked, tagContent, compoundButton.getId());
 
 
@@ -142,7 +142,7 @@ public class SelectTagActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
 
-                String tagContent = VeganTag.TAG_PESCA.getTagContent();
+                String tagContent = VeganTag.PESCO.getTagContent();
                 viewModel.tagContent(isChecked, tagContent, compoundButton.getId());
 
 
@@ -152,7 +152,7 @@ public class SelectTagActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
 
-                String tagContent = VeganTag.TAG_POLLO.getTagContent();
+                String tagContent = VeganTag.POLLO.getTagContent();
                 viewModel.tagContent(isChecked, tagContent, compoundButton.getId());
 
 
@@ -163,7 +163,7 @@ public class SelectTagActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
 
-                String tagContent = VeganTag.TAG_KETO.getTagContent();
+                String tagContent = VeganTag.KETO.getTagContent();
 
             }
         });
@@ -171,7 +171,7 @@ public class SelectTagActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
 
-                String tagContent = VeganTag.TAG_GLUTEN.getTagContent();
+                String tagContent = VeganTag.GLUTEN_FREE.getTagContent();
                 viewModel.tagContent(isChecked, tagContent, compoundButton.getId());
 
 
@@ -263,7 +263,7 @@ public class SelectTagActivity extends AppCompatActivity {
         List<String> tagList = userPrefRepository.loadTagList();
         UserRegisterRequestDTO userInfoData = new UserRegisterRequestDTO(nickName, tagList);
 
-        Call<Void> call = RetrofitClient.getUserApiService().sendUserInfo(token, userInfoData);
+        Call<Void> call = RetrofitClient.getUserApiService().sendUserInfo("Bearer " + token, userInfoData);
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
