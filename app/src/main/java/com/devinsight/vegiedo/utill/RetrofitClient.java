@@ -1,5 +1,6 @@
 package com.devinsight.vegiedo.utill;
 
+import com.devinsight.vegiedo.service.api.UserApiService;
 import com.google.gson.GsonBuilder;
 
 import okhttp3.OkHttpClient;
@@ -20,6 +21,10 @@ public class RetrofitClient {
             retrofit = builder.build();
         }
         return retrofit;
+    }
+
+    public static UserApiService getUserApiService(){
+        return getRetrofit(BASE_URL).create(UserApiService.class);
     }
 }
 
