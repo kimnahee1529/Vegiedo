@@ -24,9 +24,15 @@ import androidx.fragment.app.Fragment;
 
 import com.devinsight.vegiedo.R;
 import com.devinsight.vegiedo.data.request.PostRegisterRequestDTO;
+import com.devinsight.vegiedo.service.api.PostApiService;
+import com.devinsight.vegiedo.utill.RetrofitClient;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class WritingFragment extends Fragment {
 
@@ -43,11 +49,12 @@ public class WritingFragment extends Fragment {
     private ImageView mainImage;
     private static final int GALLERY_REQUEST_CODE = 123;
     private static final int MAX_IMAGE_COUNT = 5;
+    private View rootView;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_writing, container, false);
+        rootView = inflater.inflate(R.layout.fragment_writing, container, false);
 
         initializeViews(rootView);
         setTitleTextWatcher();
@@ -63,8 +70,6 @@ public class WritingFragment extends Fragment {
         communityStringLength = rootView.findViewById(R.id.community_string_length);
         communityWritingTitleText = rootView.findViewById(R.id.community_writing_title_text);
         registerBtn = rootView.findViewById(R.id.community_writing_register_button);
-
-        // Initialize mainImage
         mainImage = rootView.findViewById(R.id.main_image1);
         mainImage.setOnClickListener(v -> selectImagesFromGallery());
     }
@@ -72,7 +77,7 @@ public class WritingFragment extends Fragment {
     private void restoreSelectedImages() {
         int[] imageViews = {R.id.main_image1, R.id.main_image2, R.id.main_image3, R.id.main_image4, R.id.main_image5};
         for (int i = 0; i < selectedImageUris.size(); i++) {
-            ImageView imageView = getView().findViewById(imageViews[i]);
+            ImageView imageView = rootView.findViewById(imageViews[i]);
             imageView.setImageURI(Uri.parse(selectedImageUris.get(i)));
             imageView.setBackground(null);
         }
@@ -82,7 +87,6 @@ public class WritingFragment extends Fragment {
         setTextWatcher(communityWritingTitleText, 20, "최대 20자까지 입력 가능합니다.");
     }
 
-    //제목 입력
     private void setTextWatcher(EditText editText, int maxLength, String message) {
         editText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -92,8 +96,6 @@ public class WritingFragment extends Fragment {
                     editable.delete(maxLength, length);
                     Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
                 }
-
-                Log.d("LOG제목", "제목: "+editable);
             }
 
             @Override
@@ -104,7 +106,6 @@ public class WritingFragment extends Fragment {
         });
     }
 
-    //내용 입력
     private void setContentTextWatcher() {
         communityWritingContentText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -128,28 +129,45 @@ public class WritingFragment extends Fragment {
     }
 
     private void setRegisterButtonListener() {
-
         registerBtn.setOnClickListener(v -> {
-
             String titleText = communityWritingTitleText.getText().toString();
             String contentText = communityWritingContentText.getText().toString();
 
-
-            if (TextUtils.isEmpty(communityWritingTitleText.getText().toString())) {
+            if (TextUtils.isEmpty(titleText)) {
                 showDialog(DialogType.TITLE);
-            } else if (TextUtils.isEmpty(communityWritingContentText.getText().toString())) {
-                showDialog(DialogType.CONTENT);
-            } else {
-                if(!selectedImageUris.isEmpty()){
-                    PostRegisterRequestDTO postRegisterRequestDTO= new PostRegisterRequestDTO(titleText, contentText, selectedImageUris);
-                    Log.d("LOG 등록버튼", "제목 : "+postRegisterRequestDTO.getPostTitle() + " 내용 : " + postRegisterRequestDTO.getContent() + " 이미지 : " + postRegisterRequestDTO.getImages());
-                } else{
-                    PostRegisterRequestDTO postRegisterRequestDTO= new PostRegisterRequestDTO(titleText, contentText);
-                    Log.d("LOG 등록버튼", "제목 : "+postRegisterRequestDTO.getPostTitle() + " 내용 : " + postRegisterRequestDTO.getContent() + " 이미지 : " + postRegisterRequestDTO.getImages());
-                }
-                moveToCommunityFragment();
+                return;
             }
+
+            if (TextUtils.isEmpty(contentText)) {
+                showDialog(DialogType.CONTENT);
+                return;
+            }
+
+            PostRegisterRequestDTO postRegisterRequestDTO = selectedImageUris.isEmpty() ?
+                    new PostRegisterRequestDTO(titleText, contentText) :
+                    new PostRegisterRequestDTO(titleText, contentText, selectedImageUris);
+
+            Log.d("LOG 등록버튼", "제목: " + postRegisterRequestDTO.getPostTitle() +
+                    " 내용: " + postRegisterRequestDTO.getContent() +
+                    " 이미지: " + postRegisterRequestDTO.getImages());
+
+            sendPostRequest(postRegisterRequestDTO);
+
+
+            moveToCommunityFragment();
+
         });
+    }
+
+    private void sendPostRequest(PostRegisterRequestDTO postRegisterRequestDTO) {
+//        Call<Void> call = RetrofitClient.getRetrofit("").create(PostApiService.class).addPost(postRegisterRequestDTO);
+//        call.enqueue(new Callback<Void>() {
+//            @Override
+//            public void onResponse(Call<Void> call, Response<Void> response) {}
+//
+//            @Override
+//            public void onFailure(Call<Void> call, Throwable t) {}
+//        });
     }
 
     private void showDialog(DialogType type) {
@@ -160,23 +178,17 @@ public class WritingFragment extends Fragment {
         ImageView closeIcon = dialogView.findViewById(R.id.green_x_circle);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-
-
         builder.setView(dialogView);
 
         final AlertDialog dialog = builder.create();
-
         closeIcon.setOnClickListener(v -> dialog.dismiss());
         dialog.show();
     }
 
     private void moveToCommunityFragment() {
-        // Create a new instance of CommunityFragment
         CommunityFragment communityFragment = new CommunityFragment();
-
-        // Replace the current fragment with the new one
         getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.frame, communityFragment)  // 'container' is the ID of your FrameLayout in which the fragment resides.
+                .replace(R.id.frame, communityFragment)
                 .commit();
     }
 
@@ -185,46 +197,38 @@ public class WritingFragment extends Fragment {
         intent.setType("image/*");
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Pictures"), GALLERY_REQUEST_CODE);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY_REQUEST_CODE);
     }
+
     @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == GALLERY_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
             List<Uri> imageUris = new ArrayList<>();
 
-            // Handle single image selection
-            if (data.getData() != null) {
-                Uri imageUri = data.getData();
-                Log.d("LOGIMAGE", "uir:" + imageUri);
-                imageUris.add(imageUri);
-            }
-            // Handle multiple image selection
-            else if (data.getClipData() != null) {
-                ClipData clipData = data.getClipData();
-                int itemCount = Math.min(clipData.getItemCount(), MAX_IMAGE_COUNT);
-                for (int i = 0; i < itemCount; i++) {
-                    Uri imageUri = clipData.getItemAt(i).getUri();
-                    imageUris.add(imageUri);
+            if (data.getClipData() != null) {
+                int count = data.getClipData().getItemCount();
+                for (int i = 0; i < count; i++) {
+                    imageUris.add(data.getClipData().getItemAt(i).getUri());
                 }
-
-                for (Uri uri : imageUris) {
-                    selectedImageUris.add(uri.toString());
-                }
+            } else if (data.getData() != null) {
+                imageUris.add(data.getData());
             }
 
-            // Set the selected images to multiple ImageViews
-            if (!imageUris.isEmpty()) {
-                int[] imageViews = {R.id.main_image1, R.id.main_image2, R.id.main_image3, R.id.main_image4, R.id.main_image5};
-                for (int i = 0; i < imageUris.size(); i++) {
-                    ImageView imageView = getView().findViewById(imageViews[i]);
-                    imageView.setImageURI(imageUris.get(i));
-                    imageView.setBackground(null);
-                }
-            }
+            updateSelectedImages(imageUris);
         }
     }
 
+    private void updateSelectedImages(List<Uri> imageUris) {
+        selectedImageUris.clear();
 
+        int[] imageViews = {R.id.main_image1, R.id.main_image2, R.id.main_image3, R.id.main_image4, R.id.main_image5};
+        for (int i = 0; i < Math.min(imageUris.size(), MAX_IMAGE_COUNT); i++) {
+            selectedImageUris.add(imageUris.get(i).toString());
+            ImageView imageView = getView().findViewById(imageViews[i]);
+            imageView.setImageURI(imageUris.get(i));
+            imageView.setBackground(null);
+        }
+    }
 }
