@@ -1,25 +1,42 @@
 package com.devinsight.vegiedo.data.response;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 public class StoreListData {
 
-    private String storeId;
-    private String storeName;
-    private String address;
-    private String detailAddress;
-    private int distance;
-    private List<String> tags;
-    private int stars;
-    private boolean like;
-    private float latitude;
-    private float longitude;
+    @Expose
+    @SerializedName("storeId")private Long storeId;
+    @Expose
+    @SerializedName("storeName")private String storeName;
+    @Expose
+    @SerializedName("address")private String address;
+    @Expose
+    @SerializedName("latitude")private float latitude;
+    @Expose
+    @SerializedName("longitude")private float longitude;
+    @Expose
+    @SerializedName("distance")private Integer distance;
+    @Expose
+    @SerializedName("stars")private Integer stars;
+    @Expose
+    @SerializedName("tags")private List<String> tags;
+    @Expose
+    @SerializedName("like")private boolean like;
+    @Expose
+    @SerializedName("stamp")private boolean stamp;
+    @Expose
+    @SerializedName("reviewCount")private Integer reviewCount;
+    @Expose
+    @SerializedName("images")private String images;
 
-    public String getStoreId() {
+    public Long getStoreId() {
         return storeId;
     }
 
-    public void setStoreId(String storeId) {
+    public void setStoreId(Long storeId) {
         this.storeId = storeId;
     }
 
@@ -39,46 +56,6 @@ public class StoreListData {
         this.address = address;
     }
 
-    public String getDetailAddress() {
-        return detailAddress;
-    }
-
-    public void setDetailAddress(String detailAddress) {
-        this.detailAddress = detailAddress;
-    }
-
-    public int getDistance() {
-        return distance;
-    }
-
-    public void setDistance(int distance) {
-        this.distance = distance;
-    }
-
-    public List<String> getTags() {
-        return tags;
-    }
-
-    public void setTags(List<String> tags) {
-        this.tags = tags;
-    }
-
-    public int getStars() {
-        return stars;
-    }
-
-    public void setStars(int stars) {
-        this.stars = stars;
-    }
-
-    public boolean isLike() {
-        return like;
-    }
-
-    public void setLike(boolean like) {
-        this.like = like;
-    }
-
     public float getLatitude() {
         return latitude;
     }
@@ -95,16 +72,74 @@ public class StoreListData {
         this.longitude = longitude;
     }
 
-    public StoreListData(String storeId, String storeName, String address, String detailAddress, int distance, List<String> tags, int stars, boolean like, float latitude, float longitude) {
+    public Integer getDistance() {
+        return distance;
+    }
+
+    public void setDistance(Integer distance) {
+        this.distance = distance;
+    }
+
+    public Integer getStars() {
+        return stars;
+    }
+
+    public void setStars(Integer stars) {
+        this.stars = stars;
+    }
+
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
+    }
+
+    public boolean isLike() {
+        return like;
+    }
+
+    public void setLike(boolean like) {
+        this.like = like;
+    }
+
+    public boolean isStamp() {
+        return stamp;
+    }
+
+    public void setStamp(boolean stamp) {
+        this.stamp = stamp;
+    }
+
+    public Integer getReviewCount() {
+        return reviewCount;
+    }
+
+    public void setReviewCount(Integer reviewCount) {
+        this.reviewCount = reviewCount;
+    }
+
+    public String getImages() {
+        return images;
+    }
+
+    public void setImages(String images) {
+        this.images = images;
+    }
+
+    public StoreListData(Long storeId, String storeName, String address, float latitude, float longitude, Integer distance, Integer stars, List<String> tags, boolean like, boolean stamp, Integer reviewCount, String images) {
         this.storeId = storeId;
         this.storeName = storeName;
         this.address = address;
-        this.detailAddress = detailAddress;
-        this.distance = distance;
-        this.tags = tags;
-        this.stars = stars;
-        this.like = like;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.distance = distance;
+        this.stars = stars;
+        this.tags = tags;
+        this.like = like;
+        this.stamp = stamp;
+        this.reviewCount = reviewCount;
+        this.images = images;
     }
 }

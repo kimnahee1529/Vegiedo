@@ -3,14 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:padding="20dp">
 
     <ImageView
-        android:id="@+id/backwardBtn"
+        android:id="@+id/backward_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="2dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="2dp"
         android:src="@drawable/backward"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -20,23 +19,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="3dp"
-        android:layout_marginTop="8dp"
-        android:textColor="@color/black"
+        android:layout_marginTop="13dp"
         android:text="제목"
+        android:textColor="@color/black"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/backwardBtn" />
+        app:layout_constraintTop_toBottomOf="@+id/backward_btn" />
 
     <EditText
         android:id="@+id/community_writing_title_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:inputType="textMultiLine"
-        android:layout_marginEnd="4dp"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="4dp"
         android:background="@drawable/et_custom_n"
+        android:inputType="textMultiLine"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/service_question2"
-        app:layout_constraintTop_toBottomOf="@+id/backwardBtn" />
+        app:layout_constraintTop_toBottomOf="@+id/backward_btn" />
 
     <TextView
         android:id="@+id/service_question"

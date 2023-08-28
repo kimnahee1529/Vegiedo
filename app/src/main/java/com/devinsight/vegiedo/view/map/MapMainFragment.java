@@ -30,22 +30,6 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
     private FusedLocationSource locationSource;
     private Marker currentLocationMarker;
 
-    private String mParam1;
-    private String mParam2;
-
-    public MapMainFragment() {
-        // Required empty public constructor
-    }
-
-    public static MapMainFragment newInstance(String param1, String param2) {
-        MapMainFragment fragment = new MapMainFragment();
-        Bundle args = new Bundle();
-//        args.putString(ARG_PARAM1, param1);
-//        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

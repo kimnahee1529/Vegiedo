@@ -1,5 +1,11 @@
 package com.devinsight.vegiedo.utill;
 
+import com.devinsight.vegiedo.service.api.CommentApiService;
+import com.devinsight.vegiedo.service.api.MapApiService;
+import com.devinsight.vegiedo.service.api.PostApiService;
+import com.devinsight.vegiedo.service.api.ReviewApiService;
+import com.devinsight.vegiedo.service.api.StoreApiService;
+import com.devinsight.vegiedo.service.api.UserApiService;
 import com.google.gson.GsonBuilder;
 
 import okhttp3.OkHttpClient;
@@ -21,5 +27,31 @@ public class RetrofitClient {
         }
         return retrofit;
     }
+
+    public static UserApiService getUserApiService(){
+        return getRetrofit(BASE_URL).create(UserApiService.class);
+    }
+
+    public static StoreApiService getStoreApiService(){
+        return getRetrofit(BASE_URL).create(StoreApiService.class);
+    }
+
+    public static PostApiService getPostApiService(){
+        return getRetrofit(BASE_URL).create(PostApiService.class);
+    }
+
+    public static ReviewApiService getReviewApiService(){
+        return getRetrofit(BASE_URL).create(ReviewApiService.class);
+    }
+
+    public static CommentApiService getCommentApiService(){
+        return getRetrofit(BASE_URL).create(CommentApiService.class);
+    }
+
+    public static MapApiService getMapApiService(){
+        return getRetrofit(BASE_URL).create(MapApiService.class);
+    }
+
+
 }
 

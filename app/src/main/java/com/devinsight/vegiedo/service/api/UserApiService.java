@@ -32,6 +32,7 @@ public interface UserApiService {
             @Path("userId") String userId
     );
 
+
     //로그아웃
     @DELETE("/session")
     Call<Void> logoutUser(

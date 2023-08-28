@@ -2,7 +2,6 @@ package com.devinsight.vegiedo.view.community;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ClipData;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -19,21 +18,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.devinsight.vegiedo.R;
 import com.devinsight.vegiedo.data.request.PostRegisterRequestDTO;
-import com.devinsight.vegiedo.service.api.PostApiService;
-import com.devinsight.vegiedo.utill.RetrofitClient;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
+//TODO : moveToCommunityFragment에 인기게시글->글쓰기->일반게시글로 돌아오는 부분 수정
 public class WritingFragment extends Fragment {
 
     private enum DialogType {
@@ -44,13 +37,14 @@ public class WritingFragment extends Fragment {
     private EditText communityWritingContentText;
     private TextView communityStringLength;
     private EditText communityWritingTitleText;
+    private ImageView backwardBtn;
     private List<String> selectedImageUris = new ArrayList<>();
     private Button registerBtn;
     private ImageView mainImage;
     private static final int GALLERY_REQUEST_CODE = 123;
     private static final int MAX_IMAGE_COUNT = 5;
     private View rootView;
-
+    private String previousFragment;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -62,6 +56,11 @@ public class WritingFragment extends Fragment {
         setRegisterButtonListener();
         restoreSelectedImages();
 
+        if (getArguments() != null) {
+            previousFragment = getArguments().getString("previousFragment");
+        }
+
+
         return rootView;
     }
 
@@ -72,6 +71,8 @@ public class WritingFragment extends Fragment {
         registerBtn = rootView.findViewById(R.id.community_writing_register_button);
         mainImage = rootView.findViewById(R.id.main_image1);
         mainImage.setOnClickListener(v -> selectImagesFromGallery());
+        backwardBtn = rootView.findViewById(R.id.backward_btn);
+        backwardBtn.setOnClickListener(v -> goBack());
     }
 
     private void restoreSelectedImages() {
@@ -185,12 +186,23 @@ public class WritingFragment extends Fragment {
         dialog.show();
     }
 
+
     private void moveToCommunityFragment() {
-        CommunityFragment communityFragment = new CommunityFragment();
+        Fragment targetFragment;
+
+        if ("GeneralPostFragment".equals(previousFragment)) {
+            targetFragment = new GeneralPostFragment();
+        } else if ("PopuralPostFragment".equals(previousFragment)) {
+            targetFragment = new PopuralPostFragment();
+        } else {
+            targetFragment = new GeneralPostFragment(); // 기본값
+        }
+
         getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.frame, communityFragment)
+                .replace(R.id.frame, targetFragment)
                 .commit();
     }
+
 
     private void selectImagesFromGallery() {
         Intent intent = new Intent();
@@ -229,6 +241,12 @@ public class WritingFragment extends Fragment {
             ImageView imageView = getView().findViewById(imageViews[i]);
             imageView.setImageURI(imageUris.get(i));
             imageView.setBackground(null);
+        }
+    }
+
+    private void goBack() {
+        if (getFragmentManager() != null) {
+            getFragmentManager().popBackStack();
         }
     }
 }
