@@ -15,7 +15,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClient {
 
-    private static final String BASE_URL = "https://vegiedo.xyz/";
+    private static final String BASE_URL = "http://18.119.70.148:8080/";
     private static Retrofit retrofit;
 
     public static Retrofit getRetrofit(String baseurl) {

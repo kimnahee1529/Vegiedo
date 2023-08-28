@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,9 @@ import com.devinsight.vegiedo.R;
 import com.devinsight.vegiedo.data.ui.home.HomeReviewUiData;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class HomeMainFragment extends Fragment implements HomeReviewAdapter.reviewItemListner {
 
@@ -27,7 +31,14 @@ public class HomeMainFragment extends Fragment implements HomeReviewAdapter.revi
     private String mParam2;
     //  뷰페이저
     private ViewPager2 viewPager;
-    private HomeBannerAdapter bannerAdapter;
+    private HomeBannerAdapter2 bannerAdapter;
+    List<HomeBannerData> bannerList;
+
+    int currentPage = 0;
+    Timer timer;
+    final long DELAY_MS = 500;
+    final long PERIOD_MS = 3000;
+
     //  리사이클러뷰
     private RecyclerView recyclerView;
     private HomeReviewAdapter reviewAdapter;
@@ -64,8 +75,35 @@ public class HomeMainFragment extends Fragment implements HomeReviewAdapter.revi
 
 //      홈화면 상단 배너
         viewPager = view.findViewById(R.id.viewpager_home);
-        bannerAdapter = new HomeBannerAdapter(this);
+
+        bannerList = new ArrayList<>();
+        bannerList.add(new HomeBannerData("https://cdn2.thecatapi.com/images/4gd.gif"));
+        bannerList.add(new HomeBannerData("https://cdn2.thecatapi.com/images/4gd.gif"));
+        bannerList.add(new HomeBannerData("https://cdn2.thecatapi.com/images/4gd.gif"));
+        bannerList.add(new HomeBannerData("https://cdn2.thecatapi.com/images/4gd.gif"));
+
+        bannerAdapter = new HomeBannerAdapter2(getContext(), bannerList);
         viewPager.setAdapter(bannerAdapter);
+
+        final Handler handler = new Handler();
+        final Runnable Update = new Runnable() {
+            @Override
+            public void run() {
+                if(currentPage == 3) {
+                    currentPage = 0;
+                }
+                viewPager.setCurrentItem(currentPage++, true);
+            }
+        };
+
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                handler.post(Update);
+            }
+        }, DELAY_MS, PERIOD_MS);
+
 
 //      리뷰 항목
         recyclerView = view.findViewById(R.id.recycler_review_home);

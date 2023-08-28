@@ -84,6 +84,7 @@ public class LoginMainActivity extends AppCompatActivity {
                     // 토큰이 전달된다면 로그인이 성공한 것이고 토큰이 전달되지 않으면 로그인 실패한다.
 //                    updateKakaoLoginUi();
                     getKakaoAuth(oAuthToken.getAccessToken());
+
                     Log.d("카카오 토큰 ", " 카카오 토큰 : " + oAuthToken.getAccessToken().toString());
                     Intent intent = new Intent(getApplicationContext(), NickNameActivity.class);
                     startActivity(intent);
@@ -179,9 +180,6 @@ public class LoginMainActivity extends AppCompatActivity {
                             /* 서버에 파이어베이스에서 인증 받은 토큰을 보냅니다. */
                             sendTokenToServer(firebaseToken);
                             Log.d("구글 토큰 보내기", "구글 토큰 보내기" + firebaseToken);
-
-
-                            Log.d("토큰입니다", "토큰입니다" + firebaseToken);
                         }
                     }
                 });
@@ -190,17 +188,20 @@ public class LoginMainActivity extends AppCompatActivity {
 
     /* 서버에 파이어베이스 토큰을 보내고 커스텀 토큰을 받아옵니다. */
     private void sendTokenToServer(String token) {
-        Call<Void> call = RetrofitClient.getUserApiService().sendUserIdToken(token);
+
+        Call<Void> call = RetrofitClient.getUserApiService().registerUser(token, "GOOGLE");
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
+                /* 서버로부터 커스텀 토큰을 받아옵니다 */
                 String customToken = response.headers().get("Authorization");
+
+                /* 커스텀 토큰을 진짜 로그인을 위해 전달합니다.*/
                 getGoogleLogin(customToken);
 
                 /* 커스텀 토큰을 로컬에 저장합니다.*/
                 authPrefRepository.saveAuthToken("GOOGLE", customToken);
 
-                Log.d("구글 파이어 베이스 토큰 보내기", "성공");
             }
 
             @Override
@@ -208,6 +209,28 @@ public class LoginMainActivity extends AppCompatActivity {
                 Log.e("구글 파이어 베이스 토큰 보내기", "실패" + t.getMessage());
             }
         });
+//        Call<Void> call = RetrofitClient.getUserApiService().sendUserIdToken(token);
+//        call.enqueue(new Callback<Void>() {
+//            @Override
+//            public void onResponse(Call<Void> call, Response<Void> response) {
+//
+//                /* 서버로부터 커스텀 토큰을 받아옵니다 */
+//                String customToken = response.headers().get("Authorization");
+//
+//                /* 커스텀 토큰을 진짜 로그인을 위해 전달합니다.*/
+//                getGoogleLogin(customToken);
+//
+//                /* 커스텀 토큰을 로컬에 저장합니다.*/
+//                authPrefRepository.saveAuthToken("GOOGLE", customToken);
+//
+//                Log.d("구글 파이어 베이스 토큰 보내기", "성공");
+//            }
+//
+//            @Override
+//            public void onFailure(Call<Void> call, Throwable t) {
+//                Log.e("구글 파이어 베이스 토큰 보내기", "실패" + t.getMessage());
+//            }
+//        });
     }
 
     /* 서버로부터 받은 커스텀 토큰으로 로그인 */
@@ -254,6 +277,21 @@ public class LoginMainActivity extends AppCompatActivity {
                     Log.e("Login error", throwable.toString());
                     return null;
                 }
+
+                Call<Void> call = RetrofitClient.getUserApiService().registerUser(kakaoAuth,"KAKAO");
+                call.enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        Log.e("KAKAO","연동성공" + kakaoAuth);
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        Log.e("KAKAO","연동 실패" + t.getMessage());
+                    }
+                });
+
+
                 String userProfile = user.getKakaoAccount().getProfile().getProfileImageUrl();
                 userPrefRepository.saveUserInfo(UserInfoTag.USER_PROFILE.getInfoType(), userProfile);
                 authPrefRepository.saveAuthToken("KAKAO", kakaoAuth);
