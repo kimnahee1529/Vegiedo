@@ -1,34 +1,67 @@
 package com.devinsight.vegiedo.view.home;
 
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.viewpager2.adapter.FragmentStateAdapter;
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 
-public class HomeBannerAdapter extends FragmentStateAdapter {
-    public HomeBannerAdapter(@NonNull Fragment fragment) {
-        super(fragment);
+import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
+import com.devinsight.vegiedo.R;
+import com.devinsight.vegiedo.data.ui.home.HomeBannerData;
+
+import java.util.List;
+
+public class HomeBannerAdapter extends RecyclerView.Adapter<HomeBannerAdapter.ViewHolderPage>{
+
+    private List<HomeBannerData> bannerList;
+    Context context;
+
+    HomeBannerAdapter(Context context, List<HomeBannerData> bannerList){
+        this.bannerList = bannerList;
+        this.context = context;
     }
 
     @NonNull
     @Override
-    public Fragment createFragment(int position) {
-        switch(position){
-            case 0:
-                    return new BannerFragment1();
-            case 1:
-                return new BannerFragment1();
-            case 2:
-                return new BannerFragment1();
-            case 3:
-                return new BannerFragment1();
-        }
-        return null;
+    public ViewHolderPage onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_home_viewpager_item, parent, false);
+        return new ViewHolderPage(view);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolderPage holder, int position) {
+        HomeBannerData data = bannerList.get(position);
+        String imageUrl = data.getImages();
+        Glide.with(context)
+                .load(imageUrl)
+                .into(holder.bannerImage);
+
     }
 
     @Override
     public int getItemCount() {
-        return 4;
+        return bannerList.size();
     }
 
 
+    public static class ViewHolderPage extends RecyclerView.ViewHolder{
+
+        private ImageView bannerImage;
+        private CardView cardView;
+
+        HomeBannerData bannerData;
+        public ViewHolderPage(@NonNull View itemView) {
+            super(itemView);
+            bannerImage = itemView.findViewById(R.id.home_banne_item);
+            cardView = itemView.findViewById(R.id.card_banner);
+        }
+
+    }
 }
+
+
