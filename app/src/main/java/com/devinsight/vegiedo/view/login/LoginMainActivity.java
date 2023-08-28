@@ -16,6 +16,7 @@ import android.widget.ImageView;
 
 import com.devinsight.vegiedo.ConstLoginTokenType;
 import com.devinsight.vegiedo.R;
+import com.devinsight.vegiedo.data.request.UserRegisterRequestDTO;
 import com.devinsight.vegiedo.utill.RetrofitClient;
 import com.devinsight.vegiedo.utill.UserInfoTag;
 import com.devinsight.vegiedo.repository.pref.AuthPrefRepository;
@@ -138,15 +139,11 @@ public class LoginMainActivity extends AppCompatActivity {
                 Log.d("구글 로그인 1", "googleSignIn(): 성공 ");
             }
         });
-
-
     }
-
 
     private void googleSignIn() {
         Intent signIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signIntent, 123);
-
     }
 
     @Override
@@ -161,7 +158,6 @@ public class LoginMainActivity extends AppCompatActivity {
             } catch (ApiException e) {
                 Log.d("실패", "실패!!!!!!!!!!!");
             }
-
         }
     }
 
@@ -193,6 +189,7 @@ public class LoginMainActivity extends AppCompatActivity {
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
+
                 /* 서버로부터 커스텀 토큰을 받아옵니다 */
                 String customToken = response.headers().get("Authorization");
 
@@ -201,36 +198,13 @@ public class LoginMainActivity extends AppCompatActivity {
 
                 /* 커스텀 토큰을 로컬에 저장합니다.*/
                 authPrefRepository.saveAuthToken("GOOGLE", customToken);
-
             }
-
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 Log.e("구글 파이어 베이스 토큰 보내기", "실패" + t.getMessage());
             }
         });
-//        Call<Void> call = RetrofitClient.getUserApiService().sendUserIdToken(token);
-//        call.enqueue(new Callback<Void>() {
-//            @Override
-//            public void onResponse(Call<Void> call, Response<Void> response) {
-//
-//                /* 서버로부터 커스텀 토큰을 받아옵니다 */
-//                String customToken = response.headers().get("Authorization");
-//
-//                /* 커스텀 토큰을 진짜 로그인을 위해 전달합니다.*/
-//                getGoogleLogin(customToken);
-//
-//                /* 커스텀 토큰을 로컬에 저장합니다.*/
-//                authPrefRepository.saveAuthToken("GOOGLE", customToken);
-//
-//                Log.d("구글 파이어 베이스 토큰 보내기", "성공");
-//            }
-//
-//            @Override
-//            public void onFailure(Call<Void> call, Throwable t) {
-//                Log.e("구글 파이어 베이스 토큰 보내기", "실패" + t.getMessage());
-//            }
-//        });
+
     }
 
     /* 서버로부터 받은 커스텀 토큰으로 로그인 */

@@ -20,13 +20,21 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.devinsight.vegiedo.R;
+import com.devinsight.vegiedo.data.request.UserRegisterRequestDTO;
 import com.devinsight.vegiedo.data.ui.login.TagStatus;
+import com.devinsight.vegiedo.repository.pref.AuthPrefRepository;
+import com.devinsight.vegiedo.utill.RetrofitClient;
+import com.devinsight.vegiedo.utill.UserInfoTag;
 import com.devinsight.vegiedo.utill.VeganTag;
 import com.devinsight.vegiedo.repository.pref.UserPrefRepository;
 import com.devinsight.vegiedo.view.MainActivity;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class SelectTagActivity extends AppCompatActivity {
 
@@ -41,6 +49,8 @@ public class SelectTagActivity extends AppCompatActivity {
     UserPrefRepository userPrefRepository;
 
     Dialog dialog;
+
+    AuthPrefRepository authPrefRepository;
 
 
     @Override
@@ -75,6 +85,8 @@ public class SelectTagActivity extends AppCompatActivity {
 
 
         userPrefRepository = new UserPrefRepository(this);
+        authPrefRepository = new AuthPrefRepository(this);
+
         viewModel = new ViewModelProvider(this).get(TagsViewModel.class);
         toggleButtonsList = new ArrayList<>();
         userTagList = new ArrayList<>();
@@ -85,13 +97,6 @@ public class SelectTagActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 String tagContent = VeganTag.TAG_FRUITTARIAN.getTagContent();
                 viewModel.tagContent(isChecked, tagContent, compoundButton.getId());
-
-//                viewModel.setToggleState(compoundButton.getId(), isChecked);
-//                viewModel.result(compoundButton.getId(), tagContent);
-//                int tagNum = VeganTag.TAG_FRUITTARIAN.getTagNum();
-//                Log.d("프루테리언","클릭횟수 " + tagNum);
-//                addTag(isChecked, tagContent, tagNum);
-//                viewModel.setTag(isChecked, tagContent, tagNum);
             }
         });
 
@@ -102,14 +107,6 @@ public class SelectTagActivity extends AppCompatActivity {
                 String tagContent = VeganTag.TAG_VEGAN.getTagContent();
                 viewModel.tagContent(isChecked, tagContent, compoundButton.getId());
 
-//                viewModel.setToggleState(compoundButton.getId(), isChecked);
-//                viewModel.result(compoundButton.getId(), tagContent);
-//                int tagNum = VeganTag.TAG_VEGAN.getTagNum();
-//                tagNum ++;
-//                Log.d("비건","클릭횟수 " + tagNum);
-
-//                addTag(isChecked, tagContent, tagNum);
-//                viewModel.setTag(isChecked, tagContent, tagNum);
             }
         });
         taglacto.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -119,12 +116,6 @@ public class SelectTagActivity extends AppCompatActivity {
                 String tagContent = VeganTag.TAG_LACTO.getTagContent();
                 viewModel.tagContent(isChecked, tagContent, compoundButton.getId());
 
-//                viewModel.setToggleState(compoundButton.getId(), isChecked);
-//                viewModel.result(compoundButton.getId(), tagContent);
-//                int tagNum = VeganTag.TAG_LACTO.getTagNum();
-//                tagNum ++;
-//                addTag(isChecked, tagContent, tagNum);
-//                viewModel.setTag(isChecked, tagContent, tagNum);
 
             }
         });
@@ -134,12 +125,6 @@ public class SelectTagActivity extends AppCompatActivity {
 
                 String tagContent = VeganTag.TAG_OVO.getTagContent();
                 viewModel.tagContent(isChecked, tagContent, compoundButton.getId());
-
-//                String tagContent = VeganTag.TAG_OVO.getTagContent();
-//                int tagNum = VeganTag.TAG_OVO.getTagNum();
-//                tagNum ++;
-////                addTag(isChecked, tagContent, tagNum);
-//                viewModel.setTag(isChecked, tagContent, tagNum);
 
             }
         });
@@ -151,12 +136,6 @@ public class SelectTagActivity extends AppCompatActivity {
                 viewModel.tagContent(isChecked, tagContent, compoundButton.getId());
 
 
-//                String tagContent = VeganTag.TAG_LACTO_OVO.getTagContent();
-//                int tagNum = VeganTag.TAG_LACTO_OVO.getTagNum();
-//                tagNum ++;
-////                addTag(isChecked, tagContent, tagNum);
-//                viewModel.setTag(isChecked, tagContent, tagNum);
-
             }
         });
         tagPesca.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -166,11 +145,6 @@ public class SelectTagActivity extends AppCompatActivity {
                 String tagContent = VeganTag.TAG_PESCA.getTagContent();
                 viewModel.tagContent(isChecked, tagContent, compoundButton.getId());
 
-//                String tagContent = VeganTag.TAG_PESCA.getTagContent();
-//                int tagNum = VeganTag.TAG_PESCA.getTagNum();
-//                tagNum ++;
-////                addTag(isChecked, tagContent, tagNum);
-//                viewModel.setTag(isChecked, tagContent, tagNum);
 
             }
         });
@@ -181,11 +155,7 @@ public class SelectTagActivity extends AppCompatActivity {
                 String tagContent = VeganTag.TAG_POLLO.getTagContent();
                 viewModel.tagContent(isChecked, tagContent, compoundButton.getId());
 
-//                String tagContent = VeganTag.TAG_POLLO.getTagContent();
-//                int tagNum = VeganTag.TAG_POLLO.getTagNum();
-//                tagNum ++;
-////                addTag(isChecked, tagContent, tagNum);
-//                viewModel.setTag(isChecked, tagContent, tagNum);
+
 
             }
         });
@@ -194,14 +164,6 @@ public class SelectTagActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
 
                 String tagContent = VeganTag.TAG_KETO.getTagContent();
-                viewModel.tagContent(isChecked, tagContent, compoundButton.getId());
-
-//                String tagContent = VeganTag.TAG_KETO.getTagContent();
-//                int tagNum = VeganTag.TAG_KETO.getTagNum();
-//                tagNum ++;
-////                addTag(isChecked, tagContent, tagNum);
-//                viewModel.setTag(isChecked, tagContent, tagNum);
-
 
             }
         });
@@ -212,11 +174,6 @@ public class SelectTagActivity extends AppCompatActivity {
                 String tagContent = VeganTag.TAG_GLUTEN.getTagContent();
                 viewModel.tagContent(isChecked, tagContent, compoundButton.getId());
 
-//                String tagContent = VeganTag.TAG_GLUTEN.getTagContent();
-//                int tagNum = VeganTag.TAG_GLUTEN.getTagNum();
-//                tagNum ++;
-////                addTag(isChecked, tagContent, tagNum);
-//                viewModel.setTag(isChecked, tagContent, tagNum);
 
             }
         });
@@ -239,27 +196,6 @@ public class SelectTagActivity extends AppCompatActivity {
             }
         });
 
-
-//        viewModel.getTagStatusLiveData().observe(this, new Observer<TagStatus>() {
-//            @Override
-//            public void onChanged(TagStatus tagStatus) {
-//                if (tagStatus.isStatus()) {
-//                    String userTag = tagStatus.getContent();
-//                    userTagList.add(userTag);
-//                    Log.d("리스트 추가","태그 : " + userTagList);
-//                } else {
-//                    if(userTagList != null){
-//                        for( String tag : userTagList){
-//                            if ( userTagList.contains(tag) && tagStatus.getContent() == tag){
-//                                userTagList.remove(tag);
-//                                Log.d("리스트 추가","태그 : " + userTagList);
-//                            }
-//                        }
-//                    }
-//
-//                }
-//            }
-//        });
 
 
         btn_complete.setOnClickListener(new View.OnClickListener() {
@@ -301,21 +237,6 @@ public class SelectTagActivity extends AppCompatActivity {
 
     }
 
-//    public void addTag(boolean isChecked, String tag, int index) {
-//        if (isChecked) {
-//            userTagList.add(tag);
-//        } else if (isChecked == false) {
-//            int count = 0;
-//            for (String tagContent : userTagList) {
-//                if (tagContent.equals(userTagList.get(count))) {
-//                    userTagList.remove(count);
-//                    count++;
-//                }
-//                count++;
-//            }
-//
-//        }
-//    }
 
     public void setDialog(int message) {
         dialog = new Dialog(this);
@@ -328,18 +249,40 @@ public class SelectTagActivity extends AppCompatActivity {
         dialog.show();
     }
 
-//    public void setButtons() {
-//        ToggleButton tagFruittarian = findViewById(VeganTag.TAG_FRUITTARIAN.getTagId());
-//        ToggleButton tagVegan = findViewById(VeganTag.TAG_VEGAN.getTagId());
-//        ToggleButton taglacto = findViewById(VeganTag.TAG_LACTO.getTagId());
-//        ToggleButton tagOvo = findViewById(VeganTag.TAG_OVO.getTagId());
-//        ToggleButton taglactoOvo = findViewById(VeganTag.TAG_OVO.getTagId());
-//        ToggleButton tagPesca = findViewById(VeganTag.TAG_PESCA.getTagId());
-//        ToggleButton tagPollo = findViewById(VeganTag.TAG_POLLO.getTagId());
-//        ToggleButton tagKeto = findViewById(VeganTag.TAG_KETO.getTagId());
-//        ToggleButton tagGluten = findViewById(VeganTag.TAG_GLUTEN.getTagId());
-//        btn_complete = findViewById(R.id.tt_complete);
-//        btn_back = findViewById(R.id.tt_back);
-//        tt_red = findViewById(R.id.tt_red);
-//    }
+    /* 서버로 유저의 정보를 보냅니다. */
+    public void sendUserInfo(){
+        String social;
+        if( authPrefRepository.getAuthToken("KAKAO") != null) {
+            social = "KAKAO";
+        } else {
+            social = "GOOGLE";
+        }
+        String token = authPrefRepository.getAuthToken(social);
+
+        String nickName = userPrefRepository.loadUserInfo(UserInfoTag.USER_NICKNAME.getInfoType());
+        List<String> tagList = userPrefRepository.loadTagList();
+        UserRegisterRequestDTO userInfoData = new UserRegisterRequestDTO(nickName, tagList);
+
+        Call<Void> call = RetrofitClient.getUserApiService().sendUserInfo(token, userInfoData);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                Log.d("유저 정보 전송","성공");
+            }
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.e("우저 정보 전송","실패" + t.getMessage());
+            }
+        });
+    }
+
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        /* 서버로 유저의 정보를 보냅니다. */
+        sendUserInfo();
+    }
+
 }

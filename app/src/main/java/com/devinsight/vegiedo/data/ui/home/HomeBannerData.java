@@ -1,4 +1,4 @@
-package com.devinsight.vegiedo.view.home;
+package com.devinsight.vegiedo.data.ui.home;
 
 public class HomeBannerData {
     private String images;

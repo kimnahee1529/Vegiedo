@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.devinsight.vegiedo.R;
+import com.devinsight.vegiedo.data.ui.home.HomeBannerData;
 import com.devinsight.vegiedo.data.ui.home.HomeReviewUiData;
 
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ public class HomeMainFragment extends Fragment implements HomeReviewAdapter.revi
     private String mParam2;
     //  뷰페이저
     private ViewPager2 viewPager;
-    private HomeBannerAdapter2 bannerAdapter;
+    private HomeBannerAdapter bannerAdapter;
     List<HomeBannerData> bannerList;
 
     int currentPage = 0;
@@ -82,7 +83,7 @@ public class HomeMainFragment extends Fragment implements HomeReviewAdapter.revi
         bannerList.add(new HomeBannerData("https://cdn2.thecatapi.com/images/4gd.gif"));
         bannerList.add(new HomeBannerData("https://cdn2.thecatapi.com/images/4gd.gif"));
 
-        bannerAdapter = new HomeBannerAdapter2(getContext(), bannerList);
+        bannerAdapter = new HomeBannerAdapter(getContext(), bannerList);
         viewPager.setAdapter(bannerAdapter);
 
         final Handler handler = new Handler();
