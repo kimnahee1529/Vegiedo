@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
-
 
 
     <androidx.cardview.widget.CardView
@@ -15,7 +15,9 @@
         app:cardCornerRadius="20dp"
         app:cardElevation="5dp"
         app:cardPreventCornerOverlap="true"
-        app:cardUseCompatPadding="true">
+        app:cardUseCompatPadding="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardview_map_store_image"
@@ -32,21 +34,28 @@
                 android:id="@+id/map_card_image"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                android:background="@drawable/ic_launcher_background">
-
+                android:background="@drawable/ic_launcher_background"
+                android:scaleType="centerCrop">
             </ImageView>
 
+            <!-- First, place the heart_background ImageView -->
+            <ImageView
+                android:id="@+id/heart_background"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:src="@drawable/white_circle" />
+
+            <!-- Next, place the btn_map_store_like ToggleButton so it appears in front of the heart_background ImageView -->
             <ToggleButton
                 android:id="@+id/btn_map_store_like"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:background="@drawable/default_heart_btn"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="bottom|end"
                 android:layout_margin="8dp"
+                android:background="@drawable/btn_like_selector"
                 android:checked="false"
-                android:textOn=""
                 android:textOff=""
-                android:layout_gravity="bottom|end"/>
+                android:textOn="" />
 
         </androidx.cardview.widget.CardView>
 
@@ -54,9 +63,9 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end|center_vertical"
-            android:layout_marginRight="10dp">
+            android:layout_height="120dp"
+            android:layout_marginLeft="140dp"
+            android:layout_marginTop="20dp">
 
             <TextView
                 android:id="@+id/map_card_store_name"
@@ -65,7 +74,8 @@
                 android:text="가게이름"
                 android:textColor="@color/black"
                 android:textSize="16sp"
-                app:layout_constraintStart_toStartOf="@id/cardview_store_image" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/map_store_distance"
@@ -75,29 +85,39 @@
                 android:text="거리"
                 android:textColor="#B3B3B3"
                 app:layout_constraintBaseline_toBaselineOf="@id/map_card_store_name"
-                app:layout_constraintLeft_toRightOf="@+id/map_card_store_name"
-                app:layout_constraintTop_toBottomOf="@id/cardview_store_image" />
+                app:layout_constraintLeft_toRightOf="@+id/map_card_store_name"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBaseline_toBaselineOf="@id/map_card_store_name"
+                app:layout_constraintLeft_toRightOf="@+id/map_store_distance"
+                android:textColor="#B3B3B3"
+                android:layout_marginLeft="2dp"
+                android:text="m"/>
 
             <TextView
                 android:id="@+id/map_store_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:text="가게주소"
+                android:text="가게주소2134678123647831296478"
                 android:textColor="@color/black"
                 android:textSize="12sp"
-                app:layout_constraintStart_toStartOf="@id/cardview_store_image"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/map_card_store_name" />
 
             <LinearLayout
                 android:id="@+id/rating_reviews"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginBottom="5dp"
                 android:gravity="center"
                 android:orientation="horizontal"
-                app:layout_constraintStart_toStartOf="@id/cardview_store_image"
-                app:layout_constraintTop_toBottomOf="@id/map_store_address">
+                app:layout_constraintBottom_toTopOf="@+id/tag"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/map_store_address"
+                tools:ignore="UnknownId">
 
                 <RatingBar
                     android:id="@+id/map_ratingbar_star"
@@ -120,29 +140,31 @@
 
 
             <LinearLayout
+                android:id="@+id/tag"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
                 android:orientation="horizontal"
-                app:layout_constraintTop_toBottomOf="@id/rating_reviews">
+                android:layout_marginBottom="15dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
 
                 <TextView
                     android:id="@+id/map_store_tag1"
-                    android:layout_width="80dp"
+                    android:layout_width="75dp"
                     android:layout_height="25dp"
                     android:background="@drawable/btn_green"
                     android:gravity="center"
-                    android:text="@string/tag_fruittarian"
+                    android:text=""
                     android:textColor="#FFFFFF"
                     android:textSize="12sp" />
 
                 <TextView
                     android:id="@+id/map_store_tag2"
-                    android:layout_width="80dp"
+                    android:layout_width="75dp"
                     android:layout_height="25dp"
                     android:background="@drawable/btn_green"
                     android:gravity="center"
-                    android:text="@string/tag_vegan"
+                    android:text=""
                     android:textColor="#FFFFFF"
                     android:textSize="12sp" />
 

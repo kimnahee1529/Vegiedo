@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
 
 import com.devinsight.vegiedo.R;
@@ -27,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
     private String TAG = "메인홈";
     BottomNavigationView bottomNavigationView;
     ImageButton btn_filter;
-    SearchView searchView;
+    EditText searchView;
     Toolbar toolBar;
     Fragment homeMainFragment;
     Fragment searchMainFragment;
@@ -96,17 +97,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                openStoreListMainFragment();
-                return false;
-            }
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
+//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//            @Override
+//            public boolean onQueryTextSubmit(String query) {
+//                openStoreListMainFragment();
+//                return false;
+//            }
+//            @Override
+//            public boolean onQueryTextChange(String newText) {
+//                return false;
+//            }
+//        });
     }
 
 

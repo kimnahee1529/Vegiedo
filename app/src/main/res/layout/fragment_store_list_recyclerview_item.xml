@@ -26,7 +26,7 @@
         <ToggleButton
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:background="@drawable/btn_togle_like"
+            android:background="@drawable/default_heart_btn"
             android:layout_margin="15dp"
             android:checked="false"
             android:textOn=""

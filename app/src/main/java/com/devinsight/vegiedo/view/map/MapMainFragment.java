@@ -11,8 +11,17 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.devinsight.vegiedo.R;
+import com.devinsight.vegiedo.data.response.MapInquiryResponseDTO;
+import com.devinsight.vegiedo.data.response.MapStoreListData;
+import com.devinsight.vegiedo.data.response.StoreInquiryResponseDTO;
+import com.devinsight.vegiedo.data.ui.map.MapStoreCardUiData;
+import com.devinsight.vegiedo.service.api.MapApiService;
+import com.devinsight.vegiedo.service.api.StoreApiService;
+import com.devinsight.vegiedo.utill.RetrofitClient;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.CameraUpdate;
 import com.naver.maps.map.LocationTrackingMode;
@@ -22,6 +31,13 @@ import com.naver.maps.map.OnMapReadyCallback;
 import com.naver.maps.map.overlay.Marker;
 import com.naver.maps.map.util.FusedLocationSource;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class MapMainFragment extends Fragment implements OnMapReadyCallback {
 
     private MapView mapView;
@@ -29,6 +45,13 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
     private static final int REQUEST_LOCATION_PERMISSION = 1000;
     private FusedLocationSource locationSource;
     private Marker currentLocationMarker;
+    MapApiService mapApiService = RetrofitClient.getMapApiService();
+
+    //카드뷰 리사이클러뷰
+    private RecyclerView recyclerView;
+    private MapStoreCardAdapter cardAdapter;
+    private ArrayList<MapStoreListData> cardList;
+    private ArrayList<MapStoreCardUiData> cardUiList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -45,8 +68,35 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
 
         requestLocationPermission();
 
+        //API
+//        storeApiService.readStore(2L);
+        recyclerView = view.findViewById(R.id.rc_card);
+        cardList = new ArrayList<>();
+        cardUiList = new ArrayList<>();
+
+
+        cardList.add(new MapStoreListData(1L, "little forest", "서울특별시 강남구 강남대로 \n" +
+                "98길 12-5", 150, Arrays.asList("Vegan", "Organic"), 4, true, 37.1234f, 127.1234f));
+        cardList.add(new MapStoreListData(2L, "Veggie Store", "123 Veggie St.", 150, Arrays.asList("Vegan", "Organic"), 5, false, 37.1234f, 127.1234f));
+        cardUiList.add(new MapStoreCardUiData("https://i.namu.wiki/i/l_7H5Zv2mhxYHVdmjT_An3gFWge9yHzoIZ7DWVsIYoy80AtKL9LOMYuwl4OWHUhDuBTNcrv4H7KEn3I159fp-Q.webp", 1, 2, 3, 5, 150, "식당 이름", "주소", true));
+//        cardList.add(new MapStoreCardData("https://i.namu.wiki/i/l_7H5Zv2mhxYHVdmjT_An3gFWge9yHzoIZ7DWVsIYoy80AtKL9LOMYuwl4OWHUhDuBTNcrv4H7KEn3I159fp-Q.webp",7942, 9413, 33,4, 300,"가게 이름","주소",true));
+//        cardList.add(new MapStoreCardData("https://pbs.twimg.com/media/F2bkFD7agAANERO?format=jpg&name=4096x4096,7942", 7942, 9413, 33,4, 300,"가게 이름","주소",true));
+//        cardList.add(new MapStoreCardData("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRSeS17_vakustlHY5XZ0VuOiRbybzNfZbpKwULyoEqud6N9m81E9MoJkw2uwDVxh0U444&usqp=CAU",7942, 9413, 33,4, 300,"가게 이름","주소",true));
+
+
+        cardAdapter = new MapStoreCardAdapter(getContext(), cardList, this::onCardClick); //MapStoreListData 사용
+//        cardAdapter = new MapStoreCardAdapter(getContext(), cardUiList, this::onCardClick);
+        recyclerView.setAdapter(cardAdapter);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(),RecyclerView.HORIZONTAL,false);
+        recyclerView.setLayoutManager(linearLayoutManager);
+
         return view;
     }
+
+    public void onCardClick(MapStoreListData item, int position) {
+//        cardAdapter.notifyItem
+    }
+
 
     @Override
     public void onMapReady(@NonNull NaverMap naverMap) {
@@ -83,5 +133,21 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
             return;
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    private void loadStoreData() {
+        mapApiService.getStoresOnMap(Arrays.asList("tag1", "tag2"), 37.5665, 126.9780, "500", "myKeyword").enqueue(new Callback<MapInquiryResponseDTO>() {
+
+            @Override
+            public void onResponse(Call<MapInquiryResponseDTO> call, Response<MapInquiryResponseDTO> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<MapInquiryResponseDTO> call, Throwable t) {
+
+            }
+        });
+
     }
 }

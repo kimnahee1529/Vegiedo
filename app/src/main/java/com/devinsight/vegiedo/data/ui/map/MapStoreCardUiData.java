@@ -3,7 +3,7 @@ package com.devinsight.vegiedo.data.ui.map;
 public class MapStoreCardUiData {
 
 
-    private int storeImage;
+    private String storeImage;
     private int storeTag1;
     private int storeTag2;
     private int reviewNum;
@@ -13,7 +13,7 @@ public class MapStoreCardUiData {
     private String address;
     private boolean like;
 
-    public MapStoreCardUiData(int storeImage, int storeTag1, int storeTag2, int reviewer, int starlating, int distance, String storeName, String address, boolean like) {
+    public MapStoreCardUiData(String storeImage, int storeTag1, int storeTag2, int reviewer, int starlating, int distance, String storeName, String address, boolean like) {
         this.storeImage = storeImage;
         this.storeTag1 = storeTag1;
         this.storeTag2 = storeTag2;
@@ -25,11 +25,11 @@ public class MapStoreCardUiData {
         this.like = like;
     }
 
-    public int getStoreImage() {
+    public String getStoreImage() {
         return storeImage;
     }
 
-    public void setStoreImage(int storeImage) {
+    public void setStoreImage(String storeImage) {
         this.storeImage = storeImage;
     }
 
