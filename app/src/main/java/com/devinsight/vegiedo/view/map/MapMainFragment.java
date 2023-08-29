@@ -50,6 +50,7 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
     //카드뷰 리사이클러뷰
     private RecyclerView recyclerView;
     private MapStoreCardAdapter cardAdapter;
+    private MapStoreCardUiAdapter cardUiAdapter;
     private ArrayList<MapStoreListData> cardList;
     private ArrayList<MapStoreCardUiData> cardUiList;
 
@@ -75,22 +76,28 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
         cardUiList = new ArrayList<>();
 
 
-        cardList.add(new MapStoreListData(1L, "little forest", "서울특별시 강남구 강남대로 \n" +
-                "98길 12-5", 150, Arrays.asList("Vegan", "Organic"), 4, true, 37.1234f, 127.1234f));
-        cardList.add(new MapStoreListData(2L, "Veggie Store", "123 Veggie St.", 150, Arrays.asList("Vegan", "Organic"), 5, false, 37.1234f, 127.1234f));
-        cardUiList.add(new MapStoreCardUiData("https://i.namu.wiki/i/l_7H5Zv2mhxYHVdmjT_An3gFWge9yHzoIZ7DWVsIYoy80AtKL9LOMYuwl4OWHUhDuBTNcrv4H7KEn3I159fp-Q.webp", 1, 2, 3, 5, 150, "식당 이름", "주소", true));
+        //MapStoreListData 사용
+//        cardList.add(new MapStoreListData(1L, "little forest", "서울특별시 강남구 강남대로 \n"+"98길 12-5", 150, Arrays.asList("Vegan", "Organic"), 4, true, 37.1234f, 127.1234f));
+//        cardList.add(new MapStoreListData(2L, "Veggie Store", "123 Veggie St.", 150, Arrays.asList("Vegan", "Organic"), 5, false, 37.1234f, 127.1234f));
+        //MapStoreCardUiData 사용
+        cardUiList.add(new MapStoreCardUiData("https://i.namu.wiki/i/l_7H5Zv2mhxYHVdmjT_An3gFWge9yHzoIZ7DWVsIYoy80AtKL9LOMYuwl4OWHUhDuBTNcrv4H7KEn3I159fp-Q.webp", 1, 2, 3, 3, 150, "1식당 이름", "1주소", true));
+        cardUiList.add(new MapStoreCardUiData("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRSeS17_vakustlHY5XZ0VuOiRbybzNfZbpKwULyoEqud6N9m81E9MoJkw2uwDVxh0U444&usqp=CAU", 3, 4, 3, 4, 300, "2식당 이름", "2주소", false));
 //        cardList.add(new MapStoreCardData("https://i.namu.wiki/i/l_7H5Zv2mhxYHVdmjT_An3gFWge9yHzoIZ7DWVsIYoy80AtKL9LOMYuwl4OWHUhDuBTNcrv4H7KEn3I159fp-Q.webp",7942, 9413, 33,4, 300,"가게 이름","주소",true));
 //        cardList.add(new MapStoreCardData("https://pbs.twimg.com/media/F2bkFD7agAANERO?format=jpg&name=4096x4096,7942", 7942, 9413, 33,4, 300,"가게 이름","주소",true));
 //        cardList.add(new MapStoreCardData("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRSeS17_vakustlHY5XZ0VuOiRbybzNfZbpKwULyoEqud6N9m81E9MoJkw2uwDVxh0U444&usqp=CAU",7942, 9413, 33,4, 300,"가게 이름","주소",true));
 
 
-        cardAdapter = new MapStoreCardAdapter(getContext(), cardList, this::onCardClick); //MapStoreListData 사용
-//        cardAdapter = new MapStoreCardAdapter(getContext(), cardUiList, this::onCardClick);
-        recyclerView.setAdapter(cardAdapter);
+//        cardAdapter = new MapStoreCardAdapter(getContext(), cardList, this::onCardClick); //MapStoreListData 사용
+        cardUiAdapter = new MapStoreCardUiAdapter(getContext(), cardUiList, this::onCardClick);
+//        recyclerView.setAdapter(cardAdapter);
+        recyclerView.setAdapter(cardUiAdapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(),RecyclerView.HORIZONTAL,false);
         recyclerView.setLayoutManager(linearLayoutManager);
 
         return view;
+    }
+
+    private void onCardClick(MapStoreCardUiData mapStoreCardUiData, int i) {
     }
 
     public void onCardClick(MapStoreListData item, int position) {

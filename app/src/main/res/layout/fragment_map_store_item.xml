@@ -43,6 +43,7 @@
                 android:id="@+id/heart_background"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
+                android:layout_gravity="bottom|end"
                 android:src="@drawable/white_circle" />
 
             <!-- Next, place the btn_map_store_like ToggleButton so it appears in front of the heart_background ImageView -->
@@ -51,7 +52,8 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_gravity="bottom|end"
-                android:layout_margin="8dp"
+                android:layout_marginBottom="9dp"
+                android:layout_marginEnd="7dp"
                 android:background="@drawable/btn_like_selector"
                 android:checked="false"
                 android:textOff=""
@@ -87,14 +89,14 @@
                 app:layout_constraintBaseline_toBaselineOf="@id/map_card_store_name"
                 app:layout_constraintLeft_toRightOf="@+id/map_card_store_name"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintBaseline_toBaselineOf="@id/map_card_store_name"
-                app:layout_constraintLeft_toRightOf="@+id/map_store_distance"
-                android:textColor="#B3B3B3"
-                android:layout_marginLeft="2dp"
-                android:text="m"/>
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                app:layout_constraintBaseline_toBaselineOf="@id/map_card_store_name"-->
+<!--                app:layout_constraintLeft_toRightOf="@+id/map_store_distance"-->
+<!--                android:textColor="#B3B3B3"-->
+<!--                android:layout_marginLeft="2dp"-->
+<!--                android:text="m"/>-->
 
             <TextView
                 android:id="@+id/map_store_address"
@@ -126,7 +128,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:numStars="5"
-                    android:stepSize="1.0" />
+                    android:stepSize="1.0"
+                    android:progressTint="@color/yellow_star"/>
 
                 <TextView
                     android:id="@+id/map_store_reviewes"
