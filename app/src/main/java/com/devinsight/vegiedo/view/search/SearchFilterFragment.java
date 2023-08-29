@@ -96,17 +96,20 @@ public class SearchFilterFragment extends Fragment {
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                int padding= seekBar.getPaddingLeft() + seekBar.getPaddingRight();
+                /* thumb의 이동에 따른 거리 표시 및 textView 이동 */
+                int padding = seekBar.getPaddingLeft() + seekBar.getPaddingRight();
                 int sPos = seekBar.getLeft() + seekBar.getPaddingLeft();
-                int xPos = (seekBar.getWidth()-padding) * seekBar.getProgress() / seekBar.getMax() + sPos - (seekbar_distance.getWidth()/2);
+                int xPos = (seekBar.getWidth() - padding) * seekBar.getProgress() / seekBar.getMax() + sPos - (seekbar_distance.getWidth() / 2);
                 seekbar_distance.setX(xPos);
                 seekbar_distance.setText(seekBar.getProgress() + "km이내");
                 filterData.setDistance(seekBar.getProgress());
-                Log.d("seekbar 위치 ","위치 : " + xPos);
+                Log.d("seekbar 위치 ", "위치 : " + xPos);
             }
+
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
             }
+
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
 
@@ -114,14 +117,14 @@ public class SearchFilterFragment extends Fragment {
         });
 
         ToggleButton tagFruittarian = view.findViewById(VeganTag.FRUITTARIAN.getTagId());
-        ToggleButton tagVegan =  view.findViewById(VeganTag.VEGAN.getTagId());
-        ToggleButton taglacto =  view.findViewById(VeganTag.LACTO.getTagId());
-        ToggleButton tagOvo =  view.findViewById(VeganTag.OVO.getTagId());
-        ToggleButton taglactoOvo =  view.findViewById(VeganTag.LACTO_OVO.getTagId());
-        ToggleButton tagPesca =  view.findViewById(VeganTag.PESCO.getTagId());
-        ToggleButton tagPollo =  view.findViewById(VeganTag.POLLO.getTagId());
-        ToggleButton tagKeto =  view.findViewById(VeganTag.KETO.getTagId());
-        ToggleButton tagGluten =  view.findViewById(VeganTag.GLUTEN_FREE.getTagId());
+        ToggleButton tagVegan = view.findViewById(VeganTag.VEGAN.getTagId());
+        ToggleButton taglacto = view.findViewById(VeganTag.LACTO.getTagId());
+        ToggleButton tagOvo = view.findViewById(VeganTag.OVO.getTagId());
+        ToggleButton taglactoOvo = view.findViewById(VeganTag.LACTO_OVO.getTagId());
+        ToggleButton tagPesca = view.findViewById(VeganTag.PESCO.getTagId());
+        ToggleButton tagPollo = view.findViewById(VeganTag.POLLO.getTagId());
+        ToggleButton tagKeto = view.findViewById(VeganTag.KETO.getTagId());
+        ToggleButton tagGluten = view.findViewById(VeganTag.GLUTEN_FREE.getTagId());
 
         userTagList = new ArrayList<>();
         viewModel = new ViewModelProvider(this).get(SearchFilterViewModel.class);
@@ -190,7 +193,6 @@ public class SearchFilterFragment extends Fragment {
                 viewModel.tagContent(isChecked, tagContent, compoundButton.getId());
 
 
-
             }
         });
         tagKeto.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -234,19 +236,19 @@ public class SearchFilterFragment extends Fragment {
         btn_complete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (userTagList != null && userTagList.size() >= 3) {
-                    if(userPrefRepository.loadTagList() == null ){
-                        userPrefRepository.saveUserTags(userTagList);
-                        Log.d("태그","저장됨");
-                    } else {
-                        userPrefRepository.removeTagList();
-                        Log.d("태그","삭제됨");
-                        userPrefRepository.saveUserTags(userTagList);
-                        Log.d("태그","저장됨 2 ");
-                    }
+
+                if (userPrefRepository.loadTagList() == null) {
+                    userPrefRepository.saveUserTags(userTagList);
+                    Log.d("태그", "저장됨");
+                } else {
+                    userPrefRepository.removeTagList();
+                    Log.d("태그", "삭제됨");
+                    userPrefRepository.saveUserTags(userTagList);
+                    Log.d("태그", "저장됨 2 ");
                 }
 
-                if( userTagList != null && filterData.getDistance() != null) {
+
+                if (userTagList != null && filterData.getDistance() != null) {
                     userPrefRepository.saveUserTags(userTagList);
                     filterData.setTags(userTagList);
                 } else {
@@ -255,22 +257,17 @@ public class SearchFilterFragment extends Fragment {
                 }
 
                 viewModel.getFilterData(filterData.getDistance(), filterData.getTags());
-                Log.d("필터 데이터","성공" + filterData.getDistance() + filterData.getTags());
+                Log.d("필터 데이터", "성공" + filterData.getDistance() + filterData.getTags());
                 getParentFragmentManager().beginTransaction().replace(R.id.frame, searchMainFragment).commit();
 
 
             }
         });
 
-
-
-
-
-
         return view;
     }
 
-    public void setInitialTag(){
+    public void setInitialTag() {
 
     }
 }
