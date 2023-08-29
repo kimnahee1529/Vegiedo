@@ -34,10 +34,11 @@
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:background="@drawable/bolder_tool_bar"
-            android:gravity="center"
+            android:gravity="start"
+            android:layout_marginLeft="30dp"
             app:iconifiedByDefault="false"
             app:queryBackground="@android:color/transparent"
-            app:queryHint="풀 뜯으러 가보실까요?"
+            android:hint="풀 뜯으러 가보실까요 ?"
             app:searchIcon="@null">
         </EditText>
 
