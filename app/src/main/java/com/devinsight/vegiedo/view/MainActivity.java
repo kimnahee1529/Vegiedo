@@ -2,7 +2,6 @@ package com.devinsight.vegiedo.view;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -28,9 +27,11 @@ public class MainActivity extends AppCompatActivity {
     private String TAG = "메인홈";
     BottomNavigationView bottomNavigationView;
     ImageButton btn_filter;
+    ImageButton btn_filter_for_search;
 
     ImageButton btn_back;
     EditText searchView;
+    EditText searchView_for_search;
     Toolbar toolBar;
     Toolbar toolbar_for_search;
     Fragment homeMainFragment;
@@ -56,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
         /* 검색화면으로 바뀌 었을 때*/
         toolbar_for_search = findViewById(R.id.toolBar_for_search);
         btn_back = findViewById(R.id.btn_back);
+        btn_filter_for_search = findViewById(R.id.btn_filter_for_search);
 
 
 //      Fragment
@@ -65,6 +67,9 @@ public class MainActivity extends AppCompatActivity {
         myPageFragment = new MyPageFragment();
         searchMainFragment = new SearchMainFragment();
         communityFragment = new GeneralPostFragment();
+
+        toolbar_for_search.setVisibility(View.INVISIBLE);
+
 
 
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
@@ -96,14 +101,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        btn_filter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.frame, searchFilterFragment).commit();
-            }
-        });
-
         searchView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
@@ -114,6 +111,23 @@ public class MainActivity extends AppCompatActivity {
                     toolbar_for_search.setVisibility(View.VISIBLE);
                     btn_back.setVisibility(View.VISIBLE);
                 }
+            }
+        });
+
+        btn_filter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.frame, searchFilterFragment).commit();
+            }
+        });
+
+
+        btn_filter_for_search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.frame, searchFilterFragment).commit();
             }
         });
 

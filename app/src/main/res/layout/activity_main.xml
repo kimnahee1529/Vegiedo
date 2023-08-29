@@ -78,7 +78,7 @@
 
 
         <EditText
-            android:id="@+id/searchView_2"
+            android:id="@+id/searchView_for_search"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:background="@drawable/bolder_tool_bar"
@@ -92,7 +92,7 @@
         </EditText>
 
         <ImageButton
-            android:id="@+id/btn_filter_2"
+            android:id="@+id/btn_filter_for_search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
