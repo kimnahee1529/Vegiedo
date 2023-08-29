@@ -47,10 +47,6 @@ public class SearchMainFragment extends Fragment implements SearchFragmentAdapte
         return fragment;
     }
 
-
-
-
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +76,9 @@ public class SearchMainFragment extends Fragment implements SearchFragmentAdapte
         recyclerView.setAdapter(searchAdapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(),RecyclerView.VERTICAL,false);
         recyclerView.setLayoutManager(linearLayoutManager);
+
+
+
 
         return view;
     }

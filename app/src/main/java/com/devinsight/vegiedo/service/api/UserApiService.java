@@ -56,7 +56,7 @@ public interface UserApiService {
 
     //파이어베이스에서 인증받은 idToken 서버로 전송
     @POST("/users/googleLogin")
-    Call<Void> sendUserIdToken(
+    Call<Void> sendUserGoogleToken(
             @Header("Authorization") String token
     );
 

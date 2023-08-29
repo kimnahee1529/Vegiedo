@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingTop="80dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <TextView
         android:id="@+id/distance"
@@ -23,7 +24,20 @@
         android:progressDrawable="@drawable/seekbar_progress"
         android:thumb="@drawable/seekbar_thumb"
         app:layout_constraintTop_toBottomOf="@+id/distance"
+        android:max="30"
+        android:progress="5"
      />
+
+    <TextView
+        android:id="@+id/seekbar_distance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="거리"
+        android:gravity="center"
+        android:textSize="14dp"
+        android:paddingTop="10dp"
+        app:layout_constraintTop_toBottomOf="@+id/seekBar"
+        app:layout_constraintLeft_toLeftOf="@+id/seekBar"/>
 
     <TextView
         android:id="@+id/filter_tag"
@@ -33,7 +47,7 @@
         android:textColor="@color/black"
         android:textSize="16sp"
         android:layout_margin="20dp"
-        app:layout_constraintTop_toBottomOf="@+id/seekBar"></TextView>
+        app:layout_constraintTop_toBottomOf="@+id/seekbar_distance"></TextView>
 
     <LinearLayout
         android:layout_width="360dp"
@@ -43,7 +57,8 @@
         android:layout_margin="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/filter_tag">
+        app:layout_constraintTop_toBottomOf="@+id/filter_tag"
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -53,6 +68,7 @@
             app:layout_constraintVertical_bias="0.287">
 
             <ToggleButton
+                android:id="@+id/tag_fruittarian"
                 android:layout_width="60dp"
                 android:layout_height="40dp"
                 android:layout_margin="5dp"
@@ -64,6 +80,7 @@
                 android:textOn="@string/tag_fruittarian"></ToggleButton>
 
             <ToggleButton
+                android:id="@+id/tag_vegan"
                 android:layout_width="60dp"
                 android:layout_height="40dp"
                 android:layout_margin="5dp"
@@ -75,6 +92,7 @@
                 android:textOn="@string/tag_vegan"></ToggleButton>
 
             <ToggleButton
+                android:id="@+id/tag_lacto"
                 android:layout_width="60dp"
                 android:layout_height="40dp"
                 android:layout_margin="5dp"
@@ -96,6 +114,7 @@
             app:layout_constraintVertical_bias="0.444">
 
             <ToggleButton
+                android:id="@+id/tag_ovo"
                 android:layout_width="60dp"
                 android:layout_height="40dp"
                 android:layout_margin="5dp"
@@ -107,6 +126,7 @@
                 android:textOn="@string/tag_ovo"></ToggleButton>
 
             <ToggleButton
+                android:id="@+id/tag_lacto_ovo"
                 android:layout_width="60dp"
                 android:layout_height="40dp"
                 android:layout_margin="5dp"
@@ -118,6 +138,7 @@
                 android:textOn="@string/tag_lacto_ovo"></ToggleButton>
 
             <ToggleButton
+                android:id="@+id/tag_pesca"
                 android:layout_width="60dp"
                 android:layout_height="40dp"
                 android:layout_margin="5dp"
@@ -138,6 +159,7 @@
             app:layout_constraintVertical_bias="0.129">
 
             <ToggleButton
+                android:id="@+id/tag_pollo"
                 android:layout_width="60dp"
                 android:layout_height="40dp"
                 android:layout_margin="5dp"
@@ -149,6 +171,7 @@
                 android:textOn="@string/tag_pollo"></ToggleButton>
 
             <ToggleButton
+                android:id="@+id/tag_keto"
                 android:layout_width="60dp"
                 android:layout_height="40dp"
                 android:layout_margin="5dp"
@@ -160,6 +183,7 @@
                 android:textOn="@string/tag_keto"></ToggleButton>
 
             <ToggleButton
+                android:id="@+id/tag_gluten"
                 android:layout_width="60dp"
                 android:layout_height="40dp"
                 android:layout_margin="5dp"
@@ -175,7 +199,7 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/tt_complete"
+        android:id="@+id/btn_complete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="완료"

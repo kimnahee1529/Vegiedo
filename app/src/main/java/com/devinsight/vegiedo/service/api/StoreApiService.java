@@ -6,6 +6,8 @@ import com.devinsight.vegiedo.data.request.StoreReportRequestDTO;
 import com.devinsight.vegiedo.data.response.StoreInquiryResponseDTO;
 import com.devinsight.vegiedo.data.response.StoreListInquiryResponseDTO;
 
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -20,7 +22,7 @@ public interface StoreApiService {
     //가게 리스트 조회
     @GET("/stores")
     Call<StoreListInquiryResponseDTO> getStoreList(
-            @Query("tags") String tags,
+            @Query("tags") List<String> tags,
             @Query("x") float x,
             @Query("y") float y,
             @Query("distance") int distance,

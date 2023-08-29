@@ -4,7 +4,8 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:layout_marginTop="80dp">
+    android:paddingTop="80dp">
+
 
    <ScrollView
        android:layout_width="match_parent"
@@ -33,17 +34,6 @@
                 android:clipChildren="false">
 
             </androidx.viewpager2.widget.ViewPager2>
-
-
-
-<!--            <com.google.android.material.progressindicator.CircularProgressIndicator-->
-<!--                android:id="@+id/indicator"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="30dp"-->
-<!--                android:layout_gravity="center|bottom"-->
-<!--                android:foregroundGravity="center_horizontal">-->
-
-<!--            </com.google.android.material.progressindicator.CircularProgressIndicator>-->
 
          </FrameLayout>
 
