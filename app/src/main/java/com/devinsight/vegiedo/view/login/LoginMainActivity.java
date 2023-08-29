@@ -236,7 +236,6 @@ public class LoginMainActivity extends AppCompatActivity {
                         } else {
                             Log.e("커스텀 토큰 요청", "실패" + task.getException());
                         }
-
                     }
                 });
     }
@@ -265,10 +264,16 @@ public class LoginMainActivity extends AppCompatActivity {
                     return null;
                 }
 
+                String userProfile = user.getKakaoAccount().getProfile().getProfileImageUrl();
+                userPrefRepository.saveUserInfo(UserInfoTag.USER_PROFILE.getInfoType(), userProfile);
+                Log.d("this is auth", "kakao auth is = " + kakaoAuth);
+
                 Call<Void> call = RetrofitClient.getUserApiService().registerUser(kakaoAuth, "KAKAO");
                 call.enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
+                        String userKaKAoToken = response.headers().get("Authorization");
+                        authPrefRepository.saveAuthToken("KAKAO",userKaKAoToken);
                         Log.e("KAKAO", "연동성공" + kakaoAuth);
                     }
 
@@ -277,12 +282,6 @@ public class LoginMainActivity extends AppCompatActivity {
                         Log.e("KAKAO", "연동 실패" + t.getMessage());
                     }
                 });
-
-
-                String userProfile = user.getKakaoAccount().getProfile().getProfileImageUrl();
-                userPrefRepository.saveUserInfo(UserInfoTag.USER_PROFILE.getInfoType(), userProfile);
-                authPrefRepository.saveAuthToken("KAKAO", kakaoAuth);
-                Log.d("this is auth", "kakao auth is = " + kakaoAuth);
 
                 return null;
             }
