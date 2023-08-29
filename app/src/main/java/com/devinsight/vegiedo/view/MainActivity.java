@@ -28,8 +28,11 @@ public class MainActivity extends AppCompatActivity {
     private String TAG = "메인홈";
     BottomNavigationView bottomNavigationView;
     ImageButton btn_filter;
+
+    ImageButton btn_back;
     EditText searchView;
     Toolbar toolBar;
+    Toolbar toolbar_for_search;
     Fragment homeMainFragment;
     Fragment searchMainFragment;
     Fragment searchFilterFragment;
@@ -49,6 +52,10 @@ public class MainActivity extends AppCompatActivity {
         searchView = findViewById(R.id.searchView);
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         toolBar = findViewById(R.id.toolBar);
+
+        /* 검색화면으로 바뀌 었을 때*/
+        toolbar_for_search = findViewById(R.id.toolBar_for_search);
+        btn_back = findViewById(R.id.btn_back);
 
 
 //      Fragment
@@ -103,12 +110,24 @@ public class MainActivity extends AppCompatActivity {
                 if(b){
                     FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                     transaction.replace(R.id.frame, searchMainFragment).commit();
-
+                    toolBar.setVisibility(View.INVISIBLE);
+                    toolbar_for_search.setVisibility(View.VISIBLE);
+                    btn_back.setVisibility(View.VISIBLE);
                 }
             }
         });
 
+        btn_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.frame, homeMainFragment).commit();
+                toolBar.setVisibility(View.VISIBLE);
+                toolbar_for_search.setVisibility(View.INVISIBLE);
+                btn_back.setVisibility(View.INVISIBLE);
 
+            }
+        });
 
     }
 
