@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         mapMainFragment = new MapMainFragment();
         searchFilterFragment = new SearchFilterFragment();
         myPageFragment = new MyPageFragment();
-
+        searchMainFragment = new SearchMainFragment();
         communityFragment = new GeneralPostFragment();
 
 
@@ -97,17 +97,19 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(String query) {
-//                openStoreListMainFragment();
-//                return false;
-//            }
-//            @Override
-//            public boolean onQueryTextChange(String newText) {
-//                return false;
-//            }
-//        });
+        searchView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if(b){
+                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                    transaction.replace(R.id.frame, searchMainFragment).commit();
+
+                }
+            }
+        });
+
+
+
     }
 
 
