@@ -71,7 +71,6 @@ public class MainActivity extends AppCompatActivity {
         toolbar_for_search.setVisibility(View.INVISIBLE);
 
 
-
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -104,9 +103,10 @@ public class MainActivity extends AppCompatActivity {
         searchView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
-                if(b){
+                if (b) {
                     FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                    transaction.replace(R.id.frame, searchMainFragment).commit();
+                    transaction.replace(R.id.frame, searchMainFragment, "SearchMainFragment")
+                            .addToBackStack("SearchMainFragment").commit();
                     toolBar.setVisibility(View.INVISIBLE);
                     toolbar_for_search.setVisibility(View.VISIBLE);
                     btn_back.setVisibility(View.VISIBLE);

@@ -60,7 +60,7 @@ public class SelectTagActivity extends AppCompatActivity {
         /* 토글 버튼 9개 추가 .... */
 //        setButtons();
 
-        btn_complete = findViewById(R.id.tt_complete);
+        btn_complete = findViewById(R.id.btn_complete);
         btn_later = findViewById(R.id.tt_back);
         tt_selet_tag = findViewById(R.id.tt_select_tag);
 
@@ -164,6 +164,7 @@ public class SelectTagActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
 
                 String tagContent = VeganTag.KETO.getTagContent();
+                viewModel.tagContent(isChecked, tagContent, compoundButton.getId());
 
             }
         });
