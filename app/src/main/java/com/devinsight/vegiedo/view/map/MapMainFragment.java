@@ -116,7 +116,7 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
         this.naverMap = naverMap;
 
         /* 네이버 지도에서 선택된 위치의 위도 경도를 전달 합니다. */
-        getMapLocation(naverMap);
+//        getMapLocation(naverMap);
 
         naverMap.setLocationSource(locationSource);
         LatLng defaultPosition = new LatLng(37.498095, 127.027610); //강남역

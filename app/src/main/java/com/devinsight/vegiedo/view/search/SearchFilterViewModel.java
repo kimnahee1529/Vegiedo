@@ -1,5 +1,6 @@
 package com.devinsight.vegiedo.view.search;
 
+import android.location.Location;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
@@ -13,6 +14,8 @@ import com.devinsight.vegiedo.data.ui.search.SearchStorSummaryeUiData;
 import com.devinsight.vegiedo.data.ui.search.SearchStoreDetailUiData;
 import com.devinsight.vegiedo.utill.RetrofitClient;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import retrofit2.Call;
@@ -30,6 +33,8 @@ public class SearchFilterViewModel extends ViewModel {
 
     /* 필터링을 끝 낸 라이브 데이터 */
     private MutableLiveData<List<StoreListData>> storeFilteredLiveData = new MutableLiveData<>();
+    /* 검색창에 보여줄 라이브 데이터 */
+    private MutableLiveData<List<StoreListData>> storeSearchLiveData = new MutableLiveData<>();
 
     /* api 를 통해 서버로 부터 받은 가게 리스트 */
     private List<StoreListData> allStoreList;
@@ -38,12 +43,13 @@ public class SearchFilterViewModel extends ViewModel {
     private float userCurrentLat;
     private float userCurrentLong;
     private float mapLat;
-    private float mapLog;
+    private float mapLong;
     private float latitude;
     private float longitude;
     private List<String> tags;
     private int distance;
     private String keyword;
+
 
 
     public void tagContent(boolean isChecked, String content, int btnId) {
@@ -81,7 +87,7 @@ public class SearchFilterViewModel extends ViewModel {
         this.distance = distance;
         this.tags = tags;
 
-        Log.d("필터 데이터 2","거리 : " + distance + "태그 : " + tags.toString());
+        Log.d("필터 데이터 2", "거리 : " + distance + "태그 : " + tags.toString());
     }
 
     /* 검색창에서 유저가 입력한 text를 받아옵니다. */
@@ -90,23 +96,24 @@ public class SearchFilterViewModel extends ViewModel {
     }
 
     /* 지도상에서 유저가 선택한 위치의 위도, 경도를 받아옵니다. */
-    public void getCurrentMapLocationData(float mapLat, float mapLog){
+    public void getCurrentMapLocationData(float mapLat, float mapLong) {
         this.mapLat = mapLat;
-        this.mapLog = mapLog;
+        this.mapLong = mapLong;
+
+        Log.d("지도 위치", "지도 위치 " + "위도 : " + mapLat + "경도" + mapLong);
     }
 
 
-
-    public void getStoreList(){
+    public void getStoreList() {
         /* 맵에서 선택한 위치가 없다면 */
-        boolean noMapLocation = mapLat + mapLog == 0.0f;
+        boolean noMapLocation = mapLat + mapLong == 0.0f;
 
-        if( noMapLocation )  {
+        if (noMapLocation) {
             latitude = userCurrentLat;
             longitude = userCurrentLong;
         } else {
             latitude = mapLat;
-            longitude = mapLog;
+            longitude = mapLong;
         }
 
         Call<StoreListInquiryResponseDTO> call = RetrofitClient.getStoreApiService()
@@ -122,12 +129,13 @@ public class SearchFilterViewModel extends ViewModel {
         call.enqueue(new Callback<StoreListInquiryResponseDTO>() {
             @Override
             public void onResponse(Call<StoreListInquiryResponseDTO> call, Response<StoreListInquiryResponseDTO> response) {
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     StoreListInquiryResponseDTO storeList = response.body();
                     allStoreList = storeList.getStores();
                     storeFilteredLiveData.setValue(allStoreList);
                 }
             }
+
             @Override
             public void onFailure(Call<StoreListInquiryResponseDTO> call, Throwable t) {
 
@@ -135,9 +143,98 @@ public class SearchFilterViewModel extends ViewModel {
         });
     }
 
-    public LiveData<List<StoreListData>> loadStoreList(){
+
+
+    public void searchList(String input) {
+
+        boolean noMapLocation = mapLat + mapLong == 0.0f;
+
+        if (noMapLocation) {
+            latitude = userCurrentLat;
+            longitude = userCurrentLong;
+        } else {
+            latitude = mapLat;
+            longitude = mapLong;
+        }
+
+        List<StoreListData> storeList = new ArrayList<>(); // storeFilteredLiveData.getValue;
+
+        storeList.add(new StoreListData(1l,"","",37.500731f, 127.039338f, 5, 5, Arrays.asList("#비건", "#락토") , true, 45, ""));
+        storeList.add(new StoreListData(2l,"","",37.494575f, 127.034612f, 5, 4, Arrays.asList("#프루테리언", "#비건") , true, 45, ""));
+        storeList.add(new StoreListData(3l,"","",37.499176f, 127.041257f, 5, 5, Arrays.asList( "#락토", "#오보") , true, 45, ""));
+        storeList.add(new StoreListData(4l,"","",37.492988f, 127.035923f, 5, 1, Arrays.asList("#락토 오보", "#페스코") , true, 45, ""));
+        storeList.add(new StoreListData(5l,"","",37.503657f, 127.036592f, 5, 3, Arrays.asList("#오보", "#락토 오보") , true, 45, ""));
+        storeList.add(new StoreListData(6l,"","",37.492142f, 127.045137f, 5, 4, Arrays.asList("#페스코", "#폴로") , true, 45, ""));
+        storeList.add(new StoreListData(7l,"","",37.498235f, 127.032479f, 5, 2, Arrays.asList("#폴로", "#키토") , true, 45, ""));
+        storeList.add(new StoreListData(8l,"","",37.502658f, 127.040892f, 5, 3, Arrays.asList("#키토", "#글루텐프리") , true, 45, ""));
+        storeList.add(new StoreListData(9l,"","",37.496312f, 127.043285f, 5, 3, Arrays.asList("#락토", "#프루테리언") , true, 45, ""));
+        storeList.add(new StoreListData(10l,"","",37.504978f, 127.037501f, 5, 4, Arrays.asList("#오보", "#글루텐프리") , true, 45, ""));
+
+        List<StoreListData> filteredStoreList = new ArrayList<>();
+
+        for (int i = 0; i < storeList.size(); i++) {
+
+            /* 유저 위치 */
+            Location userLocation = new Location("");
+            userLocation.setLatitude(latitude);
+            userLocation.setLongitude(longitude);
+
+            /* 가게 위치 */
+            Location storeLocation = new Location("");
+            storeLocation.setLatitude(storeList.get(i).getLatitude());
+            storeLocation.setLongitude(storeList.get(i).getLongitude());
+
+            /* 유저 위치 to 가게 위치 (m) */
+            float userToStore = userLocation.distanceTo(storeLocation);
+
+            /* 거리 필터 충족 */
+            boolean storeDistance = userToStore < distance * 1000;
+
+            /* 검색 에서 문자열 체크 */
+            boolean storeNameFilter = storeList.get(i).getStoreName().toLowerCase().contains(input.toLowerCase());
+            boolean storeAddressFilter = storeList.get(i).getAddress().toLowerCase().contains(input.toLowerCase());
+
+            String tag1 = storeList.get(i).getTags().get(0);
+            String tag2 = storeList.get(i).getTags().get(1);
+
+            boolean storeTagFilter = tag1.contains(input.toLowerCase());
+            boolean storeTagFilter2 = tag2.contains(input.toLowerCase());
+
+            /* 가게 이름, 가게 주소, 태그 문자열 중 하나 포함 */
+            boolean stringFilter = storeNameFilter || storeAddressFilter || storeTagFilter || storeTagFilter2;
+            boolean isTagMatched = false;
+
+            for (String userTag : tags) {
+                for (String storeTag : storeList.get(i).getTags()) {
+                    if (userTag.contentEquals(storeTag)) {
+                        isTagMatched = true;
+                        break;
+                    }
+                }
+                if(isTagMatched) {
+                    break; // 하나라도 일치하는 태그를 찾았으면 더 이상 검사하지 않습니다.
+                }
+            }
+
+            if (storeDistance && isTagMatched && stringFilter) {
+                filteredStoreList.add(storeList.get(i));
+            }
+
+
+        }
+        storeSearchLiveData.setValue(filteredStoreList);
+    }
+
+
+    public LiveData<List<StoreListData>> getFilteredStoreList() {
         return storeFilteredLiveData;
     }
+
+    public LiveData<List<StoreListData>> getStoreSearchList() {
+        return storeSearchLiveData;
+    }
+
+
 }
 
 

@@ -19,7 +19,7 @@
         <!--        <item name="windowActionBar">false</item>-->
         <item name="android:windowLightStatusBar">true</item>
 
-        <item name="android:background">"#FFFFFF"</item>
+<!--        <item name="android:background">"#FFFFFF"</item>-->
 
     </style>
 </resources>
