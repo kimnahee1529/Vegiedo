@@ -26,8 +26,6 @@ public class StoreListData {
     @Expose
     @SerializedName("like")private boolean like;
     @Expose
-    @SerializedName("stamp")private boolean stamp;
-    @Expose
     @SerializedName("reviewCount")private Integer reviewCount;
     @Expose
     @SerializedName("images")private String images;
@@ -104,14 +102,6 @@ public class StoreListData {
         this.like = like;
     }
 
-    public boolean isStamp() {
-        return stamp;
-    }
-
-    public void setStamp(boolean stamp) {
-        this.stamp = stamp;
-    }
-
     public Integer getReviewCount() {
         return reviewCount;
     }
@@ -128,7 +118,7 @@ public class StoreListData {
         this.images = images;
     }
 
-    public StoreListData(Long storeId, String storeName, String address, float latitude, float longitude, Integer distance, Integer stars, List<String> tags, boolean like, boolean stamp, Integer reviewCount, String images) {
+    public StoreListData(Long storeId, String storeName, String address, float latitude, float longitude, Integer distance, Integer stars, List<String> tags, boolean like, Integer reviewCount, String images) {
         this.storeId = storeId;
         this.storeName = storeName;
         this.address = address;
@@ -138,7 +128,6 @@ public class StoreListData {
         this.stars = stars;
         this.tags = tags;
         this.like = like;
-        this.stamp = stamp;
         this.reviewCount = reviewCount;
         this.images = images;
     }

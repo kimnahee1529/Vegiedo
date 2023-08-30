@@ -1,6 +1,6 @@
 package com.devinsight.vegiedo.view.search;
 
-import android.widget.SeekBar;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class SearchFilterViewModel extends ViewModel {
     private MutableLiveData<TagStatus> tagStatusLiveData = new MutableLiveData<>();
@@ -29,26 +31,29 @@ public class SearchFilterViewModel extends ViewModel {
     private MutableLiveData<List<SearchStorSummaryeUiData>> storeLiveData = new MutableLiveData<>();
 
     /* 필터링을 끝 낸 라이브 데이터 */
-    private MutableLiveData<List<SearchStorSummaryeUiData>> storeFilteredLiveData = new MutableLiveData<>();
+    private MutableLiveData<List<StoreListData>> storeFilteredLiveData = new MutableLiveData<>();
 
     /* api 를 통해 서버로 부터 받은 가게 리스트 */
-    private List<StoreListData> allStoreList = new ArrayList<>();
+    private List<StoreListData> allStoreList;
+
 
     UserPrefRepository userPrefRepository;
 
+    LocationData locationData;
+
+    private float latitude;
+    private float longitude;
 
 
-
-
-    public void tagContent( boolean isChecked, String content, int btnId) {
+    public void tagContent(boolean isChecked, String content, int btnId) {
 
         TagStatus tagStatus = new TagStatus(isChecked, content, btnId);
 
-        if(isChecked) {
+        if (isChecked) {
             tagStatus.setContent(content);
             tagStatus.setBtnId(btnId);
             tagStatus.setStatus(true);
-        }else {
+        } else {
             tagStatus.setContent(content);
             tagStatus.setBtnId(btnId);
             tagStatus.setStatus(false);
@@ -57,17 +62,52 @@ public class SearchFilterViewModel extends ViewModel {
         tagStatusLiveData.setValue(tagStatus);
     }
 
-    public LiveData<TagStatus> getTagStatusLiveData(){
+    public LiveData<TagStatus> getTagStatusLiveData() {
 
         return tagStatusLiveData;
     }
 
-    public void getFilterData(int distance, List<String> tags){
-//        Call<StoreListInquiryResponseDTO> call = RetrofitClient.getStoreApiService()
-//                .getStoreList(
-//                        tags,
-//
-//                );
+    public void getCurrentLocationData(float latitude, float longitude) {
+        this.latitude = latitude;
+        this.longitude = longitude;
 
+        Log.d("위치3", "위치3" + "위도 : " + latitude + "경도" + longitude);
+    }
+
+    public void getFilterData(int distance, List<String> tags) {
+        String keyword = "";
+        Call<StoreListInquiryResponseDTO> call = RetrofitClient.getStoreApiService()
+                .getStoreList(
+                        tags,
+                        latitude,
+                        longitude,
+                        distance,
+                        keyword,
+                        10,
+                        3
+                );
+
+        call.enqueue(new Callback<StoreListInquiryResponseDTO>() {
+            @Override
+            public void onResponse(Call<StoreListInquiryResponseDTO> call, Response<StoreListInquiryResponseDTO> response) {
+                if(response.isSuccessful()){
+                    StoreListInquiryResponseDTO storeList = response.body();
+                    allStoreList = storeList.getStores();
+                    storeFilteredLiveData.setValue(allStoreList);
+                }
+            }
+            @Override
+            public void onFailure(Call<StoreListInquiryResponseDTO> call, Throwable t) {
+
+            }
+        });
+        Log.d("위치4", "위치4" + "위도 : " + latitude + "경도" + longitude);
+    }
+
+    public LiveData<List<StoreListData>> loadStoreList(){
+        return storeFilteredLiveData;
     }
 }
+
+
+

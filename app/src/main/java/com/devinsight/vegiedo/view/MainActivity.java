@@ -3,10 +3,20 @@ package com.devinsight.vegiedo.view;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -18,6 +28,7 @@ import com.devinsight.vegiedo.view.home.HomeMainFragment;
 import com.devinsight.vegiedo.view.map.MapMainFragment;
 import com.devinsight.vegiedo.view.mypage.MyPageFragment;
 import com.devinsight.vegiedo.view.search.SearchFilterFragment;
+import com.devinsight.vegiedo.view.search.SearchFilterViewModel;
 import com.devinsight.vegiedo.view.search.SearchMainFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -43,11 +54,16 @@ public class MainActivity extends AppCompatActivity {
     Fragment myPageFragment;
     Fragment communityFragment;
 
+    /* 뷰모델 */
+    SearchFilterViewModel viewModel;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
 
         btn_filter = findViewById(R.id.btn_filter);
         searchView = findViewById(R.id.searchView);
@@ -143,7 +159,51 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+//        getCurrentLocation();
+
+
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+//    public void getCurrentLocation() {
+//        final LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+//        boolean locationPermission = Build.VERSION.SDK_INT >= 23 &&
+//                ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED;
+//        if (locationPermission) {
+//            ActivityCompat.requestPermissions(this, new String[]{
+//                    android.Manifest.permission.ACCESS_FINE_LOCATION}, 0);
+//        } else {
+//            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+//            if (location != null) {
+//                float latitude = (float) location.getLatitude();
+//                float longitude = (float) location.getLongitude();
+//
+//                Log.d("위치 1 ","위치" + "위도 : " +  latitude + "경도 : " + longitude);
+//            }
+//
+//            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, locationListener);
+//            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, locationListener);
+//
+//
+//        }
+//
+//    }
+//
+//    final LocationListener locationListener = new LocationListener() {
+//        @Override
+//        public void onLocationChanged(@NonNull Location location) {
+//            float latitude = (float) location.getLatitude();
+//            float longitude = (float) location.getLongitude();
+//            Log.d("위치 2 ","위치" + "위도 : " +  latitude + "경도 : " + longitude);
+//        }
+//    };
+
+
 
 
     private void openSearchMainFragment() {

@@ -3,6 +3,7 @@ package com.devinsight.vegiedo.view.map;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.PointF;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,11 +18,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.devinsight.vegiedo.R;
 import com.devinsight.vegiedo.data.response.MapInquiryResponseDTO;
 import com.devinsight.vegiedo.data.response.MapStoreListData;
-import com.devinsight.vegiedo.data.response.StoreInquiryResponseDTO;
 import com.devinsight.vegiedo.data.ui.map.MapStoreCardUiData;
 import com.devinsight.vegiedo.service.api.MapApiService;
-import com.devinsight.vegiedo.service.api.StoreApiService;
 import com.devinsight.vegiedo.utill.RetrofitClient;
+import com.devinsight.vegiedo.view.search.SearchFilterViewModel;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.CameraUpdate;
 import com.naver.maps.map.LocationTrackingMode;
@@ -53,6 +53,9 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
     private MapStoreCardUiAdapter cardUiAdapter;
     private ArrayList<MapStoreListData> cardList;
     private ArrayList<MapStoreCardUiData> cardUiList;
+
+    /* 뷰 모델 */
+    SearchFilterViewModel viewModel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -122,6 +125,7 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
             LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
 //            currentLocationMarker.setPosition(currentLatLng);
 //            currentLocationMarker.setMap(naverMap);
+
         });
     }
 
@@ -157,4 +161,20 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
         });
 
     }
+
+    public void getUserLocation(){
+        NaverMap.OnMapClickListener mapClickListener = new NaverMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(@NonNull PointF pointF, @NonNull LatLng latLng) {
+                float latitude = (float)latLng.latitude;
+                float longitude = (float)latLng.longitude;
+            }
+        };
+    }
+
+
+
+
+
+
 }

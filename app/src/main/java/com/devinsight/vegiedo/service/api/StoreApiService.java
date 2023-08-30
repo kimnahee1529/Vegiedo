@@ -28,8 +28,7 @@ public interface StoreApiService {
             @Query("distance") int distance,
             @Query("keyword") String keyword,
             @Query("count") int count,
-            @Query("cursor") int cursor,
-            @Query("isStampBook") boolean isStampBook
+            @Query("cursor") int cursor
     );
 
     //가게 등록

@@ -1,7 +1,16 @@
 package com.devinsight.vegiedo.view.search;
 
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -19,6 +28,7 @@ import com.devinsight.vegiedo.R;
 import com.devinsight.vegiedo.data.ui.login.TagStatus;
 import com.devinsight.vegiedo.repository.pref.UserPrefRepository;
 import com.devinsight.vegiedo.utill.VeganTag;
+import com.devinsight.vegiedo.view.MainActivity;
 import com.devinsight.vegiedo.view.StoreListMainFragment;
 
 import java.util.ArrayList;
@@ -49,6 +59,8 @@ public class SearchFilterFragment extends Fragment {
 
     /* 저장소 */
     UserPrefRepository userPrefRepository;
+
+    LocationManager locationManager;
 
 
     public SearchFilterFragment() {
@@ -267,7 +279,54 @@ public class SearchFilterFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        boolean locationPermission = Build.VERSION.SDK_INT >= 23 &&
+                ContextCompat.checkSelfPermission(getActivity().getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED;
+        if (locationPermission) {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{
+                    android.Manifest.permission.ACCESS_FINE_LOCATION}, 0);
+        } else {
+            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if (location != null) {
+                float latitude = (float) location.getLatitude();
+                float longitude = (float) location.getLongitude();
+
+                Log.d("위치 1 ", "위치" + "위도 : " + latitude + "경도 : " + longitude);
+            }
+
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, locationListener);
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, locationListener);
+        }
+    }
+
+    final LocationListener locationListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(@NonNull Location location) {
+            float latitude = (float) location.getLatitude();
+            float longitude = (float) location.getLongitude();
+            viewModel.getCurrentLocationData(latitude, longitude);
+
+            Log.d("위치 2 ", "위치" + "위도 : " + latitude + "경도 : " + longitude);
+        }
+    };
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if(locationListener != null) {
+            locationManager.removeUpdates(locationListener);
+        }
+    }
+
+
+
     public void setInitialTag() {
 
     }
+
+
 }
