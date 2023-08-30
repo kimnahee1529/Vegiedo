@@ -11,10 +11,8 @@ import com.devinsight.vegiedo.data.response.StoreListInquiryResponseDTO;
 import com.devinsight.vegiedo.data.ui.login.TagStatus;
 import com.devinsight.vegiedo.data.ui.search.SearchStorSummaryeUiData;
 import com.devinsight.vegiedo.data.ui.search.SearchStoreDetailUiData;
-import com.devinsight.vegiedo.repository.pref.UserPrefRepository;
 import com.devinsight.vegiedo.utill.RetrofitClient;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -37,11 +35,12 @@ public class SearchFilterViewModel extends ViewModel {
     private List<StoreListData> allStoreList;
 
     /* Query 요청 및 필터에 사용 하기 위한 전역 변수*/
-    private float latitude;
-    private float longitude;
-
+    private float userCurrentLat;
+    private float userCurrentLong;
     private float mapLat;
     private float mapLog;
+    private float latitude;
+    private float longitude;
     private List<String> tags;
     private int distance;
     private String keyword;
@@ -68,13 +67,15 @@ public class SearchFilterViewModel extends ViewModel {
 
         return tagStatusLiveData;
     }
+
     /* 유저의 현재 위도, 경도 값을 받아옵니다. */
     public void getCurrentLocationData(float latitude, float longitude) {
-        this.latitude = latitude;
-        this.longitude = longitude;
+        this.userCurrentLat = latitude;
+        this.userCurrentLong = longitude;
 
         Log.d("위치3", "위치3" + "위도 : " + latitude + "경도" + longitude);
     }
+
     /* 유저가 선택한 태그와, 거리를 가져옵니다.*/
     public void getFilterData(int distance, List<String> tags) {
         this.distance = distance;
@@ -83,17 +84,31 @@ public class SearchFilterViewModel extends ViewModel {
         Log.d("필터 데이터 2","거리 : " + distance + "태그 : " + tags.toString());
     }
 
+    /* 검색창에서 유저가 입력한 text를 받아옵니다. */
     public void getSearchInputText(String searchText) {
         this.keyword = searchText;
     }
 
+    /* 지도상에서 유저가 선택한 위치의 위도, 경도를 받아옵니다. */
     public void getCurrentMapLocationData(float mapLat, float mapLog){
         this.mapLat = mapLat;
         this.mapLog = mapLog;
     }
 
+
+
     public void getStoreList(){
-        String keyword = "";
+        /* 맵에서 선택한 위치가 없다면 */
+        boolean noMapLocation = mapLat + mapLog == 0.0f;
+
+        if( noMapLocation )  {
+            latitude = userCurrentLat;
+            longitude = userCurrentLong;
+        } else {
+            latitude = mapLat;
+            longitude = mapLog;
+        }
+
         Call<StoreListInquiryResponseDTO> call = RetrofitClient.getStoreApiService()
                 .getStoreList(
                         tags,
@@ -118,7 +133,6 @@ public class SearchFilterViewModel extends ViewModel {
 
             }
         });
-        Log.d("위치4", "위치4" + "위도 : " + latitude + "경도" + longitude);
     }
 
     public LiveData<List<StoreListData>> loadStoreList(){

@@ -224,6 +224,7 @@ public class SearchFilterFragment extends Fragment {
                 viewModel.tagContent(isChecked, tagContent, compoundButton.getId());
 
 
+
             }
         });
 
@@ -317,15 +318,15 @@ public class SearchFilterFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        if(locationListener != null) {
+        if (locationListener != null) {
             locationManager.removeUpdates(locationListener);
         }
     }
 
 
-
-    public void setInitialTag() {
-
+    public boolean isInitialTag(String tag) {
+        List<String> initialTags = userPrefRepository.loadTagList();
+        return initialTags.contains(tag);
     }
 
 

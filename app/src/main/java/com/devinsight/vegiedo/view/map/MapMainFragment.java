@@ -72,6 +72,7 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
 
         requestLocationPermission();
 
+
         //API
 //        storeApiService.readStore(2L);
         recyclerView = view.findViewById(R.id.rc_card);
@@ -97,6 +98,8 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(),RecyclerView.HORIZONTAL,false);
         recyclerView.setLayoutManager(linearLayoutManager);
 
+
+
         return view;
     }
 
@@ -111,6 +114,9 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(@NonNull NaverMap naverMap) {
         this.naverMap = naverMap;
+
+        /* 네이버 지도에서 선택된 위치의 위도 경도를 전달 합니다. */
+        getMapLocation(naverMap);
 
         naverMap.setLocationSource(locationSource);
         LatLng defaultPosition = new LatLng(37.498095, 127.027610); //강남역
@@ -162,14 +168,18 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
 
     }
 
-    public void getUserLocation(){
+    public void getMapLocation(NaverMap naverMap){
         NaverMap.OnMapClickListener mapClickListener = new NaverMap.OnMapClickListener() {
             @Override
             public void onMapClick(@NonNull PointF pointF, @NonNull LatLng latLng) {
                 float latitude = (float)latLng.latitude;
                 float longitude = (float)latLng.longitude;
+                /* 네이버 지도 위에서 선택된 위치의 위도 경도를 뷰 모델로 전달 합니다. */
+                viewModel.getCurrentMapLocationData(latitude, longitude);
             }
         };
+
+        naverMap.setOnMapClickListener(mapClickListener);
     }
 
 
