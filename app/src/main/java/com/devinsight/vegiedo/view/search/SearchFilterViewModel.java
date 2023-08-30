@@ -36,13 +36,12 @@ public class SearchFilterViewModel extends ViewModel {
     /* api 를 통해 서버로 부터 받은 가게 리스트 */
     private List<StoreListData> allStoreList;
 
-
-    UserPrefRepository userPrefRepository;
-
-    LocationData locationData;
-
+    /* Query 요청 및 필터에 사용 하기 위한 전역 변수*/
     private float latitude;
     private float longitude;
+    private List<String> tags;
+    private int distance;
+    private String keyword;
 
 
     public void tagContent(boolean isChecked, String content, int btnId) {
@@ -66,15 +65,21 @@ public class SearchFilterViewModel extends ViewModel {
 
         return tagStatusLiveData;
     }
-
+    /* 유저의 현재 위도, 경도 값을 받아옵니다. */
     public void getCurrentLocationData(float latitude, float longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
 
         Log.d("위치3", "위치3" + "위도 : " + latitude + "경도" + longitude);
     }
-
+    /* 유저가 선택한 태그와, 거리를 가져옵니다.*/
     public void getFilterData(int distance, List<String> tags) {
+        this.distance = distance;
+        this.tags = tags;
+
+        Log.d("필터 데이터 2","거리 : " + distance + "태그 : " + tags.toString());
+    }
+    public void getStoreList(){
         String keyword = "";
         Call<StoreListInquiryResponseDTO> call = RetrofitClient.getStoreApiService()
                 .getStoreList(
@@ -86,7 +91,6 @@ public class SearchFilterViewModel extends ViewModel {
                         10,
                         3
                 );
-
         call.enqueue(new Callback<StoreListInquiryResponseDTO>() {
             @Override
             public void onResponse(Call<StoreListInquiryResponseDTO> call, Response<StoreListInquiryResponseDTO> response) {
