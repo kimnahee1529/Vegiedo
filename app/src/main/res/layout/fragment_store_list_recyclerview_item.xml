@@ -15,6 +15,7 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <ImageView
+            android:id="@+id/store_image"
             android:layout_width="350dp"
             android:layout_height="150dp"
             android:scaleType="centerCrop"
@@ -45,6 +46,7 @@
         app:layout_constraintTop_toBottomOf="@id/cardview_store_image"
         app:layout_constraintStart_toStartOf="@id/cardview_store_image"/>
     <TextView
+        android:id="@+id/store_distance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="거리"
@@ -105,6 +107,7 @@
         app:layout_constraintTop_toBottomOf="@id/rating_reviews">
 
         <TextView
+            android:id="@+id/store_Tag1"
             android:layout_width="80dp"
             android:layout_height="25dp"
             android:textSize="12sp"
@@ -116,6 +119,7 @@
             />
 
         <TextView
+            android:id="@+id/store_tag2"
             android:layout_width="80dp"
             android:layout_height="25dp"
             android:textSize="12sp"

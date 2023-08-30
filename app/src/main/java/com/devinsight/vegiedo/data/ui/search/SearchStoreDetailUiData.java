@@ -1,5 +1,10 @@
 package com.devinsight.vegiedo.data.ui.search;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
+
 public class SearchStoreDetailUiData {
     private String storeImage;
     private String storeTag1;
@@ -10,4 +15,5 @@ public class SearchStoreDetailUiData {
     private String storeName;
     private String address;
     private boolean like;
+
 }
