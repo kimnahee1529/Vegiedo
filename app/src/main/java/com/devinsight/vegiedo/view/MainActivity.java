@@ -7,15 +7,19 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -64,7 +68,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-
         btn_filter = findViewById(R.id.btn_filter);
         searchView = findViewById(R.id.searchView);
         bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -74,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         toolbar_for_search = findViewById(R.id.toolBar_for_search);
         btn_back = findViewById(R.id.btn_back);
         btn_filter_for_search = findViewById(R.id.btn_filter_for_search);
-
+        searchView_for_search = findViewById(R.id.searchView_for_search);
 
 //      Fragment
         homeMainFragment = new HomeMainFragment();
@@ -85,6 +88,8 @@ public class MainActivity extends AppCompatActivity {
         communityFragment = new GeneralPostFragment();
 
         toolbar_for_search.setVisibility(View.INVISIBLE);
+
+        viewModel = new ViewModelProvider(this).get(SearchFilterViewModel.class);
 
 
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
@@ -127,6 +132,41 @@ public class MainActivity extends AppCompatActivity {
                     toolbar_for_search.setVisibility(View.VISIBLE);
                     btn_back.setVisibility(View.VISIBLE);
                 }
+            }
+        });
+
+        searchView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                viewModel.searchList(charSequence.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        searchView_for_search.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//                Intent intent = new Intent
+                viewModel.searchList(charSequence.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
             }
         });
 

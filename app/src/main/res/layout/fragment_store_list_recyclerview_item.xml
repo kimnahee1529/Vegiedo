@@ -3,6 +3,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
+    android:padding="10dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.cardview.widget.CardView
@@ -107,7 +108,7 @@
         app:layout_constraintTop_toBottomOf="@id/rating_reviews">
 
         <TextView
-            android:id="@+id/store_Tag1"
+            android:id="@+id/store_tag1"
             android:layout_width="80dp"
             android:layout_height="25dp"
             android:textSize="12sp"

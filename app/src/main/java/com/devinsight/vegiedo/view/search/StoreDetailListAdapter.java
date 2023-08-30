@@ -31,6 +31,11 @@ public class StoreDetailListAdapter extends RecyclerView.Adapter<StoreDetailList
         this.context = cotnext;
     }
 
+    public void setStoreList(List<StoreListData> storeList){
+        this.searchList.clear();
+        this.searchList.addAll(storeList);
+    }
+
     @NonNull
     @Override
     public StoreDetailListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -46,8 +51,8 @@ public class StoreDetailListAdapter extends RecyclerView.Adapter<StoreDetailList
         holder.storeTag2.setText(data.getTags().get(1));
         holder.address.setText(data.getAddress());
         holder.starRating.setRating(data.getStars());
-        holder.distance.setText(data.getDistance());
-        holder.reviewers.setText(data.getReviewCount());
+        holder.distance.setText(String.valueOf(data.getDistance()) );
+        holder.reviewers.setText(String.valueOf(data.getReviewCount()));
 
     }
 

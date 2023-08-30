@@ -139,6 +139,7 @@ public class SearchFilterFragment extends Fragment {
         ToggleButton tagGluten = view.findViewById(VeganTag.GLUTEN_FREE.getTagId());
 
         userTagList = new ArrayList<>();
+
         viewModel = new ViewModelProvider(this).get(SearchFilterViewModel.class);
 
         tagFruittarian.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -271,8 +272,8 @@ public class SearchFilterFragment extends Fragment {
 
                 viewModel.getFilterData(filterData.getDistance(), filterData.getTags());
                 Log.d("필터 데이터", "성공" + filterData.getDistance() + filterData.getTags());
-                getParentFragmentManager().beginTransaction().replace(R.id.frame, searchMainFragment).commit();
-
+//                getParentFragmentManager().beginTransaction().replace(R.id.frame, searchMainFragment).commit();
+                getParentFragmentManager().beginTransaction().replace(R.id.frame, storeListMainFragment).commit();
 
             }
         });
