@@ -39,6 +39,9 @@ public class SearchFilterViewModel extends ViewModel {
     /* Query 요청 및 필터에 사용 하기 위한 전역 변수*/
     private float latitude;
     private float longitude;
+
+    private float mapLat;
+    private float mapLog;
     private List<String> tags;
     private int distance;
     private String keyword;
@@ -79,6 +82,16 @@ public class SearchFilterViewModel extends ViewModel {
 
         Log.d("필터 데이터 2","거리 : " + distance + "태그 : " + tags.toString());
     }
+
+    public void getSearchInputText(String searchText) {
+        this.keyword = searchText;
+    }
+
+    public void getCurrentMapLocationData(float mapLat, float mapLog){
+        this.mapLat = mapLat;
+        this.mapLog = mapLog;
+    }
+
     public void getStoreList(){
         String keyword = "";
         Call<StoreListInquiryResponseDTO> call = RetrofitClient.getStoreApiService()
