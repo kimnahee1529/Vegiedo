@@ -159,52 +159,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-//        getCurrentLocation();
-
-
     }
 
     @Override
     protected void onStart() {
         super.onStart();
     }
-
-//    public void getCurrentLocation() {
-//        final LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-//        boolean locationPermission = Build.VERSION.SDK_INT >= 23 &&
-//                ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED;
-//        if (locationPermission) {
-//            ActivityCompat.requestPermissions(this, new String[]{
-//                    android.Manifest.permission.ACCESS_FINE_LOCATION}, 0);
-//        } else {
-//            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-//            if (location != null) {
-//                float latitude = (float) location.getLatitude();
-//                float longitude = (float) location.getLongitude();
-//
-//                Log.d("위치 1 ","위치" + "위도 : " +  latitude + "경도 : " + longitude);
-//            }
-//
-//            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, locationListener);
-//            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, locationListener);
-//
-//
-//        }
-//
-//    }
-//
-//    final LocationListener locationListener = new LocationListener() {
-//        @Override
-//        public void onLocationChanged(@NonNull Location location) {
-//            float latitude = (float) location.getLatitude();
-//            float longitude = (float) location.getLongitude();
-//            Log.d("위치 2 ","위치" + "위도 : " +  latitude + "경도 : " + longitude);
-//        }
-//    };
-
-
-
 
     private void openSearchMainFragment() {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
