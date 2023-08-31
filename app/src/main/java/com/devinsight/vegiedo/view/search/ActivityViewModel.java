@@ -70,7 +70,6 @@ public class ActivityViewModel extends ViewModel {
     public void getCurrentLocationData(float latitude, float longitude) {
         this.userCurrentLat = latitude;
         this.userCurrentLong = longitude;
-
         Log.d("위치3", "위치3" + "위도 : " + latitude + "경도" + longitude);
     }
 
@@ -78,7 +77,6 @@ public class ActivityViewModel extends ViewModel {
     public void getFilterData(int distance, List<String> tags) {
         this.distance = distance;
         this.tags = tags;
-
         Log.d("필터 데이터 2", "거리 : " + distance + "태그 : " + tags.toString());
     }
 
@@ -186,7 +184,12 @@ public class ActivityViewModel extends ViewModel {
 
             /* 거리 필터 충족 */
             boolean storeDistance = userToStore < distance * 1000;
-            storeList.get(i).setDistance((int) userToStore);
+            if(userToStore < 999f){
+                storeList.get(i).setDistance( (int) userToStore );
+            } else {
+                storeList.get(i).setDistance( (int) ( userToStore * 0.001f ) );
+            }
+
 
             if (keyword != null) {
 
@@ -202,7 +205,7 @@ public class ActivityViewModel extends ViewModel {
                 /* 가게 이름, 가게 주소, 태그 문자열 중 하나 포함 */
                 boolean stringFilter = storeNameFilter || storeAddressFilter || storeTagFilter || storeTagFilter2;
 
-
+                /* 가게의 태그 == 유저 태그 ? */
                 boolean isTagMatched = false;
                 if (tags != null)
                     for (String userTag : tags) {
@@ -217,14 +220,29 @@ public class ActivityViewModel extends ViewModel {
                         }
                     }
 
-                if (storeDistance || isTagMatched || stringFilter) {
+                if (storeDistance && ( isTagMatched || stringFilter) ) {
+                    filteredStoreList.add(storeList.get(i));
+                }
+            } else {
+                boolean isTagMatched = false;
+                if (tags != null)
+                    for (String userTag : tags) {
+                        for (String storeTag : storeList.get(i).getTags()) {
+                            if (userTag.contentEquals(storeTag)) {
+                                isTagMatched = true;
+                                break;
+                            }
+                        }
+                        if (isTagMatched) {
+                            break; // 하나라도 일치하는 태그를 찾았으면 더 이상 검사하지 않습니다.
+                        }
+                    }
+                if(storeDistance && isTagMatched ){
                     filteredStoreList.add(storeList.get(i));
                 }
             }
-
             storeFilteredLiveData.setValue(filteredStoreList);
         }
-
     }
 
 

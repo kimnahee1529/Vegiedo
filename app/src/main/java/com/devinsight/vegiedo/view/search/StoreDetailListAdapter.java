@@ -51,7 +51,12 @@ public class StoreDetailListAdapter extends RecyclerView.Adapter<StoreDetailList
         holder.storeTag2.setText(data.getTags().get(1));
         holder.address.setText(data.getAddress());
         holder.starRating.setRating(data.getStars());
-        holder.distance.setText(String.valueOf(data.getDistance()) );
+        if(data.getDistance() < 999f ){
+            holder.distance.setText(String.valueOf(data.getDistance()+"m"));
+        } else {
+            holder.distance.setText(String.valueOf(data.getDistance()+"km"));
+        }
+
         holder.reviewers.setText(String.valueOf(data.getReviewCount()));
 
     }

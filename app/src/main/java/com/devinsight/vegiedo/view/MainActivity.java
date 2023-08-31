@@ -116,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 setShortSearchBar();
+
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.frame, searchMainFragment, "SearchMainFragment")
                         .addToBackStack("SearchMainFragment").commit();
@@ -154,7 +155,6 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-
 
         btn_filter.setOnClickListener(new View.OnClickListener() {
             @Override
