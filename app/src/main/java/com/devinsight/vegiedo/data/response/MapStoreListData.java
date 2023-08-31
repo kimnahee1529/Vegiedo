@@ -7,7 +7,11 @@ import java.util.List;
 
 public class MapStoreListData {
     @Expose
-    @SerializedName("tags")private List<String> tags;
+    @SerializedName("storeId") private Long storeId;
+    @Expose
+    @SerializedName("storeName")private String storeName;
+    @Expose
+    @SerializedName("address")private String address;
     @Expose
     @SerializedName("latitude")private float latitude;      // x 좌표
     @Expose
@@ -15,15 +19,17 @@ public class MapStoreListData {
     @Expose
     @SerializedName("distance") private Integer distance;  // 이 데이터 타입은 'm' 단위로 제공되는 거리를 나타내기 위해 사용됩니다.
     @Expose
-    @SerializedName("storeId") private Long storeId;
-    @Expose
-    @SerializedName("storeName")private String storeName;
-    @Expose
-    @SerializedName("address")private String address;
-     @Expose
     @SerializedName("stars") private Integer stars;  // 별점은 소수점이 포함될 수 있으므로 Double로 표현합니다.
     @Expose
+    @SerializedName("tags")private List<String> tags;
+    @Expose
     @SerializedName("like") private Boolean like;
+    @Expose
+    @SerializedName("stamp") private Boolean stamp;
+    @Expose
+    @SerializedName("reviewCount") private Integer reviewCount;
+    @Expose
+    @SerializedName("images") private String images;
 
 
     public Long getStoreId() {

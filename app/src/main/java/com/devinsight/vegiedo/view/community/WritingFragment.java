@@ -45,6 +45,7 @@ public class WritingFragment extends Fragment {
     private static final int MAX_IMAGE_COUNT = 5;
     private View rootView;
     private String previousFragment;
+    private ImageView currentlySelectedImageView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -69,10 +70,23 @@ public class WritingFragment extends Fragment {
         communityStringLength = rootView.findViewById(R.id.community_string_length);
         communityWritingTitleText = rootView.findViewById(R.id.community_writing_title_text);
         registerBtn = rootView.findViewById(R.id.community_writing_register_button);
-        mainImage = rootView.findViewById(R.id.main_image1);
-        mainImage.setOnClickListener(v -> selectImagesFromGallery());
         backwardBtn = rootView.findViewById(R.id.backward_btn);
         backwardBtn.setOnClickListener(v -> goBack());
+
+        mainImage = rootView.findViewById(R.id.main_image1);
+        mainImage.setOnClickListener(v -> selectImageForView((ImageView) v));
+
+        ImageView mainImage2 = rootView.findViewById(R.id.main_image2);
+        mainImage2.setOnClickListener(v -> selectImageForView((ImageView) v));
+
+        ImageView mainImage3 = rootView.findViewById(R.id.main_image3);
+        mainImage3.setOnClickListener(v -> selectImageForView((ImageView) v));
+
+        ImageView mainImage4 = rootView.findViewById(R.id.main_image4);
+        mainImage4.setOnClickListener(v -> selectImageForView((ImageView) v));
+
+        ImageView mainImage5 = rootView.findViewById(R.id.main_image5);
+        mainImage5.setOnClickListener(v -> selectImageForView((ImageView) v));
     }
 
     private void restoreSelectedImages() {
@@ -212,23 +226,37 @@ public class WritingFragment extends Fragment {
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY_REQUEST_CODE);
     }
 
+    private void selectImageForView(ImageView imageView) {
+        currentlySelectedImageView = imageView;
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY_REQUEST_CODE);
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == GALLERY_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
-            List<Uri> imageUris = new ArrayList<>();
+            Uri selectedImageUri = null;
 
-            if (data.getClipData() != null) {
-                int count = data.getClipData().getItemCount();
-                for (int i = 0; i < count; i++) {
-                    imageUris.add(data.getClipData().getItemAt(i).getUri());
-                }
-            } else if (data.getData() != null) {
-                imageUris.add(data.getData());
+            if (data.getData() != null) {
+                selectedImageUri = data.getData();
             }
 
-            updateSelectedImages(imageUris);
+            if (currentlySelectedImageView != null && selectedImageUri != null) {
+                currentlySelectedImageView.setImageURI(selectedImageUri);
+                currentlySelectedImageView.setBackground(null);
+
+                // If you want to save this image URI to your selectedImageUris list:
+                int tag = Integer.parseInt((String) currentlySelectedImageView.getTag());
+                if (tag < selectedImageUris.size()) {
+                    selectedImageUris.set(tag, selectedImageUri.toString());
+                } else {
+                    selectedImageUris.add(selectedImageUri.toString());
+                }
+            }
         }
     }
 
