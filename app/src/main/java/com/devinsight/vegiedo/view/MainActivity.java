@@ -3,6 +3,7 @@ package com.devinsight.vegiedo.view;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -21,8 +22,10 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
@@ -72,12 +75,8 @@ public class MainActivity extends AppCompatActivity {
         searchView = findViewById(R.id.searchView);
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         toolBar = findViewById(R.id.toolBar);
-
-        /* 검색화면으로 바뀌 었을 때*/
-        toolbar_for_search = findViewById(R.id.toolBar_for_search);
         btn_back = findViewById(R.id.btn_back);
-        btn_filter_for_search = findViewById(R.id.btn_filter_for_search);
-        searchView_for_search = findViewById(R.id.searchView_for_search);
+
 
 //      Fragment
         homeMainFragment = new HomeMainFragment();
@@ -86,9 +85,6 @@ public class MainActivity extends AppCompatActivity {
         myPageFragment = new MyPageFragment();
         searchMainFragment = new SearchMainFragment();
         communityFragment = new GeneralPostFragment();
-
-        toolbar_for_search.setVisibility(View.INVISIBLE);
-
         viewModel = new ViewModelProvider(this).get(SearchFilterViewModel.class);
 
 
@@ -125,12 +121,20 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFocusChange(View view, boolean b) {
                 if (b) {
+                    ConstraintLayout.LayoutParams toolBarParams = (ConstraintLayout.LayoutParams) toolBar.getLayoutParams();
+                    toolBarParams.width = dpToPx(320);
+                    toolBar.setLayoutParams(toolBarParams);
+
+                    ViewGroup.LayoutParams searchViewParams = searchView.getLayoutParams();
+                    searchViewParams.width = dpToPx(200);  // 예: 너비를 200dp로 조정
+                    searchView.setLayoutParams(searchViewParams);
+
+                    btn_back.setVisibility(View.VISIBLE);
+
                     FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                     transaction.replace(R.id.frame, searchMainFragment, "SearchMainFragment")
                             .addToBackStack("SearchMainFragment").commit();
-                    toolBar.setVisibility(View.INVISIBLE);
-                    toolbar_for_search.setVisibility(View.VISIBLE);
-                    btn_back.setVisibility(View.VISIBLE);
+
                 }
             }
         });
@@ -152,23 +156,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        searchView_for_search.addTextChangedListener(new TextWatcher() {
+        searchView.setOnKeyListener(new View.OnKeyListener() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//                Intent intent = new Intent
-                viewModel.searchList(charSequence.toString());
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                return false;
             }
         });
+
 
         btn_filter.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -179,58 +173,21 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        btn_filter_for_search.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.frame, searchFilterFragment).commit();
-            }
-        });
-
         btn_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.frame, homeMainFragment).commit();
-                toolBar.setVisibility(View.VISIBLE);
-                toolbar_for_search.setVisibility(View.INVISIBLE);
-                btn_back.setVisibility(View.INVISIBLE);
+
 
             }
         });
 
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
+    private int dpToPx(int dp) {
+        float density = getResources().getDisplayMetrics().density;
+        return (int) (dp * density + 0.5f);
     }
 
-    private void openSearchMainFragment() {
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        SearchMainFragment searchMainFragment = (SearchMainFragment) getSupportFragmentManager().findFragmentByTag("searchMainFragment");
-
-        if (searchMainFragment == null) {
-            searchMainFragment = SearchMainFragment.instance();
-            transaction.add(R.id.frame, searchMainFragment, "searchMainFragment");
-        } else {
-            transaction.show(searchMainFragment);
-        }
-        transaction.addToBackStack(null)
-                .commit();
-    }
-
-    private void openStoreListMainFragment() {
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        StoreListMainFragment storeListhMainFragment = (StoreListMainFragment) getSupportFragmentManager().findFragmentByTag("StoreListhMainFragment");
-
-        if (storeListMainFragment == null) {
-            storeListhMainFragment = StoreListMainFragment.instance();
-            transaction.add(R.id.frame, storeListhMainFragment, "StoreListhMainFragment");
-        } else {
-            transaction.show(storeListhMainFragment);
-        }
-        transaction.addToBackStack(null)
-                .commit();
-    }
 }

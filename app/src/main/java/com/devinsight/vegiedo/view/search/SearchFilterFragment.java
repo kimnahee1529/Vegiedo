@@ -140,7 +140,7 @@ public class SearchFilterFragment extends Fragment {
 
         userTagList = new ArrayList<>();
 
-        viewModel = new ViewModelProvider(this).get(SearchFilterViewModel.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(SearchFilterViewModel.class);
 
         tagFruittarian.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -273,8 +273,9 @@ public class SearchFilterFragment extends Fragment {
                 viewModel.getFilterData(filterData.getDistance(), filterData.getTags());
                 Log.d("필터 데이터", "성공" + filterData.getDistance() + filterData.getTags());
 //                getParentFragmentManager().beginTransaction().replace(R.id.frame, searchMainFragment).commit();
-                getParentFragmentManager().beginTransaction().replace(R.id.frame, storeListMainFragment).commit();
+//                getParentFragmentManager().beginTransaction().replace(R.id.frame, storeListMainFragment).commit();
 
+                getParentFragmentManager().popBackStack();
             }
         });
 

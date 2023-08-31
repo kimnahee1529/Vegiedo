@@ -15,33 +15,39 @@
         app:layout_constraintTop_toTopOf="parent">
 
     </FrameLayout>
+    <View
+        android:id="@id/center"
+        android:layout_margin="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="invisible"/>
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolBar"
-        android:layout_marginTop="30dp"
         android:layout_width="350dp"
         android:layout_height="40dp"
         android:layout_gravity="center"
+        android:layout_marginTop="30dp"
         android:background="@drawable/bolder_tool_bar"
         android:elevation="8dp"
-        android:gravity="center_vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="@+id/center"
         app:layout_constraintTop_toTopOf="parent">
 
         <EditText
             android:id="@+id/searchView"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
             android:background="@drawable/bolder_tool_bar"
             android:gravity="start"
-            android:layout_marginLeft="30dp"
-            app:iconifiedByDefault="false"
-            app:queryBackground="@android:color/transparent"
             android:hint="풀 뜯으러 가보실까요 ?"
             android:singleLine="true"
-            app:searchIcon="@null">
-        </EditText>
+            app:iconifiedByDefault="false"
+            app:queryBackground="@android:color/transparent"
+            app:searchIcon="@null"></EditText>
 
         <ImageButton
             android:id="@+id/btn_filter"
@@ -49,56 +55,58 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:layout_marginRight="25dp"
-            android:background="@drawable/sliders_horizontal"/>
+            android:background="@drawable/sliders_horizontal" />
 
     </androidx.appcompat.widget.Toolbar>
+
 
     <ImageButton
         android:id="@+id/btn_back"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:background="@drawable/backward"
-        app:layout_constraintLeft_toLeftOf="@id/toolBar"
+        app:layout_constraintEnd_toStartOf="@id/toolBar"
+        app:layout_constraintTop_toTopOf="@id/toolBar"
         app:layout_constraintBottom_toBottomOf="@id/toolBar"
-        android:visibility="invisible"/>
+        android:visibility="invisible" />
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolBar_for_search"
-        android:layout_marginTop="30dp"
-        android:layout_width="300dp"
-        android:layout_height="40dp"
-        android:background="@drawable/bolder_tool_bar"
-        android:elevation="8dp"
-        android:gravity="center_vertical"
-        android:visibility="invisible"
-        app:layout_constraintRight_toRightOf="@+id/toolBar"
-        app:layout_constraintEnd_toEndOf="@id/toolBar"
-        app:layout_constraintBottom_toBottomOf="@id/toolBar">
+    <!--    <androidx.appcompat.widget.Toolbar-->
+    <!--        android:id="@+id/toolBar_for_search"-->
+    <!--        android:layout_marginTop="30dp"-->
+    <!--        android:layout_width="300dp"-->
+    <!--        android:layout_height="40dp"-->
+    <!--        android:background="@drawable/bolder_tool_bar"-->
+    <!--        android:elevation="8dp"-->
+    <!--        android:gravity="center_vertical"-->
+    <!--        android:visibility="invisible"-->
+    <!--        app:layout_constraintRight_toRightOf="@+id/toolBar"-->
+    <!--        app:layout_constraintEnd_toEndOf="@id/toolBar"-->
+    <!--        app:layout_constraintBottom_toBottomOf="@id/toolBar">-->
 
 
-        <EditText
-            android:id="@+id/searchView_for_search"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:background="@drawable/bolder_tool_bar"
-            android:gravity="start"
-            android:layout_marginLeft="30dp"
-            app:iconifiedByDefault="false"
-            app:queryBackground="@android:color/transparent"
-            android:hint="풀 뜯으러 가보실까요 ?"
-            android:singleLine="true"
-            app:searchIcon="@null">
-        </EditText>
+    <!--        <EditText-->
+    <!--            android:id="@+id/searchView_for_search"-->
+    <!--            android:layout_width="200dp"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:background="@drawable/bolder_tool_bar"-->
+    <!--            android:gravity="start"-->
+    <!--            android:layout_marginLeft="30dp"-->
+    <!--            app:iconifiedByDefault="false"-->
+    <!--            app:queryBackground="@android:color/transparent"-->
+    <!--            android:hint="풀 뜯으러 가보실까요 ?"-->
+    <!--            android:singleLine="true"-->
+    <!--            app:searchIcon="@null">-->
+    <!--        </EditText>-->
 
-        <ImageButton
-            android:id="@+id/btn_filter_for_search"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginRight="25dp"
-            android:background="@drawable/sliders_horizontal"/>
+    <!--        <ImageButton-->
+    <!--            android:id="@+id/btn_filter_for_search"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_gravity="end"-->
+    <!--            android:layout_marginRight="25dp"-->
+    <!--            android:background="@drawable/sliders_horizontal"/>-->
 
-    </androidx.appcompat.widget.Toolbar>
+    <!--    </androidx.appcompat.widget.Toolbar>-->
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
