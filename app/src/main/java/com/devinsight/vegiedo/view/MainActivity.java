@@ -4,10 +4,14 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -20,6 +24,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+//import com.devinsight.vegiedo.Manifest;
+import android.Manifest;
 import com.devinsight.vegiedo.R;
 import com.devinsight.vegiedo.view.community.GeneralPostFragment;
 import com.devinsight.vegiedo.view.home.HomeMainFragment;
@@ -55,11 +61,18 @@ public class MainActivity extends AppCompatActivity {
     /* 뷰모델 */
     ActivityViewModel viewModel;
 
+    /* 위치 권한 요청 상수 정의*/
+    private static final int REQUEST_LOCATION_PERMISSION = 1;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        /* 권한 체크 후 요청*/
+        checkAndRequestLocationPermission();
 
 
         btn_filter = findViewById(R.id.btn_filter);
@@ -178,6 +191,36 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
+    /* 위치 권한 체크 및 요청 메서드 */
+    private void checkAndRequestLocationPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSION);
+        }
+    }
+
+    /* 사용자 응답 처리 */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == REQUEST_LOCATION_PERMISSION) {
+            SharedPreferences sharedPreferences = getSharedPreferences("LocationPermission", MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // 권한 허용
+                editor.putBoolean("isGranted", true);
+            } else {
+                // 권한 거부
+                editor.putBoolean("isGranted", false);
+            }
+
+            editor.apply();
+        }
+    }
+
+
 
     private void setLongSearchBar(){
         ConstraintLayout.LayoutParams toolBarParams = (ConstraintLayout.LayoutParams) toolBar.getLayoutParams();

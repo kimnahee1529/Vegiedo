@@ -1,6 +1,8 @@
 package com.devinsight.vegiedo.view.map;
 
 import android.Manifest;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.PointF;
@@ -24,6 +26,8 @@ import com.devinsight.vegiedo.service.api.MapApiService;
 import com.devinsight.vegiedo.service.api.StoreApiService;
 import com.devinsight.vegiedo.utill.RetrofitClient;
 import com.devinsight.vegiedo.view.search.ActivityViewModel;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.CameraAnimation;
@@ -58,6 +62,7 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
     private ArrayList<MapStoreListData> cardList;
     private ArrayList<MapStoreCardUiData> cardUiList;
     private FloatingActionButton floatingMapStorePageButton;
+    private FusedLocationProviderClient fusedLocationClient;
 
     /* 뷰 모델 */
     ActivityViewModel viewModel;
@@ -74,6 +79,8 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
 
         locationSource = new FusedLocationSource(this, REQUEST_LOCATION_PERMISSION);
         currentLocationMarker = new Marker();
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
+
 
 //        requestLocationPermission();
 
@@ -131,101 +138,78 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
 //        cardAdapter.notifyItem
     }
 
-
     @Override
     public void onMapReady(@NonNull NaverMap naverMap) {
         this.naverMap = naverMap;
 
-        /* 네이버 지도에서 선택된 위치의 위도 경도를 전달 합니다. */
-//        getMapLocation(naverMap);
+        //위치 권한 허용 여부 저장 변수
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("LocationPermission", Context.MODE_PRIVATE);
+        boolean isGranted = sharedPreferences.getBoolean("isGranted", false);
 
-//        naverMap.setLocationSource(locationSource);
-//        LatLng defaultPosition = new LatLng(37.498095, 127.027610); //강남역
-//        naverMap.moveCamera(CameraUpdate.scrollTo(defaultPosition));
-//        naverMap.setLocationTrackingMode(LocationTrackingMode.NoFollow);
-
-        LatLng currentPosition;
-
-        // 위치 권한을 요청하는 함수 호출
-        Log.d("위치 권한", "요청 전");
-        requestLocationPermission();
-        Log.d("위치 권한", "요청 후");
-
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            // 위치 권한 허용 시 부산역으로 이동
-            currentPosition = new LatLng(35.115095, 129.042694); //부산역
-            Log.d("위치", "O");
-        } else {
-            requestLocationPermission(); // 권한을 받아오는 함수
-            // 위치 권한 요청X 시 강남역으로 이동
-            currentPosition = new LatLng(37.498095, 127.027610); //강남역
-            Log.d("위치", "X");
+        //허용했을 때
+        if (isGranted) {
+            Log.d("onRequestPermissionsResult", "위치 권한 O");
+            getCurrentLocation(new LocationCallback() { //콜백을 통해 현재 위치를 반환해 화면 이동
+                @Override
+                public void onLocationResult(LatLng location) {
+                    if (location != null) {
+                        Log.d("현재 위치", "" + location.latitude + " " + location.longitude);
+                        setMarkerAndMoveCamera(location, naverMap);
+                    } else {
+                        // 위치 정보를 가져올 수 없는 경우의 처리 (예: 기본 위치로 설정)
+                        setMarkerAndMoveCamera(getDefaultLocation(), naverMap);
+                    }
+                }
+            });
         }
+        //허용하지 않았을 때
+        else {
+            Log.d("onRequestPermissionsResult", "위치 권한 X");
+            setMarkerAndMoveCamera(getDefaultLocation(), naverMap);
+        }
+    }
 
-        // 마커 위치 및 지도 카메라 설정
-        currentLocationMarker.setPosition(currentPosition);
+    //허용 권한 여부에 따른 마커의 위치 변화 함수
+    private void setMarkerAndMoveCamera(LatLng markerPosition, NaverMap naverMap) {
+        currentLocationMarker.setPosition(markerPosition);
         currentLocationMarker.setMap(naverMap);
         currentLocationMarker.setIconTintColor(Color.RED);
-        naverMap.moveCamera(CameraUpdate.scrollTo(currentPosition).animate(CameraAnimation.Fly, 500));
+        naverMap.moveCamera(CameraUpdate.scrollTo(markerPosition).animate(CameraAnimation.Fly, 500));
+    }
+
+    // 위치 권한을 허용하지 않았을 경우의 기본 위치인 강남역
+    private LatLng getDefaultLocation() {
+        return new LatLng(37.498095, 127.027610);
+    }
+
+
+    //위치를 반환하기 위한 콜백 인터페이스
+    public interface LocationCallback {
+        void onLocationResult(LatLng location);
+    }
+
+    private void getCurrentLocation(LocationCallback callback) {
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            fusedLocationClient.getLastLocation()
+                    .addOnSuccessListener(getActivity(), location -> {
+                        if (location != null) {
+                            LatLng currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                            callback.onLocationResult(currentLocation);
+                        } else {
+                            callback.onLocationResult(null); // 위치 정보를 가져올 수 없을 경우
+                        }
+                    });
+        } else {
+            // 권한 요청 또는 권한 거부에 따른 추가 작업
+            requestLocationPermission();
+        }
     }
 
 
     private void requestLocationPermission() {
         ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSION);
-        //사용자가 이전에 권한 요청을 거부한 경우에 true 반환
-//        if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)) {
-//            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSION);
-//        } else {
-//            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSION);
-//        }
+
     }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_LOCATION_PERMISSION) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // 권한이 허용된 경우
-                double default_latitude = 35.115095;
-                double default_lontitude = 129.042694;
-                LatLng defaultPosition = new LatLng(default_latitude, default_lontitude);
-
-                naverMap.moveCamera(CameraUpdate.scrollTo(defaultPosition).animate(CameraAnimation.Fly, 500));
-                currentLocationMarker.setPosition(defaultPosition);
-                currentLocationMarker.setMap(naverMap);
-                naverMap.setLocationTrackingMode(LocationTrackingMode.Follow);
-            } else {
-                // 권한이 거부된 경우
-                double default_latitude = 37.498095;
-                double default_lontitude = 127.027610;
-                LatLng defaultPosition = new LatLng(default_latitude, default_lontitude);
-
-                naverMap.moveCamera(CameraUpdate.scrollTo(defaultPosition).animate(CameraAnimation.Fly, 500));
-                currentLocationMarker.setPosition(defaultPosition);
-                currentLocationMarker.setMap(naverMap);
-            }
-        }
-    }
-
-
-//    private void requestLocationPermission() {
-//        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE );
-//        }
-//    }
-
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-//        if (locationSource.onRequestPermissionsResult(requestCode, permissions, grantResults)) {
-//            if (!locationSource.isActivated()) {
-//                naverMap.setLocationTrackingMode(LocationTrackingMode.NoFollow);
-//                LatLng defaultPosition = new LatLng(37.498095, 127.027610);
-//                naverMap.moveCamera(CameraUpdate.scrollTo(defaultPosition));
-//                currentLocationMarker.setPosition(defaultPosition);
-//            }
-//            return;
-//        }
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//    }
 
 
     private void loadStoreData() {
