@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -106,23 +107,30 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
         cardUiList = new ArrayList<>();
 
 
-        //MapStoreListData 사용
-//        cardList.add(new MapStoreListData(1L, "little forest", "서울특별시 강남구 강남대로 \n"+"98길 12-5", 150, Arrays.asList("Vegan", "Organic"), 4, true, 37.1234f, 127.1234f));
-//        cardList.add(new MapStoreListData(2L, "Veggie Store", "123 Veggie St.", 150, Arrays.asList("Vegan", "Organic"), 5, false, 37.1234f, 127.1234f));
+//        //MapStoreListData 사용
+////        cardList.add(new MapStoreListData(1L, "little forest", "서울특별시 강남구 강남대로 \n"+"98길 12-5", 150, Arrays.asList("Vegan", "Organic"), 4, true, 37.1234f, 127.1234f));
+////        cardList.add(new MapStoreListData(2L, "Veggie Store", "123 Veggie St.", 150, Arrays.asList("Vegan", "Organic"), 5, false, 37.1234f, 127.1234f));
+//
+//        //MapStoreCardUiData 사용
+//        cardUiList.add(new MapStoreCardUiData("https://us.123rf.com/450wm/ingalinder/ingalinder1705/ingalinder170500032/77515524-%ED%9D%B0%EC%83%89-%EB%B0%B0%EA%B2%BD%EC%97%90-%EA%B3%A0%EB%A6%BD-%EB%90%9C-%EB%8B%A4%EC%B1%84%EB%A1%9C%EC%9A%B4-%ED%8F%89%EB%A9%B4-%EB%B2%88%ED%98%B8-1.jpg", 1, 2, 3, 3, 150, "1식당 이름", "1주소", true));
+//        cardUiList.add(new MapStoreCardUiData("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNRw5d8FosBXd_Qs_HbnUP_9nNnPAwASSbkw&usqp=CAU", 3, 4, 3, 4, 300, "2식당 이름", "2주소", false));
+////        cardList.add(new MapStoreCardData("https://i.namu.wiki/i/l_7H5Zv2mhxYHVdmjT_An3gFWge9yHzoIZ7DWVsIYoy80AtKL9LOMYuwl4OWHUhDuBTNcrv4H7KEn3I159fp-Q.webp",7942, 9413, 33,4, 300,"가게 이름","주소",true));
+////        cardList.add(new MapStoreCardData("https://pbs.twimg.com/media/F2bkFD7agAANERO?format=jpg&name=4096x4096,7942", 7942, 9413, 33,4, 300,"가게 이름","주소",true));
+////        cardList.add(new MapStoreCardData("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRSeS17_vakustlHY5XZ0VuOiRbybzNfZbpKwULyoEqud6N9m81E9MoJkw2uwDVxh0U444&usqp=CAU",7942, 9413, 33,4, 300,"가게 이름","주소",true));
+//            Log.d("위치더미데이터", String.valueOf(viewModel.dummyData().get(1)));
+//
+////        cardAdapter = new MapStoreCardAdapter(getContext(), cardList, this::onCardClick); //MapStoreListData 사용
+//        cardUiAdapter = new MapStoreCardUiAdapter(getContext(), cardUiList, this::onCardClick);
+////        recyclerView.setAdapter(cardAdapter);
+//        recyclerView.setAdapter(cardUiAdapter);
+//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(),RecyclerView.HORIZONTAL,false);
+//        recyclerView.setLayoutManager(linearLayoutManager);
 
-        //MapStoreCardUiData 사용
-        cardUiList.add(new MapStoreCardUiData("https://us.123rf.com/450wm/ingalinder/ingalinder1705/ingalinder170500032/77515524-%ED%9D%B0%EC%83%89-%EB%B0%B0%EA%B2%BD%EC%97%90-%EA%B3%A0%EB%A6%BD-%EB%90%9C-%EB%8B%A4%EC%B1%84%EB%A1%9C%EC%9A%B4-%ED%8F%89%EB%A9%B4-%EB%B2%88%ED%98%B8-1.jpg", 1, 2, 3, 3, 150, "1식당 이름", "1주소", true));
-        cardUiList.add(new MapStoreCardUiData("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNRw5d8FosBXd_Qs_HbnUP_9nNnPAwASSbkw&usqp=CAU", 3, 4, 3, 4, 300, "2식당 이름", "2주소", false));
-//        cardList.add(new MapStoreCardData("https://i.namu.wiki/i/l_7H5Zv2mhxYHVdmjT_An3gFWge9yHzoIZ7DWVsIYoy80AtKL9LOMYuwl4OWHUhDuBTNcrv4H7KEn3I159fp-Q.webp",7942, 9413, 33,4, 300,"가게 이름","주소",true));
-//        cardList.add(new MapStoreCardData("https://pbs.twimg.com/media/F2bkFD7agAANERO?format=jpg&name=4096x4096,7942", 7942, 9413, 33,4, 300,"가게 이름","주소",true));
-//        cardList.add(new MapStoreCardData("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRSeS17_vakustlHY5XZ0VuOiRbybzNfZbpKwULyoEqud6N9m81E9MoJkw2uwDVxh0U444&usqp=CAU",7942, 9413, 33,4, 300,"가게 이름","주소",true));
 
-
-//        cardAdapter = new MapStoreCardAdapter(getContext(), cardList, this::onCardClick); //MapStoreListData 사용
-        cardUiAdapter = new MapStoreCardUiAdapter(getContext(), cardUiList, this::onCardClick);
-//        recyclerView.setAdapter(cardAdapter);
-        recyclerView.setAdapter(cardUiAdapter);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(),RecyclerView.HORIZONTAL,false);
+        cardList = new ArrayList<>();
+        cardAdapter = new MapStoreCardAdapter(getContext(), cardList, this::onCardClick);
+        recyclerView.setAdapter(cardAdapter);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
 
         return view;
@@ -130,24 +138,43 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
 
     // 여기에 플로팅 버튼을 눌렀을 때 수행할 동작을 작성하세요.
     private void onFloatingListButtonClick() {
-        if (recyclerView.getVisibility() == View.VISIBLE) {
-            recyclerView.setVisibility(View.GONE);
-        } else {
-            recyclerView.setVisibility(View.VISIBLE);
-        }
+//        if (recyclerView.getVisibility() == View.VISIBLE) {
+//            recyclerView.setVisibility(View.GONE);
+//        } else {
+//            recyclerView.setVisibility(View.VISIBLE);
+//            viewModel.getMapStoreLiveData().observe();
+//        }
     }
 
-    private void onCardClick(MapStoreCardUiData mapStoreCardUiData, int i) {
-    }
+//    private void onCardClick(MapStoreCardUiData mapStoreCardUiData, int i) {
+//    }
 
     public void onCardClick(MapStoreListData item, int position) {
-//        cardAdapter.notifyItem
+        Toast.makeText(getContext(),item.getStoreName() + " is clicked ",Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onMapReady(@NonNull NaverMap naverMap) {
         this.naverMap = naverMap;
-        Log.d("위치", viewModel.isGranted().toString());
+
+//        viewModel.getMapStoreLiveData().observe(getViewLifecycleOwner(), mapStoreLiveData -> {
+////            Log.d("맵 카드뷰 리스트", String.valueOf(mapStoreLiveData.get(1)));
+//            for (int i = 0; i < mapStoreLiveData.size(); i++) {
+//                MapStoreListData map = mapStoreLiveData.get(i);
+//                Log.d("맵 가게 리스트", i +"번째 가게"+map.getStoreName() + " " +map.getDistance()+" " +map.getAddress()+" " +map.getStars()+" " +map.getReviewCount() +" " +map.getTags().get(0)+" " +map.getTags().get(1)+" "+map.getImages()+" " +map.getLike());
+////                Log.d("맵 가게 리스트", mapStoreLiveData.get(i).getStoreName());
+//            }
+//        });
+
+        // 더미 데이터를 리사이클러뷰에 넣어줌
+        viewModel.getMapStoreLiveData().observe(getViewLifecycleOwner(), mapStoreLiveData -> {
+            cardList.clear(); // Clear previous data
+            for (int i = 0; i < mapStoreLiveData.size(); i++) {
+                MapStoreListData map = mapStoreLiveData.get(i);
+                cardList.add(map);
+            }
+            cardAdapter.notifyDataSetChanged(); // Notify the adapter that the data set has changed
+        });
 
         viewModel.isGranted().observe(getViewLifecycleOwner(), isGranted -> {
             if (isGranted) {

@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.devinsight.vegiedo.data.response.MapStoreListData;
 import com.devinsight.vegiedo.data.response.StoreListData;
 import com.devinsight.vegiedo.data.ui.login.TagStatus;
 import com.devinsight.vegiedo.data.ui.search.SearchStorSummaryeUiData;
@@ -34,7 +35,10 @@ public class ActivityViewModel extends ViewModel {
     private List<StoreListData> allStoreList;
 
     /* 위치 권한 허용 여부값을 담은 변수*/
-    private MutableLiveData<Boolean> isGranted = new MutableLiveData<>(false);
+    private final MutableLiveData<Boolean> isGranted = new MutableLiveData<>(false);
+
+    /* 지도의 카드뷰에 보여줄 가게 리스트 라이브 데이터*/
+    private MutableLiveData<List<MapStoreListData>> mapStoreLiveData = new MutableLiveData<>();
 
 
     /* Query 요청 및 필터에 사용 하기 위한 전역 변수*/
@@ -231,6 +235,37 @@ public class ActivityViewModel extends ViewModel {
         }
 
     }
+    public List<MapStoreListData> mapDummyData() {
+
+        List<MapStoreListData> mapStoreList = new ArrayList<>();
+
+        mapStoreList.add(new MapStoreListData(1l, "향림원", "서울특별시 강남구 삼성동 123-45", 37.500731f, 127.039338f, 5, Arrays.asList("#비건", "#락토"), 5, true, true, 40, ""));
+        mapStoreList.add(new MapStoreListData(2l, "서울테이블", "부산광역시 해운대구 우동 56-78", 37.494575f, 127.034612f, 5, Arrays.asList("#프루테리언", "#비건"), 4, false, true, 45, ""));
+        mapStoreList.add(new MapStoreListData(3l, "바다의 선물", "대구광역시 중구 동인동 90-12", 37.499176f, 127.041257f, 5, Arrays.asList("#락토", "#오보"), 5, true, true, 24, ""));
+        mapStoreList.add(new MapStoreListData(4l, "마루키친", "서울특별시 강남구 논현동 123-45", 37.492988f, 127.035923f, 5, Arrays.asList("#락토 오보", "#페스코"), 1, true, true, 5, ""));
+        mapStoreList.add(new MapStoreListData(5l, "송림정", "서울특별시 중구 을지로 56-78", 37.503657f, 127.036592f, 5, Arrays.asList("#오보", "#락토 오보"), 3, true, true, 8, ""));
+        mapStoreList.add(new MapStoreListData(6l, "파스텔레스토", "서울특별시 용산구 한강로 90-12", 37.492142f, 127.045137f, 5, Arrays.asList("#페스코", "#폴로"), 4, false, true, 2, ""));
+        mapStoreList.add(new MapStoreListData(7l, "그릴 101", "서울특별시 마포구 서교동 78-90", 37.498235f, 127.032479f, 5, Arrays.asList("#폴로", "#키토"), 2, true, true, 15, ""));
+        mapStoreList.add(new MapStoreListData(8l, "하늘정원", "대전광역시 유성구 신성동 12-34", 37.502658f, 127.040892f, 5, Arrays.asList("#키토", "#글루텐프리"), 3, true, true, 45, ""));
+        mapStoreList.add(new MapStoreListData(9l, "산바다물회", "울산광역시 남구 신정동 45-67", 37.496312f, 127.043285f, 5, Arrays.asList("#락토", "#프루테리언"), 3, false, true, 58, ""));
+        mapStoreList.add(new MapStoreListData(10l, "리베로 스테이크하우스", "서울특별시 동작구 사당동 45-67", 37.504978f, 127.037501f, 5, Arrays.asList("#오보", "#글루텐프리"), 4, true, true, 45, ""));
+
+        return mapStoreList;
+    }
+
+    public MutableLiveData<List<MapStoreListData>> getMapStoreLiveData() {
+        List<MapStoreListData> mapStoreList = mapDummyData();
+//        List<MapStoreListData> filteredStoreList = new ArrayList<>();
+//        for (int i = 0; i < mapStoreList.size(); i++) {
+//            Log.d("맵 가게 리스트", mapStoreList.get(i).getStoreName());
+//        }
+        mapStoreLiveData.setValue(mapStoreList);
+        return mapStoreLiveData;
+    }
+
+    public void setMapStoreLiveData(MutableLiveData<List<MapStoreListData>> mapStoreLiveData) {
+        this.mapStoreLiveData = mapStoreLiveData;
+    }
 
 
     public LiveData<List<StoreListData>> getFilteredStoreList() {
@@ -248,6 +283,10 @@ public class ActivityViewModel extends ViewModel {
     public void setGranted(boolean granted) {
         isGranted.setValue(granted);
     }
+
+
+
+
 
 }
 
