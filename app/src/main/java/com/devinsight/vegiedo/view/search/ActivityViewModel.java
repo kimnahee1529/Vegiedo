@@ -189,18 +189,20 @@ public class ActivityViewModel extends ViewModel {
             storeList.get(i).setDistance((int) userToStore);
 
             if (keyword != null) {
-                /* 검색 에서 문자열 체크 */
-                boolean storeNameFilter = storeList.get(i).getStoreName().toLowerCase().contains(keyword.toLowerCase());
-                boolean storeAddressFilter = storeList.get(i).getAddress().toLowerCase().contains(keyword.toLowerCase());
 
                 String tag1 = storeList.get(i).getTags().get(0);
                 String tag2 = storeList.get(i).getTags().get(1);
 
+                /* 검색 에서 문자열 체크 */
+                boolean storeNameFilter = storeList.get(i).getStoreName().toLowerCase().contains(keyword.toLowerCase());
+                boolean storeAddressFilter = storeList.get(i).getAddress().toLowerCase().contains(keyword.toLowerCase());
                 boolean storeTagFilter = tag1.contains(keyword.toLowerCase());
                 boolean storeTagFilter2 = tag2.contains(keyword.toLowerCase());
 
                 /* 가게 이름, 가게 주소, 태그 문자열 중 하나 포함 */
                 boolean stringFilter = storeNameFilter || storeAddressFilter || storeTagFilter || storeTagFilter2;
+
+
                 boolean isTagMatched = false;
                 if (tags != null)
                     for (String userTag : tags) {
@@ -217,9 +219,6 @@ public class ActivityViewModel extends ViewModel {
 
                 if (storeDistance || isTagMatched || stringFilter) {
                     filteredStoreList.add(storeList.get(i));
-                    for( int j = 0; j < storeList.size(); j ++) {
-                        Log.d("필터 리스트","필터리스트 : " + storeList.get(j).getStoreName());
-                    }
                 }
             }
 
