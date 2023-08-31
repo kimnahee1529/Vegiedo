@@ -62,7 +62,7 @@
                     app:layout_constraintVertical_bias="0.5" />
 
                 <TextView
-                    android:id="@+id/some_id"
+                    android:id="@+id/storeDetail_user_nickname"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
@@ -89,6 +89,7 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/storeDetail_store_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Little forest"
