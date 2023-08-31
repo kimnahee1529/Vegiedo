@@ -26,12 +26,12 @@ public class StoreDetailListAdapter extends RecyclerView.Adapter<StoreDetailList
     Context context;
     protected searchListner searchListner;
 
-    public StoreDetailListAdapter(Context cotnext, List<StoreListData> searchList, searchListner searchlistner){
+    public StoreDetailListAdapter(Context cotnext, List<StoreListData> searchList, searchListner searchlistner) {
         this.searchList = searchList;
         this.context = cotnext;
     }
 
-    public void setStoreList(List<StoreListData> storeList){
+    public void setStoreList(List<StoreListData> storeList) {
         this.searchList.clear();
         this.searchList.addAll(storeList);
     }
@@ -51,10 +51,13 @@ public class StoreDetailListAdapter extends RecyclerView.Adapter<StoreDetailList
         holder.storeTag2.setText(data.getTags().get(1));
         holder.address.setText(data.getAddress());
         holder.starRating.setRating(data.getStars());
-        if(data.getDistance() < 999f ){
-            holder.distance.setText(String.valueOf(data.getDistance()+"m"));
+
+        int distance = data.getDistance();
+
+        if( distance < 1000 ) {
+            holder.distance.setText(distance + "m");
         } else {
-            holder.distance.setText(String.valueOf(data.getDistance()+"km"));
+            holder.distance.setText(String.format("%.1f km", distance / 1000.0));
         }
 
         holder.reviewers.setText(String.valueOf(data.getReviewCount()));
@@ -66,7 +69,7 @@ public class StoreDetailListAdapter extends RecyclerView.Adapter<StoreDetailList
         return searchList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private ImageView storeImage;
         private TextView storeName;
@@ -78,6 +81,7 @@ public class StoreDetailListAdapter extends RecyclerView.Adapter<StoreDetailList
         private TextView reviewers;
         private ToggleButton like;
         StoreListData searchData;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             storeImage = itemView.findViewById(R.id.store_image);
@@ -93,13 +97,13 @@ public class StoreDetailListAdapter extends RecyclerView.Adapter<StoreDetailList
 
         @Override
         public void onClick(View view) {
-            if(searchListner != null) {
+            if (searchListner != null) {
                 searchListner.onSearchClick(view, searchData, getLayoutPosition());
             }
         }
     }
 
-    public interface searchListner{
+    public interface searchListner {
         void onSearchClick(View view, StoreListData searchData, int position);
     }
 }

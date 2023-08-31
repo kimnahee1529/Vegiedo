@@ -184,12 +184,7 @@ public class ActivityViewModel extends ViewModel {
 
             /* 거리 필터 충족 */
             boolean storeDistance = userToStore < distance * 1000;
-            if(userToStore < 999f){
-                storeList.get(i).setDistance( (int) userToStore );
-            } else {
-                storeList.get(i).setDistance( (int) ( userToStore * 0.001f ) );
-            }
-
+            storeList.get(i).setDistance( (int) userToStore );
 
             if (keyword != null) {
 
@@ -223,6 +218,7 @@ public class ActivityViewModel extends ViewModel {
                 if (storeDistance && ( isTagMatched || stringFilter) ) {
                     filteredStoreList.add(storeList.get(i));
                 }
+                storeFilteredLiveData.setValue(filteredStoreList);
             } else {
                 boolean isTagMatched = false;
                 if (tags != null)
@@ -240,6 +236,7 @@ public class ActivityViewModel extends ViewModel {
                 if(storeDistance && isTagMatched ){
                     filteredStoreList.add(storeList.get(i));
                 }
+                storeFilteredLiveData.setValue(filteredStoreList);
             }
             storeFilteredLiveData.setValue(filteredStoreList);
         }
