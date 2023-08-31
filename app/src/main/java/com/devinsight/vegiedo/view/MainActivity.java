@@ -210,10 +210,12 @@ public class MainActivity extends AppCompatActivity {
 
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // 권한 허용
-                editor.putBoolean("isGranted", true);
+//                editor.putBoolean("isGranted", true);
+                viewModel.setGranted(true);
             } else {
                 // 권한 거부
-                editor.putBoolean("isGranted", false);
+//                editor.putBoolean("isGranted", false);
+                viewModel.setGranted(false);
             }
 
             editor.apply();

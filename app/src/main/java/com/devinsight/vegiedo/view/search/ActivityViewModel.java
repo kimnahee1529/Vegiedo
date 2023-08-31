@@ -33,6 +33,10 @@ public class ActivityViewModel extends ViewModel {
     /* api 를 통해 서버로 부터 받은 가게 리스트 */
     private List<StoreListData> allStoreList;
 
+    /* 위치 권한 허용 여부값을 담은 변수*/
+    private MutableLiveData<Boolean> isGranted = new MutableLiveData<>(false);
+
+
     /* Query 요청 및 필터에 사용 하기 위한 전역 변수*/
     private float userCurrentLat;
     private float userCurrentLong;
@@ -43,6 +47,7 @@ public class ActivityViewModel extends ViewModel {
     private List<String> tags;
     private int distance;
     private String keyword;
+
 
 
     public void tagContent(boolean isChecked, String content, int btnId) {
@@ -236,6 +241,13 @@ public class ActivityViewModel extends ViewModel {
         return storeSearchLiveData;
     }
 
+    public LiveData<Boolean> isGranted() {
+        return isGranted;
+    }
+
+    public void setGranted(boolean granted) {
+        isGranted.setValue(granted);
+    }
 
 }
 

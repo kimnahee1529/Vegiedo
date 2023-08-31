@@ -15,6 +15,8 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -67,6 +69,7 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
     /* 뷰 모델 */
     ActivityViewModel viewModel;
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -76,6 +79,9 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
         mapView = view.findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
+
+        viewModel = new ViewModelProvider(requireActivity()).get(ActivityViewModel.class);
+
 
         locationSource = new FusedLocationSource(this, REQUEST_LOCATION_PERMISSION);
         currentLocationMarker = new Marker();
@@ -141,33 +147,29 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(@NonNull NaverMap naverMap) {
         this.naverMap = naverMap;
+        Log.d("위치", viewModel.isGranted().toString());
 
-        //위치 권한 허용 여부 저장 변수
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("LocationPermission", Context.MODE_PRIVATE);
-        boolean isGranted = sharedPreferences.getBoolean("isGranted", false);
-
-        //허용했을 때
-        if (isGranted) {
-            Log.d("onRequestPermissionsResult", "위치 권한 O");
-            getCurrentLocation(new LocationCallback() { //콜백을 통해 현재 위치를 반환해 화면 이동
-                @Override
-                public void onLocationResult(LatLng location) {
-                    if (location != null) {
-                        Log.d("현재 위치", "" + location.latitude + " " + location.longitude);
-                        setMarkerAndMoveCamera(location, naverMap);
-                    } else {
-                        // 위치 정보를 가져올 수 없는 경우의 처리 (예: 기본 위치로 설정)
-                        setMarkerAndMoveCamera(getDefaultLocation(), naverMap);
+        viewModel.isGranted().observe(getViewLifecycleOwner(), isGranted -> {
+            if (isGranted) {
+                Log.d("onRequestPermissionsResult", "위치 권한 O");
+                getCurrentLocation(new LocationCallback() { //콜백을 통해 현재 위치를 반환해 화면 이동
+                    @Override
+                    public void onLocationResult(LatLng location) {
+                        if (location != null) {
+                            Log.d("현재 위치", "" + location.latitude + " " + location.longitude);
+                            setMarkerAndMoveCamera(location, naverMap);
+                        } else {
+                            setMarkerAndMoveCamera(getDefaultLocation(), naverMap);
+                        }
                     }
-                }
-            });
-        }
-        //허용하지 않았을 때
-        else {
-            Log.d("onRequestPermissionsResult", "위치 권한 X");
-            setMarkerAndMoveCamera(getDefaultLocation(), naverMap);
-        }
+                });
+            } else {
+                Log.d("onRequestPermissionsResult", "위치 권한 X");
+                setMarkerAndMoveCamera(getDefaultLocation(), naverMap);
+            }
+        });
     }
+
 
     //허용 권한 여부에 따른 마커의 위치 변화 함수
     private void setMarkerAndMoveCamera(LatLng markerPosition, NaverMap naverMap) {
@@ -210,7 +212,6 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
         ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSION);
 
     }
-
 
     private void loadStoreData() {
         mapApiService.getStoresOnMap(Arrays.asList("tag1", "tag2"), 37.5665, 126.9780, "500", "myKeyword").enqueue(new Callback<MapInquiryResponseDTO>() {
