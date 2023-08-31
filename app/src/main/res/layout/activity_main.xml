@@ -47,7 +47,7 @@
             android:imeOptions="actionDone"
             android:singleLine="true"
             app:queryBackground="@android:color/transparent"
-            app:searchIcon="@null"></EditText>
+            app:searchIcon="@null"/>
 
         <ImageButton
             android:id="@+id/btn_filter"
