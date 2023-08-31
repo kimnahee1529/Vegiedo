@@ -21,7 +21,7 @@ import com.devinsight.vegiedo.data.response.MapStoreListData;
 import com.devinsight.vegiedo.data.ui.map.MapStoreCardUiData;
 import com.devinsight.vegiedo.service.api.MapApiService;
 import com.devinsight.vegiedo.utill.RetrofitClient;
-import com.devinsight.vegiedo.view.search.SearchFilterViewModel;
+import com.devinsight.vegiedo.view.search.ActivityViewModel;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.CameraUpdate;
 import com.naver.maps.map.LocationTrackingMode;
@@ -55,7 +55,7 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
     private ArrayList<MapStoreCardUiData> cardUiList;
 
     /* 뷰 모델 */
-    SearchFilterViewModel viewModel;
+    ActivityViewModel viewModel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

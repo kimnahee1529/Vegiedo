@@ -28,7 +28,6 @@ import com.devinsight.vegiedo.R;
 import com.devinsight.vegiedo.data.ui.login.TagStatus;
 import com.devinsight.vegiedo.repository.pref.UserPrefRepository;
 import com.devinsight.vegiedo.utill.VeganTag;
-import com.devinsight.vegiedo.view.MainActivity;
 import com.devinsight.vegiedo.view.StoreListMainFragment;
 
 import java.util.ArrayList;
@@ -54,7 +53,7 @@ public class SearchFilterFragment extends Fragment {
     List<String> userTagList;
 
     /* 뷰모델 */
-    SearchFilterViewModel viewModel;
+    ActivityViewModel viewModel;
     FilterData filterData;
 
     /* 저장소 */
@@ -140,7 +139,7 @@ public class SearchFilterFragment extends Fragment {
 
         userTagList = new ArrayList<>();
 
-        viewModel = new ViewModelProvider(requireActivity()).get(SearchFilterViewModel.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(ActivityViewModel.class);
 
         tagFruittarian.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -273,9 +272,8 @@ public class SearchFilterFragment extends Fragment {
                 viewModel.getFilterData(filterData.getDistance(), filterData.getTags());
                 Log.d("필터 데이터", "성공" + filterData.getDistance() + filterData.getTags());
 //                getParentFragmentManager().beginTransaction().replace(R.id.frame, searchMainFragment).commit();
-//                getParentFragmentManager().beginTransaction().replace(R.id.frame, storeListMainFragment).commit();
+                getParentFragmentManager().beginTransaction().replace(R.id.frame, storeListMainFragment).commit();
 
-                getParentFragmentManager().popBackStack();
             }
         });
 

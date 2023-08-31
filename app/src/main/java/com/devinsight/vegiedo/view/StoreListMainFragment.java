@@ -14,11 +14,10 @@ import android.view.ViewGroup;
 
 import com.devinsight.vegiedo.R;
 import com.devinsight.vegiedo.data.response.StoreListData;
-import com.devinsight.vegiedo.view.search.SearchFilterViewModel;
+import com.devinsight.vegiedo.view.search.ActivityViewModel;
 import com.devinsight.vegiedo.view.search.StoreDetailListAdapter;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class StoreListMainFragment extends Fragment implements StoreDetailListAdapter.searchListner {
@@ -32,7 +31,7 @@ public class StoreListMainFragment extends Fragment implements StoreDetailListAd
     private StoreDetailListAdapter storeDetailListAdapter;
 
     private List<StoreListData> storeList;
-    private SearchFilterViewModel viewModel;
+    private ActivityViewModel viewModel;
 
     public static StoreListMainFragment instance(){
         return new StoreListMainFragment();
@@ -85,9 +84,9 @@ public class StoreListMainFragment extends Fragment implements StoreDetailListAd
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        viewModel = new ViewModelProvider(requireActivity()).get(SearchFilterViewModel.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(ActivityViewModel.class);
 
-        viewModel.dummyData();
+        viewModel.searchList();
 
         viewModel.getFilteredStoreList().observe(getViewLifecycleOwner(), new Observer<List<StoreListData>>() {
             @Override
