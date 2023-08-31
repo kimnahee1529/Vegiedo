@@ -117,27 +117,26 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        searchView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        searchView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onFocusChange(View view, boolean b) {
-                if (b) {
-                    ConstraintLayout.LayoutParams toolBarParams = (ConstraintLayout.LayoutParams) toolBar.getLayoutParams();
-                    toolBarParams.width = dpToPx(320);
-                    toolBar.setLayoutParams(toolBarParams);
+            public void onClick(View view) {
+                ConstraintLayout.LayoutParams toolBarParams = (ConstraintLayout.LayoutParams) toolBar.getLayoutParams();
+                toolBarParams.width = dpToPx(320);
+                toolBar.setLayoutParams(toolBarParams);
 
-                    ViewGroup.LayoutParams searchViewParams = searchView.getLayoutParams();
-                    searchViewParams.width = dpToPx(200);  // 예: 너비를 200dp로 조정
-                    searchView.setLayoutParams(searchViewParams);
+                ViewGroup.LayoutParams searchViewParams = searchView.getLayoutParams();
+                searchViewParams.width = dpToPx(200);  // 예: 너비를 200dp로 조정
+                searchView.setLayoutParams(searchViewParams);
 
-                    btn_back.setVisibility(View.VISIBLE);
+                btn_back.setVisibility(View.VISIBLE);
 
-                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                    transaction.replace(R.id.frame, searchMainFragment, "SearchMainFragment")
-                            .addToBackStack("SearchMainFragment").commit();
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.frame, searchMainFragment, "SearchMainFragment")
+                        .addToBackStack("SearchMainFragment").commit();
 
-                }
             }
         });
+
 
         searchView.addTextChangedListener(new TextWatcher() {
             @Override
@@ -176,6 +175,16 @@ public class MainActivity extends AppCompatActivity {
         btn_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                ConstraintLayout.LayoutParams toolBarParams = (ConstraintLayout.LayoutParams) toolBar.getLayoutParams();
+                toolBarParams.width = dpToPx(350);
+                toolBar.setLayoutParams(toolBarParams);
+
+                ViewGroup.LayoutParams searchViewParams = searchView.getLayoutParams();
+                searchViewParams.width = dpToPx(250);  // 예: 너비를 200dp로 조정
+                searchView.setLayoutParams(searchViewParams);
+
+                btn_back.setVisibility(View.INVISIBLE);
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.frame, homeMainFragment).commit();
 
