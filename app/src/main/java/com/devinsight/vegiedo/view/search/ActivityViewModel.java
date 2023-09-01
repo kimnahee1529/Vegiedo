@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel;
 import com.devinsight.vegiedo.data.response.MapStoreListData;
 import com.devinsight.vegiedo.data.response.StoreListData;
 import com.devinsight.vegiedo.data.ui.login.TagStatus;
+import com.devinsight.vegiedo.data.ui.map.MapStoreCardUiData;
 import com.devinsight.vegiedo.data.ui.search.SearchStorSummaryeUiData;
 import com.devinsight.vegiedo.data.ui.search.SearchStoreDetailUiData;
 
@@ -39,6 +40,8 @@ public class ActivityViewModel extends ViewModel {
 
     /* 지도의 카드뷰에 보여줄 가게 리스트 라이브 데이터*/
     private MutableLiveData<List<MapStoreListData>> mapStoreLiveData = new MutableLiveData<>();
+
+    private MutableLiveData<List<MapStoreCardUiData>> mapStoreUiLiveData = new MutableLiveData<>();
 
 
     /* Query 요청 및 필터에 사용 하기 위한 전역 변수*/
@@ -240,7 +243,7 @@ public class ActivityViewModel extends ViewModel {
         List<MapStoreListData> mapStoreList = new ArrayList<>();
 
         mapStoreList.add(new MapStoreListData(1l, "향림원", "서울특별시 강남구 삼성동 123-45", 37.500731f, 127.039338f, 5, Arrays.asList("#비건", "#락토"), 5, true, true, 40, ""));
-        mapStoreList.add(new MapStoreListData(2l, "서울테이블", "부산광역시 해운대구 우동 56-78", 37.494575f, 127.034612f, 5, Arrays.asList("#프루테리언", "#비건"), 4, false, true, 45, ""));
+        mapStoreList.add(new MapStoreListData(2l, "서울테이블", "부산광역시 해운대구 우동 56-78", 35.1745200144f, 129.12693731157f, 5, Arrays.asList("#프루테리언", "#비건"), 4, false, true, 45, ""));
         mapStoreList.add(new MapStoreListData(3l, "바다의 선물", "대구광역시 중구 동인동 90-12", 37.499176f, 127.041257f, 5, Arrays.asList("#락토", "#오보"), 5, true, true, 24, ""));
         mapStoreList.add(new MapStoreListData(4l, "마루키친", "서울특별시 강남구 논현동 123-45", 37.492988f, 127.035923f, 5, Arrays.asList("#락토 오보", "#페스코"), 1, true, true, 5, ""));
         mapStoreList.add(new MapStoreListData(5l, "송림정", "서울특별시 중구 을지로 56-78", 37.503657f, 127.036592f, 5, Arrays.asList("#오보", "#락토 오보"), 3, true, true, 8, ""));
@@ -253,12 +256,26 @@ public class ActivityViewModel extends ViewModel {
         return mapStoreList;
     }
 
+    public MutableLiveData<List<MapStoreCardUiData>> getMapStoreSummaryData() {
+
+        List<MapStoreListData> originData = mapDummyData();
+        List<MapStoreCardUiData> mapStoreCardUiDataList = new ArrayList<>();
+
+        for(MapStoreListData data : originData) {
+            MapStoreCardUiData mapStoreCardUiData = new MapStoreCardUiData();
+            mapStoreCardUiData.setData(data.getImages(), data.getTags().get(0), data.getTags().get(1), data.getReviewCount(), data.getStars(),
+                    data.getDistance(), data.getStoreName(), data.getAddress(), data.getLike(), data.getLatitude(), data.getLongitude());
+            mapStoreCardUiDataList.add(mapStoreCardUiData);
+        }
+        mapStoreUiLiveData.setValue(mapStoreCardUiDataList);
+
+        return mapStoreUiLiveData;
+    }
+
+
+
     public MutableLiveData<List<MapStoreListData>> getMapStoreLiveData() {
         List<MapStoreListData> mapStoreList = mapDummyData();
-//        List<MapStoreListData> filteredStoreList = new ArrayList<>();
-//        for (int i = 0; i < mapStoreList.size(); i++) {
-//            Log.d("맵 가게 리스트", mapStoreList.get(i).getStoreName());
-//        }
         mapStoreLiveData.setValue(mapStoreList);
         return mapStoreLiveData;
     }
