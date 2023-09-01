@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.devinsight.vegiedo.R;
 import com.devinsight.vegiedo.data.response.StoreListData;
 import com.devinsight.vegiedo.data.ui.map.MapStoreCardUiData;
@@ -46,11 +47,14 @@ public class StoreDetailListAdapter extends RecyclerView.Adapter<StoreDetailList
     @Override
     public void onBindViewHolder(@NonNull StoreDetailListAdapter.ViewHolder holder, int position) {
         StoreListData data = searchList.get(position);
+
+        String imageUrl = data.getImages();
         holder.storeName.setText(data.getStoreName());
         holder.storeTag1.setText(data.getTags().get(0));
         holder.storeTag2.setText(data.getTags().get(1));
         holder.address.setText(data.getAddress());
         holder.starRating.setRating(data.getStars());
+        Glide.with(context).load(imageUrl).into(holder.storeImage);
 
         int distance = data.getDistance();
 

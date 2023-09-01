@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -223,8 +224,6 @@ public class SearchFilterFragment extends Fragment {
                 String tagContent = VeganTag.GLUTEN_FREE.getTagContent();
                 viewModel.tagContent(isChecked, tagContent, compoundButton.getId());
 
-
-
             }
         });
 
@@ -272,6 +271,7 @@ public class SearchFilterFragment extends Fragment {
                 viewModel.getFilterData(filterData.getDistance(), filterData.getTags());
                 Log.d("필터 데이터", "성공" + filterData.getDistance() + filterData.getTags());
 //                getParentFragmentManager().beginTransaction().replace(R.id.frame, searchMainFragment).commit();
+
                 getParentFragmentManager().beginTransaction().replace(R.id.frame, storeListMainFragment).commit();
 
             }
@@ -280,48 +280,48 @@ public class SearchFilterFragment extends Fragment {
         return view;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        boolean locationPermission = Build.VERSION.SDK_INT >= 23 &&
-                ContextCompat.checkSelfPermission(getActivity().getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED;
-        if (locationPermission) {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{
-                    android.Manifest.permission.ACCESS_FINE_LOCATION}, 0);
-        } else {
-            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            if (location != null) {
-                float latitude = (float) location.getLatitude();
-                float longitude = (float) location.getLongitude();
-
-                Log.d("위치 1 ", "위치" + "위도 : " + latitude + "경도 : " + longitude);
-            }
-
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, locationListener);
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, locationListener);
-        }
-    }
-
-    final LocationListener locationListener = new LocationListener() {
-        @Override
-        public void onLocationChanged(@NonNull Location location) {
-            float latitude = (float) location.getLatitude();
-            float longitude = (float) location.getLongitude();
-            viewModel.getCurrentLocationData(latitude, longitude);
-
-            Log.d("위치 2 ", "위치" + "위도 : " + latitude + "경도 : " + longitude);
-        }
-    };
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        if (locationListener != null) {
-            locationManager.removeUpdates(locationListener);
-        }
-    }
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//
+//        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+//        boolean locationPermission = Build.VERSION.SDK_INT >= 23 &&
+//                ContextCompat.checkSelfPermission(getActivity().getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED;
+//        if (locationPermission) {
+//            ActivityCompat.requestPermissions(getActivity(), new String[]{
+//                    android.Manifest.permission.ACCESS_FINE_LOCATION}, 0);
+//        } else {
+//            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+//            if (location != null) {
+//                float latitude = (float) location.getLatitude();
+//                float longitude = (float) location.getLongitude();
+//
+//                Log.d("위치 1 ", "위치" + "위도 : " + latitude + "경도 : " + longitude);
+//            }
+//
+//            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, locationListener);
+//            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, locationListener);
+//        }
+//    }
+//
+//    final LocationListener locationListener = new LocationListener() {
+//        @Override
+//        public void onLocationChanged(@NonNull Location location) {
+//            float latitude = (float) location.getLatitude();
+//            float longitude = (float) location.getLongitude();
+//            viewModel.getCurrentLocationData(latitude, longitude);
+//
+//            Log.d("위치 2 ", "위치" + "위도 : " + latitude + "경도 : " + longitude);
+//        }
+//    };
+//
+//    @Override
+//    public void onPause() {
+//        super.onPause();
+//        if (locationListener != null) {
+//            locationManager.removeUpdates(locationListener);
+//        }
+//    }
 
 
     public boolean isInitialTag(String tag) {

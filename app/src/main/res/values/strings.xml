@@ -16,6 +16,8 @@
 
     <string name="select_three_or_more">관심태그를 3개 이상 눌러주세요!</string>
     <string name="select_at_filter">"필터링에서 언제든지 다시 설정할 수 있어요!"</string>
+    <string name="not_found">아이쿠, 찾을 수 없다 메에에에!</string>
+    <string name="set_more_filter">추천태그를 눌러주거나 거리를 더 늘려보라메에에에</string>
 
     <string name="tag_fruittarian">#프루테리언</string>
     <string name="tag_vegan">#비건</string>

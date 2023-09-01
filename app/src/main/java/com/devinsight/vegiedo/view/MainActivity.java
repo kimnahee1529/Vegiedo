@@ -4,13 +4,23 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,6 +31,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.devinsight.vegiedo.R;
+import com.devinsight.vegiedo.repository.pref.UserPrefRepository;
 import com.devinsight.vegiedo.view.community.GeneralPostFragment;
 import com.devinsight.vegiedo.view.home.HomeMainFragment;
 import com.devinsight.vegiedo.view.map.MapMainFragment;
@@ -30,6 +41,9 @@ import com.devinsight.vegiedo.view.search.ActivityViewModel;
 import com.devinsight.vegiedo.view.search.SearchMainFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -54,6 +68,13 @@ public class MainActivity extends AppCompatActivity {
 
     /* 뷰모델 */
     ActivityViewModel viewModel;
+    List<String> currentInputList;
+
+    LocationManager locationManager;
+
+    UserPrefRepository userPrefRepository;
+
+    int INITIAL_DISTANCE = 5;
 
 
     @Override
@@ -80,6 +101,13 @@ public class MainActivity extends AppCompatActivity {
 
         /* 액티비티 뷰 모델 */
         viewModel = new ViewModelProvider(this).get(ActivityViewModel.class);
+        userPrefRepository = new UserPrefRepository(this);
+        List<String> initialTagList = userPrefRepository.loadTagList();
+        int initialDistance = INITIAL_DISTANCE;
+
+        viewModel.getInitialFilteredData(initialDistance, initialTagList);
+
+        currentInputList = new ArrayList<>();
 
 
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
@@ -134,6 +162,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 viewModel.getSearchInputText(charSequence.toString());
+                viewModel.searchSummaryListByKeyword(charSequence.toString());
             }
 
             @Override
@@ -146,6 +175,16 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
                 if(actionId == EditorInfo.IME_ACTION_DONE || (keyEvent != null && keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER) ){
+
+                    String currentInput = textView.getText().toString();
+                    if(currentInput != null ) {
+                        currentInputList.add(currentInput);
+                        viewModel.getCurrentInput(currentInputList.get( currentInputList.size() - 1 ));
+                        for( int i = 0 ; i < currentInputList.size() ; i ++ ) {
+                            Log.d("최근 검색어","최근 검색어 : " + currentInputList.get(i).toString());
+                        }
+                    }
+
 
                     FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                     transaction.replace(R.id.frame, storeListMainFragment,"storeListMainFragment").addToBackStack("storeListMainFragment").commit();
@@ -160,7 +199,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.frame, searchFilterFragment).commit();
+                transaction.replace(R.id.frame, searchFilterFragment,"searchFilterFragment").addToBackStack("searchFilterFragment").commit();
             }
         });
 
@@ -170,14 +209,47 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 setLongSearchBar();
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                fragmentManager.popBackStack("homeMainFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.frame, homeMainFragment).commit();
+                transaction.replace(R.id.frame, homeMainFragment).addToBackStack(null).commit();
 
 
             }
         });
 
+
+        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        boolean locationPermission = Build.VERSION.SDK_INT >= 23 &&
+                ContextCompat.checkSelfPermission(this.getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED;
+        if (locationPermission) {
+            ActivityCompat.requestPermissions(this, new String[]{
+                    android.Manifest.permission.ACCESS_FINE_LOCATION}, 0);
+        } else {
+            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if (location != null) {
+                float latitude = (float) location.getLatitude();
+                float longitude = (float) location.getLongitude();
+
+                Log.d("위치 1 ", "위치" + "위도 : " + latitude + "경도 : " + longitude);
+            }
+
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, locationListener);
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, locationListener);
+        }
+
     }
+
+    final LocationListener locationListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(@NonNull Location location) {
+            float latitude = (float) location.getLatitude();
+            float longitude = (float) location.getLongitude();
+            viewModel.getCurrentLocationData(latitude, longitude);
+
+            Log.d("위치 2 ", "위치" + "위도 : " + latitude + "경도 : " + longitude);
+        }
+    };
 
     private void setLongSearchBar(){
         ConstraintLayout.LayoutParams toolBarParams = (ConstraintLayout.LayoutParams) toolBar.getLayoutParams();
@@ -202,6 +274,14 @@ public class MainActivity extends AppCompatActivity {
     private int dpToPx(int dp) {
         float density = getResources().getDisplayMetrics().density;
         return (int) (dp * density + 0.5f);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (locationListener != null) {
+            locationManager.removeUpdates(locationListener);
+        }
     }
 
 }
