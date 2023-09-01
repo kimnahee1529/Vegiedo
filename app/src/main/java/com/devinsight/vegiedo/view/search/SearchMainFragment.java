@@ -65,12 +65,12 @@ public class SearchMainFragment extends Fragment implements SearchFragmentAdapte
         recyclerView = view.findViewById(R.id.recycler_search_page);
         storeList = new ArrayList<>();
 
-        storeList.add(new SearchStorSummaryeUiData(R.drawable.ic_launcher_background,"Little Forest","집이최고야"));
-        storeList.add(new SearchStorSummaryeUiData(R.drawable.ic_launcher_background,"Little Forest","집이최고야"));
-        storeList.add(new SearchStorSummaryeUiData(R.drawable.ic_launcher_background,"Little Forest","집이최고야"));
-        storeList.add(new SearchStorSummaryeUiData(R.drawable.ic_launcher_background,"Little Forest","집이최고야"));
-        storeList.add(new SearchStorSummaryeUiData(R.drawable.ic_launcher_background,"Little Forest","집이최고야"));
-        storeList.add(new SearchStorSummaryeUiData(R.drawable.ic_launcher_background,"Little Forest","집이최고야"));
+        storeList.add(new SearchStorSummaryeUiData("","Little Forest","집이최고야"));
+        storeList.add(new SearchStorSummaryeUiData("","Little Forest","집이최고야"));
+        storeList.add(new SearchStorSummaryeUiData("","Little Forest","집이최고야"));
+        storeList.add(new SearchStorSummaryeUiData("","Little Forest","집이최고야"));
+        storeList.add(new SearchStorSummaryeUiData("","Little Forest","집이최고야"));
+        storeList.add(new SearchStorSummaryeUiData("","Little Forest","집이최고야"));
 
         searchAdapter = new SearchFragmentAdapter(getContext(),storeList,this);
         recyclerView.setAdapter(searchAdapter);
