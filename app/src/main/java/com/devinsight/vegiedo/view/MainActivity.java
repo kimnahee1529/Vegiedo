@@ -219,7 +219,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         boolean locationPermission = Build.VERSION.SDK_INT >= 23 &&
                 ContextCompat.checkSelfPermission(this.getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED;
         if (locationPermission) {

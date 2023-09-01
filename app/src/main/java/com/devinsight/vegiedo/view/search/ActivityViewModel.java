@@ -209,6 +209,8 @@ public class ActivityViewModel extends ViewModel {
             distance = initialDistance;
         }
 
+        Log.d("필터링 데이터 ", "위도, 경도" + latitude + longitude + " 거리 : " + distance + " 태그 : " + tags.toArray().toString());
+
         List<StoreListData> storeList = dummyData();
         List<StoreListData> filteredStoreList = new ArrayList<>();
 

@@ -30,6 +30,7 @@ public class StoreDetailListAdapter extends RecyclerView.Adapter<StoreDetailList
     public StoreDetailListAdapter(Context cotnext, List<StoreListData> searchList, searchListner searchlistner) {
         this.searchList = searchList;
         this.context = cotnext;
+        this.searchListner = searchlistner;
     }
 
     public void setStoreList(List<StoreListData> storeList) {
@@ -96,13 +97,15 @@ public class StoreDetailListAdapter extends RecyclerView.Adapter<StoreDetailList
             starRating = itemView.findViewById(R.id.map_ratingbar_star);
             distance = itemView.findViewById(R.id.store_distance);
             reviewers = itemView.findViewById(R.id.map_store_reviewes);
+            itemView.setOnClickListener(this);
 
         }
 
         @Override
         public void onClick(View view) {
             if (searchListner != null) {
-                searchListner.onSearchClick(view, searchData, getLayoutPosition());
+//                searchListner.onSearchClick(view, searchData, getLayoutPosition());
+                searchListner.onSearchClick(view, searchList.get(getAdapterPosition()), getAdapterPosition());
             }
         }
     }
