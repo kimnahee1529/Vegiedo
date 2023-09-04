@@ -3,6 +3,7 @@ package com.devinsight.vegiedo.view.community;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
@@ -18,10 +19,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.devinsight.vegiedo.R;
 import com.devinsight.vegiedo.data.request.PostRegisterRequestDTO;
+import com.devinsight.vegiedo.view.PermissionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +46,7 @@ public class WritingFragment extends Fragment {
     private Button registerBtn;
     private ImageView mainImage;
     private static final int GALLERY_REQUEST_CODE = 123;
+    private static final int PERMISSION_REQUEST_CODE = 200; // 권한 요청 코드
     private static final int MAX_IMAGE_COUNT = 5;
     private View rootView;
     private String previousFragment;
@@ -218,20 +223,40 @@ public class WritingFragment extends Fragment {
     }
 
 
-    private void selectImagesFromGallery() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY_REQUEST_CODE);
-    }
+//    private void selectImagesFromGallery() {
+//        Intent intent = new Intent();
+//        intent.setType("image/*");
+//        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+//        intent.setAction(Intent.ACTION_GET_CONTENT);
+//        startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY_REQUEST_CODE);
+//    }
 
     private void selectImageForView(ImageView imageView) {
-        currentlySelectedImageView = imageView;
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY_REQUEST_CODE);
+        // Check if permission is already granted
+//        if (checkPermission()) {
+//            // If permission is already granted, allow user to select an image
+//            currentlySelectedImageView = imageView;
+//            Intent intent = new Intent();
+//            intent.setType("image/*");
+//            intent.setAction(Intent.ACTION_GET_CONTENT);
+//            startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY_REQUEST_CODE);
+//        } else {
+//            // If permission is not granted, request for permission
+//            requestPermission();
+//        }
+
+        if (PermissionUtils.checkPermission(getActivity())) {
+            // 권한이 이미 허용된 상태: 바로 관련 작업 수행
+            currentlySelectedImageView = imageView;
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY_REQUEST_CODE);
+        } else {
+            // 권한이 허용되지 않은 상태: 권한 요청
+            PermissionUtils.requestPermission(getActivity(), PERMISSION_REQUEST_CODE);
+//            requestPermission();
+        }
     }
 
     @Override
@@ -275,6 +300,35 @@ public class WritingFragment extends Fragment {
     private void goBack() {
         if (getFragmentManager() != null) {
             getFragmentManager().popBackStack();
+        }
+    }
+
+    //갤러리 접근 권한
+    private boolean checkPermission() {
+        int result = ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.READ_EXTERNAL_STORAGE);
+        return result == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void requestPermission() {
+        ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_REQUEST_CODE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(getActivity(), "Permission Granted", Toast.LENGTH_SHORT).show();
+
+                    // Open the gallery now as permission is granted
+                    currentlySelectedImageView = getView().findViewById(R.id.main_image1); // default view
+                    Intent intent = new Intent();
+                    intent.setType("image/*");
+                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                    startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY_REQUEST_CODE);
+                } else {
+                    Toast.makeText(getActivity(), "Permission Denied", Toast.LENGTH_SHORT).show();
+                }
+                break;
         }
     }
 }
