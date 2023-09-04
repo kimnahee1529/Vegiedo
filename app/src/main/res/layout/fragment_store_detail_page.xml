@@ -97,6 +97,7 @@
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/storeDetail_store_address"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
@@ -109,39 +110,15 @@
                         android:layout_marginTop="10dp"
                         android:orientation="horizontal">
 
-                        <LinearLayout
+                        <RatingBar
+                            android:id="@+id/map_ratingbar_star"
+                            style="@style/Widget.AppCompat.RatingBar.Small"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginRight="10dp"
-                            android:orientation="horizontal"
-                            android:padding="2dp">
-
-                            <ImageView
-                                android:layout_width="17dp"
-                                android:layout_height="17dp"
-                                android:src="@drawable/full_star" />
-
-                            <ImageView
-                                android:layout_width="17dp"
-                                android:layout_height="17dp"
-                                android:src="@drawable/full_star" />
-
-                            <ImageView
-                                android:layout_width="17dp"
-                                android:layout_height="17dp"
-                                android:src="@drawable/full_star" />
-
-                            <ImageView
-                                android:layout_width="17dp"
-                                android:layout_height="17dp"
-                                android:src="@drawable/full_star" />
-
-                            <ImageView
-                                android:layout_width="17dp"
-                                android:layout_height="17dp"
-                                android:src="@drawable/empty_star" />
-
-                        </LinearLayout>
+                            android:layout_gravity="center"
+                            android:numStars="5"
+                            android:stepSize="1.0"
+                            android:progressTint="@color/yellow_star"/>
 
                         <TextView
                             android:layout_width="wrap_content"
