@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.devinsight.vegiedo.R;
 import com.devinsight.vegiedo.data.response.StoreListData;
 import com.devinsight.vegiedo.data.ui.map.MapStoreCardUiData;
@@ -26,12 +27,13 @@ public class StoreDetailListAdapter extends RecyclerView.Adapter<StoreDetailList
     Context context;
     protected searchListner searchListner;
 
-    public StoreDetailListAdapter(Context cotnext, List<StoreListData> searchList, searchListner searchlistner){
+    public StoreDetailListAdapter(Context cotnext, List<StoreListData> searchList, searchListner searchlistner) {
         this.searchList = searchList;
         this.context = cotnext;
+        this.searchListner = searchlistner;
     }
 
-    public void setStoreList(List<StoreListData> storeList){
+    public void setStoreList(List<StoreListData> storeList) {
         this.searchList.clear();
         this.searchList.addAll(storeList);
     }
@@ -46,12 +48,23 @@ public class StoreDetailListAdapter extends RecyclerView.Adapter<StoreDetailList
     @Override
     public void onBindViewHolder(@NonNull StoreDetailListAdapter.ViewHolder holder, int position) {
         StoreListData data = searchList.get(position);
+
+        String imageUrl = data.getImages();
         holder.storeName.setText(data.getStoreName());
         holder.storeTag1.setText(data.getTags().get(0));
         holder.storeTag2.setText(data.getTags().get(1));
         holder.address.setText(data.getAddress());
         holder.starRating.setRating(data.getStars());
-        holder.distance.setText(String.valueOf(data.getDistance()) );
+        Glide.with(context).load(imageUrl).into(holder.storeImage);
+
+        int distance = data.getDistance();
+
+        if( distance < 1000 ) {
+            holder.distance.setText(distance + "m");
+        } else {
+            holder.distance.setText(String.format("%.1f km", distance / 1000.0));
+        }
+
         holder.reviewers.setText(String.valueOf(data.getReviewCount()));
 
     }
@@ -61,7 +74,7 @@ public class StoreDetailListAdapter extends RecyclerView.Adapter<StoreDetailList
         return searchList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private ImageView storeImage;
         private TextView storeName;
@@ -73,6 +86,7 @@ public class StoreDetailListAdapter extends RecyclerView.Adapter<StoreDetailList
         private TextView reviewers;
         private ToggleButton like;
         StoreListData searchData;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             storeImage = itemView.findViewById(R.id.store_image);
@@ -83,18 +97,20 @@ public class StoreDetailListAdapter extends RecyclerView.Adapter<StoreDetailList
             starRating = itemView.findViewById(R.id.map_ratingbar_star);
             distance = itemView.findViewById(R.id.store_distance);
             reviewers = itemView.findViewById(R.id.map_store_reviewes);
+            itemView.setOnClickListener(this);
 
         }
 
         @Override
         public void onClick(View view) {
-            if(searchListner != null) {
-                searchListner.onSearchClick(view, searchData, getLayoutPosition());
+            if (searchListner != null) {
+//                searchListner.onSearchClick(view, searchData, getLayoutPosition());
+                searchListner.onSearchClick(view, searchList.get(getAdapterPosition()), getAdapterPosition());
             }
         }
     }
 
-    public interface searchListner{
+    public interface searchListner {
         void onSearchClick(View view, StoreListData searchData, int position);
     }
 }
