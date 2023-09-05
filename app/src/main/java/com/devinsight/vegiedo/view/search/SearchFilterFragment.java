@@ -271,8 +271,9 @@ public class SearchFilterFragment extends Fragment {
                 viewModel.getFilterData(filterData.getDistance(), filterData.getTags());
                 Log.d("필터 데이터", "성공" + filterData.getDistance() + filterData.getTags());
 //                getParentFragmentManager().beginTransaction().replace(R.id.frame, searchMainFragment).commit();
-
-                getParentFragmentManager().beginTransaction().replace(R.id.frame, storeListMainFragment).commit();
+                getParentFragmentManager().popBackStack("homeMainFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+//                getParentFragmentManager().beginTransaction().replace(R.id.frame, storeListMainFragment).commit();
+                getParentFragmentManager().popBackStack();
 
             }
         });

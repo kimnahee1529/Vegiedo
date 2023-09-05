@@ -148,6 +148,7 @@ public class MainActivity extends AppCompatActivity {
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.frame, searchMainFragment, "SearchMainFragment")
                         .addToBackStack("SearchMainFragment").commit();
+                /* transaction. 을 통해 그 뒤에 활용 가능한 모든 함수들을 확인 한다.*/
 
             }
         });
@@ -185,7 +186,6 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
 
-
                     FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                     transaction.replace(R.id.frame, storeListMainFragment,"storeListMainFragment").addToBackStack("storeListMainFragment").commit();
 
@@ -211,6 +211,7 @@ public class MainActivity extends AppCompatActivity {
                 setLongSearchBar();
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 fragmentManager.popBackStack("homeMainFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.frame, homeMainFragment).addToBackStack(null).commit();
 

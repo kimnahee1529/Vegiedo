@@ -29,6 +29,7 @@ public class ActivityViewModel extends ViewModel {
 
     /* 필터링을 끝 낸 라이브 데이터 */
     private MutableLiveData<List<StoreListData>> storeFilteredLiveData = new MutableLiveData<>();
+
     /* 검색창에 보여줄 라이브 데이터 */
     private MutableLiveData<List<SummaryData>> storeSearchLiveData = new MutableLiveData<>();
     /* 검색창에 입력 된 텍스트 라이브 데이터 */
@@ -117,6 +118,7 @@ public class ActivityViewModel extends ViewModel {
         Log.d("지도 위치", "지도 위치 " + "위도 : " + mapLat + "경도" + mapLong);
     }
 
+    /* 실시간으로 입력 받는 검색어 */
     private LiveData<String> getInputText(){
         return  inputTextLiveData;
     }
@@ -138,10 +140,12 @@ public class ActivityViewModel extends ViewModel {
         return storeList;
     }
 
+    /* 최근 입력된 마지막 검색어 */
     public void getCurrentInput(String input) {
         this.currentInput = input;
     }
 
+    /* 더미데이터에서 필요한 부분*/
     public void searchSummList(){
         List<StoreListData> storeListData = dummyData();
         List<SummaryData> summaryList = new ArrayList<>();
@@ -157,6 +161,7 @@ public class ActivityViewModel extends ViewModel {
         storeListSummaryLiveData.setValue(summaryList);
     }
 
+    /* 최근검색어에 따른 리스트 */
     public void currentList(){
         if(currentInput != null) {
             List<SummaryData> summaryList = storeListSummaryLiveData.getValue();
@@ -173,6 +178,7 @@ public class ActivityViewModel extends ViewModel {
         }
     }
 
+    /* 요약리스트에서 실시간 검색 */
     public void searchSummaryListByKeyword(String input){
         if(storeListSummaryLiveData != null) {
             List<SummaryData> storeList = storeListSummaryLiveData.getValue();
@@ -187,7 +193,7 @@ public class ActivityViewModel extends ViewModel {
     }
 
 
-
+    /* 필터링을 통해 스토어 메인 리스트를 보여주기 위한 함수 */
     public void searchDetailList() {
         Log.d("필터함수","필터함수 발동!");
 
