@@ -7,8 +7,10 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.devinsight.vegiedo.data.response.MapStoreListData;
 import com.devinsight.vegiedo.data.response.StoreListData;
 import com.devinsight.vegiedo.data.ui.login.TagStatus;
+import com.devinsight.vegiedo.data.ui.map.MapStoreCardUiData;
 import com.devinsight.vegiedo.data.ui.search.SearchStorSummaryeUiData;
 import com.devinsight.vegiedo.repository.pref.UserPrefRepository;
 
@@ -29,7 +31,6 @@ public class ActivityViewModel extends ViewModel {
 
     /* 필터링을 끝 낸 라이브 데이터 */
     private MutableLiveData<List<StoreListData>> storeFilteredLiveData = new MutableLiveData<>();
-
     /* 검색창에 보여줄 라이브 데이터 */
     private MutableLiveData<List<SummaryData>> storeSearchLiveData = new MutableLiveData<>();
     /* 검색창에 입력 된 텍스트 라이브 데이터 */
@@ -37,6 +38,15 @@ public class ActivityViewModel extends ViewModel {
 
     /* api 를 통해 서버로 부터 받은 가게 리스트 */
     private List<StoreListData> allStoreList;
+
+    /* 위치 권한 허용 여부값을 담은 변수*/
+    private final MutableLiveData<Boolean> isGranted = new MutableLiveData<>(false);
+
+    /* 지도의 카드뷰에 보여줄 가게 리스트 라이브 데이터*/
+    private MutableLiveData<List<MapStoreListData>> mapStoreLiveData = new MutableLiveData<>();
+
+    private MutableLiveData<List<MapStoreCardUiData>> mapStoreUiLiveData = new MutableLiveData<>();
+
 
     /* Query 요청 및 필터에 사용 하기 위한 전역 변수*/
     private float userCurrentLat;
@@ -84,6 +94,7 @@ public class ActivityViewModel extends ViewModel {
     public void getCurrentLocationData(float latitude, float longitude) {
         this.userCurrentLat = latitude;
         this.userCurrentLong = longitude;
+
         Log.d("위치3", "위치3" + "위도 : " + latitude + "경도" + longitude);
     }
 
@@ -312,6 +323,17 @@ public class ActivityViewModel extends ViewModel {
     public LiveData<List<SummaryData>> getCurrentListLiveData(){
         return  storeListCurrentLiveData;
     }
+
+    public LiveData<Boolean> isGranted() {
+        return isGranted;
+    }
+
+    public void setGranted(boolean granted) {
+        isGranted.setValue(granted);
+    }
+
+
+
 
 
 }

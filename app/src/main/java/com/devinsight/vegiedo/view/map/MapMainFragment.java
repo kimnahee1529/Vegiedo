@@ -1,7 +1,12 @@
+//리팩토링 하기 전 실행되는 코드
 package com.devinsight.vegiedo.view.map;
 
 import android.Manifest;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.os.Bundle;
@@ -9,10 +14,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,8 +33,11 @@ import com.devinsight.vegiedo.service.api.MapApiService;
 import com.devinsight.vegiedo.service.api.StoreApiService;
 import com.devinsight.vegiedo.utill.RetrofitClient;
 import com.devinsight.vegiedo.view.search.ActivityViewModel;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.naver.maps.geometry.LatLng;
+import com.naver.maps.geometry.LatLngBounds;
 import com.naver.maps.map.CameraAnimation;
 import com.naver.maps.map.CameraUpdate;
 import com.naver.maps.map.LocationTrackingMode;
@@ -33,10 +45,12 @@ import com.naver.maps.map.MapView;
 import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.OnMapReadyCallback;
 import com.naver.maps.map.overlay.Marker;
+import com.naver.maps.map.overlay.OverlayImage;
 import com.naver.maps.map.util.FusedLocationSource;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -44,189 +58,302 @@ import retrofit2.Response;
 
 public class MapMainFragment extends Fragment implements OnMapReadyCallback {
 
+    //위치 권한 요청 코드
+    private static final int REQUEST_LOCATION_PERMISSION = 1000;
+    //기본 위치로 설정된 강남역의 좌표
+    private static final LatLng DEFAULT_LOCATION = new LatLng(37.498095, 127.027610);
+
     private MapView mapView;
     private NaverMap naverMap;
-    private static final int REQUEST_LOCATION_PERMISSION  = 1000;
     private FusedLocationSource locationSource;
     private Marker currentLocationMarker;
-    MapApiService mapApiService = RetrofitClient.getMapApiService();
-
-    //카드뷰 리사이클러뷰
     private RecyclerView recyclerView;
-    private MapStoreCardAdapter cardAdapter;
     private MapStoreCardUiAdapter cardUiAdapter;
-    private ArrayList<MapStoreListData> cardList;
-    private ArrayList<MapStoreCardUiData> cardUiList;
+    private ArrayList<MapStoreCardUiData> cardUiList = new ArrayList<>();
+    private FloatingActionButton floatingMapLikeButton;
+    private boolean isLikeButtonPressed = false; // 버튼이 눌린 상태를 기억하는 변수
+    private FloatingActionButton floatingMapLocationButton;
     private FloatingActionButton floatingMapStorePageButton;
-
-    /* 뷰 모델 */
+    private FusedLocationProviderClient fusedLocationClient;
+    private ArrayList<Marker> markersOnMap = new ArrayList<>();
+    private MapApiService mapApiService = RetrofitClient.getMapApiService();
     ActivityViewModel viewModel;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main_map, container, false);
-
-        mapView = view.findViewById(R.id.mapView);
-        mapView.onCreate(savedInstanceState);
-        mapView.getMapAsync(this);
-
-        locationSource = new FusedLocationSource(this, REQUEST_LOCATION_PERMISSION);
-        currentLocationMarker = new Marker();
-
-//        requestLocationPermission();
-
-        //storePageBtn 눌렀을 때
-        floatingMapStorePageButton = view.findViewById(R.id.btn_map_storePage);
-        floatingMapStorePageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onFloatingListButtonClick();
-            }
-        });
-
-        //API
-//        storeApiService.readStore(2L);
-        recyclerView = view.findViewById(R.id.rc_card);
-        cardList = new ArrayList<>();
-        cardUiList = new ArrayList<>();
-
-
-        //MapStoreListData 사용
-//        cardList.add(new MapStoreListData(1L, "little forest", "서울특별시 강남구 강남대로 \n"+"98길 12-5", 150, Arrays.asList("Vegan", "Organic"), 4, true, 37.1234f, 127.1234f));
-//        cardList.add(new MapStoreListData(2L, "Veggie Store", "123 Veggie St.", 150, Arrays.asList("Vegan", "Organic"), 5, false, 37.1234f, 127.1234f));
-
-        //MapStoreCardUiData 사용
-        cardUiList.add(new MapStoreCardUiData("https://us.123rf.com/450wm/ingalinder/ingalinder1705/ingalinder170500032/77515524-%ED%9D%B0%EC%83%89-%EB%B0%B0%EA%B2%BD%EC%97%90-%EA%B3%A0%EB%A6%BD-%EB%90%9C-%EB%8B%A4%EC%B1%84%EB%A1%9C%EC%9A%B4-%ED%8F%89%EB%A9%B4-%EB%B2%88%ED%98%B8-1.jpg", 1, 2, 3, 3, 150, "1식당 이름", "1주소", true));
-        cardUiList.add(new MapStoreCardUiData("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNRw5d8FosBXd_Qs_HbnUP_9nNnPAwASSbkw&usqp=CAU", 3, 4, 3, 4, 300, "2식당 이름", "2주소", false));
-//        cardList.add(new MapStoreCardData("https://i.namu.wiki/i/l_7H5Zv2mhxYHVdmjT_An3gFWge9yHzoIZ7DWVsIYoy80AtKL9LOMYuwl4OWHUhDuBTNcrv4H7KEn3I159fp-Q.webp",7942, 9413, 33,4, 300,"가게 이름","주소",true));
-//        cardList.add(new MapStoreCardData("https://pbs.twimg.com/media/F2bkFD7agAANERO?format=jpg&name=4096x4096,7942", 7942, 9413, 33,4, 300,"가게 이름","주소",true));
-//        cardList.add(new MapStoreCardData("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRSeS17_vakustlHY5XZ0VuOiRbybzNfZbpKwULyoEqud6N9m81E9MoJkw2uwDVxh0U444&usqp=CAU",7942, 9413, 33,4, 300,"가게 이름","주소",true));
-
-
-//        cardAdapter = new MapStoreCardAdapter(getContext(), cardList, this::onCardClick); //MapStoreListData 사용
-        cardUiAdapter = new MapStoreCardUiAdapter(getContext(), cardUiList, this::onCardClick);
-//        recyclerView.setAdapter(cardAdapter);
-        recyclerView.setAdapter(cardUiAdapter);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(),RecyclerView.HORIZONTAL,false);
-        recyclerView.setLayoutManager(linearLayoutManager);
-
+        setupMapView(view, savedInstanceState); // mapView를 초기화하고, 비동기로 지도가 준비될 때까지 기다림
+        setupViewModel(); // ViewModel을 초기화
+        setupLocationSource(); // 위치 정보를 추적하는 객체와 현재 위치 마커를 초기화
+        setupFloatingActionButton(view);
+        setupRecyclerView(view);
         return view;
     }
 
-    // 여기에 플로팅 버튼을 눌렀을 때 수행할 동작을 작성하세요.
-    private void onFloatingListButtonClick() {
-        if (recyclerView.getVisibility() == View.VISIBLE) {
-            recyclerView.setVisibility(View.GONE);
-        } else {
-            recyclerView.setVisibility(View.VISIBLE);
+    private void setupMapView(View view, Bundle savedInstanceState) {
+        mapView = view.findViewById(R.id.mapView);
+        mapView.onCreate(savedInstanceState);
+        mapView.getMapAsync(this);
+    }
+
+    private void setupViewModel() {
+        // You mentioned to leave the viewModel part out, so this is just a placeholder.
+        viewModel = new ViewModelProvider(requireActivity()).get(ActivityViewModel.class);
+    }
+
+    private void setupLocationSource() {
+        locationSource = new FusedLocationSource(this, REQUEST_LOCATION_PERMISSION);
+        currentLocationMarker = new Marker();
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
+    }
+
+    private void setupFloatingActionButton(View view) {
+        floatingMapLikeButton = view.findViewById(R.id.btn_map_like);
+        floatingMapLikeButton.setOnClickListener(v -> onFloatingLikeButtonClick());
+
+        floatingMapLocationButton = view.findViewById(R.id.btn_map_myLocation);
+        floatingMapLocationButton.setOnClickListener(v -> onFloatingLocationButtonClick());
+
+        floatingMapStorePageButton = view.findViewById(R.id.btn_map_storePage);  // Make sure this line is before the next
+        floatingMapStorePageButton.setOnClickListener(v -> onFloatingListButtonClick());
+    }
+
+    private void setupRecyclerView(View view) {
+        recyclerView = view.findViewById(R.id.rc_card);
+        cardUiAdapter = new MapStoreCardUiAdapter(getContext(), cardUiList, this::onCardClick);
+        recyclerView.setAdapter(cardUiAdapter);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false);
+        recyclerView.setLayoutManager(linearLayoutManager);
+    }
+
+    private void onCardClick(MapStoreCardUiData item, int position) {
+        Toast.makeText(getContext(), item.getStoreName() + " is clicked ", Toast.LENGTH_SHORT).show();
+    }
+
+    private void onFloatingLikeButtonClick() {
+        if(isLikeButtonPressed){
+            isLikeButtonPressed = false;
+            floatingMapLikeButton.setImageResource(R.drawable.ic_heart_default);
+            displayDonotLikedMarkers(naverMap);
+        }else{
+            isLikeButtonPressed = true; // 버튼이 눌린 상태로 설정
+            floatingMapLikeButton.setImageResource(R.drawable.red_heart);
+            displayLikedMarkers(naverMap);
         }
     }
 
-    private void onCardClick(MapStoreCardUiData mapStoreCardUiData, int i) {
+    private void onFloatingLocationButtonClick() {
+        if(currentLocationMarker != null && currentLocationMarker.getPosition() != null) {
+            LatLng currentMarkerPosition = currentLocationMarker.getPosition();
+            naverMap.moveCamera(CameraUpdate.scrollTo(currentMarkerPosition).animate(CameraAnimation.Fly, 500));
+        } else {
+            Toast.makeText(getContext(), "현재 위치가 설정되지 않았습니다.", Toast.LENGTH_SHORT).show();
+        }
+    }
+    private void onFloatingListButtonClick() {
+
     }
 
-    public void onCardClick(MapStoreListData item, int position) {
-//        cardAdapter.notifyItem
+    // isLike가 true인 마커만 표시하는 함수
+    private void displayLikedMarkers(NaverMap naverMap) {
+        clearAllMarkers();  // 모든 마커를 지도에서 제거합니다.
+
+        for (MapStoreCardUiData map : cardUiList) {
+            if (map.isLike()) {  // isLike 값이 true인 경우에만
+                LatLng location = new LatLng(map.getLatitude(), map.getLongitude());
+                addMarkerAtLocation(map, location, naverMap);  // 해당 위치에 마커를 추가합니다.
+            }
+        }
+    }
+
+    // isLike가 false인 마커만 표시하는 함수
+    private void displayDonotLikedMarkers(NaverMap naverMap) {
+        clearAllMarkers();  // 모든 마커를 지도에서 제거합니다.
+
+        for (MapStoreCardUiData map : cardUiList) {
+            if (!map.isLike()) {  // isLike 값이 true인 경우에만
+                LatLng location = new LatLng(map.getLatitude(), map.getLongitude());
+                addMarkerAtLocation(map, location, naverMap);  // 해당 위치에 마커를 추가합니다.
+            }
+        }
     }
 
 
+//    public void onCardClick(MapStoreListData item, int position) {
+//        Toast.makeText(getContext(),item.getStoreName() + " is clicked ",Toast.LENGTH_SHORT).show();
+//    }
+
+    // 지도가 준비되면 호출되는 콜백 함수
     @Override
     public void onMapReady(@NonNull NaverMap naverMap) {
         this.naverMap = naverMap;
 
-        /* 네이버 지도에서 선택된 위치의 위도 경도를 전달 합니다. */
-//        getMapLocation(naverMap);
+        // ViewModel에서 가져온 데이터로 UI를 업데이트
+        viewModel.getMapStoreSummaryData().observe(getViewLifecycleOwner(), mapStoreUiLiveData -> {
+            cardUiList.clear(); // Clear previous data
+            cardUiList.addAll(mapStoreUiLiveData);
+            cardUiAdapter.notifyDataSetChanged();
+        });
 
-//        naverMap.setLocationSource(locationSource);
-//        LatLng defaultPosition = new LatLng(37.498095, 127.027610); //강남역
-//        naverMap.moveCamera(CameraUpdate.scrollTo(defaultPosition));
-//        naverMap.setLocationTrackingMode(LocationTrackingMode.NoFollow);
+        // 위치 권한 허용 여부 묻는 창
+        checkAndRequestLocationPermission();
 
-        LatLng currentPosition;
-
-        // 위치 권한을 요청하는 함수 호출
-        Log.d("위치 권한", "요청 전");
-        requestLocationPermission();
-        Log.d("위치 권한", "요청 후");
-
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            // 위치 권한 허용 시 부산역으로 이동
-            currentPosition = new LatLng(35.115095, 129.042694); //부산역
-            Log.d("위치", "O");
-        } else {
-            requestLocationPermission(); // 권한을 받아오는 함수
-            // 위치 권한 요청X 시 강남역으로 이동
-            currentPosition = new LatLng(37.498095, 127.027610); //강남역
-            Log.d("위치", "X");
-        }
-
-        // 마커 위치 및 지도 카메라 설정
-        currentLocationMarker.setPosition(currentPosition);
-        currentLocationMarker.setMap(naverMap);
-        currentLocationMarker.setIconTintColor(Color.RED);
-        naverMap.moveCamera(CameraUpdate.scrollTo(currentPosition).animate(CameraAnimation.Fly, 500));
+        // 지도가 멈출 때마다 가시적인 마커들을 표시
+        naverMap.addOnCameraIdleListener(() -> displayVisibleMarkers(naverMap));
     }
 
-
-    private void requestLocationPermission() {
-        ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSION);
-        //사용자가 이전에 권한 요청을 거부한 경우에 true 반환
-//        if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)) {
-//            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSION);
-//        } else {
-//            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSION);
-//        }
+    //권한 체크
+    private void checkAndRequestLocationPermission() {
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            mapView.setVisibility(View.VISIBLE); // 권한이 이미 허용된 경우
+            setMarkerAndMoveCameraToCurrentLocation(naverMap); // 현재 위치로 마커를 찍는다.
+        } else {
+            mapView.setVisibility(View.INVISIBLE);
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSION);
+        }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQUEST_LOCATION_PERMISSION) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // 권한이 허용된 경우
-                double default_latitude = 35.115095;
-                double default_lontitude = 129.042694;
-                LatLng defaultPosition = new LatLng(default_latitude, default_lontitude);
-
-                naverMap.moveCamera(CameraUpdate.scrollTo(defaultPosition).animate(CameraAnimation.Fly, 500));
-                currentLocationMarker.setPosition(defaultPosition);
-                currentLocationMarker.setMap(naverMap);
-                naverMap.setLocationTrackingMode(LocationTrackingMode.Follow);
+                mapView.setVisibility(View.VISIBLE);
+                setMarkerAndMoveCameraToCurrentLocation(naverMap); // 권한이 허용되면 현재 위치로 마커를 찍는다.
             } else {
-                // 권한이 거부된 경우
-                double default_latitude = 37.498095;
-                double default_lontitude = 127.027610;
-                LatLng defaultPosition = new LatLng(default_latitude, default_lontitude);
+                mapView.setVisibility(View.VISIBLE); // 권한 거부에도 맵은 보여준다.
+                setMarkerAndMoveCamera(getDefaultLocation(), naverMap); // 권한이 거부되면 강남역에 마커를 찍는다.
+            }
+        }
+    }
 
-                naverMap.moveCamera(CameraUpdate.scrollTo(defaultPosition).animate(CameraAnimation.Fly, 500));
-                currentLocationMarker.setPosition(defaultPosition);
-                currentLocationMarker.setMap(naverMap);
+    private void setMarkerAndMoveCameraToCurrentLocation(NaverMap naverMap) {
+        getCurrentLocation(new LocationCallback() {
+            @Override
+            public void onLocationResult(LatLng location) {
+                if (location != null) {
+                    setMarkerAndMoveCamera(location, naverMap);
+                } else {
+                    setMarkerAndMoveCamera(getDefaultLocation(), naverMap);
+                }
+            }
+        });
+    }
+
+    // 주어진 위치에 마커를 설정하고 카메라를 해당 위치로 이동
+    private void setMarkerAndMoveCamera(LatLng markerPosition, NaverMap naverMap) {
+        currentLocationMarker.setPosition(markerPosition);
+        currentLocationMarker.setMap(naverMap);
+        currentLocationMarker.setIconTintColor(Color.RED);
+        naverMap.moveCamera(CameraUpdate.scrollTo(markerPosition).animate(CameraAnimation.Fly, 500));
+    }
+
+    // 기본 위치인 강남역의 좌표를 반환
+    private LatLng getDefaultLocation() {
+        return DEFAULT_LOCATION;
+    }
+
+
+    //위치를 반환하기 위한 콜백 인터페이스
+    public interface LocationCallback {
+        void onLocationResult(LatLng location);
+    }
+
+    // 현재 사용자의 위치를 가져오는 메소드
+    private void getCurrentLocation(LocationCallback callback) {
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            fusedLocationClient.getLastLocation()
+                    .addOnSuccessListener(getActivity(), location -> {
+                        if (location != null) {
+                            LatLng currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                            callback.onLocationResult(currentLocation);
+                        } else {
+                            callback.onLocationResult(null); // 위치 정보를 가져올 수 없을 경우
+                        }
+                    });
+        } else {
+            // 권한 요청 또는 권한 거부에 따른 추가 작업
+            requestLocationPermission();
+        }
+    }
+
+
+    // 위치 권한을 요청하는 메소드
+    private void requestLocationPermission() {
+        ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSION);
+    }
+
+    // 지도에 표시된 모든 마커를 제거하는 메소드
+    private void clearAllMarkers() {
+        for (Marker marker : markersOnMap) {
+            marker.setMap(null);
+        }
+        markersOnMap.clear();
+    }
+
+    //현재 지도 상의 가시 범위 내에 있는 위치에만 마커를 표시하는 메소드
+    private void displayVisibleMarkers(NaverMap naverMap) {
+        clearAllMarkers();
+
+        LatLngBounds visibleBounds = naverMap.getContentBounds();
+        for (MapStoreCardUiData map : cardUiList) {
+            LatLng location = new LatLng(map.getLatitude(), map.getLongitude());
+            if (visibleBounds.contains(location)) {
+                if(isLikeButtonPressed) { // 버튼이 눌린 상태인 경우
+                    if(map.isLike()) { // isLike 값이 true인 경우에만
+                        addMarkerAtLocation(map, location, naverMap);
+                    }
+                } else {
+                    if(!map.isLike()) { // isLike 값이 false인 경우에만
+                        addMarkerAtLocation(map, location, naverMap);
+                    }
+                }
             }
         }
     }
 
 
-//    private void requestLocationPermission() {
-//        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE );
-//        }
-//    }
+    // 특정 위치에 마커를 추가하고, 마커의 아이콘(씨앗,씨)과 캡션(가게이름)을 설정하는 메소드
+    private void addMarkerAtLocation(MapStoreCardUiData map, LatLng location, NaverMap naverMap) {
+        Marker marker = new Marker();
+        marker.setPosition(location);
+        marker.setMap(naverMap);
+        marker.setCaptionText(map.getStoreName());
 
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-//        if (locationSource.onRequestPermissionsResult(requestCode, permissions, grantResults)) {
-//            if (!locationSource.isActivated()) {
-//                naverMap.setLocationTrackingMode(LocationTrackingMode.NoFollow);
-//                LatLng defaultPosition = new LatLng(37.498095, 127.027610);
-//                naverMap.moveCamera(CameraUpdate.scrollTo(defaultPosition));
-//                currentLocationMarker.setPosition(defaultPosition);
-//            }
-//            return;
-//        }
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//    }
+        int imageId = map.isLike() ? R.drawable.sprout : R.drawable.seed_brown;
+        int width = map.isLike() ? 100 : 50;
+        int height = map.isLike() ? 100 : 70;
 
+        Bitmap originalBitmap = BitmapFactory.decodeResource(getResources(), imageId);
+        Bitmap resizedBitmap = Bitmap.createScaledBitmap(originalBitmap, width, height, false);
+        OverlayImage resizedImage = OverlayImage.fromBitmap(resizedBitmap);
+        marker.setIcon(resizedImage);
+
+        // 마커 클릭 리스너 설정
+        marker.setOnClickListener(overlay -> {
+            String storeName = marker.getCaptionText();
+            for (int i = 0; i < cardUiList.size(); i++) {
+                if (cardUiList.get(i).getStoreName().equals(storeName)) {
+                    Log.d("마커 클릭1", storeName + " " +String.valueOf(i));
+                    scrollToItemInView(i);
+                    break;
+                }
+            }
+            return true;
+        });
+
+        markersOnMap.add(marker);
+    }
+
+    // 핀 클릭 시 해당 카드뷰가 중앙에 오도록 설정
+    private void scrollToItemInView(int position) {
+        LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+        if (layoutManager != null) {
+            int screenWidth = recyclerView.getWidth();
+            int offset = (int) (screenWidth * 0.1f);  // 예를 들어, 화면의 10%만큼의 오프셋
+            layoutManager.scrollToPositionWithOffset(position, offset);
+        }
+    }
 
     private void loadStoreData() {
         mapApiService.getStoresOnMap(Arrays.asList("tag1", "tag2"), 37.5665, 126.9780, "500", "myKeyword").enqueue(new Callback<MapInquiryResponseDTO>() {
@@ -244,6 +371,7 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
 
     }
 
+    // 사용자가 지도에서 위치를 클릭하면 해당 위치의 위도와 경도를 ViewModel로 전달하는 메소드
     public void getMapLocation(NaverMap naverMap){
         NaverMap.OnMapClickListener mapClickListener = new NaverMap.OnMapClickListener() {
             @Override
@@ -257,10 +385,5 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
 
         naverMap.setOnMapClickListener(mapClickListener);
     }
-
-
-
-
-
 
 }

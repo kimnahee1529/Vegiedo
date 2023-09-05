@@ -4,107 +4,71 @@ import java.util.ArrayList;
 
 public class UserReviewItem {
     public enum ItemType {
-        TYPE_ONE,
-        TYPE_TWO,
         STORE_DETAIL_PAGE
     }
-
-
-
     private ItemType itemType;
     private String title;
     private String description;
     private String content;
     private ArrayList<String> userReviewImageUrlList;
 
-
-    private int imageResource1;
-    private int imageResource2;
-    private int imageResource3;
-    private int imageResource4;
-    private int imageResource5;
-    private int imageResource6;
-    private int imageResource7;
-    private int imageResource8;
-    private int imageResource9;
-    private int imageResource10;
-
-
-    public UserReviewItem(ItemType itemType, String title, int imageResource6, int imageResource7, int imageResource8, int imageResource9, int imageResource10, String content, int imageResource1, int imageResource2, int imageResource3, int imageResource4, int imageResource5) {
+    public UserReviewItem(ItemType itemType, String title, String description, String content, ArrayList<String> userReviewImageUrlList, int ratingBar) {
         this.itemType = itemType;
         this.title = title;
+        this.description = description;
         this.content = content;
-        this.imageResource1 = imageResource1;
-        this.imageResource2 = imageResource2;
-        this.imageResource3 = imageResource3;
-        this.imageResource4 = imageResource4;
-        this.imageResource5 = imageResource5;
-        this.imageResource6 = imageResource6;
-        this.imageResource7 = imageResource7;
-        this.imageResource8 = imageResource8;
-        this.imageResource9 = imageResource9;
-        this.imageResource10 = imageResource10;
+        this.userReviewImageUrlList = userReviewImageUrlList;
+        this.ratingBar = ratingBar;
     }
-
-    // Getters
     public ItemType getItemType() {
         return itemType;
+    }
+
+    public void setItemType(ItemType itemType) {
+        this.itemType = itemType;
     }
 
     public String getTitle() {
         return title;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public String getDescription() {
         return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getContent() {
         return content;
     }
 
-    public int getImageResource1() {
-        return imageResource1;
+    public void setContent(String content) {
+        this.content = content;
     }
 
-    public int getImageResource2() {
-        return imageResource2;
+    public ArrayList<String> getUserReviewImageUrlList() {
+        return userReviewImageUrlList;
     }
 
-    public int getImageResource3() {
-        return imageResource3;
+    public void setUserReviewImageUrlList(ArrayList<String> userReviewImageUrlList) {
+        this.userReviewImageUrlList = userReviewImageUrlList;
     }
 
-    public int getImageResource4() {
-        return imageResource4;
+    public int getRatingBar() {
+        return ratingBar;
     }
 
-    public int getImageResource5() {
-        return imageResource5;
+    public void setRatingBar(int ratingBar) {
+        this.ratingBar = ratingBar;
     }
 
-    public int getImageResource6() {
-        return imageResource6;
-    }
+    private int ratingBar;
 
-    public int getImageResource7() {
-        return imageResource7;
-    }
-
-    public int getImageResource8() {
-        return imageResource8;
-    }
-
-    public int getImageResource9() {
-        return imageResource9;
-    }
-
-    public int getImageResource10() {
-        return imageResource10;
-    }
-
-    public void setItemType(ItemType itemType) {
-        this.itemType = itemType;
-    }
 
 }

@@ -1,20 +1,21 @@
 package com.devinsight.vegiedo.data.ui.search;
 
 public class SearchStorSummaryeUiData {
-    private int storeImage;
+    private String storeImage;
     private String storeName;
     private String storeAddress;
 
-    public SearchStorSummaryeUiData(int storeImage, String storeName, String storeAddress) {
+    public SearchStorSummaryeUiData() {}
+    public SearchStorSummaryeUiData(String storeImage, String storeName, String storeAddress) {
         this.storeImage = storeImage;
         this.storeName = storeName;
         this.storeAddress = storeAddress;
     }
-    public int getStoreImage() {
+    public String getStoreImage() {
         return storeImage;
     }
 
-    public void setStoreImage(int storeImage) {
+    public void setStoreImage(String storeImage) {
         this.storeImage = storeImage;
     }
 
@@ -33,6 +34,13 @@ public class SearchStorSummaryeUiData {
     public void setStoreAddress(String storeAddress) {
         this.storeAddress = storeAddress;
     }
+
+    public void setData(String storeImage, String storeName, String storeAddress) {
+        this.storeImage = storeImage;
+        this.storeName = storeName;
+        this.storeAddress = storeAddress;
+    }
+
 
 
 }

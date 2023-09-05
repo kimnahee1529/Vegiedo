@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -20,18 +21,23 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.bumptech.glide.Glide;
 import com.devinsight.vegiedo.R;
+import com.devinsight.vegiedo.view.PermissionUtils;
 import com.devinsight.vegiedo.view.login.LoginMainActivity;
 import com.devinsight.vegiedo.view.login.NickNameActivity;
 
 // TODO : 로그아웃 기능 구현해야 함
 public class MyPageFragment extends Fragment {
     private static final int REQUEST_IMAGE_PICK = 101;
+    private static final int PERMISSION_REQUEST_CODE = 200; // 권한 요청 코드
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -51,6 +57,13 @@ public class MyPageFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 showProfileImageDialog();
+//                if (checkPermission()) {
+//                    // 권한이 이미 허용된 상태: 바로 관련 작업 수행
+//                    showProfileImageDialog();
+//                } else {
+//                    // 권한이 허용되지 않은 상태: 권한 요청
+//                    requestPermission();
+//                }
             }
         });
 
@@ -185,8 +198,25 @@ public class MyPageFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getActivity(), "앨범에서 이미지를 선택하세요.", Toast.LENGTH_SHORT).show();
-                ImagePickerUtil.selectImageFromGallery(MyPageFragment.this, REQUEST_IMAGE_PICK);
-                dialog.dismiss();  // Uncomment if you want the dialog to close after selecting album image
+                if (checkPermission()) {
+                    // 권한이 이미 허용된 상태: 바로 관련 작업 수행
+                    ImagePickerUtil.selectImageFromGallery(MyPageFragment.this, REQUEST_IMAGE_PICK);
+                    dialog.dismiss();  // Uncomment if you want the dialog to close after selecting album image
+                } else {
+                    // 권한이 허용되지 않은 상태: 권한 요청
+                    requestPermission();
+                }
+
+//                if (PermissionUtils.checkPermission(getActivity())) {
+//                    // 권한이 이미 허용된 상태: 바로 관련 작업 수행
+//                    Toast.makeText(getActivity(), "앨범에서 이미지를 선택하세요.", Toast.LENGTH_SHORT).show();
+//                    ImagePickerUtil.selectImageFromGallery(MyPageFragment.this, REQUEST_IMAGE_PICK);
+//                    dialog.dismiss();  // Uncomment if you want the dialog to close after selecting album image
+//                } else {
+//                    // 권한이 허용되지 않은 상태: 권한 요청
+//                    PermissionUtils.requestPermission(getActivity(), PERMISSION_REQUEST_CODE);
+//                    requestPermission();
+//                }
             }
         });
 
@@ -269,6 +299,32 @@ public class MyPageFragment extends Fragment {
                         .load(selectedImageUri)
                         .circleCrop()  // 원형 이미지로 변환
                         .into(myImageView);
+            }
+        }
+    }
+
+    //갤러리 접근 권한
+    private boolean checkPermission() {
+        int result = ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.READ_EXTERNAL_STORAGE);
+        return result == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void requestPermission() {
+        ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            // grantResults 배열에는 요청한 권한들의 허용 여부가 저장되어 있습니다.
+            // 권한이 허용되었는지 확인하기 위해 grantResults[0]을 체크합니다.
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // 권한이 허용되었으므로 바로 갤러리를 엽니다.
+                ImagePickerUtil.selectImageFromGallery(MyPageFragment.this, REQUEST_IMAGE_PICK);
+            } else {
+                Toast.makeText(getActivity(), "권한이 거부되었습니다.", Toast.LENGTH_SHORT).show();
             }
         }
     }

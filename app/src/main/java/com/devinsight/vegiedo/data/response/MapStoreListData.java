@@ -26,8 +26,11 @@ public class MapStoreListData {
     @SerializedName("like") private Boolean like;
     @Expose
     @SerializedName("stamp") private Boolean stamp;
+
     @Expose
     @SerializedName("reviewCount") private Integer reviewCount;
+
+
     @Expose
     @SerializedName("images") private String images;
 
@@ -104,15 +107,28 @@ public class MapStoreListData {
         this.longitude = longitude;
     }
 
-    public MapStoreListData(Long storeId, String storeName, String address, Integer distance, List<String> tags, Integer stars, Boolean like, float latitude, float longitude) {
+
+    public Integer getReviewCount() {
+        return reviewCount;
+    }
+
+
+    public String getImages() {
+        return images;
+    }
+
+    public MapStoreListData(Long storeId, String storeName, String address, float latitude, float longitude, Integer distance, List<String> tags, Integer stars, Boolean like, Boolean stamp, Integer reviewCount, String images) {
         this.storeId = storeId;
         this.storeName = storeName;
         this.address = address;
-        this.distance = distance;
-        this.tags = tags;
-        this.stars = stars;
-        this.like = like;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.distance = distance;
+        this.stars = stars;
+        this.tags = tags;
+        this.like = like;
+        this.stamp = stamp;
+        this.reviewCount = reviewCount;
+        this.images = images;
     }
 }

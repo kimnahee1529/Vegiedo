@@ -17,8 +17,7 @@
         android:layout_gravity="bottom|center_horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:visibility="gone"/>
+        app:layout_constraintStart_toStartOf="parent"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btn_map_storePage"
@@ -30,9 +29,8 @@
         app:fabCustomSize="45dp"
         app:layout_constraintBottom_toTopOf="@+id/rc_card"
         app:layout_constraintEnd_toEndOf="parent"
-        app:tint="@null">
+        app:tint="@null"/>
 
-    </com.google.android.material.floatingactionbutton.FloatingActionButton>
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btn_map_myLocation"
         android:layout_width="wrap_content"
@@ -45,9 +43,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:tint="@null"
         android:src="@drawable/ic_my_location"
-        >
+        />
 
-    </com.google.android.material.floatingactionbutton.FloatingActionButton>
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btn_map_like"
         android:layout_width="wrap_content"
@@ -59,9 +56,6 @@
         app:layout_constraintBottom_toTopOf="@id/btn_map_myLocation"
         app:layout_constraintEnd_toEndOf="parent"
         app:tint="@null"
-        android:src="@drawable/ic_heart_default"
-        >
-
-    </com.google.android.material.floatingactionbutton.FloatingActionButton>
+        android:src="@drawable/ic_heart_default"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

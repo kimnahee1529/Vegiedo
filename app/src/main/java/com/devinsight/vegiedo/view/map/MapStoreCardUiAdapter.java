@@ -1,9 +1,11 @@
 package com.devinsight.vegiedo.view.map;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -44,6 +46,7 @@ public class MapStoreCardUiAdapter extends RecyclerView.Adapter<MapStoreCardUiAd
         holder.setData(cardDataList.get(position));
     }
 
+
     @Override
     public int getItemCount() {
         return cardDataList.size();
@@ -76,13 +79,37 @@ public class MapStoreCardUiAdapter extends RecyclerView.Adapter<MapStoreCardUiAd
             distance = itemView.findViewById(R.id.map_store_distance);
             reviewers = itemView.findViewById(R.id.map_store_reviewes);
             like = itemView.findViewById(R.id.btn_map_store_like);
+
+            like.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(cardData.isLike()){
+                        cardData.setLike(false);
+                        notifyDataSetChanged();
+                    }else{
+                        cardData.setLike(true);
+                        notifyDataSetChanged();
+                    }
+                }
+            });
+            // 하트 버튼 토글
+//            like.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//                @Override
+//                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                    if (isChecked) {
+//                        like.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.ic_heart_selected));
+//                        cardData.setLike(true);
+//                    } else {
+//                        like.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.ic_heart_default));
+//                        cardData.setLike(false);
+//                    }
+//                }
+//            });
         }
 
         public void setData(MapStoreCardUiData cardData) {
             this.cardData = cardData;
 
-            // Assume storeImage is a resource id in MapStoreCardUiData
-//            storeImage.setImageResource(Integer.parseInt(cardData.getStoreImage()));
             Glide.with(context)
                     .load(cardData.getStoreImage())
                     .into(storeImage);
@@ -94,6 +121,8 @@ public class MapStoreCardUiAdapter extends RecyclerView.Adapter<MapStoreCardUiAd
             starRating.setRating(cardData.getStarlating());
             distance.setText(cardData.getDistance() + "m");
             reviewers.setText(cardData.getReviewNum() + " reviews");
+
+//            like.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.ic_heart_selected));
             if(cardData.isLike()) {
                 like.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.ic_heart_selected));
             } else {

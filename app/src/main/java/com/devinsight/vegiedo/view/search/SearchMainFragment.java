@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.devinsight.vegiedo.R;
+import com.devinsight.vegiedo.data.ui.search.SearchStorSummaryeUiData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,7 +105,7 @@ public class SearchMainFragment extends Fragment implements SearchSummaryListAda
                 } else {
                     Toast.makeText(getContext(), "최근 검색어가 없습니다. ", Toast.LENGTH_SHORT).show();
                 }
-            
+
             }
         });
 

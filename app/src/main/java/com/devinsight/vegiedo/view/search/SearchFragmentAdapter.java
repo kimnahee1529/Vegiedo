@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.devinsight.vegiedo.R;
 import com.devinsight.vegiedo.data.ui.search.SearchStorSummaryeUiData;
 
@@ -65,7 +66,10 @@ public class SearchFragmentAdapter extends RecyclerView.Adapter<SearchFragmentAd
         public void setSearchData(SearchStorSummaryeUiData searchData){
             this.searchData = searchData;
 
-            searchStoreImage.setImageResource(searchData.getStoreImage());
+//            searchStoreImage.setImageResource(searchData.getStoreImage());
+            Glide.with(context)
+                    .load(searchData.getStoreImage())
+                    .into(searchStoreImage);
             searchStoreName.setText(searchData.getStoreName());
             searchStoreAddress.setText(searchData.getStoreAddress());
         }

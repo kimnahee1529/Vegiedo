@@ -17,6 +17,8 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -30,6 +32,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+//import com.devinsight.vegiedo.Manifest;
+import android.Manifest;
 import com.devinsight.vegiedo.R;
 import com.devinsight.vegiedo.repository.pref.UserPrefRepository;
 import com.devinsight.vegiedo.view.community.GeneralPostFragment;
@@ -144,7 +148,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 setShortSearchBar();
-
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.frame, searchMainFragment, "SearchMainFragment")
                         .addToBackStack("SearchMainFragment").commit();

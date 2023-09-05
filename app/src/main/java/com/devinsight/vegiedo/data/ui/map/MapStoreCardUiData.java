@@ -1,28 +1,50 @@
 package com.devinsight.vegiedo.data.ui.map;
 
+import com.devinsight.vegiedo.data.ui.home.HomeReviewUiData;
+
 public class MapStoreCardUiData {
-
-
     private String storeImage;
-    private int storeTag1;
-    private int storeTag2;
+    private String storeTag1;
+    private String storeTag2;
     private int reviewNum;
-    private int starlating;
+    private int starRating;
     private int distance;
     private String storeName;
     private String address;
     private boolean like;
+    private float latitude;
+    private float longitude;
 
-    public MapStoreCardUiData(String storeImage, int storeTag1, int storeTag2, int reviewer, int starlating, int distance, String storeName, String address, boolean like) {
+    public MapStoreCardUiData() {
+
+    }
+    public MapStoreCardUiData(String storeImage, String storeTag1, String storeTag2, int reviewer, int starRating, int distance, String storeName, String address, boolean like, float latitude, float longitude) {
         this.storeImage = storeImage;
         this.storeTag1 = storeTag1;
         this.storeTag2 = storeTag2;
         this.reviewNum = reviewer;
-        this.starlating = starlating;
+        this.starRating = starRating;
         this.distance = distance;
         this.storeName = storeName;
         this.address = address;
         this.like = like;
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
+    public void setData(String storeImage, String storeTag1, String storeTag2, int reviewer, int starRating,
+                        int distance, String storeName, String address, boolean like, float latitude, float longitude) {
+        this.storeImage = storeImage;
+        this.storeTag1 = storeTag1;
+        this.storeTag2 = storeTag2;
+        this.reviewNum = reviewer;
+        this.starRating = starRating;
+        this.distance = distance;
+        this.storeName = storeName;
+        this.address = address;
+        this.like = like;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public String getStoreImage() {
@@ -33,19 +55,19 @@ public class MapStoreCardUiData {
         this.storeImage = storeImage;
     }
 
-    public int getStoreTag1() {
+    public String getStoreTag1() {
         return storeTag1;
     }
 
-    public void setStoreTag1(int storeTag1) {
+    public void setStoreTag1(String storeTag1) {
         this.storeTag1 = storeTag1;
     }
 
-    public int getStoreTag2() {
+    public String getStoreTag2() {
         return storeTag2;
     }
 
-    public void setStoreTag2(int storeTag2) {
+    public void setStoreTag2(String storeTag2) {
         this.storeTag2 = storeTag2;
     }
 
@@ -58,11 +80,11 @@ public class MapStoreCardUiData {
     }
 
     public int getStarlating() {
-        return starlating;
+        return starRating;
     }
 
     public void setStarlating(int starlating) {
-        this.starlating = starlating;
+        this.starRating = starlating;
     }
 
     public int getDistance() {
@@ -95,5 +117,21 @@ public class MapStoreCardUiData {
 
     public void setLike(boolean like) {
         this.like = like;
+    }
+
+    public float getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(float latitude) {
+        this.latitude = latitude;
+    }
+
+    public float getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(float longitude) {
+        this.longitude = longitude;
     }
 }
