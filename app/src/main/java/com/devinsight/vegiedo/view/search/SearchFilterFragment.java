@@ -278,6 +278,7 @@ public class SearchFilterFragment extends Fragment {
             }
         });
 
+
         return view;
     }
 
