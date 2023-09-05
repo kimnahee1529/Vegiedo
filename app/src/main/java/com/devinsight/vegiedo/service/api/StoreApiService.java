@@ -4,7 +4,9 @@ import com.devinsight.vegiedo.data.request.StoreModifyRequestDTO;
 import com.devinsight.vegiedo.data.request.StoreRegisterRequestDTO;
 import com.devinsight.vegiedo.data.request.StoreReportRequestDTO;
 import com.devinsight.vegiedo.data.response.StoreInquiryResponseDTO;
+import com.devinsight.vegiedo.data.response.StoreListData;
 import com.devinsight.vegiedo.data.response.StoreListInquiryResponseDTO;
+import com.devinsight.vegiedo.view.store.StoreDetailData;
 
 import java.util.List;
 
@@ -12,6 +14,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
@@ -20,15 +23,28 @@ import retrofit2.http.Query;
 public interface StoreApiService {
 
     //가게 리스트 조회
-    @GET("/stores")
+    @GET("/test/stores")
     Call<StoreListInquiryResponseDTO> getStoreList(
             @Query("tags") List<String> tags,
-            @Query("x") float x,
-            @Query("y") float y,
+            @Query("latitude") float latitude,
+            @Query("longitude") float longitude,
             @Query("distance") int distance,
             @Query("keyword") String keyword,
             @Query("count") int count,
-            @Query("cursor") int cursor
+            @Query("cursor") int cursor,
+            @Header("Authorization") String token
+    );
+
+    @GET("/test/stores")
+    Call<List<StoreListData>> getStoreLists(
+            @Query("tags") List<String> tags,
+            @Query("latitude") float latitude,
+            @Query("longitude") float longitude,
+            @Query("distance") int distance,
+            @Query("keyword") String keyword,
+            @Query("count") int count,
+            @Query("cursor") int cursor,
+            @Header("Authorization") String token
     );
 
     //가게 등록

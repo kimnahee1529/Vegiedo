@@ -1,7 +1,12 @@
 package com.devinsight.vegiedo.view.search;
 
+import static com.devinsight.vegiedo.utill.RetrofitClient.getStoreApiService;
+import static com.google.android.gms.common.util.CollectionUtils.listOf;
+
+import android.content.Context;
 import android.location.Location;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -9,14 +14,26 @@ import androidx.lifecycle.ViewModel;
 
 import com.devinsight.vegiedo.data.response.MapStoreListData;
 import com.devinsight.vegiedo.data.response.StoreListData;
+import com.devinsight.vegiedo.data.response.StoreListInquiryResponseDTO;
+import com.devinsight.vegiedo.data.response.response;
 import com.devinsight.vegiedo.data.ui.login.TagStatus;
 import com.devinsight.vegiedo.data.ui.map.MapStoreCardUiData;
 import com.devinsight.vegiedo.data.ui.search.SearchStorSummaryeUiData;
+import com.devinsight.vegiedo.repository.pref.AuthPrefRepository;
 import com.devinsight.vegiedo.repository.pref.UserPrefRepository;
+import com.devinsight.vegiedo.service.api.StoreApiService;
+import com.devinsight.vegiedo.utill.RetrofitClient;
+import com.devinsight.vegiedo.view.StoreListMainFragment;
+import com.devinsight.vegiedo.view.store.StoreDetailData;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ActivityViewModel extends ViewModel {
     private MutableLiveData<TagStatus> tagStatusLiveData = new MutableLiveData<>();
@@ -46,6 +63,11 @@ public class ActivityViewModel extends ViewModel {
     private MutableLiveData<List<MapStoreListData>> mapStoreLiveData = new MutableLiveData<>();
 
     private MutableLiveData<List<MapStoreCardUiData>> mapStoreUiLiveData = new MutableLiveData<>();
+    /* 서버에서 내려주는 가게 리스트 */
+
+    private MutableLiveData<List<StoreListData>> storeListLiveData = new MutableLiveData<>();
+
+    AuthPrefRepository authPrefRepository;
 
 
     /* Query 요청 및 필터에 사용 하기 위한 전역 변수*/
@@ -62,11 +84,10 @@ public class ActivityViewModel extends ViewModel {
     private String keyword;
 
     private String currentInput;
-
-    UserPrefRepository userPrefRepository;
-
+    private String token;
 
 
+    StoreApiService storeApiService = RetrofitClient.getStoreApiService();
 
 
     public void tagContent(boolean isChecked, String content, int btnId) {
@@ -99,11 +120,11 @@ public class ActivityViewModel extends ViewModel {
     }
 
     /* 유저의 최초 필터링 셋 */
-    public void getInitialFilteredData(int distance, List<String> tags ) {
+    public void getInitialFilteredData(int distance, List<String> tags, String token) {
         this.initialDistance = distance;
         this.initialTags = tags;
+        this.token = token;
     }
-
 
 
     /* 유저가 선택한 태그와, 거리를 가져옵니다.*/
@@ -130,8 +151,8 @@ public class ActivityViewModel extends ViewModel {
     }
 
     /* 실시간으로 입력 받는 검색어 */
-    private LiveData<String> getInputText(){
-        return  inputTextLiveData;
+    private LiveData<String> getInputText() {
+        return inputTextLiveData;
     }
 
     public List<StoreListData> dummyData() {
@@ -151,16 +172,59 @@ public class ActivityViewModel extends ViewModel {
         return storeList;
     }
 
+    public void storeApiData() {
+        Log.d("api 가져오는 함수 ", "  public void storeApiData() ");
+        boolean noMapLocation = mapLat + mapLong == 0.0f;
+
+        if (noMapLocation) {
+            latitude = userCurrentLat;
+            longitude = userCurrentLong;
+        } else {
+            latitude = mapLat;
+            longitude = mapLong;
+        }
+
+        if (tags == null) {
+            tags = initialTags;
+        }
+
+        if (distance == 0) {
+            distance = initialDistance;
+        }
+        Log.d("여기까지 됨", "194번줄");
+
+        storeApiService.getStoreLists(tags, latitude, longitude, distance, keyword, 10, 1, token).enqueue(new Callback<List<StoreListData>>() {
+            @Override
+            public void onResponse(Call<List<StoreListData>> call, Response<List<StoreListData>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<StoreListData> data = response.body();
+                    storeListLiveData.setValue(data);
+                    searchSummList();
+                    Log.e("성공","가져왔어요" + data.get(0).getStoreName());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<StoreListData>> call, Throwable t) {
+                Log.e("실패", "실패" + t.getMessage());
+            }
+
+        });
+
+    }
+
     /* 최근 입력된 마지막 검색어 */
     public void getCurrentInput(String input) {
         this.currentInput = input;
     }
 
     /* 더미데이터에서 필요한 부분*/
-    public void searchSummList(){
-        List<StoreListData> storeListData = dummyData();
+    public void searchSummList() {
+//        List<StoreListData> storeListData = dummyData();
+        Log.d("필요 데이터 추출 함수"," public void searchSummList()");
+        List<StoreListData> storeListData = storeListLiveData.getValue();
         List<SummaryData> summaryList = new ArrayList<>();
-        for(StoreListData data : storeListData) {
+        for (StoreListData data : storeListData) {
             SummaryData summaryData = new SummaryData();
             summaryData.setStoreImage(data.getImages());
             summaryData.setStoreName(data.getStoreName());
@@ -177,7 +241,7 @@ public class ActivityViewModel extends ViewModel {
         List<MapStoreListData> originData = mapDummyData();
         List<MapStoreCardUiData> mapStoreCardUiDataList = new ArrayList<>();
 
-        for(MapStoreListData data : originData) {
+        for (MapStoreListData data : originData) {
             MapStoreCardUiData mapStoreCardUiData = new MapStoreCardUiData();
             mapStoreCardUiData.setData(data.getImages(), data.getTags().get(0), data.getTags().get(1), data.getReviewCount(), data.getStars(),
                     data.getDistance(), data.getStoreName(), data.getAddress(), data.getLike(), data.getLatitude(), data.getLongitude());
@@ -217,29 +281,31 @@ public class ActivityViewModel extends ViewModel {
     }
 
     /* 최근검색어에 따른 리스트 */
-    public void currentList(){
-        if(currentInput != null) {
+    public void currentList() {
+        Log.d("최근 검색어에 따른 리스트 ","public void currentList()");
+        if (currentInput != null) {
             List<SummaryData> summaryList = storeListSummaryLiveData.getValue();
             List<SummaryData> currentList = new ArrayList<>();
-            for( int i = 0 ; i < summaryList.size(); i ++ ) {
-                if(summaryList.get(i).getStoreName().toLowerCase().contains(currentInput.toLowerCase()) || summaryList.get(i).getStoreAddress().toLowerCase().contains(currentInput.toLowerCase())){
+            for (int i = 0; i < summaryList.size(); i++) {
+                if (summaryList.get(i).getStoreName().toLowerCase().contains(currentInput.toLowerCase()) || summaryList.get(i).getStoreAddress().toLowerCase().contains(currentInput.toLowerCase())) {
                     currentList.add(summaryList.get(i));
                 }
 
             }
             storeListCurrentLiveData.setValue(currentList);
         } else {
-         storeListCurrentLiveData.setValue(null);
+            storeListCurrentLiveData.setValue(null);
         }
     }
 
     /* 요약리스트에서 실시간 검색 */
-    public void searchSummaryListByKeyword(String input){
-        if(storeListSummaryLiveData != null) {
+    public void searchSummaryListByKeyword(String input) {
+        Log.d("요약리스트 실시간 검색","public void searchSummaryListByKeyword(String input)");
+        if (storeListSummaryLiveData != null) {
             List<SummaryData> storeList = storeListSummaryLiveData.getValue();
             List<SummaryData> filteredList = new ArrayList<>();
-            for( int i = 0 ; i < storeListSummaryLiveData.getValue().size() ; i ++ ) {
-                if( storeList.get(i).getStoreName().toLowerCase().contains(input.toLowerCase()) || storeList.get(i).getStoreAddress().toLowerCase().contains(input.toLowerCase()) ) {
+            for (int i = 0; i < storeListSummaryLiveData.getValue().size(); i++) {
+                if (storeList.get(i).getStoreName().toLowerCase().contains(input.toLowerCase()) || storeList.get(i).getStoreAddress().toLowerCase().contains(input.toLowerCase())) {
                     filteredList.add(storeList.get(i));
                 }
             }
@@ -250,7 +316,7 @@ public class ActivityViewModel extends ViewModel {
 
     /* 필터링을 통해 스토어 메인 리스트를 보여주기 위한 함수 */
     public void searchDetailList() {
-        Log.d("필터함수","필터함수 발동!");
+        Log.d("필터함수", "필터함수 발동!");
 
         boolean noMapLocation = mapLat + mapLong == 0.0f;
 
@@ -262,17 +328,18 @@ public class ActivityViewModel extends ViewModel {
             longitude = mapLong;
         }
 
-        if(tags == null ) {
+        if (tags == null) {
             tags = initialTags;
         }
 
-        if( distance == 0 ){
+        if (distance == 0) {
             distance = initialDistance;
         }
 
         Log.d("필터링 데이터 ", "위도, 경도" + latitude + longitude + " 거리 : " + distance + " 태그 : " + tags.toArray().toString());
 
-        List<StoreListData> storeList = dummyData();
+//        List<StoreListData> storeList = dummyData();
+        List<StoreListData> storeList = storeListLiveData.getValue();
         List<StoreListData> filteredStoreList = new ArrayList<>();
 
         for (int i = 0; i < storeList.size(); i++) {
@@ -286,19 +353,24 @@ public class ActivityViewModel extends ViewModel {
             Location storeLocation = new Location("");
             storeLocation.setLatitude(storeList.get(i).getLatitude());
             storeLocation.setLongitude(storeList.get(i).getLongitude());
-            Log.d("가게 주소 목록","위도" + storeList.get(i).getLatitude());
+//            Log.d("가게 주소 목록", "위도" + storeList.get(i).getLatitude());
 
             /* 유저 위치 to 가게 위치 (m) */
             float userToStore = userLocation.distanceTo(storeLocation);
 
             /* 거리 필터 충족 */
             boolean storeDistance = userToStore < distance * 1000;
-            storeList.get(i).setDistance( (int) userToStore );
+            storeList.get(i).setDistance((int) userToStore);
+            Log.d("거리필터링 성공","해당 범위 입니다" + (storeList.get(i).getDistance() < distance * 1000));
 
             if (keyword != null) {
-
-                String tag1 = storeList.get(i).getTags().get(0);
-                String tag2 = storeList.get(i).getTags().get(1);
+                List<String> storeTags = storeList.get(i).getTags();
+                if (storeTags == null){
+                }
+                String tag1 = storeTags.size() > 0 ? storeTags.get(0) : "";
+                String tag2 = storeTags.size() > 1 ? storeTags.get(1) : "";
+//                String tag1 = storeList.get(i).getTags().get(0);
+//                String tag2 = storeList.get(i).getTags().get(1);
 
                 /* 검색 에서 문자열 체크 */
                 boolean storeNameFilter = storeList.get(i).getStoreName().toLowerCase().contains(keyword.toLowerCase());
@@ -324,10 +396,11 @@ public class ActivityViewModel extends ViewModel {
                         }
                     }
 
-                if (storeDistance && ( isTagMatched || stringFilter) ) {
+                if (storeDistance && (isTagMatched || stringFilter)) {
                     filteredStoreList.add(storeList.get(i));
                 }
-                storeFilteredLiveData.setValue(filteredStoreList);
+//                storeFilteredLiveData.setValue(filteredStoreList);
+                Log.d("필터링1","필터링1" + filteredStoreList.get(i).getStoreName());
             } else {
                 boolean isTagMatched = false;
                 if (tags != null)
@@ -342,12 +415,14 @@ public class ActivityViewModel extends ViewModel {
                             break; // 하나라도 일치하는 태그를 찾았으면 더 이상 검사하지 않습니다.
                         }
                     }
-                if(storeDistance && isTagMatched ){
+                if (storeDistance || isTagMatched) {
                     filteredStoreList.add(storeList.get(i));
+//                    Log.d("필터링2","필터링2" + filteredStoreList.get(filteredStoreList.size()).getStoreName());
                 }
-                storeFilteredLiveData.setValue(filteredStoreList);
+//                storeFilteredLiveData.setValue(filteredStoreList);
+
             }
-//            storeFilteredLiveData.setValue(filteredStoreList);
+            storeFilteredLiveData.setValue(filteredStoreList);
         }
     }
 
@@ -360,24 +435,25 @@ public class ActivityViewModel extends ViewModel {
         return storeSearchLiveData;
     }
 
-    public LiveData<List<SummaryData>> getSummaryListLiveData(){
-        return  storeListSummaryLiveData;
+    public LiveData<List<SummaryData>> getSummaryListLiveData() {
+        return storeListSummaryLiveData;
     }
 
-    public LiveData<List<SummaryData>> getCurrentListLiveData(){
-        return  storeListCurrentLiveData;
+    public LiveData<List<SummaryData>> getCurrentListLiveData() {
+        return storeListCurrentLiveData;
     }
 
     public LiveData<Boolean> isGranted() {
         return isGranted;
     }
 
+    public LiveData<List<StoreListData>> getStoreListLiveData() {
+        return storeListLiveData;
+    }
+
     public void setGranted(boolean granted) {
         isGranted.setValue(granted);
     }
-
-
-
 
 
 }

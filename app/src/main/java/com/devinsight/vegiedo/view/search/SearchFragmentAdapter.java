@@ -77,14 +77,14 @@ public class SearchFragmentAdapter extends RecyclerView.Adapter<SearchFragmentAd
         @Override
         public void onClick(View view) {
             if(searchItemListner != null){
-                searchItemListner.onSearchItemClick(searchData);
+                searchItemListner.onSearchItemClick(view, searchData, getLayoutPosition());
             }
 
         }
     }
 
     public interface searchItemListner{
-        void onSearchItemClick(SearchStorSummaryeUiData searchData);
+        void onSearchItemClick(View view, SearchStorSummaryeUiData searchData, int position);
     }
 
 }
