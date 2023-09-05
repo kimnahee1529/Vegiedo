@@ -83,9 +83,9 @@
 
                 <LinearLayout
                     android:layout_width="248dp"
-                    android:layout_height="98dp"
+                    android:layout_height="match_parent"
                     android:layout_marginLeft="16dp"
-                    android:layout_marginTop="33dp"
+                    android:layout_marginTop="20dp"
                     android:orientation="vertical">
 
                     <TextView
@@ -93,7 +93,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Little forest"
-                        android:textSize="23dp"
+                        android:textSize="20dp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -111,7 +111,7 @@
                         android:orientation="horizontal">
 
                         <RatingBar
-                            android:id="@+id/map_ratingbar_star"
+                            android:id="@+id/storeDetail_ratingbar"
                             style="@style/Widget.AppCompat.RatingBar.Small"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -147,22 +147,42 @@
                             android:orientation="horizontal">
 
                             <RelativeLayout
+                                android:id="@+id/storeDetail_stamp_btn"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="26dp"
                                 android:layout_marginEnd="10dp">
 
                                 <ImageView
+                                    android:id="@+id/storeDetail_green_background_stamp_btn"
                                     android:layout_width="40dp"
                                     android:layout_height="40dp"
-                                    android:src="@drawable/green_circle"/>
+                                    android:src="@drawable/green_circle"
+                                    android:visibility="invisible"/>
 
                                 <ImageView
+                                    android:id="@+id/storeDetail_white_background_stamp_btn"
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:src="@drawable/profile_circle"/>
+
+                                <ImageView
+                                    android:id="@+id/storeDetail_white_stamp_btn"
                                     android:layout_width="22dp"
                                     android:layout_height="23dp"
                                     android:layout_centerHorizontal="true"
                                     android:layout_centerVertical="true"
-                                    android:src="@drawable/white_stamp" />
+                                    android:src="@drawable/green_stamp" />
+
+                                <ImageView
+                                    android:id="@+id/storeDetail_green_stamp_btn"
+                                    android:layout_width="22dp"
+                                    android:layout_height="23dp"
+                                    android:layout_centerHorizontal="true"
+                                    android:layout_centerVertical="true"
+                                    android:src="@drawable/white_stamp"
+                                    android:visibility="invisible"/>
+
 
                             </RelativeLayout>
 
