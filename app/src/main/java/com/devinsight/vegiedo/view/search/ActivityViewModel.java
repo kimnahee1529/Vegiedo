@@ -361,8 +361,10 @@ public class ActivityViewModel extends ViewModel {
             /* 거리 필터 충족 */
             boolean storeDistance = userToStore < distance * 1000;
             storeList.get(i).setDistance((int) userToStore);
-            Log.d("거리필터링 성공","해당 범위 입니다" + (storeList.get(i).getDistance() < distance * 1000));
+            if(storeDistance) {
+                Log.d("거리필터링 성공","해당 범위 입니다" + i + (storeList.get(i).getDistance() < distance * 1000));
 
+            }
             if (keyword != null) {
                 List<String> storeTags = storeList.get(i).getTags();
                 if (storeTags == null){
@@ -400,7 +402,7 @@ public class ActivityViewModel extends ViewModel {
                     filteredStoreList.add(storeList.get(i));
                 }
 //                storeFilteredLiveData.setValue(filteredStoreList);
-                Log.d("필터링1","필터링1" + filteredStoreList.get(i).getStoreName());
+//                Log.d("필터링1","필터링1" + filteredStoreList.get(i).getStoreName());
             } else {
                 boolean isTagMatched = false;
                 if (tags != null)
