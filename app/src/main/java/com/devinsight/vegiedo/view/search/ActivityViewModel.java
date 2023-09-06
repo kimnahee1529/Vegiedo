@@ -1,5 +1,7 @@
 package com.devinsight.vegiedo.view.search;
 
+import static com.devinsight.vegiedo.utill.RetrofitClient.getStoreApiService;
+
 import android.location.Location;
 import android.util.Log;
 
@@ -7,16 +9,24 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.bumptech.glide.Glide;
 import com.devinsight.vegiedo.data.response.MapStoreListData;
+import com.devinsight.vegiedo.data.response.StoreInquiryResponseDTO;
 import com.devinsight.vegiedo.data.response.StoreListData;
 import com.devinsight.vegiedo.data.ui.login.TagStatus;
 import com.devinsight.vegiedo.data.ui.map.MapStoreCardUiData;
 import com.devinsight.vegiedo.data.ui.search.SearchStorSummaryeUiData;
 import com.devinsight.vegiedo.repository.pref.UserPrefRepository;
+import com.devinsight.vegiedo.service.api.StoreApiService;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ActivityViewModel extends ViewModel {
     private MutableLiveData<TagStatus> tagStatusLiveData = new MutableLiveData<>();
@@ -36,16 +46,19 @@ public class ActivityViewModel extends ViewModel {
     /* 검색창에 입력 된 텍스트 라이브 데이터 */
     private MutableLiveData<String> inputTextLiveData = new MutableLiveData<>();
 
-    /* api 를 통해 서버로 부터 받은 가게 리스트 */
-    private List<StoreListData> allStoreList;
 
     /* 위치 권한 허용 여부값을 담은 변수*/
-    private final MutableLiveData<Boolean> isGranted = new MutableLiveData<>(false);
+//    private final MutableLiveData<Boolean> isGranted = new MutableLiveData<>(false);
 
     /* 지도의 카드뷰에 보여줄 가게 리스트 라이브 데이터*/
     private MutableLiveData<List<MapStoreListData>> mapStoreLiveData = new MutableLiveData<>();
-
     private MutableLiveData<List<MapStoreCardUiData>> mapStoreUiLiveData = new MutableLiveData<>();
+
+    /* api 를 통해 서버로 부터 받은 가게 리스트 */
+    private List<StoreListData> allStoreList;
+    /*  가게 API 호출 */
+    StoreApiService storeApiService = getStoreApiService();
+    private MutableLiveData<StoreInquiryResponseDTO> storeDataLiveData = new MutableLiveData<>();
 
 
     /* Query 요청 및 필터에 사용 하기 위한 전역 변수*/
@@ -64,6 +77,7 @@ public class ActivityViewModel extends ViewModel {
     private String currentInput;
 
     UserPrefRepository userPrefRepository;
+
 
 
 
@@ -352,6 +366,54 @@ public class ActivityViewModel extends ViewModel {
     }
 
 
+    public void StoreInquiryData(Long storeId) {
+        storeApiService.readStore(storeId).enqueue(new Callback<StoreInquiryResponseDTO>() {
+            @Override
+            public void onResponse(Call<StoreInquiryResponseDTO> call, Response<StoreInquiryResponseDTO> response) {
+                if (response.isSuccessful()) {
+                    storeDataLiveData.setValue(response.body());
+                    Log.d("LOGAPI", "API 호출");
+                    // ... any other logic
+                } else {
+                    // handle error...
+                    Log.d("LOGAPI", "API 호출실패");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<StoreInquiryResponseDTO> call, Throwable t) {
+                // handle failure...
+                Log.d("LOGAPI", "API 호출실패2");
+            }
+        });
+    }
+
+    public void StoreListInquiryData(Long storeId) {
+//        storeApiService.getStoreList()
+        storeApiService.readStore(storeId).enqueue(new Callback<StoreInquiryResponseDTO>() {
+            @Override
+            public void onResponse(Call<StoreInquiryResponseDTO> call, Response<StoreInquiryResponseDTO> response) {
+                if (response.isSuccessful()) {
+                    storeDataLiveData.setValue(response.body());
+                    Log.d("LOGAPI", "API 호출");
+                    // ... any other logic
+                } else {
+                    // handle error...
+                    Log.d("LOGAPI", "API 호출실패");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<StoreInquiryResponseDTO> call, Throwable t) {
+                // handle failure...
+                Log.d("LOGAPI", "API 호출실패2");
+            }
+        });
+    }
+
+    public LiveData<StoreInquiryResponseDTO> getStoreDataLiveData() {
+        return storeDataLiveData;
+    }
     public LiveData<List<StoreListData>> getFilteredStoreListLiveData() {
         return storeFilteredLiveData;
     }
@@ -367,16 +429,6 @@ public class ActivityViewModel extends ViewModel {
     public LiveData<List<SummaryData>> getCurrentListLiveData(){
         return  storeListCurrentLiveData;
     }
-
-    public LiveData<Boolean> isGranted() {
-        return isGranted;
-    }
-
-    public void setGranted(boolean granted) {
-        isGranted.setValue(granted);
-    }
-
-
 
 
 
