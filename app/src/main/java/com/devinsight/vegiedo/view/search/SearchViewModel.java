@@ -5,10 +5,16 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.devinsight.vegiedo.data.response.StoreListData;
+import com.devinsight.vegiedo.data.response.StoreListInquiryResponseDTO;
+import com.devinsight.vegiedo.utill.RetrofitClient;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class SearchViewModel extends ViewModel {
 
@@ -17,8 +23,10 @@ public class SearchViewModel extends ViewModel {
 
     /* 검색창에 보여줄 라이브 데이터 */
     private MutableLiveData<List<SummaryData>> storeSearchLiveData = new MutableLiveData<>();
+    private MutableLiveData<List<StoreListData>> storeLiveData = new MutableLiveData<>();
 
     String input;
+
 
     public List<StoreListData> dummyData() {
         List<StoreListData> storeList = new ArrayList<>(); // storeFilteredLiveData.getValue;

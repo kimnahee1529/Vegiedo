@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -75,6 +76,7 @@ public class StoreListMainFragment extends Fragment implements StoreDetailListAd
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_store_list_main, container, false);
+        Log.d("가게메인리스트","가게메인리스트");
 
         layout = view.findViewById(R.id.store_setting_message);
         not_found_Sheep = view.findViewById(R.id.not_found);
@@ -90,16 +92,22 @@ public class StoreListMainFragment extends Fragment implements StoreDetailListAd
         recyclerView.setLayoutManager(linearLayoutManager);
 
         viewModel = new ViewModelProvider(requireActivity()).get(ActivityViewModel.class);
+        Log.d("가게메인리스트2","가게메인리스트2");
 
+//        viewModel.storeApiData();
         viewModel.searchDetailList();
+        Log.d("가게메인리스트3","가게메인리스트3");
+
 
         viewModel.getFilteredStoreListLiveData().observe(getViewLifecycleOwner(), new Observer<List<StoreListData>>() {
             @Override
             public void onChanged(List<StoreListData> storeListData) {
+                Log.d("가게메인리스트4","가게메인리스트4");
                 storeDetailListAdapter.setStoreList(storeListData);
                 storeDetailListAdapter.notifyDataSetChanged();
             }
         });
+
 
 
         return view;

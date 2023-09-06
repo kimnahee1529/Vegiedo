@@ -35,6 +35,7 @@ import android.widget.TextView;
 //import com.devinsight.vegiedo.Manifest;
 import android.Manifest;
 import com.devinsight.vegiedo.R;
+import com.devinsight.vegiedo.repository.pref.AuthPrefRepository;
 import com.devinsight.vegiedo.repository.pref.UserPrefRepository;
 import com.devinsight.vegiedo.view.community.GeneralPostFragment;
 import com.devinsight.vegiedo.view.home.HomeMainFragment;
@@ -70,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
     Fragment storeListMainFragment;
     Fragment myPageFragment;
     Fragment communityFragment;
-//    Fragment storeDetailPageFragment;
+    Fragment storeDetailPageFragment;
 
     /* 뷰모델 */
     ActivityViewModel viewModel;
@@ -79,8 +80,9 @@ public class MainActivity extends AppCompatActivity {
     LocationManager locationManager;
 
     UserPrefRepository userPrefRepository;
+    AuthPrefRepository authPrefRepository;
 
-    int INITIAL_DISTANCE = 5;
+    int INITIAL_DISTANCE = 10;
 
 
     @Override
@@ -104,17 +106,39 @@ public class MainActivity extends AppCompatActivity {
         searchMainFragment = new SearchMainFragment();
         communityFragment = new GeneralPostFragment();
         storeListMainFragment = new StoreListMainFragment();
-//        storeDetailPageFragment = new StoreDetailPageFragment();
+        storeDetailPageFragment = new StoreDetailPageFragment();
 
         /* 액티비티 뷰 모델 */
         viewModel = new ViewModelProvider(this).get(ActivityViewModel.class);
         userPrefRepository = new UserPrefRepository(this);
+        authPrefRepository = new AuthPrefRepository(this);
+        String token = authPrefRepository.getAuthToken("KAKAO");
         List<String> initialTagList = userPrefRepository.loadTagList();
         int initialDistance = INITIAL_DISTANCE;
 
-        viewModel.getInitialFilteredData(initialDistance, initialTagList);
+        viewModel.getInitialFilteredData(initialDistance, initialTagList, token);
 
         currentInputList = new ArrayList<>();
+
+
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        boolean locationPermission = Build.VERSION.SDK_INT >= 23 &&
+                ContextCompat.checkSelfPermission(this.getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED;
+        if (locationPermission) {
+            ActivityCompat.requestPermissions(this, new String[]{
+                    android.Manifest.permission.ACCESS_FINE_LOCATION}, 0);
+        } else {
+            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if (location != null) {
+                float latitude = (float) location.getLatitude();
+                float longitude = (float) location.getLongitude();
+
+                Log.d("위치 1 ", "위치" + "위도 : " + latitude + "경도 : " + longitude);
+            }
+
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, locationListener);
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, locationListener);
+        }
 
 
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
@@ -138,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 } else if (item.getItemId() == R.id.nav_user) {
                     toolBar.setVisibility(View.GONE);
-                    transaction.replace(R.id.frame, myPageFragment,"myPageFragment").addToBackStack("myPageFragment").commit();
+                    transaction.replace(R.id.frame, storeDetailPageFragment,"myPageFragment").addToBackStack("myPageFragment").commit();
 
                     return true;
                 }
@@ -158,6 +182,8 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+
 
 
         searchView.addTextChangedListener(new TextWatcher() {
@@ -201,6 +227,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+
         btn_filter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -226,24 +254,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        boolean locationPermission = Build.VERSION.SDK_INT >= 23 &&
-                ContextCompat.checkSelfPermission(this.getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED;
-        if (locationPermission) {
-            ActivityCompat.requestPermissions(this, new String[]{
-                    android.Manifest.permission.ACCESS_FINE_LOCATION}, 0);
-        } else {
-            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            if (location != null) {
-                float latitude = (float) location.getLatitude();
-                float longitude = (float) location.getLongitude();
-
-                Log.d("위치 1 ", "위치" + "위도 : " + latitude + "경도 : " + longitude);
-            }
-
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, locationListener);
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, locationListener);
-        }
 
     }
 
@@ -290,5 +300,7 @@ public class MainActivity extends AppCompatActivity {
             locationManager.removeUpdates(locationListener);
         }
     }
+
+
 
 }

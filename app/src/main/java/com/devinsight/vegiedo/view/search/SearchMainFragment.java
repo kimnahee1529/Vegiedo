@@ -84,15 +84,6 @@ public class SearchMainFragment extends Fragment implements SearchSummaryListAda
 //            }
 //        });
 
-        /* 검색창에 입력된 글자를 기준으로 리스트를 보여줍니다.*/
-        viewModel.searchSummList();
-        viewModel.getStoreSearchListByKeywordLiveData().observe(getViewLifecycleOwner(), new Observer<List<SummaryData>>() {
-            @Override
-            public void onChanged(List<SummaryData> summaryDataList) {
-                searchAdapter.setSearchList(summaryDataList);
-                searchAdapter.notifyDataSetChanged();
-            }
-        });
 
         /* 최근 검색어를 기준으로 최초 요약된 리스트를 보여줍니다.*/
         viewModel.currentList();
@@ -108,6 +99,19 @@ public class SearchMainFragment extends Fragment implements SearchSummaryListAda
 
             }
         });
+
+        viewModel.storeApiData();
+        /* 검색창에 입력된 글자를 기준으로 리스트를 보여줍니다.*/
+//        viewModel.searchSummList();
+        viewModel.getStoreSearchListByKeywordLiveData().observe(getViewLifecycleOwner(), new Observer<List<SummaryData>>() {
+            @Override
+            public void onChanged(List<SummaryData> summaryDataList) {
+                searchAdapter.setSearchList(summaryDataList);
+                searchAdapter.notifyDataSetChanged();
+            }
+        });
+
+
 
         return view;
     }

@@ -33,7 +33,7 @@ public class RetrofitClient {
     }
 
     public static StoreApiService getStoreApiService(){
-        return getRetrofit("http://ec2-18-218-192-76.us-east-2.compute.amazonaws.com:8000").create(StoreApiService.class);
+        return getRetrofit("http://3.38.23.253:8080/test/").create(StoreApiService.class);
     }
 
     public static PostApiService getPostApiService(){

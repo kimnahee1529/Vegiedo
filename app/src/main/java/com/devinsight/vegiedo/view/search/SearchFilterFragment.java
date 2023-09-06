@@ -13,6 +13,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -29,6 +30,7 @@ import com.devinsight.vegiedo.R;
 import com.devinsight.vegiedo.data.ui.login.TagStatus;
 import com.devinsight.vegiedo.repository.pref.UserPrefRepository;
 import com.devinsight.vegiedo.utill.VeganTag;
+import com.devinsight.vegiedo.view.MainActivity;
 import com.devinsight.vegiedo.view.StoreListMainFragment;
 
 import java.util.ArrayList;
@@ -61,6 +63,7 @@ public class SearchFilterFragment extends Fragment {
     UserPrefRepository userPrefRepository;
 
     LocationManager locationManager;
+    SearchFilterFragment searchFilterFragment;
 
 
     public SearchFilterFragment() {
@@ -90,6 +93,7 @@ public class SearchFilterFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_search_filter, container, false);
+        searchFilterFragment = new SearchFilterFragment();
 
         seekBar = view.findViewById(R.id.seekBar);
         seekbar_distance = view.findViewById(R.id.seekbar_distance);
@@ -271,9 +275,12 @@ public class SearchFilterFragment extends Fragment {
                 viewModel.getFilterData(filterData.getDistance(), filterData.getTags());
                 Log.d("필터 데이터", "성공" + filterData.getDistance() + filterData.getTags());
 //                getParentFragmentManager().beginTransaction().replace(R.id.frame, searchMainFragment).commit();
-                getParentFragmentManager().popBackStack("homeMainFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
-//                getParentFragmentManager().beginTransaction().replace(R.id.frame, storeListMainFragment).commit();
-                getParentFragmentManager().popBackStack();
+//                getParentFragmentManager().popBackStack("homeMainFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                getParentFragmentManager().beginTransaction().replace(R.id.frame, storeListMainFragment).commit();
+//                getParentFragmentManager().popBackStack();
+
+
+                Log.d("떨어짐","떨어짐");
 
             }
         });
@@ -330,6 +337,7 @@ public class SearchFilterFragment extends Fragment {
         List<String> initialTags = userPrefRepository.loadTagList();
         return initialTags.contains(tag);
     }
+
 
 
 }
