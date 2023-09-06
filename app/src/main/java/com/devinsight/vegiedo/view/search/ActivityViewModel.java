@@ -192,6 +192,7 @@ public class ActivityViewModel extends ViewModel {
             distance = initialDistance;
         }
         Log.d("여기까지 됨", "194번줄");
+        Log.d("쿼리 재료","tag : " + tags + "latitude : " + latitude + "longitude : " + longitude );
 
         storeApiService.getStoreLists(tags, latitude, longitude, distance, keyword, 10, 1, token).enqueue(new Callback<List<StoreListData>>() {
             @Override
