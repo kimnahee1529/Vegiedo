@@ -45,7 +45,7 @@ public class ActivityViewModel extends ViewModel {
 
     /* 스토어 상세 목록에 보여 줄 가게 데이터 */
     private MutableLiveData<List<SummaryData>> storeListSummaryLiveData = new MutableLiveData<>();
-
+    /* 최근 검색 목록 리스트*/
     private MutableLiveData<List<SummaryData>> storeListCurrentLiveData = new MutableLiveData<>();
 
     /* 검색 창 클릭 시 간략하게 보여 줄 가게 데이터 */
@@ -93,7 +93,7 @@ public class ActivityViewModel extends ViewModel {
     private String currentInput;
     private String token;
 
-
+    /* API 호출을 위한 레트로핏 초기화 */
     StoreApiService storeApiService = RetrofitClient.getStoreApiService();
 
 
@@ -164,23 +164,7 @@ public class ActivityViewModel extends ViewModel {
         return inputTextLiveData;
     }
 
-    public List<StoreListData> dummyData() {
-        List<StoreListData> storeList = new ArrayList<>(); // storeFilteredLiveData.getValue;
-
-        storeList.add(new StoreListData(1l, "향림원", "서울특별시 강남구 삼성동 123-45", 37.500731f, 127.039338f, 5, 5, Arrays.asList("#비건", "#락토"), true, 45, "https://cdn.pixabay.com/photo/2014/04/13/20/49/cat-323262_640.jpg"));
-        storeList.add(new StoreListData(2l, "서울테이블", "부산광역시 해운대구 우동 56-78", 37.494575f, 127.034612f, 5, 4, Arrays.asList("#프루테리언", "#비건"), true, 45, "https://cdn.pixabay.com/photo/2016/05/24/16/48/mountains-1412683_640.png"));
-        storeList.add(new StoreListData(3l, "바다의 선물", "대구광역시 중구 동인동 90-12", 37.499176f, 127.041257f, 5, 5, Arrays.asList("#락토", "#오보"), true, 45, "https://cdn.pixabay.com/photo/2018/08/12/15/29/hintersee-3601004_640.jpg"));
-        storeList.add(new StoreListData(4l, "마루키친", "서울특별시 강남구 논현동 123-45", 37.492988f, 127.035923f, 5, 1, Arrays.asList("#락토 오보", "#페스코"), true, 45, "https://cdn.pixabay.com/photo/2018/01/30/22/50/forest-3119826_640.jpg"));
-        storeList.add(new StoreListData(5l, "송림정", "서울특별시 중구 을지로 56-78", 37.503657f, 127.036592f, 5, 3, Arrays.asList("#오보", "#락토 오보"), true, 45, "https://cdn.pixabay.com/photo/2018/12/15/18/02/forest-3877365_640.jpg"));
-        storeList.add(new StoreListData(6l, "파스텔레스토", "서울특별시 용산구 한강로 90-12", 37.492142f, 127.045137f, 5, 4, Arrays.asList("#페스코", "#폴로"), true, 45, "https://cdn.pixabay.com/photo/2016/09/04/20/09/mountains-1645078_640.jpg"));
-        storeList.add(new StoreListData(7l, "그릴 101", "서울특별시 마포구 서교동 78-90", 37.498235f, 127.032479f, 5, 2, Arrays.asList("#폴로", "#키토"), true, 45, "https://cdn.pixabay.com/photo/2018/07/14/17/46/raccoon-3538081_640.jpg"));
-        storeList.add(new StoreListData(8l, "하늘정원", "대전광역시 유성구 신성동 12-34", 37.502658f, 127.040892f, 5, 3, Arrays.asList("#키토", "#글루텐프리"), true, 45, "https://cdn.pixabay.com/photo/2020/12/23/14/41/forest-5855196_640.jpg"));
-        storeList.add(new StoreListData(9l, "산바다물회", "울산광역시 남구 신정동 45-67", 37.496312f, 127.043285f, 5, 3, Arrays.asList("#락토", "#프루테리언"), true, 45, "https://cdn.pixabay.com/photo/2014/07/28/20/39/sunset-404072_640.jpg"));
-        storeList.add(new StoreListData(10l, "리베로 스테이크하우스", "서울특별시 동작구 사당동 45-67", 37.504978f, 127.037501f, 5, 4, Arrays.asList("#오보", "#글루텐프리"), true, 45, "https://cdn.pixabay.com/photo/2018/08/21/23/29/forest-3622519_640.jpg"));
-
-        return storeList;
-    }
-
+    /* 가게 리스트 API 호출 */
     public void storeApiData() {
         Log.d("api 가져오는 함수 ", "  public void storeApiData() ");
         boolean noMapLocation = mapLat + mapLong == 0.0f;
@@ -468,11 +452,11 @@ public class ActivityViewModel extends ViewModel {
     public LiveData<StoreInquiryResponseDTO> getStoreDataLiveData() {
         return storeDataLiveData;
     }
-
+    /* StoreMainList에 보여질 필터링 된 가게 리스트*/
     public LiveData<List<StoreListData>> getFilteredStoreListLiveData() {
         return storeFilteredLiveData;
     }
-
+    /* 실시간 검색어 입력에 따른 가게 리스트 */
     public LiveData<List<SummaryData>> getStoreSearchListByKeywordLiveData() {
         return storeSearchLiveData;
     }
@@ -480,7 +464,7 @@ public class ActivityViewModel extends ViewModel {
     public LiveData<List<SummaryData>> getSummaryListLiveData() {
         return storeListSummaryLiveData;
     }
-
+    /* 최근 검색어에 따른 가게 리스트*/
     public LiveData<List<SummaryData>> getCurrentListLiveData() {
         return storeListCurrentLiveData;
     }
