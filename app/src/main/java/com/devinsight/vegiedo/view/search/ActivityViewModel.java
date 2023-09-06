@@ -58,10 +58,6 @@ public class ActivityViewModel extends ViewModel {
     /* 검색창에 입력 된 텍스트 라이브 데이터 */
     private MutableLiveData<String> inputTextLiveData = new MutableLiveData<>();
 
-
-    /* 위치 권한 허용 여부값을 담은 변수*/
-    private final MutableLiveData<Boolean> isGranted = new MutableLiveData<>(false);
-
     /* 지도의 카드뷰에 보여줄 가게 리스트 라이브 데이터*/
     private MutableLiveData<List<MapStoreListData>> mapStoreLiveData = new MutableLiveData<>();
 
@@ -76,6 +72,8 @@ public class ActivityViewModel extends ViewModel {
     private List<StoreListData> allStoreList;
     /*  가게 API 호출 */
 //    StoreApiService storeApiService = getStoreApiService();
+
+    //가게 조회 API 호출에서 쓸 라이브 데이터
     private MutableLiveData<StoreInquiryResponseDTO> storeDataLiveData = new MutableLiveData<>();
 
 
@@ -248,6 +246,7 @@ public class ActivityViewModel extends ViewModel {
         storeListSummaryLiveData.setValue(summaryList);
     }
 
+    //mapDummyData를 MapMainFragment의 카드뷰에 보여줄 함수
     public MutableLiveData<List<MapStoreCardUiData>> getMapStoreSummaryData() {
 
         List<MapStoreListData> originData = mapDummyData();
@@ -441,6 +440,7 @@ public class ActivityViewModel extends ViewModel {
     }
 
 
+    //StoreDetailPageFragment서 쓸 가게 조회 API
     public void StoreInquiryData(Long storeId) {
         storeApiService.readStore(storeId).enqueue(new Callback<StoreInquiryResponseDTO>() {
             @Override
@@ -463,32 +463,12 @@ public class ActivityViewModel extends ViewModel {
         });
     }
 
-    public void StoreListInquiryData(Long storeId) {
-//        storeApiService.getStoreList()
-        storeApiService.readStore(storeId).enqueue(new Callback<StoreInquiryResponseDTO>() {
-            @Override
-            public void onResponse(Call<StoreInquiryResponseDTO> call, Response<StoreInquiryResponseDTO> response) {
-                if (response.isSuccessful()) {
-                    storeDataLiveData.setValue(response.body());
-                    Log.d("LOGAPI", "API 호출");
-                    // ... any other logic
-                } else {
-                    // handle error...
-                    Log.d("LOGAPI", "API 호출실패");
-                }
-            }
 
-            @Override
-            public void onFailure(Call<StoreInquiryResponseDTO> call, Throwable t) {
-                // handle failure...
-                Log.d("LOGAPI", "API 호출실패2");
-            }
-        });
-    }
-
+    //여기서 호출한 api 함수를 StoreDetailPageFragment서 씀
     public LiveData<StoreInquiryResponseDTO> getStoreDataLiveData() {
         return storeDataLiveData;
     }
+
     public LiveData<List<StoreListData>> getFilteredStoreListLiveData() {
         return storeFilteredLiveData;
     }
@@ -505,16 +485,8 @@ public class ActivityViewModel extends ViewModel {
         return storeListCurrentLiveData;
     }
 
-    public LiveData<Boolean> isGranted() {
-        return isGranted;
-    }
-
     public LiveData<List<StoreListData>> getStoreListLiveData() {
         return storeListLiveData;
-    }
-
-    public void setGranted(boolean granted) {
-        isGranted.setValue(granted);
     }
 
 
