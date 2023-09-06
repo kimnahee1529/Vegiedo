@@ -43,6 +43,7 @@ import com.devinsight.vegiedo.view.mypage.MyPageFragment;
 import com.devinsight.vegiedo.view.search.SearchFilterFragment;
 import com.devinsight.vegiedo.view.search.ActivityViewModel;
 import com.devinsight.vegiedo.view.search.SearchMainFragment;
+import com.devinsight.vegiedo.view.store.StoreDetailPageFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
@@ -69,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
     Fragment storeListMainFragment;
     Fragment myPageFragment;
     Fragment communityFragment;
+//    Fragment storeDetailPageFragment;
 
     /* 뷰모델 */
     ActivityViewModel viewModel;
@@ -102,6 +104,7 @@ public class MainActivity extends AppCompatActivity {
         searchMainFragment = new SearchMainFragment();
         communityFragment = new GeneralPostFragment();
         storeListMainFragment = new StoreListMainFragment();
+//        storeDetailPageFragment = new StoreDetailPageFragment();
 
         /* 액티비티 뷰 모델 */
         viewModel = new ViewModelProvider(this).get(ActivityViewModel.class);
