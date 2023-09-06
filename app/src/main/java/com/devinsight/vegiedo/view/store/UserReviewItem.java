@@ -4,7 +4,8 @@ import java.util.ArrayList;
 
 public class UserReviewItem {
     public enum ItemType {
-        STORE_DETAIL_PAGE
+        STORE_DETAIL_REVIEW_PAGE,
+        STORE_DETAIL_BLOG_REVIEW_PAGE
     }
     private ItemType itemType;
     private String title;
