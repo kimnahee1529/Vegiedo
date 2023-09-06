@@ -9,9 +9,7 @@
 
     <!--  여기부터 -->
 
-    <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true">
@@ -27,17 +25,19 @@
                 android:orientation="vertical">
 
 
+                <!-- img_sheep ImageView -->
+
+
                 <ImageView
-                    android:id="@+id/black_recta"
+                    android:id="@+id/storeDetail_store_image"
                     android:layout_width="match_parent"
                     android:layout_height="270dp"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true"
                     android:background="#66000000"
-                    tools:ignore="MissingConstraints" />
-
-                <!-- img_sheep ImageView -->
-
+                    tools:ignore="MissingConstraints"
+                    tools:layout_editor_absoluteX="0dp"
+                    tools:layout_editor_absoluteY="0dp" />
 
                 <ImageView
                     android:id="@+id/circle1"
@@ -67,11 +67,10 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true"
-                    android:layout_marginTop="240dp"
-                    android:layout_marginEnd="13dp"
+                    android:layout_marginEnd="10dp"
                     android:text="맛있다 메에에엥"
-                    app:layout_constraintEnd_toEndOf="@id/black_recta"
-                    app:layout_constraintTop_toTopOf="@id/black_recta" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/circle1" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -116,14 +115,16 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
+                            android:layout_marginRight="10dp"
                             android:numStars="5"
                             android:stepSize="1.0"
                             android:progressTint="@color/yellow_star"/>
 
                         <TextView
+                            android:id="@+id/storeDetail_store_reviewers"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="43 reviews"
+                            android:text="43"
                             android:textColor="@color/orange"
                             android:textSize="14sp" />
 
@@ -223,20 +224,30 @@
                             android:orientation="horizontal">
 
                             <RelativeLayout
+                                android:id="@+id/storeDetail_like_btn"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content">
 
                                 <ImageView
                                     android:layout_width="40dp"
                                     android:layout_height="40dp"
-                                    android:src="@drawable/white_circle"></ImageView>
+                                    android:src="@drawable/white_circle"/>
 
                                 <ImageView
+                                    android:id="@+id/StoreDetail_default_heart"
+                                    android:layout_width="23dp"
+                                    android:layout_height="23dp"
+                                    android:layout_centerHorizontal="true"
+                                    android:layout_centerVertical="true"
+                                    android:src="@drawable/ic_heart_default"/>
+
+                                <ImageView
+                                    android:id="@+id/StoreDetail_selected_heart"
                                     android:layout_width="22dp"
                                     android:layout_height="23dp"
                                     android:layout_centerHorizontal="true"
                                     android:layout_centerVertical="true"
-                                    android:src="@drawable/red_heart" />
+                                    android:src="@drawable/ic_heart_selected" />
 
                             </RelativeLayout>
 
@@ -258,20 +269,24 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginStart="20dp"
                     android:layout_marginBottom="10dp"
                     android:orientation="horizontal">
 
                     <TextView
+                        android:id="@+id/StoreDetail_page_review_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textSize="18sp"
                         android:layout_marginEnd="22dp"
                         android:text="리뷰" />
 
                     <TextView
+                        android:id="@+id/StoreDetail_page_blog_review_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textSize="18sp"
                         android:text="블로그 리뷰" />
 
                 </LinearLayout>
@@ -293,28 +308,20 @@
                         android:paddingLeft="20dp"
                         android:paddingTop="4dp"
                         android:paddingRight="20dp"
-                        android:paddingBottom="4dp"
+                        android:paddingBottom="5dp"
                         android:text="+리뷰 작성하러 가기"
                         android:textColor="@color/white"
                         android:background="@drawable/btn_green"
-                        android:textSize="14sp" />
+                        android:textSize="17sp" />
 
                 </LinearLayout>
 
             </LinearLayout>
 
-            <!--  ScrollView -->
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/store_recycle_view"
+            <FrameLayout
+                android:id="@+id/fragment_container"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:scrollbarFadeDuration="0"
-                android:scrollbarSize="5dp"
-                android:scrollbarThumbVertical="@android:color/darker_gray"
-                android:scrollbars="vertical"/>
-
+                android:layout_height="match_parent"/>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

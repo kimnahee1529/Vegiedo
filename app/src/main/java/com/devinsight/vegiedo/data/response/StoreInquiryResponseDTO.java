@@ -9,26 +9,29 @@ import java.util.List;
 public class StoreInquiryResponseDTO {
 
     @Expose
-    @SerializedName("storeId")private Long storeId;
+    @SerializedName("storeId") private Long storeId;
     @Expose
-    @SerializedName("storeName")private String storeName;
+    @SerializedName("storeName") private String storeName;
     @Expose
-    @SerializedName("address")private String address;
+    @SerializedName("images") private String storeImage;
     @Expose
-    @SerializedName("stars")private Integer stars;
+    @SerializedName("address") private String address;
     @Expose
-    @SerializedName("tags")private List<String> tags;
-
+    @SerializedName("stars") private Integer stars;
     @Expose
-    @SerializedName("latitude")private float latitude;
+    @SerializedName("reviewCount") private Integer reviewCount;
     @Expose
-    @SerializedName("longitude")private float longitude;
+    @SerializedName("tags") private List<String> tags;
     @Expose
-    @SerializedName("like")private boolean like;
+    @SerializedName("latitude") private float latitude;
     @Expose
-    @SerializedName("stamp")private boolean stamp;
+    @SerializedName("longitude") private float longitude;
     @Expose
-    @SerializedName("reviewContent")private List<String> images;
+    @SerializedName("like") private boolean like;
+    @Expose
+    @SerializedName("stamp") private boolean stamp;
+    @Expose
+    @SerializedName("reviewContent") private List<String> images;
 
 
     public Long getStoreId() {
@@ -53,6 +56,14 @@ public class StoreInquiryResponseDTO {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public Integer getReviewCount() {
+        return reviewCount;
+    }
+
+    public void setReviewCount(Integer reviewCount) {
+        this.reviewCount = reviewCount;
     }
 
     public Integer getStars() {
@@ -87,14 +98,21 @@ public class StoreInquiryResponseDTO {
         this.stamp = stamp;
     }
 
-    public List<String> getImages() {
-        return images;
+//    public String getImages() {
+//        return images;
+//    }
+//
+//    public void setImages(String images) {
+//        this.images = images;
+//    }
+
+    public String getStoreImage() {
+        return storeImage;
     }
 
-    public void setImages(List<String> images) {
-        this.images = images;
+    public void setStoreImage(String storeImage) {
+        this.storeImage = storeImage;
     }
-
     public float getLatitude() {
         return latitude;
     }
