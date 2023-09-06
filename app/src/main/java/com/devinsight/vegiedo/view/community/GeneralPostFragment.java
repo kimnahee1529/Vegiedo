@@ -27,7 +27,7 @@ public class GeneralPostFragment extends Fragment {
         });
 
         // popural_posts 클릭 리스너 설정
-        view.findViewById(R.id.popural_posts).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.popular_posts).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // PopuralPostFragment로 전환

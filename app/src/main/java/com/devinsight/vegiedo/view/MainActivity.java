@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -37,6 +38,8 @@ import android.Manifest;
 import com.devinsight.vegiedo.R;
 import com.devinsight.vegiedo.repository.pref.AuthPrefRepository;
 import com.devinsight.vegiedo.repository.pref.UserPrefRepository;
+import com.devinsight.vegiedo.view.community.CommunityMainActivity;
+import com.devinsight.vegiedo.view.community.CommunityMainFragment;
 import com.devinsight.vegiedo.view.community.GeneralPostFragment;
 import com.devinsight.vegiedo.view.home.HomeMainFragment;
 import com.devinsight.vegiedo.view.map.MapMainFragment;
@@ -72,13 +75,13 @@ public class MainActivity extends AppCompatActivity {
     Fragment myPageFragment;
     Fragment communityFragment;
     Fragment storeDetailPageFragment;
+    Fragment communityMainFragment;
+    CommunityMainActivity communityMainActivity;
 
     /* 뷰모델 */
     ActivityViewModel viewModel;
     List<String> currentInputList;
-
     LocationManager locationManager;
-
     UserPrefRepository userPrefRepository;
     AuthPrefRepository authPrefRepository;
 
@@ -107,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
         communityFragment = new GeneralPostFragment();
         storeListMainFragment = new StoreListMainFragment();
         storeDetailPageFragment = new StoreDetailPageFragment();
+        communityMainFragment = new CommunityMainFragment();
 
         /* 액티비티 뷰 모델 */
         viewModel = new ViewModelProvider(this).get(ActivityViewModel.class);
@@ -147,7 +151,10 @@ public class MainActivity extends AppCompatActivity {
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 if (item.getItemId() == R.id.nav_community) {
                     toolBar.setVisibility(View.GONE);
-                    transaction.replace(R.id.frame, communityFragment, "communityFragment").addToBackStack("communityFragment").commit();
+//                    Intent intent = new Intent(getApplicationContext(), CommunityMainActivity.class);
+//                    startActivity(intent);
+//                    finish();
+                    transaction.replace(R.id.frame, communityMainFragment, "communityMainFragment").addToBackStack("communityMainFragment").commit();
 
                     return true;
                 } else if (item.getItemId() == R.id.nav_home) {
@@ -162,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 } else if (item.getItemId() == R.id.nav_user) {
                     toolBar.setVisibility(View.GONE);
-                    transaction.replace(R.id.frame, storeDetailPageFragment,"myPageFragment").addToBackStack("myPageFragment").commit();
+                    transaction.replace(R.id.frame, myPageFragment,"myPageFragment").addToBackStack("myPageFragment").commit();
 
                     return true;
                 }

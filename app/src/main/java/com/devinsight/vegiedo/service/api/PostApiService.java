@@ -3,12 +3,16 @@ package com.devinsight.vegiedo.service.api;
 import com.devinsight.vegiedo.data.request.PostRegisterRequestDTO;
 import com.devinsight.vegiedo.data.request.PostReportRequestDTO;
 import com.devinsight.vegiedo.data.response.PostInquiryResponseDTO;
+import com.devinsight.vegiedo.data.response.PostListData;
 import com.devinsight.vegiedo.data.response.PostListInquiryResponseDTO;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
@@ -17,11 +21,18 @@ import retrofit2.http.Query;
 public interface PostApiService {
 
     //게시글 리스트 조회
-    @GET("/posts")
-    Call<PostListInquiryResponseDTO> getPostList(
-            @Query("count") int count,
-            @Query("cursor") int cursor,
-            @Query("type") int type
+    @GET("/test/posts/list")
+    Call<List<PostListData>> getGeneralPostList(
+            @Query("pageSize") int pageSize,
+            @Query("pageNumber") int pageNumber,
+            @Header("Authorization") String token
+    );
+
+    @GET("/test/posts/popularList")
+    Call<List<PostListData>> getPopularPostList(
+            @Query("pageSize") int count,
+            @Query("pageNumber") int cursor,
+            @Header("Authorization") String token
     );
 
     //게시글 등록

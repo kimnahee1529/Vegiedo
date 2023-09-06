@@ -65,6 +65,8 @@ public class ActivityViewModel extends ViewModel {
     /* 서버에서 내려주는 가게 리스트 */
 
     private MutableLiveData<List<StoreListData>> storeListLiveData = new MutableLiveData<>();
+    /* 유저 토큰 전달을 위한 라이브데이터 */
+    private MutableLiveData<String> tokenLiveData = new MutableLiveData<>();
 
     AuthPrefRepository authPrefRepository;
 
@@ -132,6 +134,7 @@ public class ActivityViewModel extends ViewModel {
         this.initialDistance = distance;
         this.initialTags = tags;
         this.token = token;
+        tokenLiveData.setValue(token);
     }
 
 
@@ -471,6 +474,10 @@ public class ActivityViewModel extends ViewModel {
 
     public LiveData<List<StoreListData>> getStoreListLiveData() {
         return storeListLiveData;
+    }
+    /* 커뮤니티 뷰 모델로 유저 토큰을 전달합니다.*/
+    public LiveData<String> getToken(){
+        return tokenLiveData;
     }
 
 

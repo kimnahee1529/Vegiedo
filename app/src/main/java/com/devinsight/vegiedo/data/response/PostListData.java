@@ -15,7 +15,11 @@ public class PostListData {
     @Expose
     @SerializedName("createdAt")private String createdAt;
     @Expose
-    @SerializedName("like")private Boolean like;
+    @SerializedName("imageUrl")private String imageUrl;
+    @Expose
+    @SerializedName("likeReceiveCount")private int like;
+    @Expose
+    @SerializedName("commentCount")private int commentCount;
 
     public Long getPostId() {
         return postId;
@@ -49,19 +53,37 @@ public class PostListData {
         this.createdAt = createdAt;
     }
 
-    public Boolean getLike() {
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public int getLike() {
         return like;
     }
 
-    public void setLike(Boolean like) {
+    public void setLike(int like) {
         this.like = like;
     }
 
-    public PostListData(Long postId, String postTitle, String userName, String createdAt, Boolean like) {
+    public int getCommentCount() {
+        return commentCount;
+    }
+
+    public void setCommentCount(int commentCount) {
+        this.commentCount = commentCount;
+    }
+
+    public PostListData(Long postId, String postTitle, String userName, String createdAt, String imageUrl, int like, int commentCount) {
         this.postId = postId;
         this.postTitle = postTitle;
         this.userName = userName;
         this.createdAt = createdAt;
+        this.imageUrl = imageUrl;
         this.like = like;
+        this.commentCount = commentCount;
     }
 }
