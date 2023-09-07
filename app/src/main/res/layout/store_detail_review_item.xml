@@ -1,97 +1,147 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="10dp">
+    android:padding="15dp">
 
-    <!-- Top TextView -->
     <TextView
         android:id="@+id/storeReview_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Top Text"
+        android:layout_marginTop="10dp"
         android:textSize="15sp"
-        android:layout_marginBottom="12dp"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/storeReview_modify_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="13dp"
-        android:gravity="center">
+        android:layout_marginStart="200dp"
+        android:layout_marginTop="10dp"
+        android:text="수정"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toStartOf="@+id/storeReview_delete_text"
+        app:layout_constraintStart_toEndOf="@+id/storeReview_title"
+        app:layout_constraintTop_toTopOf="parent"/>
 
-        <RatingBar
-            android:id="@+id/storeReview_ratingbar"
-            style="@style/Widget.AppCompat.RatingBar.Small"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:numStars="5"
-            android:stepSize="1.0"
-            android:progressTint="@color/yellow_star"/>
+    <TextView
+        android:id="@+id/storeReview_delete_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="30dp"
+        android:text="삭제"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/storeReview_modify_text"/>
 
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
     </LinearLayout>
+
+    <RatingBar
+        android:id="@+id/storeReview_ratingbar"
+        style="@style/Widget.AppCompat.RatingBar.Small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:numStars="5"
+        android:stepSize="1.0"
+        android:layout_marginTop="10dp"
+        android:progressTint="@color/yellow_star"
+        app:layout_constraintStart_toStartOf="@id/storeReview_title"
+        app:layout_constraintTop_toBottomOf="@id/storeReview_title"
+        app:layout_constraintBottom_toTopOf="@id/storeReview_content" />
 
     <TextView
         android:id="@+id/storeReview_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=" 3천원 발렛 주차가능하며, 건물 지하 주차장에 주로 차를 댑니다.출차는 신속한 이동이 요구됩니다. 실내 분위기가 많이 활기차 보이며, 일반적인 레스토랑 대비 음식 종류별로 1만원가량 비싸지만 분위기로 대신하고 있습니다."
-        android:layout_marginBottom="16dp"/>
+        android:layout_marginTop="10dp"
+        android:text="3천원 발렛 주차가능하며, 건물 지하 주차장에 주로 차를 댑니다.출차는 신속한 이동이 요구됩니다. 실내 분위기가 많이 활기차 보이며, 일반적인 레스토랑 대비 음식 종류별로 1만원가량 비싸지만 분위기로 대신하고 있습니다."
+        app:layout_constraintStart_toStartOf="@id/storeReview_ratingbar"
+        app:layout_constraintTop_toBottomOf="@id/storeReview_ratingbar" />
 
-    <!-- Horizontal LinearLayout for the ImageViews -->
     <HorizontalScrollView
-        android:layout_width="match_parent"
+        android:id="@+id/horizontalScrollView"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:scrollbars="none">
+        android:scrollbars="none"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/storeReview_content">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center">
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/storeReview_image1"
                 android:layout_width="90dp"
                 android:layout_height="90dp"
-                android:src="@drawable/ic_launcher_foreground" />
+                android:layout_marginTop="10dp"
+                android:src="@drawable/ic_launcher_foreground"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
                 android:id="@+id/storeReview_image2"
                 android:layout_width="90dp"
                 android:layout_height="90dp"
+                android:layout_marginStart="15dp"
                 android:src="@drawable/ic_launcher_foreground"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"/>
+                app:layout_constraintStart_toEndOf="@id/storeReview_image1"
+                app:layout_constraintTop_toTopOf="@id/storeReview_image1" />
 
             <ImageView
                 android:id="@+id/storeReview_image3"
                 android:layout_width="90dp"
                 android:layout_height="90dp"
+                android:layout_marginStart="15dp"
                 android:src="@drawable/ic_launcher_foreground"
-                android:layout_marginEnd="8dp"/>
+                app:layout_constraintStart_toEndOf="@id/storeReview_image2"
+                app:layout_constraintTop_toTopOf="@id/storeReview_image2" />
 
             <ImageView
                 android:id="@+id/storeReview_image4"
                 android:layout_width="90dp"
                 android:layout_height="90dp"
+                android:layout_marginStart="15dp"
                 android:src="@drawable/ic_launcher_foreground"
-                android:layout_marginEnd="8dp"/>
+                app:layout_constraintStart_toEndOf="@id/storeReview_image3"
+                app:layout_constraintTop_toTopOf="@id/storeReview_image3" />
 
             <ImageView
                 android:id="@+id/storeReview_image5"
                 android:layout_width="90dp"
                 android:layout_height="90dp"
-                android:src="@drawable/ic_launcher_foreground" />
+                android:layout_marginStart="15dp"
+                android:src="@drawable/ic_launcher_foreground"
+                app:layout_constraintStart_toEndOf="@id/storeReview_image4"
+                app:layout_constraintTop_toTopOf="@id/storeReview_image4" />
 
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </HorizontalScrollView>
 
-    <!-- Bottom TextView -->
+    <ImageView
+        android:id="@+id/storeReview_report_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/alert_triangle"
+        app:layout_constraintBottom_toBottomOf="@+id/linearLayout"
+        app:layout_constraintEnd_toEndOf="@+id/linearLayout"
+        app:layout_constraintStart_toStartOf="@+id/linearLayout"
+        app:layout_constraintTop_toTopOf="@+id/linearLayout" />
 
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

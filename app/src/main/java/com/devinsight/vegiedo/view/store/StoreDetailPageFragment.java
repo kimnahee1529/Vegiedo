@@ -2,12 +2,16 @@ package com.devinsight.vegiedo.view.store;
 
 import static com.devinsight.vegiedo.utill.RetrofitClient.getStoreApiService;
 
+import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -55,6 +59,7 @@ public class StoreDetailPageFragment extends Fragment {
     TextView storeDetail_store_reviewers;
     RatingBar ratingBar;
     RelativeLayout stampBtn;
+    RelativeLayout mapBtn;
     RelativeLayout likeBtn;
     ImageView greenStamp;
     ImageView greenStampBackground;
@@ -64,6 +69,9 @@ public class StoreDetailPageFragment extends Fragment {
     Boolean isClickedLike;
     ImageView storeDetail_default_heart;
     ImageView storeDetail_selected_heart;
+    Button StoreDetail_review_writing_btn;
+    double Longitude;
+    double Latitude;
     ActivityViewModel viewModel;
 
 
@@ -79,7 +87,7 @@ public class StoreDetailPageFragment extends Fragment {
 
         initializeComponents(view);
         // 기본 프래그먼트(리뷰 화면) 로드
-        loadFragment(new StoreReviewFragment());  // 이 부분이 추가되었습니다.
+        loadFragment(new StoreReviewFragment());
         callStoreAPI(5L);
 
         return view;
@@ -99,8 +107,10 @@ public class StoreDetailPageFragment extends Fragment {
         storeDetail_store_reviewers = view.findViewById(R.id.storeDetail_store_reviewers);
         ratingBar = view.findViewById(R.id.storeDetail_ratingbar);
         stampBtn = view.findViewById(R.id.storeDetail_stamp_btn);
+        mapBtn = view.findViewById(R.id.storeDetail_map_btn);
         greenStamp = view.findViewById(R.id.storeDetail_green_stamp_btn);
         likeBtn = view.findViewById(R.id.storeDetail_like_btn);
+        StoreDetail_review_writing_btn = view.findViewById(R.id.StoreDetail_review_writing_btn);
         whiteStampBackground = view.findViewById(R.id.storeDetail_white_background_stamp_btn);
         whiteStamp = view.findViewById(R.id.storeDetail_white_stamp_btn);
         greenStampBackground = view.findViewById(R.id.storeDetail_green_background_stamp_btn);
@@ -112,6 +122,22 @@ public class StoreDetailPageFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 onStampBtnClicked();
+            }
+        });
+
+        //지도 플로팅 버튼을 눌렀을 때 네이버 지도 deep-link로 이동
+        mapBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                double lat = Latitude;
+                double lng = Longitude;
+                Log.d("LOGAPI 위도 경도 is",  lng+ " " + lat);
+
+                String uriString = String.format("nmap://navigation?dlat=%s&dlng=%s&appname=vegiedo", lat, lng);
+
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uriString));
+                startActivity(intent);
+
             }
         });
         likeBtn.setOnClickListener(new View.OnClickListener() {
@@ -140,6 +166,28 @@ public class StoreDetailPageFragment extends Fragment {
                 reviewText.setTextColor(getResources().getColor(android.R.color.darker_gray)); // 글자를 검정색으로 설정
                 loadFragment(new StoreBlogReviewFragment());
             }
+        });
+
+        StoreDetail_review_writing_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                WritingReviewFragment fragment = new WritingReviewFragment();
+//                FragmentManager fragmentManager = ((FragmentActivity) view.getContext()).getSupportFragmentManager();
+
+                FragmentManager fragmentManager = ((FragmentActivity) view.getContext()).getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+                // 이 코드는 액티비티의 루트 뷰를 교체합니다. (예: android.R.id.content)
+                fragmentTransaction.replace(android.R.id.content, fragment);
+
+                // 백스택에 추가합니다.
+                fragmentTransaction.addToBackStack(null);
+
+                // 트랜잭션 커밋
+                fragmentTransaction.commit();
+            }
+//                loadFragment(new WritingReviewFragment());
+
         });
     }
 
@@ -231,10 +279,12 @@ public class StoreDetailPageFragment extends Fragment {
                 storeDetail_store_address.setText(data.getAddress());
                 ratingBar.setRating(data.getStars());
                 storeDetail_store_reviewers.setText(data.getReviewCount() + " reviews");
+                Longitude = data.getLongitude();
+                Latitude = data.getLatitude();
 
                 // data.isStamp()가 true일 때의 동작
                 isClickedStamp = data.isStamp(); // isClickedStamp를 data.isStamp()로 설정
-                Log.d("LOGAPIisClickedStamp is", String.valueOf(isClickedStamp));
+                Log.d("LOGAPI 위도 경도 is", Longitude + " " + Latitude);
 
                 isClickedLike = data.isLike();
 

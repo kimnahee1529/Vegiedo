@@ -1,19 +1,24 @@
 package com.devinsight.vegiedo.view.store;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.devinsight.vegiedo.R;
+import com.devinsight.vegiedo.view.community.WritingFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +28,7 @@ public class StoreReviewFragment extends Fragment {
     private List<UserReviewItem> userReviewItems;
     private static final int ITEMS_COUNT = 10;
     private UserReviewItemAdapter adapter;
+
 
     @Nullable
     @Override
@@ -35,9 +41,9 @@ public class StoreReviewFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         recyclerView = view.findViewById(R.id.store_review_recycler_view);
-
         populateData();
         setupRecyclerView();
+
     }
 
     // ITEMS_COUNT(10)개 만큼의 아이템 생성
@@ -72,6 +78,8 @@ public class StoreReviewFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
     }
+
+
 
 
 }
