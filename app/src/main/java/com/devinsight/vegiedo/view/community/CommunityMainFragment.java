@@ -110,6 +110,11 @@ public class CommunityMainFragment extends Fragment implements CommunityPostAdat
         general_post.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(postContentFragment != null ){
+                    getParentFragmentManager().popBackStack("postContentFragment", 0);
+                } else {
+                    Log.d("플그먼트 없음","프래그먼트 없음");
+                }
                 community_banner.setVisibility(View.VISIBLE);
                 recyclerView.setVisibility(View.VISIBLE);
                 setGeneralFontStyle();
@@ -159,8 +164,8 @@ public class CommunityMainFragment extends Fragment implements CommunityPostAdat
         community_banner.setVisibility(View.GONE);
         recyclerView.setVisibility(View.GONE);
         btn_writing.setVisibility(View.GONE);
-        transaction.replace(R.id.community_frame, postContentFragment);
-        transaction.addToBackStack(null);
+        transaction.replace(R.id.community_frame, postContentFragment,"postContentFragment");
+        transaction.addToBackStack("postContentFragment");
         transaction.commit();
     }
     /* 리사이클러뷰에 리스트 설정 */
