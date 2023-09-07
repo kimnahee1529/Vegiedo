@@ -49,7 +49,7 @@ public class RetrofitClient {
     }
 
     public static MapApiService getMapApiService(){
-        return getRetrofit(BASE_URL).create(MapApiService.class);
+        return getRetrofit("http://3.38.23.253:8080/test/").create(MapApiService.class);
     }
 
 
