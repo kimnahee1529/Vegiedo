@@ -172,21 +172,14 @@ public class StoreDetailPageFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 WritingReviewFragment fragment = new WritingReviewFragment();
-//                FragmentManager fragmentManager = ((FragmentActivity) view.getContext()).getSupportFragmentManager();
 
                 FragmentManager fragmentManager = ((FragmentActivity) view.getContext()).getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-                // 이 코드는 액티비티의 루트 뷰를 교체합니다. (예: android.R.id.content)
                 fragmentTransaction.replace(android.R.id.content, fragment);
-
-                // 백스택에 추가합니다.
                 fragmentTransaction.addToBackStack(null);
-
-                // 트랜잭션 커밋
                 fragmentTransaction.commit();
             }
-//                loadFragment(new WritingReviewFragment());
 
         });
     }
@@ -239,30 +232,6 @@ public class StoreDetailPageFragment extends Fragment {
 
         }
     }
-
-//    private void populateData() {
-//        userReviewItems = new ArrayList<>();
-//        for (int i = 0; i < ITEMS_COUNT; i++) {
-//            userReviewItems.add(createItem(i));
-//        }
-//    }
-
-//    private UserReviewItem createItem(int index) {
-//        UserReviewItem.ItemType itemType = UserReviewItem.ItemType.STORE_DETAIL_REVIEW_PAGE;
-//        String title = "Title " + index;
-//        String description = "Description 1";
-//        String content = " 3천원 발렛 주차가능하며, 건물 지하 주차장에 주로 차를 댑니다.출차는 신속한 이동이 요구됩니다. 실내 분위기가 많이 활기차 보이며, 일반적인 레스토랑 대비 음식 종류별로 1만원가량 비싸지만 분위기로 대신하고 있습니다."; // 임시로 넣었습니다. 필요에 따라 수정하세요.
-//        ArrayList<String> userReviewImageUrlList = new ArrayList<>();
-//        // 이미지 URL을 ArrayList에 추가합니다. 여기서는 임의의 Drawable 리소스 ID를 사용했는데, 실제로는 이미지의 URL을 추가해야 합니다.
-//        userReviewImageUrlList.add(String.valueOf(R.drawable.ic_launcher_background));
-//        userReviewImageUrlList.add(String.valueOf(R.drawable.ic_launcher_background));
-//        userReviewImageUrlList.add(String.valueOf(R.drawable.ic_launcher_background));
-//        userReviewImageUrlList.add(String.valueOf(R.drawable.ic_launcher_background));
-//        userReviewImageUrlList.add(String.valueOf(R.drawable.ic_launcher_background));
-//        int ratingBar = 4; // 예를 들어 4를 줬습니다. 실제 필요한 값을 넣어주세요.
-//
-//        return new UserReviewItem(itemType, title, description, content, userReviewImageUrlList, ratingBar);
-//    }
 
     private void callStoreAPI(Long storeId){
         viewModel.getStoreDataLiveData().observe(getViewLifecycleOwner(), new Observer<StoreInquiryResponseDTO>() {
