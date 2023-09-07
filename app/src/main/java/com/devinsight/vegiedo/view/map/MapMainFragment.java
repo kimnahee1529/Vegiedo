@@ -21,6 +21,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -87,6 +88,7 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
         setupLocationSource(); // 위치 정보를 추적하는 객체와 현재 위치 마커를 초기화
         setupFloatingActionButton(view);
         setupRecyclerView(view);
+        callMapAPI();
         return view;
     }
 
@@ -154,6 +156,55 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
 
     }
 
+    private void callMapAPI(){
+        viewModel.getMapStoreLiveData().observe(getViewLifecycleOwner(), new Observer<List<MapStoreListData>>() {
+            @Override
+            public void onChanged(List<MapStoreListData> data) {
+                Log.d("LOGAPI callMapAPI 함수 안 ", " "+ data);
+
+                cardUiList.clear();
+
+                // 데이터 변환 후 cardUiList에 추가
+                for (MapStoreListData listData : data) {
+                    cardUiList.add(convertToCardUiData(listData));
+                }
+
+                cardUiAdapter.notifyDataSetChanged();  // 어댑터에 데이터 변경 알림
+            }
+        });
+
+        // 데이터 로드
+        viewModel.MapInquiryData();
+
+    }
+
+    private MapStoreCardUiData convertToCardUiData(MapStoreListData listData) {
+        String tag1 = "";
+        String tag2 = "";
+
+        // Check if we have enough tags for tag1 and tag2
+        if(listData.getTags() != null && !listData.getTags().isEmpty()) {
+            tag1 = listData.getTags().get(0);
+            if(listData.getTags().size() > 1) {
+                tag2 = listData.getTags().get(1);
+            }
+        }
+
+        return new MapStoreCardUiData(
+                listData.getImages(),          // storeImage
+                tag1,                          // storeTag1
+                tag2,                          // storeTag2
+                listData.getReviewCount(),     // reviewer
+                listData.getStars(),           // starRating
+                listData.getDistance(),        // distance
+                listData.getStoreName(),       // storeName
+                listData.getAddress(),         // address
+                listData.getLike(),            // like
+                listData.getLatitude(),        // latitude
+                listData.getLongitude()        // longitude
+        );
+    }
+
     // isLike가 true인 마커만 표시하는 함수
     private void displayLikedMarkers(NaverMap naverMap) {
         clearAllMarkers();  // 모든 마커를 지도에서 제거합니다.
@@ -188,12 +239,16 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady(@NonNull NaverMap naverMap) {
         this.naverMap = naverMap;
 
-        // ViewModel에서 가져온 데이터로 UI를 업데이트
-        viewModel.getMapStoreSummaryData().observe(getViewLifecycleOwner(), mapStoreUiLiveData -> {
-            cardUiList.clear(); // Clear previous data
-            cardUiList.addAll(mapStoreUiLiveData);
-            cardUiAdapter.notifyDataSetChanged();
-        });
+//         ViewModel에서 가져온 데이터로 UI를 업데이트
+//        viewModel.getMapStoreSummaryData().observe(getViewLifecycleOwner(), mapStoreUiLiveData -> {
+//            cardUiList.clear(); // Clear previous data
+//            cardUiList.addAll(mapStoreUiLiveData);
+//            cardUiAdapter.notifyDataSetChanged();
+//        });
+
+//        viewModel.getMapStoreSummaryData().observe(getViewLifecycleOwner(), mapStoreCardUiData -> {
+//
+//        });
 
         // 위치 권한 허용 여부 묻는 창
         checkAndRequestLocationPermission();
@@ -353,22 +408,6 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
             int offset = (int) (screenWidth * 0.1f);  // 예를 들어, 화면의 10%만큼의 오프셋
             layoutManager.scrollToPositionWithOffset(position, offset);
         }
-    }
-
-    private void loadStoreData() {
-        mapApiService.getStoresOnMap(Arrays.asList("tag1", "tag2"), 37.5665, 126.9780, "500", "myKeyword").enqueue(new Callback<MapInquiryResponseDTO>() {
-
-            @Override
-            public void onResponse(Call<MapInquiryResponseDTO> call, Response<MapInquiryResponseDTO> response) {
-
-            }
-
-            @Override
-            public void onFailure(Call<MapInquiryResponseDTO> call, Throwable t) {
-
-            }
-        });
-
     }
 
     // 사용자가 지도에서 위치를 클릭하면 해당 위치의 위도와 경도를 ViewModel로 전달하는 메소드
