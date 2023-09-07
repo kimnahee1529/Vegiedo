@@ -44,4 +44,15 @@ public class PostRegisterRequestDTO {
         this.content = content;
         this.images = images;
     }
+
+    public PostRegisterRequestDTO(String content, List<String> images) {
+        this.content = content;
+        this.images = images;
+    }
+
+    public PostRegisterRequestDTO(String content) {
+        this.postTitle = null;
+        this.content = content;
+        this.images = null; // 또는 new ArrayList<>() 빈 리스트로 초기화
+    }
 }
