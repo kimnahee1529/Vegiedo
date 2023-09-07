@@ -11,7 +11,7 @@ import retrofit2.http.Query;
 public interface MapApiService {
 
     //지도 가게 조회
-    @GET("/maps/stores")
+    @GET("maps/stores")
     Call<MapInquiryResponseDTO> getStoresOnMap(
             @Query("tags") List<String> tags,
             @Query("latitude") Double x,

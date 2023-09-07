@@ -25,7 +25,7 @@ import retrofit2.http.Query;
 public interface StoreApiService {
 
     //가게 리스트 조회
-    @GET("/test/stores")
+    @GET("stores")
     Call<List<StoreListData>> getStoreLists(
             @Query("tags") List<String> tags,
             @Query("latitude") float latitude,
@@ -45,7 +45,7 @@ public interface StoreApiService {
 
 
     //가게 조회
-    @GET("test/stores/{storeId}")
+    @GET("stores/{storeId}")
     Call<StoreInquiryResponseDTO> readStore(
             @Path("storeId") Long storeId
     );
