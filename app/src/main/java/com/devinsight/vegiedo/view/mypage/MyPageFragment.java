@@ -172,8 +172,6 @@ public class MyPageFragment extends Fragment {
         layoutParams.copyFrom(dialog.getWindow().getAttributes());
         layoutParams.width = 400;
         layoutParams.height = 800;
-//      layoutParams.width = WindowManager.LayoutParams.WRAP_CONTENT;  // Or use specific size in pixels
-//        layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT; // Or use specific size in pixels
         window.setAttributes(layoutParams);
 
         // Find the buttons and set click listeners on them
