@@ -195,6 +195,7 @@
                             android:orientation="horizontal">
 
                             <RelativeLayout
+                                android:id="@+id/storeDetail_map_btn"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="26dp"
@@ -300,6 +301,7 @@
                     android:layout_marginTop="5dp">
 
                     <Button
+                        android:id="@+id/StoreDetail_review_writing_btn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal|center_vertical"
