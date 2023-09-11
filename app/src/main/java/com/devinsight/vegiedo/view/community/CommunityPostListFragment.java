@@ -20,6 +20,8 @@ import android.widget.ImageView;
 import com.devinsight.vegiedo.R;
 import com.devinsight.vegiedo.data.response.PostListData;
 import com.devinsight.vegiedo.view.MainActivity;
+import com.devinsight.vegiedo.view.community.adapter.CommunityPostAdaptper;
+import com.devinsight.vegiedo.view.community.viewmodel.CommunityViewModel;
 import com.devinsight.vegiedo.view.search.ActivityViewModel;
 
 import java.util.ArrayList;

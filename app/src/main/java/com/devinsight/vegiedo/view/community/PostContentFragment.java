@@ -19,6 +19,7 @@ import com.bumptech.glide.Glide;
 import com.devinsight.vegiedo.R;
 import com.devinsight.vegiedo.data.response.ContentImage;
 import com.devinsight.vegiedo.data.response.PostInquiryResponseDTO;
+import com.devinsight.vegiedo.view.community.adapter.PostContentAdapter;
 import com.devinsight.vegiedo.view.search.ActivityViewModel;
 
 import java.util.ArrayList;

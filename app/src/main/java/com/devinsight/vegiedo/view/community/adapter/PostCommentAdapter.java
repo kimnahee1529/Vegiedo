@@ -1,10 +1,9 @@
-package com.devinsight.vegiedo.view.community;
+package com.devinsight.vegiedo.view.community.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 

@@ -1,4 +1,4 @@
-package com.devinsight.vegiedo.view.community;
+package com.devinsight.vegiedo.view.community.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;

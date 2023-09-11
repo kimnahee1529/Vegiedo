@@ -8,8 +8,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +17,8 @@ import android.widget.TextView;
 
 import com.devinsight.vegiedo.R;
 import com.devinsight.vegiedo.data.response.CommentListData;
+import com.devinsight.vegiedo.view.community.adapter.PostCommentAdapter;
+import com.devinsight.vegiedo.view.community.viewmodel.PostCommentViewModel;
 import com.devinsight.vegiedo.view.search.ActivityViewModel;
 
 import java.util.ArrayList;
@@ -36,6 +36,7 @@ public class PostCommentFragment extends Fragment implements PostCommentAdapter.
     List<CommentListData> commentList;
 
     ActivityViewModel activityViewModel;
+    PostCommentViewModel commentViewModel;
 
     Long postId;
 
@@ -57,6 +58,15 @@ public class PostCommentFragment extends Fragment implements PostCommentAdapter.
         recyclerView.setLayoutManager(linearLayoutManager);
 
         activityViewModel = new ViewModelProvider(requireActivity()).get(ActivityViewModel.class);
+        commentViewModel = new ViewModelProvider(this).get(PostCommentViewModel.class);
+
+        activityViewModel.getToken().observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String token) {
+                commentViewModel.getToken(token);
+            }
+        });
+
         activityViewModel.getPostCommentLiveData().observe(getViewLifecycleOwner(), new Observer<List<CommentListData>>() {
             @Override
             public void onChanged(List<CommentListData> commentList) {
@@ -70,26 +80,21 @@ public class PostCommentFragment extends Fragment implements PostCommentAdapter.
         activityViewModel.getPostIdLiveData().observe(getViewLifecycleOwner(), new Observer<Long>() {
             @Override
             public void onChanged(Long postId) {
-
+                commentViewModel.getPostId(postId);
             }
         });
 
-        et_comment_input.addTextChangedListener(new TextWatcher() {
+        btn_register.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
+            public void onClick(View view) {
+                String comment =  et_comment_input.getText().toString();
+                commentViewModel.getCommentContent(comment);
             }
         });
+
+
+
+
 
 
         return view;

@@ -1,4 +1,4 @@
-package com.devinsight.vegiedo.view.community;
+package com.devinsight.vegiedo.view.community.viewmodel;
 
 import android.util.Log;
 
