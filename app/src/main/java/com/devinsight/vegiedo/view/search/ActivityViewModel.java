@@ -9,15 +9,19 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.devinsight.vegiedo.data.request.ReviewModifyrRequestDTO;
 import com.devinsight.vegiedo.data.response.MapInquiryResponseDTO;
 import com.devinsight.vegiedo.data.response.MapStoreListData;
+import com.devinsight.vegiedo.data.response.ReviewListInquiryResponseDTO;
 import com.devinsight.vegiedo.data.response.StoreInquiryResponseDTO;
 import com.devinsight.vegiedo.data.response.StoreListData;
 import com.devinsight.vegiedo.data.ui.login.TagStatus;
 import com.devinsight.vegiedo.data.ui.map.MapStoreCardUiData;
 import com.devinsight.vegiedo.data.ui.search.SearchStorSummaryeUiData;
 import com.devinsight.vegiedo.repository.pref.AuthPrefRepository;
+import com.devinsight.vegiedo.service.api.CommentApiService;
 import com.devinsight.vegiedo.service.api.MapApiService;
+import com.devinsight.vegiedo.service.api.ReviewApiService;
 import com.devinsight.vegiedo.service.api.StoreApiService;
 import com.devinsight.vegiedo.utill.RetrofitClient;
 
@@ -56,17 +60,19 @@ public class ActivityViewModel extends ViewModel {
 
     /* api 를 통해 서버로 부터 받은 가게 리스트 */
     private List<StoreListData> allStoreList;
-    /*  가게 API 호출 */
-//    StoreApiService storeApiService = getStoreApiService();
 
-    //가게 조회 API 호출에서 쓸 라이브 데이터
+    //가게-가게 조회 API 호출에서 쓸 라이브 데이터
     private MutableLiveData<StoreInquiryResponseDTO> storeDataLiveData = new MutableLiveData<>();
 
 
-    //지도 가게 조회 API 호출에서 쓸 라이브 데이터
+    //지도-가게 조회 API 호출에서 쓸 라이브 데이터
     private MutableLiveData<List<MapStoreListData>> mapStoreLiveData = new MutableLiveData<>();
     // 지도의 카드뷰에 보여줄 가게 리스트 라이브 데이터
     private MutableLiveData<List<MapStoreCardUiData>> mapStoreUiLiveData = new MutableLiveData<>();
+
+
+    //리뷰-리뷰 조회 API 호출에서 쓸 라이브 데이터
+    private MutableLiveData<ReviewListInquiryResponseDTO> reviewLiveData = new MutableLiveData<>();
 
 
     /* Query 요청 및 필터에 사용 하기 위한 전역 변수*/
@@ -85,9 +91,14 @@ public class ActivityViewModel extends ViewModel {
     private String currentInput;
     private String token;
 
+    // 선택한 가게를 알기 위한 storeId(StoreReviewFragment에서 본인이 쓴 리뷰 수정, 삭제하기 위함)
+    private MutableLiveData<Long> storeId = new MutableLiveData<>();
+
     /* API 호출을 위한 레트로핏 초기화 */
     StoreApiService storeApiService = RetrofitClient.getStoreApiService();
     MapApiService mapApiService = RetrofitClient.getMapApiService();
+    ReviewApiService reviewApiService = RetrofitClient.getReviewApiService();
+    CommentApiService commentApiService = RetrofitClient.getCommentApiService();
 
 
 
@@ -223,66 +234,6 @@ public class ActivityViewModel extends ViewModel {
 
         storeListSummaryLiveData.setValue(summaryList);
     }
-
-//    //mapDummyData를 MapMainFragment의 카드뷰에 보여줄 함수
-//    public MutableLiveData<List<MapStoreCardUiData>> getMapStoreSummaryData() {
-//
-//        List<MapStoreListData> originData = mapDummyData();
-//        List<MapStoreCardUiData> mapStoreCardUiDataList = new ArrayList<>();
-//
-//        for (MapStoreListData data : originData) {
-//            MapStoreCardUiData mapStoreCardUiData = new MapStoreCardUiData();
-//            mapStoreCardUiData.setData(data.getImages(), data.getTags().get(0), data.getTags().get(1), data.getReviewCount(), data.getStars(),
-//                    data.getDistance(), data.getStoreName(), data.getAddress(), data.getLike(), data.getLatitude(), data.getLongitude());
-//            mapStoreCardUiDataList.add(mapStoreCardUiData);
-//        }
-//        mapStoreUiLiveData.setValue(mapStoreCardUiDataList);
-//
-//        return mapStoreUiLiveData;
-//    }
-
-    //mapDummyData를 MapMainFragment의 카드뷰에 보여줄 함수
-//    public MutableLiveData<List<MapStoreCardUiData>> getMapStoreSummaryData() {
-//
-//        List<MapStoreListData> originData = MapInquiryData();
-//        Log.d("LOGAPIgetMapStoreSummaryData시작", " "+ originData);
-//        List<MapStoreCardUiData> mapStoreCardUiDataList = new ArrayList<>();
-//
-//        for (MapStoreListData data : originData) {
-//            MapStoreCardUiData mapStoreCardUiData = new MapStoreCardUiData();
-//            mapStoreCardUiData.setData(data.getImages(), data.getTags().get(0), data.getTags().get(1), data.getReviewCount(), data.getStars(),
-//                    data.getDistance(), data.getStoreName(), data.getAddress(), data.getLike(), data.getLatitude(), data.getLongitude());
-//            mapStoreCardUiDataList.add(mapStoreCardUiData);
-//            Log.d("LOGAPIgetMapStoreSummaryData", " "+ mapStoreCardUiData);
-//        }
-//        mapStoreUiLiveData.setValue(mapStoreCardUiDataList);
-//
-//        return mapStoreUiLiveData;
-//    }
-
-//    public List<MapStoreListData> mapDummyData() {
-//
-//        List<MapStoreListData> mapStoreList = new ArrayList<>();
-//
-//        mapStoreList.add(new MapStoreListData(1l, "향림원", "서울특별시 강남구 삼성동 123-45", 37.500731f, 127.039338f, 5, Arrays.asList("#비건", "#락토"), 5, true, true, 40, ""));
-//        mapStoreList.add(new MapStoreListData(2l, "서울테이블", "부산광역시 해운대구 우동 56-78", 35.1745200144f, 129.12693731157f, 5, Arrays.asList("#프루테리언", "#비건"), 4, false, true, 45, ""));
-//        mapStoreList.add(new MapStoreListData(3l, "바다의 선물", "대구광역시 중구 동인동 90-12", 37.499176f, 127.041257f, 5, Arrays.asList("#락토", "#오보"), 5, true, true, 24, ""));
-//        mapStoreList.add(new MapStoreListData(4l, "마루키친", "서울특별시 강남구 논현동 123-45", 37.492988f, 127.035923f, 5, Arrays.asList("#락토 오보", "#페스코"), 1, true, true, 5, ""));
-//        mapStoreList.add(new MapStoreListData(5l, "송림정", "서울특별시 중구 을지로 56-78", 37.503657f, 127.036592f, 5, Arrays.asList("#오보", "#락토 오보"), 3, true, true, 8, ""));
-//        mapStoreList.add(new MapStoreListData(6l, "파스텔레스토", "서울특별시 용산구 한강로 90-12", 37.492142f, 127.045137f, 5, Arrays.asList("#페스코", "#폴로"), 4, false, true, 2, ""));
-//        mapStoreList.add(new MapStoreListData(7l, "그릴 101", "서울특별시 마포구 서교동 78-90", 37.498235f, 127.032479f, 5, Arrays.asList("#폴로", "#키토"), 2, true, true, 15, ""));
-//        mapStoreList.add(new MapStoreListData(8l, "하늘정원", "대전광역시 유성구 신성동 12-34", 37.502658f, 127.040892f, 5, Arrays.asList("#키토", "#글루텐프리"), 3, true, true, 45, ""));
-//        mapStoreList.add(new MapStoreListData(9l, "산바다물회", "울산광역시 남구 신정동 45-67", 37.496312f, 127.043285f, 5, Arrays.asList("#락토", "#프루테리언"), 3, false, true, 58, ""));
-//        mapStoreList.add(new MapStoreListData(10l, "리베로 스테이크하우스", "서울특별시 동작구 사당동 45-67", 37.504978f, 127.037501f, 5, Arrays.asList("#오보", "#글루텐프리"), 4, true, true, 45, ""));
-//
-//        return mapStoreList;
-//    }
-
-//    public MutableLiveData<List<MapStoreListData>> getMapStoreLiveData() {
-//        List<MapStoreListData> mapStoreList = MapInquiryData();
-//        mapStoreLiveData.setValue(mapStoreList);
-//        return mapStoreLiveData;
-//    }
 
     public MutableLiveData<List<MapStoreListData>> getMapStoreLiveData() {
         return mapStoreLiveData;
@@ -441,25 +392,26 @@ public class ActivityViewModel extends ViewModel {
     }
 
 
-    //StoreDetailPageFragment서 쓸 가게 조회 API
+    //가게 조회 API(StoreDetailPageFragment서 사용)
     public void StoreInquiryData(Long storeId) {
+        //가게 조회
         storeApiService.readStore(storeId).enqueue(new Callback<StoreInquiryResponseDTO>() {
             @Override
             public void onResponse(Call<StoreInquiryResponseDTO> call, Response<StoreInquiryResponseDTO> response) {
                 if (response.isSuccessful()) {
                     storeDataLiveData.setValue(response.body());
-                    Log.d("LOGAPI", "API 호출");
+                    Log.d("LOGAPI", "StoreAPI 호출");
                     // ... any other logic
                 } else {
                     // handle error...
-                    Log.d("LOGAPI", "API 호출실패");
+                    Log.d("LOGAPI", "StoreAPI 호출실패");
                 }
             }
 
             @Override
             public void onFailure(Call<StoreInquiryResponseDTO> call, Throwable t) {
                 // handle failure...
-                Log.d("LOGAPI", "API 호출실패2");
+                Log.d("LOGAPI", "StoreAPI 호출실패2");
             }
         });
     }
@@ -470,7 +422,7 @@ public class ActivityViewModel extends ViewModel {
         return storeDataLiveData;
     }
 
-    //StoreDetailPageFragment서 쓸 가게 조회 API
+    //가게 조회 API(MapMainFragment에서 사용)
     public void MapInquiryData() {
         float latitude = 41.40338f;
         float longitude = 41.40338f;
@@ -497,6 +449,84 @@ public class ActivityViewModel extends ViewModel {
         });
     }
 
+    //리뷰 조회 API(StoreDetailPageFragment서 사용)
+    public void ReviewInquiryData(Long storeId, int count, int cursor, boolean blogReview) {
+        //리뷰 조회
+        Call<ReviewListInquiryResponseDTO> reviewListInquiryResponseDTOCall = reviewApiService.getReviews(storeId, count, cursor, blogReview);
+        reviewListInquiryResponseDTOCall.enqueue(new Callback<ReviewListInquiryResponseDTO>() {
+            @Override
+            public void onResponse(Call<ReviewListInquiryResponseDTO> call, Response<ReviewListInquiryResponseDTO> response) {
+                if (response.isSuccessful()) {
+                    ReviewListInquiryResponseDTO responseData = response.body();
+                    reviewLiveData.setValue(responseData);
+                } else {
+                    Log.d("LOGAPI", "ReviewAPI 호출실패2");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ReviewListInquiryResponseDTO> call, Throwable t) {
+                Log.e("LOGAPI", "ReviewAPI 호출실패3 " + t.getMessage());
+            }
+        });
+    }
+
+    //리뷰 수정 API(WritingReviewFragment에서 사용)
+    public void ReviewModifyData(Long storeId, Long reviewId, ReviewModifyrRequestDTO requestDTO) {
+        //리뷰 수정
+        Call<Void> reviewModifyrRequestDTOCall = reviewApiService.modifyReview(storeId, reviewId, requestDTO);
+        reviewModifyrRequestDTOCall.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    Void responseData = response.body();
+                    Log.d("LOGAPIReviewModifyData", responseData.toString());
+                } else{
+                    Log.d("LOGAPI", "ReviewModifyData 호출실패1 "+response);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("LOGAPI", "ReviewModifyData 호출실패2");
+            }
+        });
+    }
+
+    //리뷰 삭제 API(WritingReviewFragment에서 사용)
+    public void ReviewDeleteData(Long storeId, Long reviewId) {
+        //리뷰 수정
+        Call<Void> reviewDeleteRequestDTOCall = reviewApiService.deleteReview(storeId, reviewId);
+        reviewDeleteRequestDTOCall.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    Void responseData = response.body();
+//                    Log.d("LOGAPIReviewDeleteData", responseData.toString());
+                    Log.d("LOGAPI", "ReviewDeleteData 호출성공 " + response);
+                } else{
+                    Log.d("LOGAPI", "ReviewDeleteData 호출실패1 " + response);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("LOGAPI", "ReviewDeleteData 호출실패2"+ t.getMessage());
+            }
+        });
+    }
+
+
+    //리뷰 조회
+    public MutableLiveData<ReviewListInquiryResponseDTO> getReviewLiveData() {
+        return reviewLiveData;
+    }
+
+    public void setReviewLiveData(MutableLiveData<ReviewListInquiryResponseDTO> reviewLiveData) {
+        this.reviewLiveData = reviewLiveData;
+    }
+    //리뷰 조회
+
     /* StoreMainList에 보여질 필터링 된 가게 리스트*/
     public LiveData<List<StoreListData>> getFilteredStoreListLiveData() {
         return storeFilteredLiveData;
@@ -522,6 +552,14 @@ public class ActivityViewModel extends ViewModel {
         return tokenLiveData;
     }
 
+    //선택한 가게를 알기 위한 storeId
+    public void setStoreId(Long id) {
+        storeId.setValue(id);
+    }
+
+    public LiveData<Long> getStoreId() {
+        return storeId;
+    }
 
 }
 

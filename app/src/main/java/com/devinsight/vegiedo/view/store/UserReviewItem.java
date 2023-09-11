@@ -1,26 +1,65 @@
 package com.devinsight.vegiedo.view.store;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class UserReviewItem {
     public enum ItemType {
         STORE_DETAIL_REVIEW_PAGE,
-        STORE_DETAIL_BLOG_REVIEW_PAGE
+        STORE_DETAIL_BLOG_REVIEW_PAGE,
+        REPORT_COMPELETE,
+        AD_TYPE,
+        REVIEW_RC,
+        AD_BANNER
     }
     private ItemType itemType;
-    private String title;
-    private String description;
+    private String userName;
     private String content;
+    private Integer ratingBar;
+    private Long storeId;
+    private Long reviewId;
     private ArrayList<String> userReviewImageUrlList;
 
-    public UserReviewItem(ItemType itemType, String title, String description, String content, ArrayList<String> userReviewImageUrlList, int ratingBar) {
+    //별점 있는 리뷰
+    public UserReviewItem(Long reviewId, ItemType itemType, String userName, int ratingBar, String content, ArrayList<String> userReviewImageUrlList) {
+        this.reviewId = reviewId;
         this.itemType = itemType;
-        this.title = title;
-        this.description = description;
+        this.userName = userName;
+        this.ratingBar = ratingBar;
         this.content = content;
         this.userReviewImageUrlList = userReviewImageUrlList;
-        this.ratingBar = ratingBar;
     }
+
+    //별점 없는 블로그 리뷰
+    public UserReviewItem(Long reviewId, ItemType itemType, String userName, String content, ArrayList<String> userReviewImageUrlList) {
+        this.reviewId = reviewId;
+        this.itemType = itemType;
+        this.userName = userName;
+        this.content = content;
+        this.userReviewImageUrlList = userReviewImageUrlList;
+    }
+
+    // For AdMob items
+    public UserReviewItem(ItemType itemType) {
+        this.itemType = itemType;
+    }
+
+    public static List<UserReviewItem> configureDataPattern(List<UserReviewItem> originalItems) {
+        List<UserReviewItem> newPatternedItems = new ArrayList<>();
+
+        for(int i = 0; i < originalItems.size(); i+=3) {
+            // Add 3 review items
+            for(int j = 0; j < 3 && (i+j) < originalItems.size(); j++) {
+                newPatternedItems.add(originalItems.get(i+j));
+            }
+
+            // Add an AdMob item
+            newPatternedItems.add(new UserReviewItem(ItemType.AD_BANNER));
+        }
+
+        return newPatternedItems;
+    }
+
     public ItemType getItemType() {
         return itemType;
     }
@@ -28,21 +67,19 @@ public class UserReviewItem {
     public void setItemType(ItemType itemType) {
         this.itemType = itemType;
     }
+    public Long getReviewId() {
+        return reviewId;
+    }
 
+    public void setReviewId(Long reviewId) {
+        this.reviewId = reviewId;
+    }
     public String getTitle() {
-        return title;
+        return userName;
     }
 
     public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
+        this.userName = title;
     }
 
     public String getContent() {
@@ -68,8 +105,6 @@ public class UserReviewItem {
     public void setRatingBar(int ratingBar) {
         this.ratingBar = ratingBar;
     }
-
-    private int ratingBar;
 
 
 }

@@ -8,7 +8,8 @@ import java.util.List;
 // ReviewInquiryResponseDTO (리뷰 조회 응답 데이터)
 public class ReviewListInquiryResponseDTO {
     @Expose
-    @SerializedName("storeId") private List<ReviewListData> reviews;
+    @SerializedName("reviews")
+    private List<ReviewListData> reviews;
 
     public List<ReviewListData> getReviews() {
         return reviews;

@@ -31,6 +31,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.devinsight.vegiedo.R;
+import com.devinsight.vegiedo.data.response.MapStoreListData;
+import com.devinsight.vegiedo.data.response.ReviewListInquiryResponseDTO;
 import com.devinsight.vegiedo.data.response.StoreInquiryResponseDTO;
 import com.devinsight.vegiedo.service.api.StoreApiService;
 import com.devinsight.vegiedo.view.search.ActivityViewModel;
@@ -83,12 +85,16 @@ public class StoreDetailPageFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_store_detail_page, container, false);
+        View view = inflater.inflate(R.layout.fragment_store_detail_page_seemore, container, false);
 
         initializeComponents(view);
         // 기본 프래그먼트(리뷰 화면) 로드
         loadFragment(new StoreReviewFragment());
-        callStoreAPI(5L);
+
+        //TODO 이 전페이지에서 받아온 storeId를 넣어줘야 함
+        Long storeId = viewModel.getStoreId().getValue();
+//        callStoreAPI(viewModel.getStoreId().getValue());
+        callStoreAPI(1L);
 
         return view;
     }
@@ -172,6 +178,7 @@ public class StoreDetailPageFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 WritingReviewFragment fragment = new WritingReviewFragment();
+//                WritingReviewFragment fragment = WritingReviewFragment.newInstance(false, null);
 
                 FragmentManager fragmentManager = ((FragmentActivity) view.getContext()).getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -190,6 +197,7 @@ public class StoreDetailPageFragment extends Fragment {
         transaction.addToBackStack(null);
         transaction.commit();
     }
+
 
     private void onStampBtnClicked() {
         Toast.makeText(getActivity(), "스탬프 버튼이 눌렸습니다.", Toast.LENGTH_SHORT).show();
@@ -233,6 +241,7 @@ public class StoreDetailPageFragment extends Fragment {
         }
     }
 
+    //가게 조회 API
     private void callStoreAPI(Long storeId){
         viewModel.getStoreDataLiveData().observe(getViewLifecycleOwner(), new Observer<StoreInquiryResponseDTO>() {
             @Override

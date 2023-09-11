@@ -18,26 +18,52 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.devinsight.vegiedo.R;
+import com.devinsight.vegiedo.view.search.ActivityViewModel;
+import com.google.android.gms.ads.AdView;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class UserReviewItemAdapter extends RecyclerView.Adapter<UserReviewItemAdapter.BaseViewHolder> {
+    private List<UserReviewItem> userReviewItemList;
+    private static ActivityViewModel viewModel;
+    private static Long currentStoreId;
 
     private enum DialogType {
         DELETE,
         REPORT_TYPE,
-        REPORT_COMPELETE
     }
-    private List<UserReviewItem> userReviewItemList;
 
     public UserReviewItemAdapter(List<UserReviewItem> userReviewItemList) {
-        this.userReviewItemList = userReviewItemList;
+        if (userReviewItemList != null) {
+            Log.d("LOGAPIUserReviewItemAdapter", userReviewItemList.toString());
+            this.userReviewItemList = userReviewItemList;
+        } else {
+            this.userReviewItemList = new ArrayList<>();
+        }
     }
+    public UserReviewItemAdapter(List<UserReviewItem> items, ActivityViewModel viewModel) {
+        this.userReviewItemList = items;
+        this.viewModel = viewModel;
+        this.currentStoreId = viewModel.getStoreId().getValue();
+    }
+
 
     @Override
     public int getItemViewType(int position) {
+        Log.d("LOGAPIUsergetItemViewType", String.valueOf(userReviewItemList.get(position).getItemType().ordinal()));
         return userReviewItemList.get(position).getItemType().ordinal();
+    }
+
+    public void setReviewItems(List<UserReviewItem> items) {
+        this.userReviewItemList = items;
+        for(int i=0; i<getItemCount(); i++){
+            Log.d("LOGAPISet", items.get(i).getReviewId().toString());
+        }
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -45,13 +71,27 @@ public class UserReviewItemAdapter extends RecyclerView.Adapter<UserReviewItemAd
     public BaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view;
+        Log.d("LOGAPIviewType", String.valueOf(viewType));
         if (viewType == UserReviewItem.ItemType.STORE_DETAIL_REVIEW_PAGE.ordinal()) {
             view = inflater.inflate(R.layout.store_detail_review_item, parent, false);
             return new ViewHolderReviewPage(view);
         } else if (viewType == UserReviewItem.ItemType.STORE_DETAIL_BLOG_REVIEW_PAGE.ordinal()) {
             view = inflater.inflate(R.layout.store_detail_blog_review_item, parent, false);
             return new ViewHolderBlogReviewPage(view);
-        } else {
+        } else if (viewType == UserReviewItem.ItemType.REPORT_COMPELETE.ordinal()) {
+            view = inflater.inflate(R.layout.select_reporting_type_dialog, parent, false);
+            return new ViewHolderBlogReviewPage(view);
+        } else if (viewType == UserReviewItem.ItemType.AD_TYPE.ordinal()) {
+            view = inflater.inflate(R.layout.fragment_store_review, parent, false);
+            return new ViewHolderAdview(view);
+        } else if (viewType == UserReviewItem.ItemType.REVIEW_RC.ordinal()) {
+            view = inflater.inflate(R.layout.store_detail_review_item, parent, false);
+            return new ViewHolderReviewRC(view, userReviewItemList.get(viewType));
+        } else if (viewType == UserReviewItem.ItemType.AD_BANNER.ordinal()) {
+            view = inflater.inflate(R.layout.ad_banner_item, parent, false);
+            return new ViewHolderAdBanner(view);
+        }
+        else {
             throw new IllegalArgumentException("Unknown view type");
         }
     }
@@ -61,48 +101,69 @@ public class UserReviewItemAdapter extends RecyclerView.Adapter<UserReviewItemAd
         UserReviewItem userReviewItem = userReviewItemList.get(position);
 
         if (holder instanceof ViewHolderReviewPage) {
-            ViewHolderReviewPage viewHolder = (ViewHolderReviewPage) holder;
-            viewHolder.title.setText(userReviewItem.getTitle());
-            viewHolder.content.setText(userReviewItem.getContent());
-            viewHolder.imageView1.setImageResource(Integer.parseInt(userReviewItem.getUserReviewImageUrlList().get(0)));
-            viewHolder.imageView2.setImageResource(Integer.parseInt(userReviewItem.getUserReviewImageUrlList().get(1)));
-            viewHolder.imageView3.setImageResource(Integer.parseInt(userReviewItem.getUserReviewImageUrlList().get(2)));
-            viewHolder.imageView4.setImageResource(Integer.parseInt(userReviewItem.getUserReviewImageUrlList().get(3)));
-            viewHolder.imageView5.setImageResource(Integer.parseInt(userReviewItem.getUserReviewImageUrlList().get(4)));
-            viewHolder.ratingBar.setRating(userReviewItem.getRatingBar());
-            viewHolder.storeReview_modify_text.setOnClickListener(v -> {
-                WritingReviewFragment fragment = new WritingReviewFragment();
-                FragmentManager fragmentManager = ((FragmentActivity) viewHolder.itemView.getContext()).getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-                // 액티비티의 루트 뷰를 교체(예: android.R.id.content)
-                fragmentTransaction.replace(android.R.id.content, fragment);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
-            });
-            viewHolder.storeReview_delete_text.setOnClickListener(v -> {
-                Log.d("LOG삭제", "삭제 버튼 눌림");
-                showDialog(DialogType.DELETE, holder.itemView.getContext());
-            });
-            viewHolder.storeReview_report_btn.setOnClickListener(v -> {
-                Log.d("LOG신고", "신고 버튼 눌림");
-                showDialog(DialogType.REPORT_TYPE, holder.itemView.getContext());
-            });
+//            ViewHolderReviewPage viewHolder = (ViewHolderReviewPage) holder;
+//            viewHolder.title.setText(userReviewItem.getTitle());
+//            viewHolder.content.setText(userReviewItem.getContent());
+//
+//            Glide.with(holder.itemView.getContext()).load(userReviewItem.getUserReviewImageUrlList().get(0)).into(viewHolder.imageView1);
+//            Glide.with(holder.itemView.getContext()).load(userReviewItem.getUserReviewImageUrlList().get(1)).into(viewHolder.imageView2);
+//            Glide.with(holder.itemView.getContext()).load(userReviewItem.getUserReviewImageUrlList().get(2)).into(viewHolder.imageView3);
+//            Glide.with(holder.itemView.getContext()).load(userReviewItem.getUserReviewImageUrlList().get(3)).into(viewHolder.imageView4);
+//
+//            viewHolder.ratingBar.setRating(userReviewItem.getRatingBar());
+//
+//            viewHolder.storeReview_modify_text.setOnClickListener(v -> {
+//                WritingReviewFragment fragment = new WritingReviewFragment();
+//                FragmentManager fragmentManager = ((FragmentActivity) viewHolder.itemView.getContext()).getSupportFragmentManager();
+//                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//
+//                // 액티비티의 루트 뷰를 교체(예: android.R.id.content)
+//                fragmentTransaction.replace(android.R.id.content, fragment);
+//                fragmentTransaction.addToBackStack(null);
+//                fragmentTransaction.commit();
+//            });
+//            viewHolder.storeReview_delete_text.setOnClickListener(v -> {
+//                Log.d("LOG삭제", "삭제 버튼 눌림");
+//                showDialog(DialogType.DELETE, holder.itemView.getContext(), stor);
+//            });
+//            viewHolder.storeReview_report_btn.setOnClickListener(v -> {
+//                Log.d("LOG신고", "신고 버튼 눌림");
+//                showDialog(DialogType.REPORT_TYPE, holder.itemView.getContext());
+//            });
+//
 
         } else if (holder instanceof ViewHolderBlogReviewPage) {
             ViewHolderBlogReviewPage viewHolder = (ViewHolderBlogReviewPage) holder;
             viewHolder.title.setText(userReviewItem.getTitle());
             viewHolder.content.setText(userReviewItem.getContent());
-            viewHolder.imageView1.setImageResource(Integer.parseInt(userReviewItem.getUserReviewImageUrlList().get(0)));
+            Glide.with(holder.itemView.getContext()).load(userReviewItem.getUserReviewImageUrlList().get(0)).into(viewHolder.imageView1);
+
+        } else if (holder instanceof ViewHolderAdview) {
+            ViewHolderAdview viewHolder = (ViewHolderAdview) holder;
+            viewHolder.recyclerView.setAdapter(UserReviewItemAdapter.this);
+            com.google.android.gms.ads.AdRequest adRequest = new com.google.android.gms.ads.AdRequest.Builder().build();
+            viewHolder.adView.loadAd(adRequest);
+        } else if (holder instanceof ViewHolderReviewRC) {
+            ViewHolderReviewRC viewHolder = (ViewHolderReviewRC) holder;
+            UserReviewItem currentItem = userReviewItemList.get(position);
+            viewHolder.bindData(currentItem);
         }
-
-
+        else if (holder instanceof ViewHolderAdBanner) {
+            ViewHolderAdBanner viewHolder = (ViewHolderAdBanner) holder;
+            com.google.android.gms.ads.AdRequest adRequest = new com.google.android.gms.ads.AdRequest.Builder().build();
+            viewHolder.adBannerView.loadAd(adRequest);
+            // 광고에 대한 바인딩 로직 (예: AdMob 코드)을 여기에 추가합니다.
+        }
 
     }
 
     @Override
     public int getItemCount() {
-        return userReviewItemList.size();
+        if (userReviewItemList != null){
+//            Log.d("LOGAPIgetItemCount", String.valueOf(userReviewItemList.size())); //20으로 잘 나옴
+            return userReviewItemList.size();
+        }
+        return 0;
     }
 
     abstract static class BaseViewHolder extends RecyclerView.ViewHolder {
@@ -138,7 +199,10 @@ public class UserReviewItemAdapter extends RecyclerView.Adapter<UserReviewItemAd
             storeReview_modify_text = itemView.findViewById(R.id.storeReview_modify_text);
             storeReview_delete_text = itemView.findViewById(R.id.storeReview_delete_text);
             storeReview_report_btn = itemView.findViewById(R.id.storeReview_report_btn);
+
+
         }
+
 
     }
 
@@ -155,7 +219,128 @@ public class UserReviewItemAdapter extends RecyclerView.Adapter<UserReviewItemAd
         }
     }
 
-    private void showDialog(DialogType type, Context context) {
+    static class ViewHolderAdview extends BaseViewHolder {
+        RecyclerView recyclerView;
+        AdView adView;
+
+        ViewHolderAdview(@NonNull View itemView) {
+            super(itemView);
+            recyclerView = itemView.findViewById(R.id.store_review_recycler_view);
+//            adView = itemView.findViewById(R.id.StoreDetial_adview);
+        }
+    }
+
+    static class ViewHolderReviewRC extends BaseViewHolder {
+        TextView title;
+        TextView content;
+        ImageView imageView1;
+        ImageView imageView2;
+        ImageView imageView3;
+        ImageView imageView4;
+        ImageView imageView5;
+        RatingBar ratingBar;
+        TextView storeReview_modify_text;
+        TextView storeReview_delete_text;
+        ImageView storeReview_report_btn;
+        UserReviewItem userReviewItem;
+        Long reviewId;
+        Long storeId;
+
+        ViewHolderReviewRC(@NonNull View itemView, UserReviewItem item) {
+            super(itemView);
+            this.userReviewItem = item;
+
+            title = itemView.findViewById(R.id.storeReview_title);
+            content = itemView.findViewById(R.id.storeReview_content);
+            imageView1 = itemView.findViewById(R.id.storeReview_image1);
+            imageView2 = itemView.findViewById(R.id.storeReview_image2);
+            imageView3 = itemView.findViewById(R.id.storeReview_image3);
+            imageView4 = itemView.findViewById(R.id.storeReview_image4);
+            imageView5 = itemView.findViewById(R.id.storeReview_image5);
+            ratingBar = itemView.findViewById(R.id.storeReview_ratingbar);
+            storeReview_modify_text = itemView.findViewById(R.id.storeReview_modify_text);
+            storeReview_delete_text = itemView.findViewById(R.id.storeReview_delete_text);
+            storeReview_report_btn = itemView.findViewById(R.id.storeReview_report_btn);
+
+            // 아이템 클릭 리스너 설정
+            itemView.setOnClickListener(v -> {
+//                Toast.makeText(itemView.getContext(), "클릭된 아이템 ReviewId: " + userReviewItem.getReviewId(), Toast.LENGTH_SHORT).show();
+                Log.d("LOGAPIReviewId", String.valueOf(reviewId));
+                Log.d("LOGAPIcurrentStoreId", String.valueOf(currentStoreId));
+
+            });
+
+            // 이 세 요소에서 부모 뷰 (itemView)의 클릭 이벤트가 발생하는 것은 막음
+            storeReview_modify_text.setClickable(true);
+            storeReview_delete_text.setClickable(true);
+            storeReview_report_btn.setClickable(true);
+        }
+        void bindData(UserReviewItem item) {
+            this.userReviewItem = item;
+            reviewId = userReviewItem.getReviewId();
+            currentStoreId = viewModel.getStoreId().getValue();
+
+            Log.d("LOGAPI아이디!!!!!", "" + currentStoreId + " " + reviewId);
+
+            title.setText(userReviewItem.getTitle());
+            content.setText(userReviewItem.getContent());
+
+            List<String> imageUrls = userReviewItem.getUserReviewImageUrlList();
+            if (imageUrls.size() > 0) Glide.with(itemView.getContext()).load(imageUrls.get(0)).into(imageView1);
+            if (imageUrls.size() > 1) Glide.with(itemView.getContext()).load(imageUrls.get(1)).into(imageView2);
+            if (imageUrls.size() > 2) Glide.with(itemView.getContext()).load(imageUrls.get(2)).into(imageView3);
+            if (imageUrls.size() > 3) Glide.with(itemView.getContext()).load(imageUrls.get(3)).into(imageView4);
+            if (imageUrls.size() > 4) Glide.with(itemView.getContext()).load(imageUrls.get(4)).into(imageView5);
+
+            ratingBar.setRating(userReviewItem.getRatingBar());
+
+            storeReview_modify_text.setOnClickListener(v -> {
+                WritingReviewFragment fragment = WritingReviewFragment.newInstance(
+                        currentStoreId,
+                        userReviewItem.getReviewId(),
+                        userReviewItem.getContent(),
+                        userReviewItem.getUserReviewImageUrlList(),
+                        userReviewItem.getRatingBar()
+                );
+//                Log.d("LOGAPI수정할 때 넘어가는 데이터 !!!!", String.valueOf(fragment));
+                FragmentManager fragmentManager = ((FragmentActivity) itemView.getContext()).getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(android.R.id.content, fragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            });
+
+            storeReview_delete_text.setOnClickListener(v -> {
+                Log.d("LOG삭제", "삭제 버튼 눌림");
+                showDialog(DialogType.DELETE, itemView.getContext(), currentStoreId, reviewId);
+            });
+            storeReview_report_btn.setOnClickListener(v -> {
+                Log.d("LOG신고", "신고 버튼 눌림");
+                showDialog(DialogType.REPORT_TYPE, itemView.getContext(), currentStoreId, reviewId);
+            });
+
+            if(Objects.equals(reviewId, currentStoreId)){
+                storeReview_modify_text.setVisibility(View.VISIBLE);
+                storeReview_delete_text.setVisibility(View.VISIBLE);
+                storeReview_report_btn.setVisibility(View.INVISIBLE);
+            }else{
+                storeReview_modify_text.setVisibility(View.INVISIBLE);
+                storeReview_delete_text.setVisibility(View.INVISIBLE);
+                storeReview_report_btn.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+    static class ViewHolderAdBanner extends BaseViewHolder {
+        AdView adBannerView;
+
+        ViewHolderAdBanner(@NonNull View itemView) {
+            super(itemView);
+            adBannerView = itemView.findViewById(R.id.ad_banner_item_view);
+        }
+    }
+
+    private static void showDialog(DialogType type, Context context, Long storeId, Long reviewId) {
+        Log.d("showDialog", "초입");
         int layoutId;
         if(type == DialogType.DELETE){
             layoutId = R.layout.delete_review_dialog;
@@ -176,7 +361,9 @@ public class UserReviewItemAdapter extends RecyclerView.Adapter<UserReviewItemAd
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(context, "예 버튼입니다.", Toast.LENGTH_SHORT).show();
-                    Log.d("LOGf리뷰삭제", "예");
+                    Log.d("LOG리뷰삭제", "예 "+ storeId);
+                    //서버로 삭제 요청 보냄
+                    viewModel.ReviewDeleteData(storeId, reviewId);
                     dialog.dismiss();
                 }
             });
@@ -185,7 +372,7 @@ public class UserReviewItemAdapter extends RecyclerView.Adapter<UserReviewItemAd
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(context, "아니오 버튼입니다.", Toast.LENGTH_SHORT).show();
-                    Log.d("LOGf리뷰삭제", "아니오");
+                    Log.d("LOG리뷰삭제", "아니오");
                     dialog.dismiss();
                 }
             });
@@ -210,5 +397,7 @@ public class UserReviewItemAdapter extends RecyclerView.Adapter<UserReviewItemAd
         closeIcon.setOnClickListener(v -> dialog.dismiss());
         dialog.show();
     }
+
+
 
 }

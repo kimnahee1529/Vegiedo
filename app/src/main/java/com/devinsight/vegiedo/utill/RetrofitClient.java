@@ -41,11 +41,11 @@ public class RetrofitClient {
     }
 
     public static ReviewApiService getReviewApiService(){
-        return getRetrofit(BASE_URL).create(ReviewApiService.class);
+        return getRetrofit("http://3.38.23.253:8080/test/").create(ReviewApiService.class);
     }
 
     public static CommentApiService getCommentApiService(){
-        return getRetrofit(BASE_URL).create(CommentApiService.class);
+        return getRetrofit("http://3.38.23.253:8080/test/").create(CommentApiService.class);
     }
 
     public static MapApiService getMapApiService(){
