@@ -48,6 +48,7 @@ import com.devinsight.vegiedo.view.search.SearchFilterFragment;
 import com.devinsight.vegiedo.view.search.ActivityViewModel;
 import com.devinsight.vegiedo.view.search.SearchMainFragment;
 import com.devinsight.vegiedo.view.store.StoreDetailPageFragment;
+import com.google.android.gms.ads.MobileAds;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
@@ -120,30 +121,15 @@ public class MainActivity extends AppCompatActivity {
         List<String> initialTagList = userPrefRepository.loadTagList();
         int initialDistance = INITIAL_DISTANCE;
 
+        //애드몹 초기화
+        MobileAds.initialize(this, initializationStatus -> {});
+
         viewModel.getInitialFilteredData(initialDistance, initialTagList, token);
 
         currentInputList = new ArrayList<>();
 
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        boolean locationPermission = Build.VERSION.SDK_INT >= 23 &&
-                ContextCompat.checkSelfPermission(this.getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED;
-        if (locationPermission) {
-            ActivityCompat.requestPermissions(this, new String[]{
-                    android.Manifest.permission.ACCESS_FINE_LOCATION}, 0);
-        } else {
-            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            if (location != null) {
-                float latitude = (float) location.getLatitude();
-                float longitude = (float) location.getLongitude();
-
-                Log.d("위치 1 ", "위치" + "위도 : " + latitude + "경도 : " + longitude);
-            }
-
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, locationListener);
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, locationListener);
-        }
-
 
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
@@ -154,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
 //                    Intent intent = new Intent(getApplicationContext(), CommunityMainActivity.class);
 //                    startActivity(intent);
 //                    finish();
-                    transaction.replace(R.id.frame, communityMainFragment, "communityMainFragment").addToBackStack("communityMainFragment").commit();
+                    transaction.replace(R.id.frame, communityFragment, "communityMainFragment").addToBackStack("communityMainFragment").commit();
 
                     return true;
                 } else if (item.getItemId() == R.id.nav_home) {
@@ -169,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 } else if (item.getItemId() == R.id.nav_user) {
                     toolBar.setVisibility(View.GONE);
-                    transaction.replace(R.id.frame, myPageFragment,"myPageFragment").addToBackStack("myPageFragment").commit();
+                    transaction.replace(R.id.frame, storeDetailPageFragment,"myPageFragment").addToBackStack("myPageFragment").commit();
 
                     return true;
                 }
