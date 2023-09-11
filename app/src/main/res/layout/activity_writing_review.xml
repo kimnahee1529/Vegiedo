@@ -62,52 +62,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/StoreDetail_review_string_length" />
 
-<!--    <ImageView-->
-<!--        android:id="@+id/star1"-->
-<!--        android:layout_width="25dp"-->
-<!--        android:layout_height="25dp"-->
-<!--        android:layout_marginStart="70dp"-->
-<!--        android:src="@drawable/full_star"-->
-<!--        app:layout_constraintStart_toEndOf="@+id/ratingText"-->
-<!--        app:layout_constraintTop_toTopOf="@+id/ratingText" />-->
-
-<!--    <ImageView-->
-<!--        android:id="@+id/star2"-->
-<!--        android:layout_width="25dp"-->
-<!--        android:layout_height="25dp"-->
-<!--        android:layout_marginStart="4dp"-->
-<!--        android:src="@drawable/full_star"-->
-<!--        app:layout_constraintStart_toEndOf="@+id/star1"-->
-<!--        app:layout_constraintTop_toTopOf="@+id/star1" />-->
-
-<!--    <ImageView-->
-<!--        android:id="@+id/star3"-->
-<!--        android:layout_width="25dp"-->
-<!--        android:layout_height="25dp"-->
-<!--        android:layout_marginStart="4dp"-->
-<!--        android:src="@drawable/full_star"-->
-<!--        app:layout_constraintStart_toEndOf="@+id/star2"-->
-<!--        app:layout_constraintTop_toTopOf="@+id/star2" />-->
-
-<!--    <ImageView-->
-<!--        android:id="@+id/star4"-->
-<!--        android:layout_width="25dp"-->
-<!--        android:layout_height="25dp"-->
-<!--        android:layout_marginStart="4dp"-->
-<!--        android:src="@drawable/full_star"-->
-<!--        app:layout_constraintStart_toEndOf="@+id/star3"-->
-<!--        app:layout_constraintTop_toTopOf="@+id/star3" />-->
-
-<!--    <ImageView-->
-<!--        android:id="@+id/star5"-->
-<!--        android:layout_width="25dp"-->
-<!--        android:layout_height="25dp"-->
-<!--        android:layout_marginStart="4dp"-->
-<!--        android:src="@drawable/unable_star"-->
-<!--        app:layout_constraintStart_toEndOf="@+id/star4"-->
-<!--        app:layout_constraintTop_toTopOf="@+id/star4" />-->
-
-
     <!-- 사진 텍스트뷰 위치 조정 -->
     <RatingBar
         android:id="@+id/StoreDetail_ratingbar_star"

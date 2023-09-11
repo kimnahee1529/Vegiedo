@@ -39,7 +39,7 @@
                 android:textSize="12sp"
                 android:layout_marginRight="6dp"
                 android:gravity="center"
-                android:background="@drawable/btn_toogle"
+                android:background="@drawable/btn_toggle"
                 android:textColor="@color/black"
                 android:text="@string/tag_fruittarian"
                 />
@@ -50,7 +50,7 @@
                 android:textSize="12sp"
                 android:layout_marginRight="6dp"
                 android:gravity="center"
-                android:background="@drawable/btn_toogle"
+                android:background="@drawable/btn_toggle"
                 android:textColor="@color/black"
                 android:text="@string/tag_vegan"/>
 
@@ -60,7 +60,7 @@
                 android:textSize="12sp"
                 android:layout_marginRight="6dp"
                 android:gravity="center"
-                android:background="@drawable/btn_toogle"
+                android:background="@drawable/btn_toggle"
                 android:textColor="@color/black"
                 android:text="@string/tag_lacto"/>
 
