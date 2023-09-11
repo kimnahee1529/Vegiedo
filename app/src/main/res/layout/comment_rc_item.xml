@@ -24,7 +24,7 @@
         app:layout_constraintLeft_toRightOf="@id/comment_user_name" />
 
     <ImageView
-        android:id="@+id/storeReview_report_btn"
+        android:id="@+id/btn_comment_report"
         android:layout_width="12dp"
         android:layout_height="12dp"
         android:layout_marginLeft="10dp"

@@ -17,32 +17,32 @@ import com.devinsight.vegiedo.data.response.PostListData;
 
 import java.util.List;
 
-public class CommunityPostAdatper extends RecyclerView.Adapter<CommunityPostAdatper.PostViewHolder> {
+public class CommunityPostAdaptper extends RecyclerView.Adapter<CommunityPostAdaptper.PostViewHolder> {
 
     private List<PostListData> postList;
     Context context;
-    protected PostItemListner postItemListner;
+    protected PostItemListnere postItemListnere;
 
     public void setPostList(List<PostListData> list){
         this.postList.clear();
         this.postList.addAll(list);
     }
 
-    public CommunityPostAdatper(Context context, List<PostListData> list, PostItemListner postItemListner){
+    public CommunityPostAdaptper(Context context, List<PostListData> list, PostItemListnere postItemListnere){
         this.postList = list;
         this.context = context;
-        this.postItemListner = postItemListner;
+        this.postItemListnere = postItemListnere;
     }
 
     @NonNull
     @Override
-    public CommunityPostAdatper.PostViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public CommunityPostAdaptper.PostViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_post_recycler_item, parent, false);
         return new PostViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CommunityPostAdatper.PostViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull CommunityPostAdaptper.PostViewHolder holder, int position) {
         PostListData data = postList.get(position);
         String imageUrl = data.getImageUrl();
         if(imageUrl != null ) {
@@ -51,7 +51,7 @@ public class CommunityPostAdatper extends RecyclerView.Adapter<CommunityPostAdat
             holder.postImage.setVisibility(View.GONE);
         }
         holder.postTitle.setText(data.getPostTitle());
-        holder.postCommentCount.setText(String.valueOf(data.getCommentCount()));
+        holder.postCommentCount.setText(String.valueOf("[" + data.getCommentCount() + "]" ));
         holder.postUserName.setText(data.getUserName());
         holder.postCreatedAt.setText(String.valueOf(data.getCreatedAt()));
         holder.postLikeCount.setText(String.valueOf(data.getLike()));
@@ -92,14 +92,14 @@ public class CommunityPostAdatper extends RecyclerView.Adapter<CommunityPostAdat
 
         @Override
         public void onClick(View view) {
-            if(postItemListner != null){
-                postItemListner.onPostClicked(view, postListData, getLayoutPosition());
+            if(postItemListnere != null){
+                postItemListnere.onPostClicked(view, postList.get(getLayoutPosition()), getLayoutPosition());
             }
 
         }
     }
 
-    public interface PostItemListner{
+    public interface PostItemListnere {
         void onPostClicked(View view, PostListData postListData, int position);
     }
 }

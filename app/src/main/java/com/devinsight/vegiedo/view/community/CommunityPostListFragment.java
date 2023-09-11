@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,13 +25,13 @@ import com.devinsight.vegiedo.view.search.ActivityViewModel;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CommunityPostListFragment extends Fragment implements CommunityPostAdatper.PostItemListner{
+public class CommunityPostListFragment extends Fragment implements CommunityPostAdaptper.PostItemListnere {
 
     ActivityViewModel activityViewModel;
     CommunityViewModel communityViewModel;
     ImageView community_banner;
     RecyclerView recyclerView;
-    CommunityPostAdatper adatper;
+    CommunityPostAdaptper adatper;
     List<PostListData> postList;
 
     FragmentManager fragmentManager;
@@ -48,7 +49,7 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
         community_banner = view.findViewById(R.id.community_banner);
         recyclerView = view.findViewById(R.id.post_recyclerview);
         postList = new ArrayList<>();
-        adatper = new CommunityPostAdatper(getActivity(), postList, this);
+        adatper = new CommunityPostAdaptper(getContext(), postList, this);
 
         postMainFragment = new PostMainFragment();
 
@@ -77,6 +78,7 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
             @Override
             public void onChanged(Boolean postType) {
                 if(postType){
+                    communityViewModel.loadGeneralPostList();
                     communityViewModel.getGeneralPostList().observe(getViewLifecycleOwner(), new Observer<List<PostListData>>() {
                         @Override
                         public void onChanged(List<PostListData> generalPostListData) {
@@ -93,12 +95,9 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
 
                         }
                     });
-
                 }
             }
         });
-
-
 
 
         return view;
@@ -106,8 +105,6 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
 
     @Override
     public void onPostClicked(View view, PostListData postListData, int position) {
-
-        activityViewModel.setClickedPostData(postListData);
 
         PostContentFragment postContentFragment = new PostContentFragment();
 
@@ -117,11 +114,18 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
         bundle.putString("createdAt", postList.get(position).getCreatedAt());
         bundle.putInt("likeReceiveCount", postList.get(position).getLike());
         bundle.putInt("commentCount", postList.get(position).getCommentCount());
+        Log.d("클릭된 데이터 ","클릭된 데이터" + postList.get(position).getPostTitle() + postList.get(position).getUserName());
 
         postContentFragment.setArguments(bundle);
 
         ((MainActivity)getActivity()).replaceFragment(postMainFragment);
 
+        FragmentManager fragmentManager = ((MainActivity)getActivity()).getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.post_content_frame, postContentFragment).commit();
+
+
+        activityViewModel.setClickedPostData(postListData);
 
     }
 

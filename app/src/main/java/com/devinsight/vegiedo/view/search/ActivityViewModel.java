@@ -13,8 +13,10 @@ import androidx.lifecycle.ViewModel;
 import com.devinsight.vegiedo.data.request.ReviewModifyrRequestDTO;
 import com.devinsight.vegiedo.data.request.ReviewRegisterRequestDTO;
 import com.devinsight.vegiedo.data.request.ReviewReportRequestDTO;
+import com.devinsight.vegiedo.data.response.CommentListData;
 import com.devinsight.vegiedo.data.response.MapInquiryResponseDTO;
 import com.devinsight.vegiedo.data.response.MapStoreListData;
+import com.devinsight.vegiedo.data.response.PostInquiryResponseDTO;
 import com.devinsight.vegiedo.data.response.PostListData;
 import com.devinsight.vegiedo.data.response.ReviewListInquiryResponseDTO;
 import com.devinsight.vegiedo.data.response.StoreInquiryResponseDTO;
@@ -25,6 +27,7 @@ import com.devinsight.vegiedo.data.ui.search.SearchStorSummaryeUiData;
 import com.devinsight.vegiedo.repository.pref.AuthPrefRepository;
 import com.devinsight.vegiedo.service.api.CommentApiService;
 import com.devinsight.vegiedo.service.api.MapApiService;
+import com.devinsight.vegiedo.service.api.PostApiService;
 import com.devinsight.vegiedo.service.api.ReviewApiService;
 import com.devinsight.vegiedo.service.api.StoreApiService;
 import com.devinsight.vegiedo.utill.RetrofitClient;
@@ -83,6 +86,12 @@ public class ActivityViewModel extends ViewModel {
 
     private MutableLiveData<PostListData> postClickedLiveData = new MutableLiveData<>();
 
+    private MutableLiveData<PostInquiryResponseDTO> postContentLiveData = new MutableLiveData<>();
+
+    private MutableLiveData<List<CommentListData>> postCommentLiveData = new MutableLiveData<>();
+
+    private MutableLiveData<Long> postIdLiveData = new MutableLiveData<>();
+
 
     /* Query 요청 및 필터에 사용 하기 위한 전역 변수*/
     private float userCurrentLat;
@@ -112,6 +121,7 @@ public class ActivityViewModel extends ViewModel {
     MapApiService mapApiService = RetrofitClient.getMapApiService();
     ReviewApiService reviewApiService = RetrofitClient.getReviewApiService();
     CommentApiService commentApiService = RetrofitClient.getCommentApiService();
+    PostApiService postApiService = RetrofitClient.getPostApiService();
 
 
 
@@ -572,6 +582,7 @@ public class ActivityViewModel extends ViewModel {
             }
         });
     }
+
     /* true : 일반 게시글, false : 인기 게시글*/
     public void setPostType(Boolean postType){
         if(postType){
@@ -585,6 +596,31 @@ public class ActivityViewModel extends ViewModel {
         Long clickedPostId = data.getPostId();
         this.postId = clickedPostId;
         postClickedLiveData.setValue(data);
+    }
+
+    public void getPostData(){
+        Call<PostInquiryResponseDTO> call = postApiService.getPost(postId);
+        call.enqueue(new Callback<PostInquiryResponseDTO>() {
+            @Override
+            public void onResponse(Call<PostInquiryResponseDTO> call, Response<PostInquiryResponseDTO> response) {
+                if(response.isSuccessful()){
+                    PostInquiryResponseDTO data = response.body();
+                    postContentLiveData.setValue(data);
+                    postCommentLiveData.setValue(data.getCommentList());
+                    postIdLiveData.setValue(data.getPostId());
+                    Log.d("post api 호출 성공 ","성공" + response);
+
+                }else{
+                    Log.e("post api 호출 실패 ","실패1" + response);
+
+                }
+            }
+            @Override
+            public void onFailure(Call<PostInquiryResponseDTO> call, Throwable t) {
+                Log.e("post api 호출 실패 ","실패2" + t.getMessage());
+            }
+        });
+
     }
 
 
@@ -639,6 +675,19 @@ public class ActivityViewModel extends ViewModel {
     public LiveData<PostListData> getClickedPostLiveData(){
         return postClickedLiveData;
     }
+
+    public LiveData<PostInquiryResponseDTO> getPostContentLiveData(){
+        return postContentLiveData;
+    }
+
+    public LiveData<List<CommentListData>> getPostCommentLiveData(){
+        return postCommentLiveData;
+    }
+
+    public LiveData<Long> getPostIdLiveData(){
+        return postIdLiveData;
+    }
+
 
 }
 

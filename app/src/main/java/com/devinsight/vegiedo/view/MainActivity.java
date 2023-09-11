@@ -34,7 +34,7 @@ import android.widget.TextView;
 import com.devinsight.vegiedo.R;
 import com.devinsight.vegiedo.repository.pref.AuthPrefRepository;
 import com.devinsight.vegiedo.repository.pref.UserPrefRepository;
-import com.devinsight.vegiedo.view.community.CommunityMainFragmentDD;
+import com.devinsight.vegiedo.view.community.CommunityMainFragment;
 import com.devinsight.vegiedo.view.home.HomeMainFragment;
 import com.devinsight.vegiedo.view.map.MapMainFragment;
 import com.devinsight.vegiedo.view.mypage.MyPageFragment;
@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
         searchMainFragment = new SearchMainFragment();
         storeListMainFragment = new StoreListMainFragment();
         storeDetailPageFragment = new StoreDetailPageFragment();
-        communityMainFragment = new CommunityMainFragmentDD();
+        communityMainFragment = new CommunityMainFragment();
 
         /* 액티비티 뷰 모델 */
         viewModel = new ViewModelProvider(this).get(ActivityViewModel.class);
@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 } else if (item.getItemId() == R.id.nav_user) {
                     toolBar.setVisibility(View.GONE);
-                    transaction.replace(R.id.frame, storeDetailPageFragment,"myPageFragment").addToBackStack("myPageFragment").commit();
+                    transaction.replace(R.id.frame, myPageFragment,"myPageFragment").addToBackStack("myPageFragment").commit();
 
                     return true;
                 }

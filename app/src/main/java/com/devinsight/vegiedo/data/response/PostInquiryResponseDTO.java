@@ -11,12 +11,15 @@ public class PostInquiryResponseDTO {
     @Expose
     @SerializedName("postTitle")private String postTitle;
     @Expose
+    @SerializedName("postContent")private String content;
+    @Expose
     @SerializedName("userName")private String userName;
     @Expose
-    @SerializedName("content")private String content;
+    @SerializedName("userImageUrl")private String userImageUrl;
+    @Expose
+    @SerializedName("likeReceiveCnt")private String likeReceiveCnt;
     @Expose
     @SerializedName("images")private List<String> images;
-
     @Expose
     @SerializedName("commentList")private List<CommentListData> commentList;
 
@@ -36,6 +39,14 @@ public class PostInquiryResponseDTO {
         this.postTitle = postTitle;
     }
 
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
     public String getUserName() {
         return userName;
     }
@@ -44,12 +55,20 @@ public class PostInquiryResponseDTO {
         this.userName = userName;
     }
 
-    public String getContent() {
-        return content;
+    public String getUserImageUrl() {
+        return userImageUrl;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setUserImageUrl(String userImageUrl) {
+        this.userImageUrl = userImageUrl;
+    }
+
+    public String getLikeReceiveCnt() {
+        return likeReceiveCnt;
+    }
+
+    public void setLikeReceiveCnt(String likeReceiveCnt) {
+        this.likeReceiveCnt = likeReceiveCnt;
     }
 
     public List<String> getImages() {
@@ -68,11 +87,13 @@ public class PostInquiryResponseDTO {
         this.commentList = commentList;
     }
 
-    public PostInquiryResponseDTO(Long postId, String postTitle, String userName, String content, List<String> images, List<CommentListData> commentList) {
+    public PostInquiryResponseDTO(Long postId, String postTitle, String content, String userName, String userImageUrl, String likeReceiveCnt, List<String> images, List<CommentListData> commentList) {
         this.postId = postId;
         this.postTitle = postTitle;
-        this.userName = userName;
         this.content = content;
+        this.userName = userName;
+        this.userImageUrl = userImageUrl;
+        this.likeReceiveCnt = likeReceiveCnt;
         this.images = images;
         this.commentList = commentList;
     }

@@ -24,7 +24,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.devinsight.vegiedo.R;
-import com.devinsight.vegiedo.data.request.ReviewModifyrRequestDTO;
 import com.devinsight.vegiedo.data.request.ReviewReportRequestDTO;
 import com.devinsight.vegiedo.view.search.ActivityViewModel;
 import com.google.android.gms.ads.AdView;
@@ -178,7 +177,7 @@ public class UserReviewItemAdapter extends RecyclerView.Adapter<UserReviewItemAd
             ratingBar = itemView.findViewById(R.id.storeReview_ratingbar);
             storeReview_modify_text = itemView.findViewById(R.id.storeReview_modify_text);
             storeReview_delete_text = itemView.findViewById(R.id.storeReview_delete_text);
-            storeReview_report_btn = itemView.findViewById(R.id.storeReview_report_btn);
+            storeReview_report_btn = itemView.findViewById(R.id.btn_comment_report);
 
             // 아이템 클릭 리스너 설정
             itemView.setOnClickListener(v -> {

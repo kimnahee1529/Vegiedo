@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
@@ -51,7 +52,7 @@ public class PostMainFragment extends Fragment {
 
         postContentFragment = new PostContentFragment();
         postCommentFragment = new PostCommentFragment();
-        communityMainFragment = new CommunityMainFragmentDD();
+        communityMainFragment = new CommunityMainFragment();
 
         transaction.replace(R.id.post_content_frame, postContentFragment).addToBackStack(null);
         transaction.replace(R.id.post_comment_frame, postCommentFragment).addToBackStack(null).commit();
@@ -60,6 +61,17 @@ public class PostMainFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 getParentFragmentManager().beginTransaction().replace(R.id.frame, communityMainFragment).commit();
+            }
+        });
+
+        activityViewModel.getPostType().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean postType) {
+                if(postType) {
+                    post_type.setText("일반 게시글");
+                } else {
+                    post_type.setText("인기 게시글");
+                }
             }
         });
 

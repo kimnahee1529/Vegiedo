@@ -10,6 +10,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
@@ -25,7 +26,8 @@ public interface CommentApiService {
     @POST("/posts/{postId}/comments")
     Call<Void> addComment(
             @Path("postId") Long postId,
-            @Body CommentRegisterRequestDTO registerComment
+            @Header("Authorization") String token,
+            @Body CommentRegisterRequestDTO commentRegisterRequestDTO
     );
 
     //댓글 수정

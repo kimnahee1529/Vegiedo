@@ -3,17 +3,28 @@ package com.devinsight.vegiedo.view.community;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.devinsight.vegiedo.R;
+import com.devinsight.vegiedo.data.response.ContentImage;
+import com.devinsight.vegiedo.data.response.PostInquiryResponseDTO;
+import com.devinsight.vegiedo.view.search.ActivityViewModel;
 
-public class PostContentFragment extends Fragment {
+import java.util.ArrayList;
+import java.util.List;
+
+public class PostContentFragment extends Fragment implements PostContentAdapter.ImageClickListener {
 
     ImageView user_image;
     TextView post_title;
@@ -25,13 +36,18 @@ public class PostContentFragment extends Fragment {
     TextView post_content_recommend;
     TextView post_content_delete;
     TextView post_content_modify;
-    RecyclerView content_rc;
+
+    PostContentAdapter adaptper;
+    RecyclerView recyclerView;
+    List<ContentImage> imageList;
 
     String postTitle;
     String userName;
     String createdAt;
     int likeReceiveCount;
     int commentCount;
+
+    ActivityViewModel activityViewModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -62,14 +78,51 @@ public class PostContentFragment extends Fragment {
         post_content_delete = view.findViewById(R.id.post_content_delete);
         post_content_modify = view.findViewById(R.id.post_content_modify);
 
+        recyclerView = view.findViewById(R.id.content_image_rc);
+        imageList = new ArrayList<>();
+        adaptper = new PostContentAdapter(getContext(), imageList, this);
+        recyclerView.setAdapter(adaptper);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false);
+        recyclerView.setLayoutManager(linearLayoutManager);
+
+        activityViewModel = new ViewModelProvider(requireActivity()).get(ActivityViewModel.class);
+
+        activityViewModel.getPostData();
+        activityViewModel.getPostContentLiveData().observe(getViewLifecycleOwner(), new Observer<PostInquiryResponseDTO>() {
+            @Override
+            public void onChanged(PostInquiryResponseDTO postData) {
+                List<String> list =  postData.getImages();
+                List<ContentImage> imageList = new ArrayList<>();
+                for( int i = 0 ; i < list.size() ; i ++ ){
+                    ContentImage contentImage = new ContentImage();
+                    contentImage.setImageUrl(list.get(i));
+                    imageList.add(contentImage);
+                }
+                adaptper.setImageList(imageList);
+                adaptper.notifyDataSetChanged();
+                String userImageUrl = postData.getUserImageUrl();
+                if( userImageUrl != null ){
+                    Glide.with(getContext()).load(userImageUrl).into(user_image);
+                } else {
+                    user_image.setImageResource(R.drawable.sheep_profile);
+                }
+                post_content.setText(postData.getContent());
+
+                Log.d("포스트 조호 호출","포스트 조회 호출" + postData.getContent());
+            }
+        });
+
         post_title.setText(postTitle);
         user_name.setText(userName);
         created_time.setText(createdAt);
-        like_count.setText(likeReceiveCount);
-        post_content_recommend.setText(likeReceiveCount);
-
-
+        like_count.setText(String.valueOf(likeReceiveCount));
+        post_recommend_count.setText(String.valueOf(likeReceiveCount));
 
         return view;
+    }
+
+    @Override
+    public void onImageClicked(View view, ContentImage image, int position) {
+
     }
 }

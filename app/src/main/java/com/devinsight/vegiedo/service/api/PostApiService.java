@@ -42,9 +42,10 @@ public interface PostApiService {
     );
 
     //게시글 조회
-    @GET("/posts/{postId}")
+    @GET("/test/posts/{postId}")
     Call<PostInquiryResponseDTO> getPost(
             @Path("postId") Long postId
+
     );
 
     //게시글 수정
