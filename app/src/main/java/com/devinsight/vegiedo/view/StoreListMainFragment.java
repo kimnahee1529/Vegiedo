@@ -94,7 +94,7 @@ public class StoreListMainFragment extends Fragment implements StoreDetailListAd
         viewModel = new ViewModelProvider(requireActivity()).get(ActivityViewModel.class);
         Log.d("가게메인리스트2","가게메인리스트2");
 
-//        viewModel.storeApiData();
+        viewModel.storeApiData();
         viewModel.searchDetailList();
         Log.d("가게메인리스트3","가게메인리스트3");
 

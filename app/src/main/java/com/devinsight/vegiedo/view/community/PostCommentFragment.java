@@ -72,7 +72,6 @@ public class PostCommentFragment extends Fragment implements PostCommentAdapter.
             public void onChanged(List<CommentListData> commentList) {
                 adapter.setCommentList(commentList);
                 adapter.notifyDataSetChanged();
-
                 post_content_comment.setText("댓글 " + commentList.size());
             }
         });
@@ -89,6 +88,15 @@ public class PostCommentFragment extends Fragment implements PostCommentAdapter.
             public void onClick(View view) {
                 String comment =  et_comment_input.getText().toString();
                 commentViewModel.getCommentContent(comment);
+            }
+        });
+
+        commentViewModel.getCommentListLiveData().observe(getViewLifecycleOwner(), new Observer<List<CommentListData>>() {
+            @Override
+            public void onChanged(List<CommentListData> commentList) {
+                adapter.setCommentList(commentList);
+                adapter.notifyDataSetChanged();
+                post_content_comment.setText("댓글 " + commentList.size());
             }
         });
 

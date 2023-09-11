@@ -30,6 +30,7 @@ public class CommunityMainFragment extends Fragment {
     FragmentTransaction transaction;
     Fragment communityPostListFragment;
     Fragment postMainFragment;
+    Fragment writingFragment;
 
 
     @Override
@@ -44,6 +45,7 @@ public class CommunityMainFragment extends Fragment {
 
         communityPostListFragment = new CommunityPostListFragment();
         postMainFragment = new PostMainFragment();
+        writingFragment = new WritingFragment();
 
 
         fragmentManager = getChildFragmentManager();
@@ -71,7 +73,7 @@ public class CommunityMainFragment extends Fragment {
         btn_writing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                transaction.replace(R.id.frame, writingFragment).addToBackStack(null).commit();
             }
         });
 

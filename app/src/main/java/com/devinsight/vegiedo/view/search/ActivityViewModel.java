@@ -403,7 +403,7 @@ public class ActivityViewModel extends ViewModel {
                             break; // 하나라도 일치하는 태그를 찾았으면 더 이상 검사하지 않습니다.
                         }
                     }
-                if (storeDistance || isTagMatched) {
+                if (storeDistance && isTagMatched) {
                     filteredStoreList.add(storeList.get(i));
 //                    Log.d("필터링2","필터링2" + filteredStoreList.get(filteredStoreList.size()).getStoreName());
                 }
@@ -411,7 +411,11 @@ public class ActivityViewModel extends ViewModel {
 
             }
             storeFilteredLiveData.setValue(filteredStoreList);
+            for( int k = 0 ; k < filteredStoreList.size() ; k ++ ) {
+                Log.e("k","k " + k + " " + filteredStoreList.get(k).getDistance() + filteredStoreList.get(k).getTags().get(0) + filteredStoreList.get(k).getTags().get(1));
+            }
         }
+
     }
 
 
@@ -609,7 +613,6 @@ public class ActivityViewModel extends ViewModel {
                     postCommentLiveData.setValue(data.getCommentList());
                     postIdLiveData.setValue(data.getPostId());
                     Log.d("post api 호출 성공 ","성공" + response);
-
                 }else{
                     Log.e("post api 호출 실패 ","실패1" + response);
 

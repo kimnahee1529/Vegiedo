@@ -4,7 +4,10 @@ import com.devinsight.vegiedo.data.request.CommentModifyRequestDTO;
 import com.devinsight.vegiedo.data.request.CommentRegisterRequestDTO;
 import com.devinsight.vegiedo.data.request.CommentReportRequestDTO;
 import com.devinsight.vegiedo.data.response.CommentInquiryResponseDTO;
+import com.devinsight.vegiedo.data.response.CommentListData;
 import com.devinsight.vegiedo.data.response.CommentModifyResponseDTO;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -18,8 +21,9 @@ import retrofit2.http.Path;
 public interface CommentApiService {
 
     //댓글 조회
-    @GET("/posts/{postId}/comments")
+    @GET("/test/posts/{postId}/comments")
     Call<CommentInquiryResponseDTO> getCommentList(
+            @Header("Authorization") String token,
             @Path("postId") Long postId
     );
     //댓글 등록
