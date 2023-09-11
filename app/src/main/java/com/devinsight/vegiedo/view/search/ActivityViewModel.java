@@ -10,6 +10,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.devinsight.vegiedo.data.request.ReviewModifyrRequestDTO;
+import com.devinsight.vegiedo.data.request.ReviewRegisterRequestDTO;
+import com.devinsight.vegiedo.data.request.ReviewReportRequestDTO;
 import com.devinsight.vegiedo.data.response.MapInquiryResponseDTO;
 import com.devinsight.vegiedo.data.response.MapStoreListData;
 import com.devinsight.vegiedo.data.response.ReviewListInquiryResponseDTO;
@@ -471,6 +473,28 @@ public class ActivityViewModel extends ViewModel {
         });
     }
 
+    //리뷰 등록 API(WritingReviewFragment에서 사용)
+    public void ReviewRegisterData(Long storeId, ReviewRegisterRequestDTO requestDTO) {
+        //리뷰 등록
+        Call<Void> reviewRegisterRequestDTOCall = reviewApiService.postReview(storeId, requestDTO);
+        reviewRegisterRequestDTOCall.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    Void responseData = response.body();
+                    Log.d("LOGAPIReviewRegisterData", response.toString());
+                } else{
+                    Log.d("LOGAPI", "ReviewRegisterData 호출실패1 "+response);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("LOGAPI", "ReviewRegisterData 호출실패2");
+            }
+        });
+    }
+
     //리뷰 수정 API(WritingReviewFragment에서 사용)
     public void ReviewModifyData(Long storeId, Long reviewId, ReviewModifyrRequestDTO requestDTO) {
         //리뷰 수정
@@ -489,6 +513,28 @@ public class ActivityViewModel extends ViewModel {
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 Log.d("LOGAPI", "ReviewModifyData 호출실패2");
+            }
+        });
+    }
+
+    //리뷰 신고 API(WritingReviewFragment에서 사용)
+    public void ReviewReportData(Long storeId, Long reviewId, ReviewReportRequestDTO requestDTO) {
+        //리뷰 수정
+        Call<Void> reviewReportRequestDTOCall = reviewApiService.reportReview(storeId, reviewId, requestDTO);
+        reviewReportRequestDTOCall.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    Void responseData = response.body();
+                    Log.d("LOGAPIReviewReportData", response.toString());
+                } else{
+                    Log.d("LOGAPI", "ReviewReportData 호출실패1 "+response);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("LOGAPI", "ReviewReportData 호출실패2");
             }
         });
     }
