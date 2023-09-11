@@ -4,22 +4,15 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.Build;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -34,13 +27,10 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 //import com.devinsight.vegiedo.Manifest;
-import android.Manifest;
 import com.devinsight.vegiedo.R;
 import com.devinsight.vegiedo.repository.pref.AuthPrefRepository;
 import com.devinsight.vegiedo.repository.pref.UserPrefRepository;
-import com.devinsight.vegiedo.view.community.CommunityMainActivity;
-import com.devinsight.vegiedo.view.community.CommunityMainFragment;
-import com.devinsight.vegiedo.view.community.GeneralPostFragment;
+import com.devinsight.vegiedo.view.community.CommunityMainFragmentDD;
 import com.devinsight.vegiedo.view.home.HomeMainFragment;
 import com.devinsight.vegiedo.view.map.MapMainFragment;
 import com.devinsight.vegiedo.view.mypage.MyPageFragment;
@@ -77,7 +67,6 @@ public class MainActivity extends AppCompatActivity {
     Fragment communityFragment;
     Fragment storeDetailPageFragment;
     Fragment communityMainFragment;
-    CommunityMainActivity communityMainActivity;
 
     /* 뷰모델 */
     ActivityViewModel viewModel;
@@ -108,10 +97,9 @@ public class MainActivity extends AppCompatActivity {
         searchFilterFragment = new SearchFilterFragment();
         myPageFragment = new MyPageFragment();
         searchMainFragment = new SearchMainFragment();
-        communityFragment = new GeneralPostFragment();
         storeListMainFragment = new StoreListMainFragment();
         storeDetailPageFragment = new StoreDetailPageFragment();
-        communityMainFragment = new CommunityMainFragment();
+        communityMainFragment = new CommunityMainFragmentDD();
 
         /* 액티비티 뷰 모델 */
         viewModel = new ViewModelProvider(this).get(ActivityViewModel.class);
@@ -140,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
 //                    Intent intent = new Intent(getApplicationContext(), CommunityMainActivity.class);
 //                    startActivity(intent);
 //                    finish();
-                    transaction.replace(R.id.frame, communityFragment, "communityMainFragment").addToBackStack("communityMainFragment").commit();
+                    transaction.replace(R.id.frame, communityMainFragment, "communityMainFragment").addToBackStack("communityMainFragment").commit();
 
                     return true;
                 } else if (item.getItemId() == R.id.nav_home) {
@@ -248,6 +236,12 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+    }
+
+    public void replaceFragment(Fragment fragment){
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.frame, fragment).commit();
     }
 
     final LocationListener locationListener = new LocationListener() {

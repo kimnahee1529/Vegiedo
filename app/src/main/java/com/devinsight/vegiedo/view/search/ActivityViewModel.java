@@ -4,6 +4,7 @@ import static com.google.android.gms.common.util.CollectionUtils.listOf;
 
 import android.location.Location;
 import android.util.Log;
+import android.view.View;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -12,6 +13,7 @@ import androidx.lifecycle.ViewModel;
 import com.devinsight.vegiedo.data.request.ReviewModifyrRequestDTO;
 import com.devinsight.vegiedo.data.response.MapInquiryResponseDTO;
 import com.devinsight.vegiedo.data.response.MapStoreListData;
+import com.devinsight.vegiedo.data.response.PostListData;
 import com.devinsight.vegiedo.data.response.ReviewListInquiryResponseDTO;
 import com.devinsight.vegiedo.data.response.StoreInquiryResponseDTO;
 import com.devinsight.vegiedo.data.response.StoreListData;
@@ -24,6 +26,7 @@ import com.devinsight.vegiedo.service.api.MapApiService;
 import com.devinsight.vegiedo.service.api.ReviewApiService;
 import com.devinsight.vegiedo.service.api.StoreApiService;
 import com.devinsight.vegiedo.utill.RetrofitClient;
+import com.devinsight.vegiedo.view.community.ClickedPostData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,6 +76,10 @@ public class ActivityViewModel extends ViewModel {
 
     //리뷰-리뷰 조회 API 호출에서 쓸 라이브 데이터
     private MutableLiveData<ReviewListInquiryResponseDTO> reviewLiveData = new MutableLiveData<>();
+    /* 게시글 종류 확인 라이브 데이터*/
+    private MutableLiveData<Boolean> postTypeLiveData = new MutableLiveData<>();
+
+    private MutableLiveData<PostListData> postClickedLiveData = new MutableLiveData<>();
 
 
     /* Query 요청 및 필터에 사용 하기 위한 전역 변수*/
@@ -90,6 +97,10 @@ public class ActivityViewModel extends ViewModel {
 
     private String currentInput;
     private String token;
+
+    private Long postId;
+
+    ClickedPostData postData;
 
     // 선택한 가게를 알기 위한 storeId(StoreReviewFragment에서 본인이 쓴 리뷰 수정, 삭제하기 위함)
     private MutableLiveData<Long> storeId = new MutableLiveData<>();
@@ -515,6 +526,20 @@ public class ActivityViewModel extends ViewModel {
             }
         });
     }
+    /* true : 일반 게시글, false : 인기 게시글*/
+    public void setPostType(Boolean postType){
+        if(postType){
+            postTypeLiveData.setValue(true);
+        } else {
+            postTypeLiveData.setValue(false);
+        }
+    }
+
+    public void setClickedPostData(PostListData data){
+        Long clickedPostId = data.getPostId();
+        this.postId = clickedPostId;
+        postClickedLiveData.setValue(data);
+    }
 
 
     //리뷰 조회
@@ -559,6 +584,14 @@ public class ActivityViewModel extends ViewModel {
 
     public LiveData<Long> getStoreId() {
         return storeId;
+    }
+
+    public LiveData<Boolean> getPostType(){
+        return postTypeLiveData;
+    }
+
+    public LiveData<PostListData> getClickedPostLiveData(){
+        return postClickedLiveData;
     }
 
 }

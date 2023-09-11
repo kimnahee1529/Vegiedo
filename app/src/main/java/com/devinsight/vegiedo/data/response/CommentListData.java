@@ -8,7 +8,7 @@ public class CommentListData {
     @Expose
     @SerializedName("commentId") private Long commentId;
     @Expose
-    @SerializedName("content")private String content;
+    @SerializedName("commentContent")private String commentContent;
     @Expose
     @SerializedName("userName")private String userName;
     @Expose
@@ -21,12 +21,12 @@ public class CommentListData {
         this.commentId = commentId;
     }
 
-    public String getContent() {
-        return content;
+    public String getCommentContent() {
+        return commentContent;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setCommentContent(String commentContent) {
+        this.commentContent = commentContent;
     }
 
     public String getUserName() {
@@ -47,7 +47,7 @@ public class CommentListData {
 
     public CommentListData(Long commentId, String content, String userName, String createdAt) {
         this.commentId = commentId;
-        this.content = content;
+        this.commentContent = content;
         this.userName = userName;
         this.createdAt = createdAt;
     }

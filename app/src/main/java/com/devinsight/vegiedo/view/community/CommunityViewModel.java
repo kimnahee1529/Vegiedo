@@ -49,17 +49,6 @@ public class CommunityViewModel extends ViewModel {
 
     public void loadGeneralPostList(){
 
-//        List<PostListData> postList = new ArrayList<>();
-//        for(long i = 0; i < 9; i++) {
-//            String title = String.format("제목%d", i + 1);  // 제목1, 제목2, ...
-//            String name = String.format("이름%d", i + 1);   // 이름1, 이름2, ...
-//            String date = String.format("날짜%d", i + 1);   // 날짜1, 날짜2, ...
-//            String image = String.format("이미지%d", i + 1); // 이미지1, 이미지2, ...
-//
-//            postList.add(new PostListData(i, title, name, date, null, 3, 4));
-//        }
-//        generalPostLiveData.setValue(postList);
-
         Log.d("포스트 요청을 위한 토큰"," 포스트 요청 토큰" + token);
         postApiService.getGeneralPostList(5,1,token).enqueue(new Callback<List<PostListData>>() {
             @Override

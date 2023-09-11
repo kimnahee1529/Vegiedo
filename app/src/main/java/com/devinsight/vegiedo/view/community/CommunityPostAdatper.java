@@ -82,7 +82,7 @@ public class CommunityPostAdatper extends RecyclerView.Adapter<CommunityPostAdat
 
             itemView.setOnClickListener(this);
 //            postCard = itemView.findViewById(R.id.post_card);
-            postImage = itemView.findViewById(R.id.post_image);
+            postImage = itemView.findViewById(R.id.user_image);
             postTitle = itemView.findViewById(R.id.post_title);
             postCommentCount = itemView.findViewById(R.id.comment_count);
             postUserName = itemView.findViewById(R.id.user_name);

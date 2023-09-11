@@ -174,7 +174,7 @@ public class WritingFragment extends Fragment {
             sendPostRequest(postRegisterRequestDTO);
 
 
-            moveToCommunityFragment();
+//            moveToCommunityFragment();
 
         });
     }
@@ -206,21 +206,21 @@ public class WritingFragment extends Fragment {
     }
 
 
-    private void moveToCommunityFragment() {
-        Fragment targetFragment;
-
-        if ("GeneralPostFragment".equals(previousFragment)) {
-            targetFragment = new GeneralPostFragment();
-        } else if ("PopuralPostFragment".equals(previousFragment)) {
-            targetFragment = new PopuralPostFragment();
-        } else {
-            targetFragment = new GeneralPostFragment(); // 기본값
-        }
-
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.frame, targetFragment)
-                .commit();
-    }
+//    private void moveToCommunityFragment() {
+//        Fragment targetFragment;
+//
+//        if ("GeneralPostFragment".equals(previousFragment)) {
+//            targetFragment = new GeneralPostFragment();
+//        } else if ("PopuralPostFragment".equals(previousFragment)) {
+//            targetFragment = new PopuralPostFragment();
+//        } else {
+//            targetFragment = new GeneralPostFragment(); // 기본값
+//        }
+//
+//        getActivity().getSupportFragmentManager().beginTransaction()
+//                .replace(R.id.frame, targetFragment)
+//                .commit();
+//    }
 
 
 //    private void selectImagesFromGallery() {
