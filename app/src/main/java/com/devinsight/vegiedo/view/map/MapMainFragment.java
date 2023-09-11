@@ -20,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -33,7 +34,9 @@ import com.devinsight.vegiedo.data.ui.map.MapStoreCardUiData;
 import com.devinsight.vegiedo.service.api.MapApiService;
 import com.devinsight.vegiedo.service.api.StoreApiService;
 import com.devinsight.vegiedo.utill.RetrofitClient;
+import com.devinsight.vegiedo.view.StoreListMainFragment;
 import com.devinsight.vegiedo.view.search.ActivityViewModel;
+import com.devinsight.vegiedo.view.search.SearchMainFragment;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -96,6 +99,7 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
         mapView = view.findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
+
     }
 
     private void setupViewModel() {
@@ -153,7 +157,11 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
         }
     }
     private void onFloatingListButtonClick() {
-
+//        StoreListMainFragment storeListMainFragment  = new StoreListMainFragment();
+//        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+//        transaction.replace(R.id.frame, storeListMainFragment);
+//        transaction.addToBackStack(null);
+//        transaction.commit();
     }
 
     private void callMapAPI(){
