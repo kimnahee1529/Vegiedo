@@ -3,6 +3,7 @@ package com.devinsight.vegiedo.view.mypage;
 import static android.content.Context.MODE_PRIVATE;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,6 +12,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,14 +40,31 @@ import com.devinsight.vegiedo.view.login.NickNameActivity;
 public class MyPageFragment extends Fragment {
     private static final int REQUEST_IMAGE_PICK = 101;
     private static final int PERMISSION_REQUEST_CODE = 200; // 권한 요청 코드
+    private TextView MyPage_nickname;
+    private ImageView MyPage_profile_image;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_my_page, container, false);
+        MyPage_nickname = rootView.findViewById(R.id.MyPage_nickname);
+        MyPage_profile_image = rootView.findViewById(R.id.MyPage_profile_image);
 
-        // Find the mypage_camera view and set a click listener on it
+//TODO : user api로 구현해야 함
+        // SharedPreferences 객체 얻기(회원가입 때 정한 닉네임, 태그 얻기 위함)
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_info", Context.MODE_PRIVATE);
+        // userName 값 읽기
+        String userName = sharedPreferences.getString("userName", "기본값"); // "기본값"은 userName이 없을 때 반환되는 기본값입니다.
+        String userProfile = sharedPreferences.getString("userProfile","null"); //디폴트는 null
+
+        MyPage_nickname.setText(userName);
+        Glide.with(getContext())
+                .load(userProfile)
+                .circleCrop()
+                .into(MyPage_profile_image);
+//TODO : user api로 구현해야 함
+
         ImageView mypageCamera = rootView.findViewById(R.id.my_page_camera_image);
         ImageView mypagePencil = rootView.findViewById(R.id.my_page_change_nickname_image);
 
@@ -73,16 +92,9 @@ public class MyPageFragment extends Fragment {
             public void onClick(View v) {
                 ChangeNicknameFragment changeNicknameFragment = new ChangeNicknameFragment();
 
-                // FragmentTransaction 시작
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
-
-                // Replace the current fragment with the new one
-                transaction.replace(R.id.frame, changeNicknameFragment); // 'fragment_container'는 해당 Fragment를 추가하거나 교체할 레이아웃의 ID입니다. 이 이름을 실제 사용하는 이름으로 변경해야 합니다.
-
-                // Optional: Add transaction to the back stack (if you want the user to navigate back)
+                transaction.replace(R.id.frame, changeNicknameFragment);
                 transaction.addToBackStack(null);
-
-                // Commit the transaction
                 transaction.commit();
             }
         });
@@ -184,7 +196,7 @@ public class MyPageFragment extends Fragment {
             public void onClick(View v) {
                 Toast.makeText(getActivity(), "기본이미지 선택하셨습니다.", Toast.LENGTH_SHORT).show();
 
-                ImageView myImageView = getActivity().findViewById(R.id.my_page_profile_image);
+                ImageView myImageView = getActivity().findViewById(R.id.MyPage_profile_image);
                 // 해당 ImageView에 img_sheep 이미지를 설정
                 myImageView.setImageResource(R.drawable.img_sheep);
 
@@ -290,7 +302,7 @@ public class MyPageFragment extends Fragment {
 
             if (data != null) {
 
-                ImageView myImageView = getActivity().findViewById(R.id.my_page_profile_image);
+                ImageView myImageView = getActivity().findViewById(R.id.MyPage_profile_image);
                 android.net.Uri selectedImageUri = data.getData();
 //                myImageView.setImageURI(selectedImageUri);
                 Glide.with(this)
