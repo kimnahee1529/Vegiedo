@@ -78,8 +78,8 @@
 
             <ToggleButton
                 android:id="@+id/report_type_btn4"
-                android:textOff="기타"
-                android:textOn="기타"
+                android:textOff="@string/report_type_etc"
+                android:textOn="@string/report_type_etc"
                 android:textSize="12sp"
                 android:textColor="@drawable/btn_togle_text_color"
                 android:layout_width="180dp"
