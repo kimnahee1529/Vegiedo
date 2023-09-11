@@ -2,15 +2,19 @@ package com.devinsight.vegiedo.view.store;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
@@ -20,12 +24,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.devinsight.vegiedo.R;
+import com.devinsight.vegiedo.data.request.ReviewModifyrRequestDTO;
+import com.devinsight.vegiedo.data.request.ReviewReportRequestDTO;
 import com.devinsight.vegiedo.view.search.ActivityViewModel;
 import com.google.android.gms.ads.AdView;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class UserReviewItemAdapter extends RecyclerView.Adapter<UserReviewItemAdapter.BaseViewHolder> {
     private List<UserReviewItem> userReviewItemList;
@@ -72,18 +79,12 @@ public class UserReviewItemAdapter extends RecyclerView.Adapter<UserReviewItemAd
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view;
         Log.d("LOGAPIviewType", String.valueOf(viewType));
-        if (viewType == UserReviewItem.ItemType.STORE_DETAIL_REVIEW_PAGE.ordinal()) {
-            view = inflater.inflate(R.layout.store_detail_review_item, parent, false);
-            return new ViewHolderReviewPage(view);
-        } else if (viewType == UserReviewItem.ItemType.STORE_DETAIL_BLOG_REVIEW_PAGE.ordinal()) {
+        if (viewType == UserReviewItem.ItemType.STORE_DETAIL_BLOG_REVIEW_PAGE.ordinal()) {
             view = inflater.inflate(R.layout.store_detail_blog_review_item, parent, false);
             return new ViewHolderBlogReviewPage(view);
         } else if (viewType == UserReviewItem.ItemType.REPORT_COMPELETE.ordinal()) {
             view = inflater.inflate(R.layout.select_reporting_type_dialog, parent, false);
             return new ViewHolderBlogReviewPage(view);
-        } else if (viewType == UserReviewItem.ItemType.AD_TYPE.ordinal()) {
-            view = inflater.inflate(R.layout.fragment_store_review, parent, false);
-            return new ViewHolderAdview(view);
         } else if (viewType == UserReviewItem.ItemType.REVIEW_RC.ordinal()) {
             view = inflater.inflate(R.layout.store_detail_review_item, parent, false);
             return new ViewHolderReviewRC(view, userReviewItemList.get(viewType));
@@ -100,50 +101,13 @@ public class UserReviewItemAdapter extends RecyclerView.Adapter<UserReviewItemAd
     public void onBindViewHolder(@NonNull BaseViewHolder holder, int position) {
         UserReviewItem userReviewItem = userReviewItemList.get(position);
 
-        if (holder instanceof ViewHolderReviewPage) {
-//            ViewHolderReviewPage viewHolder = (ViewHolderReviewPage) holder;
-//            viewHolder.title.setText(userReviewItem.getTitle());
-//            viewHolder.content.setText(userReviewItem.getContent());
-//
-//            Glide.with(holder.itemView.getContext()).load(userReviewItem.getUserReviewImageUrlList().get(0)).into(viewHolder.imageView1);
-//            Glide.with(holder.itemView.getContext()).load(userReviewItem.getUserReviewImageUrlList().get(1)).into(viewHolder.imageView2);
-//            Glide.with(holder.itemView.getContext()).load(userReviewItem.getUserReviewImageUrlList().get(2)).into(viewHolder.imageView3);
-//            Glide.with(holder.itemView.getContext()).load(userReviewItem.getUserReviewImageUrlList().get(3)).into(viewHolder.imageView4);
-//
-//            viewHolder.ratingBar.setRating(userReviewItem.getRatingBar());
-//
-//            viewHolder.storeReview_modify_text.setOnClickListener(v -> {
-//                WritingReviewFragment fragment = new WritingReviewFragment();
-//                FragmentManager fragmentManager = ((FragmentActivity) viewHolder.itemView.getContext()).getSupportFragmentManager();
-//                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//
-//                // 액티비티의 루트 뷰를 교체(예: android.R.id.content)
-//                fragmentTransaction.replace(android.R.id.content, fragment);
-//                fragmentTransaction.addToBackStack(null);
-//                fragmentTransaction.commit();
-//            });
-//            viewHolder.storeReview_delete_text.setOnClickListener(v -> {
-//                Log.d("LOG삭제", "삭제 버튼 눌림");
-//                showDialog(DialogType.DELETE, holder.itemView.getContext(), stor);
-//            });
-//            viewHolder.storeReview_report_btn.setOnClickListener(v -> {
-//                Log.d("LOG신고", "신고 버튼 눌림");
-//                showDialog(DialogType.REPORT_TYPE, holder.itemView.getContext());
-//            });
-//
-
-        } else if (holder instanceof ViewHolderBlogReviewPage) {
+        if (holder instanceof ViewHolderBlogReviewPage) {
             ViewHolderBlogReviewPage viewHolder = (ViewHolderBlogReviewPage) holder;
             viewHolder.title.setText(userReviewItem.getTitle());
             viewHolder.content.setText(userReviewItem.getContent());
             Glide.with(holder.itemView.getContext()).load(userReviewItem.getUserReviewImageUrlList().get(0)).into(viewHolder.imageView1);
 
-        } else if (holder instanceof ViewHolderAdview) {
-            ViewHolderAdview viewHolder = (ViewHolderAdview) holder;
-            viewHolder.recyclerView.setAdapter(UserReviewItemAdapter.this);
-            com.google.android.gms.ads.AdRequest adRequest = new com.google.android.gms.ads.AdRequest.Builder().build();
-            viewHolder.adView.loadAd(adRequest);
-        } else if (holder instanceof ViewHolderReviewRC) {
+        }else if (holder instanceof ViewHolderReviewRC) {
             ViewHolderReviewRC viewHolder = (ViewHolderReviewRC) holder;
             UserReviewItem currentItem = userReviewItemList.get(position);
             viewHolder.bindData(currentItem);
@@ -152,7 +116,6 @@ public class UserReviewItemAdapter extends RecyclerView.Adapter<UserReviewItemAd
             ViewHolderAdBanner viewHolder = (ViewHolderAdBanner) holder;
             com.google.android.gms.ads.AdRequest adRequest = new com.google.android.gms.ads.AdRequest.Builder().build();
             viewHolder.adBannerView.loadAd(adRequest);
-            // 광고에 대한 바인딩 로직 (예: AdMob 코드)을 여기에 추가합니다.
         }
 
     }
@@ -172,40 +135,6 @@ public class UserReviewItemAdapter extends RecyclerView.Adapter<UserReviewItemAd
         }
     }
 
-    static class ViewHolderReviewPage extends BaseViewHolder {
-        TextView title;
-        TextView content;
-        ImageView imageView1;
-        ImageView imageView2;
-        ImageView imageView3;
-        ImageView imageView4;
-        ImageView imageView5;
-        RatingBar ratingBar;
-        TextView storeReview_modify_text;
-        TextView storeReview_delete_text;
-        ImageView storeReview_report_btn;
-
-        ViewHolderReviewPage(@NonNull View itemView) {
-            super(itemView);
-
-            title = itemView.findViewById(R.id.storeReview_title);
-            content = itemView.findViewById(R.id.storeReview_content);
-            imageView1 = itemView.findViewById(R.id.storeReview_image1);
-            imageView2 = itemView.findViewById(R.id.storeReview_image2);
-            imageView3 = itemView.findViewById(R.id.storeReview_image3);
-            imageView4 = itemView.findViewById(R.id.storeReview_image4);
-            imageView5 = itemView.findViewById(R.id.storeReview_image5);
-            ratingBar = itemView.findViewById(R.id.storeReview_ratingbar);
-            storeReview_modify_text = itemView.findViewById(R.id.storeReview_modify_text);
-            storeReview_delete_text = itemView.findViewById(R.id.storeReview_delete_text);
-            storeReview_report_btn = itemView.findViewById(R.id.storeReview_report_btn);
-
-
-        }
-
-
-    }
-
     static class ViewHolderBlogReviewPage extends BaseViewHolder {
         TextView title;
         TextView content;
@@ -216,17 +145,6 @@ public class UserReviewItemAdapter extends RecyclerView.Adapter<UserReviewItemAd
             title = itemView.findViewById(R.id.storeReview_title);
             content = itemView.findViewById(R.id.storeReview_content);
             imageView1 = itemView.findViewById(R.id.storeReview_image1);
-        }
-    }
-
-    static class ViewHolderAdview extends BaseViewHolder {
-        RecyclerView recyclerView;
-        AdView adView;
-
-        ViewHolderAdview(@NonNull View itemView) {
-            super(itemView);
-            recyclerView = itemView.findViewById(R.id.store_review_recycler_view);
-//            adView = itemView.findViewById(R.id.StoreDetial_adview);
         }
     }
 
@@ -329,6 +247,7 @@ public class UserReviewItemAdapter extends RecyclerView.Adapter<UserReviewItemAd
                 storeReview_report_btn.setVisibility(View.VISIBLE);
             }
         }
+
     }
     static class ViewHolderAdBanner extends BaseViewHolder {
         AdView adBannerView;
@@ -340,62 +259,161 @@ public class UserReviewItemAdapter extends RecyclerView.Adapter<UserReviewItemAd
     }
 
     private static void showDialog(DialogType type, Context context, Long storeId, Long reviewId) {
-        Log.d("showDialog", "초입");
         int layoutId;
-        if(type == DialogType.DELETE){
-            layoutId = R.layout.delete_review_dialog;
+        View dialogView;
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        LayoutInflater inflater = LayoutInflater.from(context);
 
-            LayoutInflater inflater = LayoutInflater.from(context);
-            View dialogView = inflater.inflate(layoutId, null);
-
-            Button yesBtn = dialogView.findViewById(R.id.DeleteReivew_yesBtn);
-            Button noBtn = dialogView.findViewById(R.id.DeleteReivew_noBtn);
-            ImageView closeIcon = dialogView.findViewById(R.id.green_x_circle);
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setView(dialogView);
-
-            final AlertDialog dialog = builder.create();
-
-            yesBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(context, "예 버튼입니다.", Toast.LENGTH_SHORT).show();
-                    Log.d("LOG리뷰삭제", "예 "+ storeId);
-                    //서버로 삭제 요청 보냄
-                    viewModel.ReviewDeleteData(storeId, reviewId);
-                    dialog.dismiss();
-                }
-            });
-
-            noBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(context, "아니오 버튼입니다.", Toast.LENGTH_SHORT).show();
-                    Log.d("LOG리뷰삭제", "아니오");
-                    dialog.dismiss();
-                }
-            });
-
-            closeIcon.setOnClickListener(v -> dialog.dismiss());
-            dialog.show();
-
-        } else if(type == DialogType.REPORT_TYPE){
-            layoutId = R.layout.select_reporting_type_dialog;
-        } else {
-            layoutId = R.layout.accept_reporting_dialog;
+        switch (type) {
+            case DELETE:
+                layoutId = R.layout.delete_review_dialog;
+                dialogView = inflater.inflate(layoutId, null);
+                builder.setView(dialogView);
+                final AlertDialog deleteDialog = builder.create();
+                setupDeleteDialog(context, storeId, reviewId, dialogView, deleteDialog);
+                deleteDialog.show();
+                return; // 이 경우에서 다른 대화 상자를 생성하지 않도록 return합니다.
+            case REPORT_TYPE:
+                layoutId = R.layout.select_reporting_type_dialog;
+                dialogView = inflater.inflate(layoutId, null);
+                final AlertDialog reportDialog = builder.create();
+                builder.setView(dialogView);
+                setupReportDialog(context, storeId, reviewId, dialogView, reportDialog);
+                break;
+            default:
+                layoutId = R.layout.accept_reporting_dialog;
+                dialogView = inflater.inflate(layoutId, null);
+                builder.setView(dialogView);
+                break;
         }
 
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View dialogView = inflater.inflate(layoutId, null);
+        final AlertDialog dialog = builder.create();
+        setupCloseIcon(dialogView, dialog);  // 여기서 dialog 객체를 전달합니다.
+        dialog.show();
+    }
+
+    private static void setupDeleteDialog(Context context, Long storeId, Long reviewId, View dialogView, AlertDialog dialog) {
+        Button yesBtn = dialogView.findViewById(R.id.DeleteReivew_yesBtn);
+        Button noBtn = dialogView.findViewById(R.id.DeleteReivew_noBtn);
         ImageView closeIcon = dialogView.findViewById(R.id.green_x_circle);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setView(dialogView);
+        yesBtn.setOnClickListener(v -> {
+            Toast.makeText(context, "예 버튼입니다.", Toast.LENGTH_SHORT).show();
+            Log.d("LOG리뷰삭제", "예 " + storeId);
+            // viewModel이 여기서 접근 가능하다면 이렇게 호출할 수 있습니다.
+            viewModel.ReviewDeleteData(storeId, reviewId);
+            dialog.dismiss();
+        });
 
-        final AlertDialog dialog = builder.create();
+        noBtn.setOnClickListener(v -> {
+            Toast.makeText(context, "아니오 버튼입니다.", Toast.LENGTH_SHORT).show();
+            Log.d("LOG리뷰삭제", "아니오");
+            dialog.dismiss();
+        });
+
         closeIcon.setOnClickListener(v -> dialog.dismiss());
-        dialog.show();
+    }
+    private static void setupCloseIcon(View dialogView, AlertDialog dialog) {
+        ImageView closeIcon = dialogView.findViewById(R.id.green_x_circle);
+        closeIcon.setOnClickListener(v -> dialog.dismiss());
+    }
+
+    //신고 다이얼로그 생성
+    private static void setupReportDialog(Context context, Long storeId, Long reviewId, View dialogView, AlertDialog dialog) {
+
+        ToggleButton report_type_btn1 = dialogView.findViewById(R.id.report_type_btn1);
+        ToggleButton report_type_btn2 = dialogView.findViewById(R.id.report_type_btn2);
+        ToggleButton report_type_btn3 = dialogView.findViewById(R.id.report_type_btn3);
+        ToggleButton report_type_btn4 = dialogView.findViewById(R.id.report_type_btn4);
+        EditText reasons_edit_text = dialogView.findViewById(R.id.other_reasons_text);
+        TextView num_of_letter_text = dialogView.findViewById(R.id.num_of_letter);
+        TextView reporting_btn = dialogView.findViewById(R.id.reporting_btn);
+        //각 버튼 별 reportType과 기타에서의 option
+        AtomicReference<String> reportType = new AtomicReference<>("");
+        AtomicReference<String> opinion = new AtomicReference<>("");
+
+        ImageView closeIcon = dialogView.findViewById(R.id.green_x_circle);
+
+        reasons_edit_text.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // nothing to do here
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                opinion.set(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // nothing to do here
+            }
+        });
+
+        report_type_btn1.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                report_type_btn2.setChecked(false);
+                report_type_btn3.setChecked(false);
+                report_type_btn4.setChecked(false);
+                reasons_edit_text.setVisibility(View.INVISIBLE);
+                num_of_letter_text.setVisibility(View.INVISIBLE);
+                reportType.set("부적절한 사진 사용");
+                opinion.set("");
+            }
+        });
+
+        report_type_btn2.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                report_type_btn1.setChecked(false);
+                report_type_btn3.setChecked(false);
+                report_type_btn4.setChecked(false);
+                reasons_edit_text.setVisibility(View.INVISIBLE);
+                num_of_letter_text.setVisibility(View.INVISIBLE);
+                reportType.set("부적절한 언어 사용");
+                opinion.set("");
+            }
+        });
+
+        report_type_btn3.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                report_type_btn1.setChecked(false);
+                report_type_btn2.setChecked(false);
+                report_type_btn4.setChecked(false);
+                reasons_edit_text.setVisibility(View.INVISIBLE);
+                num_of_letter_text.setVisibility(View.INVISIBLE);
+                reportType.set("허위 정보 기재");
+                opinion.set("");
+            }
+        });
+
+        report_type_btn4.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                report_type_btn1.setChecked(false);
+                report_type_btn2.setChecked(false);
+                report_type_btn3.setChecked(false);
+                reasons_edit_text.setVisibility(View.VISIBLE);
+                num_of_letter_text.setVisibility(View.VISIBLE);
+                reportType.set("기타");
+//                opinion.set("기타");
+            }
+        });
+
+        reporting_btn.setOnClickListener(v -> {
+            ReviewReportRequestDTO requestDTO = new ReviewReportRequestDTO();
+            Log.d("ReviewReportData", "reportType:" + reportType + ", opinion:" + opinion);
+            requestDTO.setReportType(reportType.get());
+            requestDTO.setOpinion(opinion.get());
+            viewModel.ReviewReportData(storeId, reviewId, requestDTO);
+
+            Log.d("LOGAPI", "다이얼로그 닫기전" );
+            dialog.dismiss(); // 다이얼로그 닫기
+            Log.d("LOGAPI", "다이얼로그 닫기후" );
+        });
+
+        closeIcon.setOnClickListener(v -> dialog.dismiss());
+
+
     }
 
 
