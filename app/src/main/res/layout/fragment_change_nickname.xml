@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/nickname_rule"
+        android:id="@+id/ChangeNickname_rule"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -14,25 +14,25 @@
         android:textColor="@color/boarder_gray"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nickname_editText"
+        app:layout_constraintTop_toBottomOf="@+id/ChangeNickname_text"
         app:layout_constraintVertical_bias="0.052"
         tools:layout_editor_absoluteX="0dp"/>
 
     <TextView
-        android:id="@+id/change_nickname_question"
+        android:id="@+id/ChangeNickname_question"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="바꾸고 싶은 닉네임을 알려주세요!"
         android:textColor="@color/black"
         android:textSize="25sp"
-        app:layout_constraintBottom_toTopOf="@+id/nickname_editText"
+        app:layout_constraintBottom_toTopOf="@+id/ChangeNickname_text"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.748"
         tools:layout_editor_absoluteX="0dp"/>
 
     <EditText
-        android:id="@+id/nickname_editText"
+        android:id="@+id/ChangeNickname_text"
         android:layout_width="380dp"
         android:layout_height="45dp"
         android:background="@drawable/bolder_green"
@@ -50,6 +50,8 @@
     <Button
         android:layout_width="70dp"
         android:layout_height="45dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
         android:background="@drawable/btn_green"
         android:gravity="center_horizontal|center_vertical"
         android:minWidth="0dp"
@@ -62,10 +64,6 @@
         android:textColor="@color/white"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.953"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nickname_rule"
-        app:layout_constraintVertical_bias="0.862" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

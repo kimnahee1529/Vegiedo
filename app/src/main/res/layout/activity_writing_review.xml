@@ -110,18 +110,20 @@
 
     <!-- 사진 텍스트뷰 위치 조정 -->
     <RatingBar
-        android:id="@+id/map_ratingbar_star"
+        android:id="@+id/StoreDetail_ratingbar_star"
         style="@style/Widget.AppCompat.RatingBar.Indicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginStart="70dp"
         android:layout_marginTop="24dp"
-        android:numStars="5"
+        android:rating="5"
         android:progressTint="@color/yellow_star"
         android:stepSize="1.0"
+        android:isIndicator="false"
         app:layout_constraintStart_toEndOf="@+id/ratingText"
         app:layout_constraintTop_toBottomOf="@+id/StoreDetail_review_string_length" />
+
 
     <TextView
         android:id="@+id/imagetext"
@@ -148,53 +150,63 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/main_image"
+                android:id="@+id/store_image_plus_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/plus"
+                app:layout_constraintBottom_toBottomOf="@+id/StoreDetail_image1"
+                app:layout_constraintEnd_toEndOf="@+id/StoreDetail_image1"
+                app:layout_constraintStart_toStartOf="@+id/StoreDetail_image1"
+                app:layout_constraintTop_toTopOf="@+id/StoreDetail_image1" />
+
+            <ImageView
+                android:id="@+id/StoreDetail_image1"
+                android:tag="0"
                 android:layout_width="85dp"
                 android:layout_height="85dp"
-                android:src="@drawable/ic_launcher_background"
-                app:layout_constraintTop_toTopOf="parent"
+                android:background="@drawable/dashed_border"
                 app:layout_constraintStart_toStartOf="parent"
-                tools:srcCompat="@tools:sample/avatars" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
-                android:id="@+id/main_image2"
+                android:id="@+id/StoreDetail_image2"
+                android:tag="1"
                 android:layout_width="85dp"
                 android:layout_height="85dp"
+                android:background="@drawable/dashed_border"
                 android:layout_marginStart="30dp"
-                android:src="@drawable/ic_launcher_background"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/main_image"
-                tools:srcCompat="@tools:sample/avatars" />
+                app:layout_constraintStart_toEndOf="@+id/StoreDetail_image1"/>
 
             <ImageView
-                android:id="@+id/main_image3"
+                android:id="@+id/StoreDetail_image3"
+                android:tag="2"
                 android:layout_width="85dp"
                 android:layout_height="85dp"
+                android:background="@drawable/dashed_border"
                 android:layout_marginStart="30dp"
-                android:src="@drawable/ic_launcher_background"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/main_image2"
-                tools:srcCompat="@tools:sample/avatars" />
+                app:layout_constraintStart_toEndOf="@+id/StoreDetail_image2"/>
 
             <ImageView
-                android:id="@+id/main_image4"
+                android:id="@+id/StoreDetail_image4"
+                android:tag="3"
                 android:layout_width="85dp"
                 android:layout_height="85dp"
+                android:background="@drawable/dashed_border"
                 android:layout_marginStart="30dp"
-                android:src="@drawable/ic_launcher_background"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/main_image3"
-                tools:srcCompat="@tools:sample/avatars" />
+                app:layout_constraintStart_toEndOf="@+id/StoreDetail_image3" />
 
             <ImageView
-                android:id="@+id/main_image5"
+                android:id="@+id/StoreDetail_image5"
+                android:tag="4"
                 android:layout_width="85dp"
                 android:layout_height="85dp"
+                android:background="@drawable/dashed_border"
                 android:layout_marginStart="30dp"
-                android:src="@drawable/ic_launcher_background"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/main_image4"
-                tools:srcCompat="@tools:sample/avatars" />
+                app:layout_constraintStart_toEndOf="@+id/StoreDetail_image4" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

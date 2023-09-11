@@ -18,35 +18,27 @@
 
     <TextView
         android:id="@+id/storeReview_modify_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="200dp"
-        android:layout_marginTop="10dp"
+        android:layout_width="60dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
         android:text="수정"
         android:textSize="15sp"
         app:layout_constraintEnd_toStartOf="@+id/storeReview_delete_text"
-        app:layout_constraintStart_toEndOf="@+id/storeReview_title"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/storeReview_delete_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="30dp"
+        android:layout_width="60dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="5dp"
+        android:gravity="center"
         android:text="삭제"
         android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/storeReview_modify_text"/>
+        app:layout_constraintTop_toTopOf="@+id/storeReview_modify_text" />
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginTop="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
 
-    </LinearLayout>
 
     <RatingBar
         android:id="@+id/storeReview_ratingbar"
@@ -90,7 +82,6 @@
                 android:layout_width="90dp"
                 android:layout_height="90dp"
                 android:layout_marginTop="10dp"
-                android:src="@drawable/ic_launcher_foreground"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -99,7 +90,6 @@
                 android:layout_width="90dp"
                 android:layout_height="90dp"
                 android:layout_marginStart="15dp"
-                android:src="@drawable/ic_launcher_foreground"
                 app:layout_constraintStart_toEndOf="@id/storeReview_image1"
                 app:layout_constraintTop_toTopOf="@id/storeReview_image1" />
 
@@ -108,7 +98,6 @@
                 android:layout_width="90dp"
                 android:layout_height="90dp"
                 android:layout_marginStart="15dp"
-                android:src="@drawable/ic_launcher_foreground"
                 app:layout_constraintStart_toEndOf="@id/storeReview_image2"
                 app:layout_constraintTop_toTopOf="@id/storeReview_image2" />
 
@@ -117,7 +106,6 @@
                 android:layout_width="90dp"
                 android:layout_height="90dp"
                 android:layout_marginStart="15dp"
-                android:src="@drawable/ic_launcher_foreground"
                 app:layout_constraintStart_toEndOf="@id/storeReview_image3"
                 app:layout_constraintTop_toTopOf="@id/storeReview_image3" />
 
@@ -126,7 +114,6 @@
                 android:layout_width="90dp"
                 android:layout_height="90dp"
                 android:layout_marginStart="15dp"
-                android:src="@drawable/ic_launcher_foreground"
                 app:layout_constraintStart_toEndOf="@id/storeReview_image4"
                 app:layout_constraintTop_toTopOf="@id/storeReview_image4" />
 
@@ -134,10 +121,19 @@
 
     </HorizontalScrollView>
 
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ImageView
         android:id="@+id/storeReview_report_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:src="@drawable/alert_triangle"
         app:layout_constraintBottom_toBottomOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="@+id/linearLayout"
