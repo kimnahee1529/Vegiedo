@@ -52,6 +52,10 @@
 
 
     <string name="GOOGLE_CLIENT_KEY">505975847219-mov8ltkf0d4b2apr0lo4nc03faj9si8c.apps.googleusercontent.com</string>
+    <string name="report_type_photo">부적절한 사진 사용</string>
+    <string name="report_type_lan">부적절한 언어 사용</string>
+    <string name="report_type_falseInfo">허위 정보 기재</string>
+    <string name="report_type_etc">기타</string>
 
 
 </resources>
