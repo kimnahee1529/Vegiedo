@@ -30,9 +30,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Vegiedo"
         tools:targetApi="31">
-        <activity
-            android:name=".view.community.CommunityMainActivity"
-            android:exported="false" />
 
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"

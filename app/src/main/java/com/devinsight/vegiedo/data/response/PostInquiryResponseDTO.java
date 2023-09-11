@@ -17,6 +17,9 @@ public class PostInquiryResponseDTO {
     @Expose
     @SerializedName("images")private List<String> images;
 
+    @Expose
+    @SerializedName("commentList")private List<CommentListData> commentList;
+
     public Long getPostId() {
         return postId;
     }
@@ -57,11 +60,20 @@ public class PostInquiryResponseDTO {
         this.images = images;
     }
 
-    public PostInquiryResponseDTO(Long postId, String postTitle, String userName, String content, List<String> images) {
+    public List<CommentListData> getCommentList() {
+        return commentList;
+    }
+
+    public void setCommentList(List<CommentListData> commentList) {
+        this.commentList = commentList;
+    }
+
+    public PostInquiryResponseDTO(Long postId, String postTitle, String userName, String content, List<String> images, List<CommentListData> commentList) {
         this.postId = postId;
         this.postTitle = postTitle;
         this.userName = userName;
         this.content = content;
         this.images = images;
+        this.commentList = commentList;
     }
 }

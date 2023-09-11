@@ -18,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/post_image"
+            android:id="@+id/user_image"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:background="@drawable/ic_launcher_background"
@@ -132,7 +132,7 @@
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <TextView
-        android:id="@+id/post_recommand_count"
+        android:id="@+id/post_recommend_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="56"
