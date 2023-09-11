@@ -40,69 +40,79 @@
             android:layout_marginTop="30dp"
             android:layout_gravity="center">
 
-            <Button
-                android:text="부적절한 사진 사용"
+            <ToggleButton
+                android:id="@+id/report_type_btn1"
+                android:textOff="@string/report_type_photo"
+                android:textOn="@string/report_type_photo"
                 android:textSize="12sp"
-                android:textColor="@color/white"
-                android:id="@+id/btn1"
+                android:textColor="@drawable/btn_togle_text_color"
                 android:layout_width="180dp"
                 android:layout_height="37dp"
-                android:background="@drawable/btn_green"
+                android:background="@drawable/btn_toggle_report_type"
                 android:scaleType="center"
                 android:layout_marginBottom="10dp"/>
 
-            <Button
-                android:text="부적절한 언어 사용"
+            <ToggleButton
+                android:id="@+id/report_type_btn2"
+                android:textOff="@string/report_type_lan"
+                android:textOn="@string/report_type_lan"
                 android:textSize="12sp"
-                android:textColor="@color/primaryGreen"
-                android:id="@+id/btn2"
+                android:textColor="@drawable/btn_togle_text_color"
                 android:layout_width="180dp"
                 android:layout_height="37dp"
-                android:background="@drawable/btn_green_border_n"
+                android:background="@drawable/btn_toggle_report_type"
                 android:scaleType="center"
                 android:layout_marginBottom="10dp"/>
 
-            <Button
-                android:text="허위 정보 기재"
+            <ToggleButton
+                android:id="@+id/report_type_btn3"
+                android:textOff="@string/report_type_falseInfo"
+                android:textOn="@string/report_type_falseInfo"
                 android:textSize="12sp"
-                android:textColor="@color/primaryGreen"
-                android:id="@+id/btn3"
+                android:textColor="@drawable/btn_togle_text_color"
                 android:layout_width="180dp"
                 android:layout_height="37dp"
-                android:background="@drawable/btn_green_border_n"
+                android:background="@drawable/btn_toggle_report_type"
                 android:scaleType="center"
                 android:layout_marginBottom="10dp"/>
 
-            <Button
-                android:text="기타"
+            <ToggleButton
+                android:id="@+id/report_type_btn4"
+                android:textOff="기타"
+                android:textOn="기타"
                 android:textSize="12sp"
-                android:textColor="@color/primaryGreen"
-                android:id="@+id/btn4"
+                android:textColor="@drawable/btn_togle_text_color"
                 android:layout_width="180dp"
                 android:layout_height="37dp"
-                android:background="@drawable/btn_green_border_n"
+                android:background="@drawable/btn_toggle_report_type"
                 android:scaleType="center"
                 android:layout_marginBottom="10dp"/>
 
         </LinearLayout>
 
+
         <EditText
+            android:id="@+id/other_reasons_text"
             android:layout_width="304dp"
             android:layout_height="88dp"
             android:layout_gravity="center"
             android:hint="기타 사유를 적어주세요."
+            android:visibility="invisible"
             android:padding="10dp"
             android:textSize="12sp"
             android:gravity="top"
             android:background="@drawable/edittext_border_line_n"/>
 
         <TextView
+            android:id="@+id/num_of_letter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="0자 / 200자"
+            android:visibility="invisible"
             android:textSize="12sp"
             android:textColor="@color/black"
             android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
             android:layout_gravity="right"/>
 
         <LinearLayout
@@ -113,11 +123,13 @@
             android:layout_marginRight="10dp">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/reporting_btn"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:gravity="center"
                 android:layout_gravity="center"
                 android:textColor="@color/black"
-                android:textSize="13sp"
+                android:textSize="15sp"
                 android:text="완료" />
 
         </LinearLayout>
