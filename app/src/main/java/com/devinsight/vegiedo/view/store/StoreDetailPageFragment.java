@@ -75,6 +75,7 @@ public class StoreDetailPageFragment extends Fragment {
     double Longitude;
     double Latitude;
     ActivityViewModel viewModel;
+    private static Long storeId;
 
 
     public StoreDetailPageFragment() {
@@ -92,9 +93,11 @@ public class StoreDetailPageFragment extends Fragment {
         loadFragment(new StoreReviewFragment());
 
         //TODO 이 전페이지에서 받아온 storeId를 넣어줘야 함
-        Long storeId = viewModel.getStoreId().getValue();
+//        storeId = viewModel.getStoreId().getValue();
 //        callStoreAPI(viewModel.getStoreId().getValue());
-        callStoreAPI(1L);
+        storeId = 1L;
+        Log.d("LOGAPI storeId갖고 오는 거 맞나?", String.valueOf(storeId));
+        callStoreAPI(storeId);
 
         return view;
     }
@@ -177,8 +180,10 @@ public class StoreDetailPageFragment extends Fragment {
         StoreDetail_review_writing_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                WritingReviewFragment fragment = new WritingReviewFragment();
-//                WritingReviewFragment fragment = WritingReviewFragment.newInstance(false, null);
+                WritingReviewFragment fragment = WritingReviewFragment.newInstance(
+                        storeId,
+                        5
+                );
 
                 FragmentManager fragmentManager = ((FragmentActivity) view.getContext()).getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
