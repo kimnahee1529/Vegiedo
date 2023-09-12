@@ -280,6 +280,10 @@ public class SearchFilterFragment extends Fragment {
                 getParentFragmentManager().beginTransaction().replace(R.id.frame, storeListMainFragment).commit();
 //                getParentFragmentManager().popBackStack();
 
+                FragmentManager fragmentManager = ((MainActivity)getActivity()).getSupportFragmentManager();
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                transaction.replace(R.id.frame, storeListMainFragment).commit();
+
 
                 Log.d("떨어짐","떨어짐");
 

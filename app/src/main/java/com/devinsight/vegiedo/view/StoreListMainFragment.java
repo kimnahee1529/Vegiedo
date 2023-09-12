@@ -1,6 +1,5 @@
 package com.devinsight.vegiedo.view;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -17,7 +16,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.devinsight.vegiedo.R;
 import com.devinsight.vegiedo.data.response.StoreListData;
@@ -43,6 +44,10 @@ public class StoreListMainFragment extends Fragment implements StoreDetailListAd
 
     ConstraintLayout layout;
     LinearLayout not_found_Sheep;
+
+    ImageView sheep;
+    TextView tt_not_found;
+    TextView tt_set_more_option;
 
     StoreDetailPageDDFragment storeDetailPageDDFragment;
 
@@ -76,13 +81,12 @@ public class StoreListMainFragment extends Fragment implements StoreDetailListAd
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_store_list_main, container, false);
-        Log.d("가게메인리스트","가게메인리스트");
+        Log.d("가게메인리스트", "가게메인리스트");
 
         layout = view.findViewById(R.id.store_setting_message);
-        not_found_Sheep = view.findViewById(R.id.not_found);
-
-        layout.setVisibility(View.INVISIBLE);
-        not_found_Sheep.setVisibility(View.VISIBLE);
+        sheep = view.findViewById(R.id.sheep);
+        tt_not_found = view.findViewById(R.id.tt_not_found);
+        tt_set_more_option = view.findViewById(R.id.tt_set_more_option);
 
         recyclerView = view.findViewById(R.id.recycler_store_list);
         storeList = new ArrayList<>();
@@ -92,25 +96,46 @@ public class StoreListMainFragment extends Fragment implements StoreDetailListAd
         recyclerView.setLayoutManager(linearLayoutManager);
 
         viewModel = new ViewModelProvider(requireActivity()).get(ActivityViewModel.class);
-        Log.d("가게메인리스트2","가게메인리스트2");
+        Log.d("가게메인리스트2", "가게메인리스트2");
 
 //        viewModel.storeApiData();
         viewModel.searchDetailList();
-        Log.d("가게메인리스트3","가게메인리스트3");
+        Log.d("가게메인리스트3", "가게메인리스트3");
 
 
         viewModel.getFilteredStoreListLiveData().observe(getViewLifecycleOwner(), new Observer<List<StoreListData>>() {
             @Override
             public void onChanged(List<StoreListData> storeListData) {
-                Log.d("가게메인리스트4","가게메인리스트4");
-                storeDetailListAdapter.setStoreList(storeListData);
-                storeDetailListAdapter.notifyDataSetChanged();
+
+                if (storeListData.size() == 0) {
+                    Log.d("검색 리스트 없음 ", " 검색리스트 갯수 : " + storeListData.size());
+                    setNotificationVisible();
+                } else {
+                    Log.d("가게메인리스트4", "가게메인리스트4");
+                    setNotificationInVisible();
+                    storeDetailListAdapter.setStoreList(storeListData);
+                    storeDetailListAdapter.notifyDataSetChanged();
+
+                }
             }
         });
 
 
-
         return view;
+    }
+
+    public void setNotificationVisible() {
+        layout.setVisibility(View.INVISIBLE);
+        sheep.setVisibility(View.VISIBLE);
+        tt_not_found.setVisibility(View.VISIBLE);
+        tt_set_more_option.setVisibility(View.VISIBLE);
+    }
+
+    public void setNotificationInVisible() {
+        layout.setVisibility(View.VISIBLE);
+        sheep.setVisibility(View.INVISIBLE);
+        tt_not_found.setVisibility(View.INVISIBLE);
+        tt_set_more_option.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -139,7 +164,5 @@ public class StoreListMainFragment extends Fragment implements StoreDetailListAd
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        layout.setVisibility(View.VISIBLE);
-        not_found_Sheep.setVisibility(View.INVISIBLE);
     }
 }

@@ -23,9 +23,11 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -80,6 +82,8 @@ public class MainActivity extends AppCompatActivity {
     AuthPrefRepository authPrefRepository;
 
     int INITIAL_DISTANCE = 10;
+
+    private InputMethodManager inputMethodManager;
 
 
     @Override
@@ -140,6 +144,9 @@ public class MainActivity extends AppCompatActivity {
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, locationListener);
         }
 
+        inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+
+
 
 
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
@@ -190,14 +197,18 @@ public class MainActivity extends AppCompatActivity {
         searchView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
-                setShortSearchBar();
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.frame, searchMainFragment, "SearchMainFragment")
-                        .addToBackStack("SearchMainFragment").commit();
+                if(b) {
+                    setShortSearchBar();
+                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                    transaction.replace(R.id.frame, searchMainFragment, "SearchMainFragment")
+                            .addToBackStack("SearchMainFragment").commit();
+                } else {
+                    setLongSearchBar();
+                    getSupportFragmentManager().popBackStack();
+
+                }
             }
         });
-
-
 
 
         searchView.addTextChangedListener(new TextWatcher() {
@@ -222,7 +233,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
                 if(actionId == EditorInfo.IME_ACTION_DONE || (keyEvent != null && keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER) ){
-
+                    inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
                     String currentInput = textView.getText().toString();
                     if(currentInput != null ) {
                         currentInputList.add(currentInput);
@@ -246,6 +257,7 @@ public class MainActivity extends AppCompatActivity {
         btn_filter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.frame, searchFilterFragment,"searchFilterFragment").addToBackStack("searchFilterFragment").commit();
             }
