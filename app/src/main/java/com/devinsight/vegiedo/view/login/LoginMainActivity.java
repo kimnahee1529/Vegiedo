@@ -274,6 +274,7 @@ public class LoginMainActivity extends AppCompatActivity {
                     public void onResponse(Call<Void> call, Response<Void> response) {
                         String userKaKAoToken = response.headers().get("Authorization");
                         authPrefRepository.saveAuthToken("KAKAO",userKaKAoToken);
+                        Log.e("KAKAO"," 서버토큰 " + userKaKAoToken);
                         Log.e("KAKAO", "연동성공" + kakaoAuth);
                     }
 

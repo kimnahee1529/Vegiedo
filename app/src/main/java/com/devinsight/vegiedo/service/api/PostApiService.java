@@ -5,6 +5,7 @@ import com.devinsight.vegiedo.data.request.PostReportRequestDTO;
 import com.devinsight.vegiedo.data.response.PostInquiryResponseDTO;
 import com.devinsight.vegiedo.data.response.PostListData;
 import com.devinsight.vegiedo.data.response.PostListInquiryResponseDTO;
+//import com.devinsight.vegiedo.data.response.
 import com.devinsight.vegiedo.data.response.PostRegisterResponseDTO;
 
 import java.util.List;
@@ -26,14 +27,14 @@ import retrofit2.http.Query;
 public interface PostApiService {
 
     //게시글 리스트 조회
-    @GET("/test/posts/list")
+    @GET("/posts/list")
     Call<List<PostListData>> getGeneralPostList(
             @Query("pageSize") int pageSize,
             @Query("pageNumber") int pageNumber,
             @Header("Authorization") String token
     );
 
-    @GET("/test/posts/popularList")
+    @GET("/posts/popularList")
     Call<List<PostListData>> getPopularPostList(
             @Query("pageSize") int count,
             @Query("pageNumber") int cursor,
@@ -42,17 +43,33 @@ public interface PostApiService {
 
     //게시글 등록
     @Multipart
-    @POST("/test/posts")
-    Call<PostRegisterResponseDTO> addPost(
+    @POST("/posts")
+    Call<Void> addPost(
+            @Header("Authorization") String token,
+            @Part List<MultipartBody.Part> images,
+            @Part("postTitle") MultipartBody.Part postTitle,
+            @Part("content") MultipartBody.Part content
+    );
+    @Multipart
+    @POST("/posts")
+    Call<PostRegisterResponseDTO> addPost2(
             @Header("Authorization") String token,
             @Part List<MultipartBody.Part> images,
             @Part("postTitle") RequestBody postTitle,
             @Part("content") RequestBody content
     );
 
-    //게시글 조회
+//    @Multipart
+//    @POST("/posts")
+//    Call<PostRegisterResponseDTO> addPost2(
+//            @Header("Authorization") String token,
+//            @Part List<MultipartBody.Part> images,
+//            @Part MultipartBody.Part postTitle,
+//            @Part MultipartBody.Part content
+//    );
 
-    @GET("/test/posts/{postId}")
+    //게시글 조회
+    @GET("/posts/{postId}")
     Call<PostInquiryResponseDTO> getPost(
             @Path("postId") Long postId
 

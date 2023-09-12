@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.devinsight.vegiedo.data.response.PostListData;
 import com.devinsight.vegiedo.data.response.PostListInquiryResponseDTO;
+import com.devinsight.vegiedo.data.response.response;
 import com.devinsight.vegiedo.service.api.PostApiService;
 import com.devinsight.vegiedo.utill.RetrofitClient;
 
@@ -35,7 +36,7 @@ public class CommunityViewModel extends ViewModel {
     public void loadPopularPostList(){
         Log.d("인기 포스트 요청을 위한 토큰"," 포스트 요청 토큰" + token);
 
-        postApiService.getPopularPostList(5,1,token).enqueue(new Callback<List<PostListData>>() {
+        postApiService.getPopularPostList(5,1, "Bearer " + token).enqueue(new Callback<List<PostListData>>() {
             @Override
             public void onResponse(Call<List<PostListData>> call, Response<List<PostListData>> response) {
                 if(response.isSuccessful() && response.body() != null ){

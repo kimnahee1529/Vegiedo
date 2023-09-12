@@ -74,7 +74,7 @@ public class WritingFragment extends Fragment {
     private ImageView currentlySelectedImageView;
 
     private List<Uri> imageUrilist;
-    private List<MultipartBody.Part> files;
+//    private List<MultipartBody.Part> files;
 
     private String token;
 
@@ -88,9 +88,7 @@ public class WritingFragment extends Fragment {
 
 
         imageUrilist = new ArrayList<>();
-        files = new ArrayList<>();
-
-
+//        files = new ArrayList<>();
 
 
         initializeViews(rootView);
@@ -102,7 +100,7 @@ public class WritingFragment extends Fragment {
         AuthPrefRepository authPrefRepository = new AuthPrefRepository(getContext());
 
         String social;
-        if( authPrefRepository.getAuthToken("KAKAO") != null) {
+        if (authPrefRepository.getAuthToken("KAKAO") != null) {
             social = "KAKAO";
         } else {
             social = "GOOGLE";
@@ -115,9 +113,9 @@ public class WritingFragment extends Fragment {
         }
 
 
-
         return rootView;
     }
+
     /* 뷰 초기화 */
     private void initializeViews(View rootView) {
         communityWritingContentText = rootView.findViewById(R.id.community_writing_content_text);
@@ -142,6 +140,7 @@ public class WritingFragment extends Fragment {
         ImageView mainImage5 = rootView.findViewById(R.id.main_image5);
         mainImage5.setOnClickListener(v -> selectImageForView((ImageView) v));
     }
+
     /* */
     private void restoreSelectedImages() {
         int[] imageViews = {R.id.main_image1, R.id.main_image2, R.id.main_image3, R.id.main_image4, R.id.main_image5};
@@ -222,26 +221,55 @@ public class WritingFragment extends Fragment {
                     new PostRegisterRequestDTO(titleText, contentText, selectedImageUris);
 
 
-
-            for ( int i = 0 ; i < imageUrilist.size() ; i ++ ) {
+            List<MultipartBody.Part> files = new ArrayList<>();
+            for (int i = 0; i < imageUrilist.size(); i++) {
                 String filePath = getFilePath(getActivity(), imageUrilist.get(i));
 
-                if(filePath != null ) {
+                if (filePath != null) {
+//                    RequestBody fileBody = RequestBody.create(MediaType.parse("image/*"), new File(filePath));
                     RequestBody fileBody = RequestBody.create(MediaType.parse("image/*"), new File(filePath));
                     String fileName = "photo" + i + ".jpg";
-                    MultipartBody.Part filePart = MultipartBody.Part.createFormData("photo", fileName, fileBody);
+                    MultipartBody.Part filePart = MultipartBody.Part.createFormData("images", fileName, fileBody);
                     files.add(filePart);
                 }
             }
+
+            if (!files.isEmpty()) {
+                MultipartBody.Part firstFilePart = files.get(0);
+                RequestBody firstFileRequestBody = firstFilePart.body();
+                Log.d("첫 번째 파일 이름", firstFilePart.headers().value(0)); // 파일 이름
+                Log.d("첫 번째 파일 미디어 타입", firstFileRequestBody.contentType().toString()); // 미디어 타입
+                try {
+                    Log.d("첫 번째 파일 크기", String.valueOf(firstFileRequestBody.contentLength())); // 파일 크기
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                // 나머지 파일 관련 정보도 필요하다면 추가로 출력할 수 있음
+            } else {
+                Log.d("files 리스트", "비어 있습니다.");
+            }
+            Log.d("files 리스트 크기", "크기: " + files.size());
             RequestBody titleRequestBody = RequestBody.create(MediaType.parse("text/plain"), titleText);
+            MultipartBody.Part titlePart = MultipartBody.Part.createFormData("postTitle", titleText, titleRequestBody);
+
             RequestBody contentRequestBody = RequestBody.create(MediaType.parse("text/plain"), contentText);
-            postApiService.addPost(token, files, titleRequestBody, contentRequestBody ).enqueue(new Callback<PostRegisterResponseDTO>() {
+            MultipartBody.Part contentPart = MultipartBody.Part.createFormData("content", contentText, contentRequestBody);
+
+
+            Log.d("토큰", "토큰" + token);
+            postApiService.addPost2("Bearer " + token, files, titleRequestBody, contentRequestBody).enqueue(new Callback<PostRegisterResponseDTO>() {
                 @Override
                 public void onResponse(Call<PostRegisterResponseDTO> call, Response<PostRegisterResponseDTO> response) {
-                    if(response.isSuccessful()){
-                        Log.d("post 등록 api 호출 성공 ","성공" + response);
-                    }else{
-                        Log.e("post 등록 api 호출 실패 ","실패1" + response);
+                    if (response.isSuccessful()) {
+                        PostRegisterResponseDTO data = response.body();
+                        String imageUrl = data.getImages().toString();
+                        Log.d("이미지 url", "url" + imageUrl);
+                        Log.d("내용", "content" + data.getContent());
+                        Log.d("내용", "title" + data.getPostTitle());
+
+                        Log.d("post 등록 api 호출 성공 ", "성공" + response);
+                    } else {
+                        Log.e("post 등록 api 호출 실패 ", "실패1" + response);
 
                         // 예외처리 및 오류 로그
                         try {
@@ -252,16 +280,48 @@ public class WritingFragment extends Fragment {
                             // 오류 본문을 읽어오지 못하는 경우에 대한 예외처리
                             Log.e("오류 응답 본문 읽기 실패", e.getMessage(), e);
                         }
-                        Log.e("post 등록 api 호출 실패 ","실패1" + response);
+                        Log.e("post 등록 api 호출 실패 ", "실패1" + response);
                     }
                 }
+
                 @Override
                 public void onFailure(Call<PostRegisterResponseDTO> call, Throwable t) {
-                    Log.e("post 등록 api 호출 실패 ","실패2" + t.getMessage());
+                    Log.e("post 등록 api 호출 실패 ", "실패2" + t.getMessage());
                 }
             });
 
-            Log.d("files","files" + files.size());
+
+//            postApiService.addPost(token, files, titleRequestBody, contentRequestBody ).enqueue(new Callback<Void>() {
+//                @Override
+//                public void onResponse(Call<Void> call, Response<Void> response) {
+//                    if(response.isSuccessful()){
+//                        PostRegisterResponseDTO data = response.body();
+//                        Log.d("post 등록 api 호출 성공 "," void 성공" + response);
+//                    }else{
+//                        Log.e("post 등록 api 호출 실패 "," void 실패1" + response);
+//
+//                        // 예외처리 및 오류 로그
+//                        try {
+//                            // 오류 응답에서 오류 메시지를 가져와서 로그에 기록
+//                            String errorBody = response.errorBody().string();
+//                            Log.e("오류 응답 본문", errorBody);
+//                        } catch (IOException e) {
+//                            // 오류 본문을 읽어오지 못하는 경우에 대한 예외처리
+//                            Log.e("오류 응답 본문 읽기 실패", e.getMessage(), e);
+//                        }
+//                        Log.e("post 등록 api 호출 실패 ","실패1" + response);
+//                    }
+//
+//                }
+//
+//                @Override
+//                public void onFailure(Call<Void> call, Throwable t) {
+//                    Log.e("post 등록 api 호출 실패 "," void 실패2" + t.getMessage());
+//
+//                }
+//            });
+
+            Log.d("files", "files" + files.size());
 //            sendPostRequest(postRegisterRequestDTO);
 //            moveToCommunityFragment();
 
