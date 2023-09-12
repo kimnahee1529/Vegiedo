@@ -462,6 +462,7 @@ public class ActivityViewModel extends ViewModel {
         });
     }
 
+    //리뷰
     //리뷰 조회 API(StoreDetailPageFragment서 사용)
     public void ReviewInquiryData(Long storeId, int count, int cursor, boolean blogReview) {
         //리뷰 조회
@@ -506,6 +507,29 @@ public class ActivityViewModel extends ViewModel {
         });
     }
 
+    //리뷰 삭제 API(WritingReviewFragment에서 사용)
+    public void ReviewDeleteData(Long storeId, Long reviewId) {
+        //리뷰 수정
+        Call<Void> reviewDeleteRequestDTOCall = reviewApiService.deleteReview(storeId, reviewId);
+        reviewDeleteRequestDTOCall.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    Void responseData = response.body();
+//                    Log.d("LOGAPIReviewDeleteData", responseData.toString());
+                    Log.d("LOGAPI", "ReviewDeleteData 호출성공 " + response);
+                } else{
+                    Log.d("LOGAPI", "ReviewDeleteData 호출실패1 " + response);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("LOGAPI", "ReviewDeleteData 호출실패2"+ t.getMessage());
+            }
+        });
+    }
+
     //리뷰 수정 API(WritingReviewFragment에서 사용)
     public void ReviewModifyData(Long storeId, Long reviewId, ReviewModifyrRequestDTO requestDTO) {
         //리뷰 수정
@@ -515,7 +539,7 @@ public class ActivityViewModel extends ViewModel {
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
                     Void responseData = response.body();
-                    Log.d("LOGAPIReviewModifyData", responseData.toString());
+                    Log.d("LOGAPIReviewModifyData", response.toString());
                 } else{
                     Log.d("LOGAPI", "ReviewModifyData 호출실패1 "+response);
                 }
@@ -550,28 +574,6 @@ public class ActivityViewModel extends ViewModel {
         });
     }
 
-    //리뷰 삭제 API(WritingReviewFragment에서 사용)
-    public void ReviewDeleteData(Long storeId, Long reviewId) {
-        //리뷰 수정
-        Call<Void> reviewDeleteRequestDTOCall = reviewApiService.deleteReview(storeId, reviewId);
-        reviewDeleteRequestDTOCall.enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                if (response.isSuccessful()) {
-                    Void responseData = response.body();
-//                    Log.d("LOGAPIReviewDeleteData", responseData.toString());
-                    Log.d("LOGAPI", "ReviewDeleteData 호출성공 " + response);
-                } else{
-                    Log.d("LOGAPI", "ReviewDeleteData 호출실패1 " + response);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                Log.d("LOGAPI", "ReviewDeleteData 호출실패2"+ t.getMessage());
-            }
-        });
-    }
     /* true : 일반 게시글, false : 인기 게시글*/
     public void setPostType(Boolean postType){
         if(postType){
