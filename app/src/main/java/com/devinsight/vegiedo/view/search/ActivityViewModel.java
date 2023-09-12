@@ -219,6 +219,8 @@ public class ActivityViewModel extends ViewModel {
             @Override
             public void onResponse(Call<List<StoreListData>> call, Response<List<StoreListData>> response) {
                 if (response.isSuccessful() && response.body() != null) {
+
+                    Log.d(" 가게 호출 쿼리","값" + tags + latitude + longitude + "거리 : " + distance + keyword);
                     List<StoreListData> data = response.body();
                     storeListLiveData.setValue(data);
                     searchSummList();
@@ -390,6 +392,7 @@ public class ActivityViewModel extends ViewModel {
 //                storeFilteredLiveData.setValue(filteredStoreList);
 //                Log.d("필터링1","필터링1" + filteredStoreList.get(i).getStoreName());
             } else {
+                Log.d("키워드가 없을 때"," 발동 !");
                 boolean isTagMatched = false;
                 if (tags != null)
                     for (String userTag : tags) {
@@ -410,7 +413,10 @@ public class ActivityViewModel extends ViewModel {
 //                storeFilteredLiveData.setValue(filteredStoreList);
 
             }
+            Log.d(" 데이터 저장 ","데이터 저장" );
             storeFilteredLiveData.setValue(filteredStoreList);
+            Log.d(" 데이터 저장2 ","데이터 저장2" );
+
             for( int k = 0 ; k < filteredStoreList.size() ; k ++ ) {
                 Log.e("k","k " + k + " " + filteredStoreList.get(k).getDistance() + filteredStoreList.get(k).getTags().get(0) + filteredStoreList.get(k).getTags().get(1));
             }
