@@ -44,22 +44,6 @@ public class UserReviewItem {
         this.itemType = itemType;
     }
 
-    public static List<UserReviewItem> configureDataPattern(List<UserReviewItem> originalItems) {
-        List<UserReviewItem> newPatternedItems = new ArrayList<>();
-
-        for(int i = 0; i < originalItems.size(); i+=3) {
-            // Add 3 review items
-            for(int j = 0; j < 3 && (i+j) < originalItems.size(); j++) {
-                newPatternedItems.add(originalItems.get(i+j));
-            }
-
-            // Add an AdMob item
-            newPatternedItems.add(new UserReviewItem(ItemType.AD_BANNER));
-        }
-
-        return newPatternedItems;
-    }
-
     public ItemType getItemType() {
         return itemType;
     }
