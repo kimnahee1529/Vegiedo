@@ -51,7 +51,6 @@ public class MyPageFragment extends Fragment {
         MyPage_nickname = rootView.findViewById(R.id.MyPage_nickname);
         MyPage_profile_image = rootView.findViewById(R.id.MyPage_profile_image);
 
-//TODO : user api로 구현해야 함
         // SharedPreferences 객체 얻기(회원가입 때 정한 닉네임, 태그 얻기 위함)
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_info", Context.MODE_PRIVATE);
         // userName 값 읽기
@@ -63,7 +62,6 @@ public class MyPageFragment extends Fragment {
                 .load(userProfile)
                 .circleCrop()
                 .into(MyPage_profile_image);
-//TODO : user api로 구현해야 함
 
         ImageView mypageCamera = rootView.findViewById(R.id.my_page_camera_image);
         ImageView mypagePencil = rootView.findViewById(R.id.my_page_change_nickname_image);
