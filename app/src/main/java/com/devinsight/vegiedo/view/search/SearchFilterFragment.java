@@ -119,6 +119,7 @@ public class SearchFilterFragment extends Fragment {
                 seekbar_distance.setX(xPos);
                 seekbar_distance.setText(seekBar.getProgress() + "km이내");
                 filterData.setDistance(seekBar.getProgress());
+                viewModel.getDistance(seekBar.getProgress());
                 Log.d("seekbar 위치 ", "위치 : " + xPos);
             }
 

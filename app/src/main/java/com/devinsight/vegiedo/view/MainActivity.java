@@ -187,6 +187,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        searchView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                setShortSearchBar();
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.frame, searchMainFragment, "SearchMainFragment")
+                        .addToBackStack("SearchMainFragment").commit();
+            }
+        });
+
 
 
 

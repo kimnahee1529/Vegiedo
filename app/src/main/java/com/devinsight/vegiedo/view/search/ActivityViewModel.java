@@ -187,6 +187,10 @@ public class ActivityViewModel extends ViewModel {
         Log.d("지도 위치", "지도 위치 " + "위도 : " + mapLat + "경도" + mapLong);
     }
 
+    public void getDistance( int distance){
+        this.distance = distance;
+    }
+
     /* 실시간으로 입력 받는 검색어 */
     private LiveData<String> getInputText() {
         return inputTextLiveData;
@@ -406,19 +410,19 @@ public class ActivityViewModel extends ViewModel {
                             break; // 하나라도 일치하는 태그를 찾았으면 더 이상 검사하지 않습니다.
                         }
                     }
-                if (storeDistance && isTagMatched) {
+                if (storeDistance || isTagMatched) {
                     filteredStoreList.add(storeList.get(i));
+
 //                    Log.d("필터링2","필터링2" + filteredStoreList.get(filteredStoreList.size()).getStoreName());
                 }
 //                storeFilteredLiveData.setValue(filteredStoreList);
-
             }
-            Log.d(" 데이터 저장 ","데이터 저장" );
+
             storeFilteredLiveData.setValue(filteredStoreList);
             Log.d(" 데이터 저장2 ","데이터 저장2" );
 
             for( int k = 0 ; k < filteredStoreList.size() ; k ++ ) {
-                Log.e("k","k " + k + " " + filteredStoreList.get(k).getDistance() + filteredStoreList.get(k).getTags().get(0) + filteredStoreList.get(k).getTags().get(1));
+                Log.e("k","k " + k + " " + filteredStoreList.get(k).getDistance() + "필터링 거리 " + distance );
             }
         }
 
