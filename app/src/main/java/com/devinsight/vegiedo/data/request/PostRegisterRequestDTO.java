@@ -1,13 +1,19 @@
 package com.devinsight.vegiedo.data.request;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 // 2. 게시글 등록 요청
 public class PostRegisterRequestDTO {
 
-    private String postTitle;
-    private String content;
-    private List<String> images;
+    @Expose
+    @SerializedName("postTitle")private String postTitle;
+    @Expose
+    @SerializedName("content")private String content;
+    @Expose
+    @SerializedName("images")private List<String> images;
     public String getPostTitle() {
         return postTitle;
     }

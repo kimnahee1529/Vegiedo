@@ -3,6 +3,7 @@ package com.devinsight.vegiedo.view.search;
 import static com.google.android.gms.common.util.CollectionUtils.listOf;
 
 import android.location.Location;
+import android.net.Uri;
 import android.util.Log;
 import android.view.View;
 
@@ -33,9 +34,12 @@ import com.devinsight.vegiedo.service.api.StoreApiService;
 import com.devinsight.vegiedo.utill.RetrofitClient;
 import com.devinsight.vegiedo.view.community.ClickedPostData;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -110,6 +114,9 @@ public class ActivityViewModel extends ViewModel {
     private String token;
 
     private Long postId;
+
+    private List<Uri> imageUriList;
+
 
     ClickedPostData postData;
 
@@ -190,6 +197,8 @@ public class ActivityViewModel extends ViewModel {
     public void getDistance( int distance){
         this.distance = distance;
     }
+
+
 
     /* 실시간으로 입력 받는 검색어 */
     private LiveData<String> getInputText() {
@@ -629,6 +638,10 @@ public class ActivityViewModel extends ViewModel {
             }
         });
 
+    }
+
+    public void getUriList(List<Uri> imageUri) {
+        this.imageUriList = imageUri;
     }
 
 

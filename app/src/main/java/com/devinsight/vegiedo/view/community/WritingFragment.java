@@ -2,10 +2,15 @@ package com.devinsight.vegiedo.view.community;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -19,16 +24,32 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 
 import com.devinsight.vegiedo.R;
 import com.devinsight.vegiedo.data.request.PostRegisterRequestDTO;
+import com.devinsight.vegiedo.data.response.PostRegisterResponseDTO;
+import com.devinsight.vegiedo.repository.pref.AuthPrefRepository;
+import com.devinsight.vegiedo.service.api.PostApiService;
+import com.devinsight.vegiedo.utill.RetrofitClient;
 import com.devinsight.vegiedo.view.PermissionUtils;
+import com.devinsight.vegiedo.view.search.ActivityViewModel;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 //TODO : moveToCommunityFragment에 인기게시글->글쓰기->일반게시글로 돌아오는 부분 수정
 public class WritingFragment extends Fragment {
@@ -52,26 +73,52 @@ public class WritingFragment extends Fragment {
     private String previousFragment;
     private ImageView currentlySelectedImageView;
 
+    private List<Uri> imageUrilist;
+    private List<MultipartBody.Part> files;
+
+    private String token;
+
+    ActivityViewModel activityViewModel;
+
+    PostApiService postApiService = RetrofitClient.getPostApiService();
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_writing, container, false);
-        /* 초기화 합니다 */
+
+
+        imageUrilist = new ArrayList<>();
+        files = new ArrayList<>();
+
+
+
+
         initializeViews(rootView);
-
-
         setTitleTextWatcher();
         setContentTextWatcher();
         setRegisterButtonListener();
         restoreSelectedImages();
+
+        AuthPrefRepository authPrefRepository = new AuthPrefRepository(getContext());
+
+        String social;
+        if( authPrefRepository.getAuthToken("KAKAO") != null) {
+            social = "KAKAO";
+        } else {
+            social = "GOOGLE";
+        }
+        this.token = authPrefRepository.getAuthToken(social);
+
 
         if (getArguments() != null) {
             previousFragment = getArguments().getString("previousFragment");
         }
 
 
+
         return rootView;
     }
-
+    /* 뷰 초기화 */
     private void initializeViews(View rootView) {
         communityWritingContentText = rootView.findViewById(R.id.community_writing_content_text);
         communityStringLength = rootView.findViewById(R.id.community_string_length);
@@ -95,13 +142,14 @@ public class WritingFragment extends Fragment {
         ImageView mainImage5 = rootView.findViewById(R.id.main_image5);
         mainImage5.setOnClickListener(v -> selectImageForView((ImageView) v));
     }
-
+    /* */
     private void restoreSelectedImages() {
         int[] imageViews = {R.id.main_image1, R.id.main_image2, R.id.main_image3, R.id.main_image4, R.id.main_image5};
         for (int i = 0; i < selectedImageUris.size(); i++) {
             ImageView imageView = rootView.findViewById(imageViews[i]);
             imageView.setImageURI(Uri.parse(selectedImageUris.get(i)));
             imageView.setBackground(null);
+
         }
     }
 
@@ -121,10 +169,12 @@ public class WritingFragment extends Fragment {
             }
 
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
         });
     }
 
@@ -143,10 +193,12 @@ public class WritingFragment extends Fragment {
             }
 
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
         });
     }
 
@@ -169,16 +221,63 @@ public class WritingFragment extends Fragment {
                     new PostRegisterRequestDTO(titleText, contentText) :
                     new PostRegisterRequestDTO(titleText, contentText, selectedImageUris);
 
-            Log.d("LOG 등록버튼", "제목: " + postRegisterRequestDTO.getPostTitle() +
-                    " 내용: " + postRegisterRequestDTO.getContent() +
-                    " 이미지: " + postRegisterRequestDTO.getImages());
-
-            sendPostRequest(postRegisterRequestDTO);
 
 
+            for ( int i = 0 ; i < imageUrilist.size() ; i ++ ) {
+                String filePath = getFilePath(getActivity(), imageUrilist.get(i));
+
+                if(filePath != null ) {
+                    RequestBody fileBody = RequestBody.create(MediaType.parse("image/*"), new File(filePath));
+                    String fileName = "photo" + i + ".jpg";
+                    MultipartBody.Part filePart = MultipartBody.Part.createFormData("photo", fileName, fileBody);
+                    files.add(filePart);
+                }
+            }
+            RequestBody titleRequestBody = RequestBody.create(MediaType.parse("text/plain"), titleText);
+            RequestBody contentRequestBody = RequestBody.create(MediaType.parse("text/plain"), contentText);
+            postApiService.addPost(token, files, titleRequestBody, contentRequestBody ).enqueue(new Callback<PostRegisterResponseDTO>() {
+                @Override
+                public void onResponse(Call<PostRegisterResponseDTO> call, Response<PostRegisterResponseDTO> response) {
+                    if(response.isSuccessful()){
+                        Log.d("post 등록 api 호출 성공 ","성공" + response);
+                    }else{
+                        Log.e("post 등록 api 호출 실패 ","실패1" + response);
+
+                        // 예외처리 및 오류 로그
+                        try {
+                            // 오류 응답에서 오류 메시지를 가져와서 로그에 기록
+                            String errorBody = response.errorBody().string();
+                            Log.e("오류 응답 본문", errorBody);
+                        } catch (IOException e) {
+                            // 오류 본문을 읽어오지 못하는 경우에 대한 예외처리
+                            Log.e("오류 응답 본문 읽기 실패", e.getMessage(), e);
+                        }
+                        Log.e("post 등록 api 호출 실패 ","실패1" + response);
+                    }
+                }
+                @Override
+                public void onFailure(Call<PostRegisterResponseDTO> call, Throwable t) {
+                    Log.e("post 등록 api 호출 실패 ","실패2" + t.getMessage());
+                }
+            });
+
+            Log.d("files","files" + files.size());
+//            sendPostRequest(postRegisterRequestDTO);
 //            moveToCommunityFragment();
 
         });
+    }
+
+    private String getFilePath(Context context, Uri uri) {
+        String filePath = null;
+        if (Build.VERSION.SDK_INT < 11) {
+            filePath = RealPathUtil.getRealPathFromURI_BelowAPI11(context, uri);
+        } else if (Build.VERSION.SDK_INT < 19) {
+            filePath = RealPathUtil.getRealPathFromURI_API11to18(context, uri);
+        } else {
+            filePath = RealPathUtil.getRealPathFromURI_API19(context, uri);
+        }
+        return filePath;
     }
 
     private void sendPostRequest(PostRegisterRequestDTO postRegisterRequestDTO) {
@@ -246,19 +345,28 @@ public class WritingFragment extends Fragment {
 //            // If permission is not granted, request for permission
 //            requestPermission();
 //        }
+        currentlySelectedImageView = imageView;
 
         if (PermissionUtils.checkPermission(getActivity())) {
             // 권한이 이미 허용된 상태: 바로 관련 작업 수행
-            currentlySelectedImageView = imageView;
+//            currentlySelectedImageView = imageView;
             Intent intent = new Intent();
             intent.setType("image/*");
             intent.setAction(Intent.ACTION_GET_CONTENT);
             startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY_REQUEST_CODE);
         } else {
             // 권한이 허용되지 않은 상태: 권한 요청
-            PermissionUtils.requestPermission(getActivity(), PERMISSION_REQUEST_CODE);
+//            PermissionUtils.requestPermission(getActivity(), PERMISSION_REQUEST_CODE);
+            requestGalleryPermission();
 //            requestPermission();
         }
+    }
+
+    private void requestGalleryPermission() {
+        // 권한을 요청합니다.
+        ActivityCompat.requestPermissions(getActivity(),
+                new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE},
+                PERMISSION_REQUEST_CODE);
     }
 
     @Override
@@ -266,22 +374,27 @@ public class WritingFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == GALLERY_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
+            /* Uri 를 담을 변수를 초기화 해줍니다. */
             Uri selectedImageUri = null;
 
             if (data.getData() != null) {
+                /* Uri를 담아줍니다.*/
                 selectedImageUri = data.getData();
-            }
 
+            }
+            /* 이미지뷰가 null이 아니고, uri도 null이 아니라면 Uri를 이미지뷰에 그려줍니다. */
             if (currentlySelectedImageView != null && selectedImageUri != null) {
                 currentlySelectedImageView.setImageURI(selectedImageUri);
                 currentlySelectedImageView.setBackground(null);
 
-                // If you want to save this image URI to your selectedImageUris list:
+                /* 이미지뷰의 태그가 0-4까지, 해당 태그 위치의 값과 동일한 리스트상의 인덱스에 Uri를 넣어줍니다. */
                 int tag = Integer.parseInt((String) currentlySelectedImageView.getTag());
                 if (tag < selectedImageUris.size()) {
                     selectedImageUris.set(tag, selectedImageUri.toString());
+                    imageUrilist.set(tag, selectedImageUri);
                 } else {
                     selectedImageUris.add(selectedImageUri.toString());
+                    imageUrilist.add(selectedImageUri);
                 }
             }
         }
@@ -314,6 +427,7 @@ public class WritingFragment extends Fragment {
     private void requestPermission() {
         ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {

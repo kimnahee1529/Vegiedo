@@ -5,16 +5,21 @@ import com.devinsight.vegiedo.data.request.PostReportRequestDTO;
 import com.devinsight.vegiedo.data.response.PostInquiryResponseDTO;
 import com.devinsight.vegiedo.data.response.PostListData;
 import com.devinsight.vegiedo.data.response.PostListInquiryResponseDTO;
+import com.devinsight.vegiedo.data.response.PostRegisterResponseDTO;
 
 import java.util.List;
 
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.Multipart;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -36,12 +41,17 @@ public interface PostApiService {
     );
 
     //게시글 등록
-    @POST("/posts")
-    Call<Void> addPost(
-            @Body PostRegisterRequestDTO postRegisterRequestDTO
+    @Multipart
+    @POST("/test/posts")
+    Call<PostRegisterResponseDTO> addPost(
+            @Header("Authorization") String token,
+            @Part List<MultipartBody.Part> images,
+            @Part("postTitle") RequestBody postTitle,
+            @Part("content") RequestBody content
     );
 
     //게시글 조회
+
     @GET("/test/posts/{postId}")
     Call<PostInquiryResponseDTO> getPost(
             @Path("postId") Long postId
