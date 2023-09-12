@@ -414,16 +414,13 @@ public class ActivityViewModel extends ViewModel {
                 if (response.isSuccessful()) {
                     storeDataLiveData.setValue(response.body());
                     Log.d("LOGAPI", "StoreAPI 호출");
-                    // ... any other logic
                 } else {
-                    // handle error...
                     Log.d("LOGAPI", "StoreAPI 호출실패");
                 }
             }
 
             @Override
             public void onFailure(Call<StoreInquiryResponseDTO> call, Throwable t) {
-                // handle failure...
                 Log.d("LOGAPI", "StoreAPI 호출실패2");
             }
         });
@@ -435,7 +432,7 @@ public class ActivityViewModel extends ViewModel {
         return storeDataLiveData;
     }
 
-    //가게 조회 API(MapMainFragment에서 사용)
+    //지도 가게 조회 API(MapMainFragment에서 사용)
     public void MapInquiryData() {
         float latitude = 41.40338f;
         float longitude = 41.40338f;
@@ -446,18 +443,15 @@ public class ActivityViewModel extends ViewModel {
             public void onResponse(Call<List<MapStoreListData>> call, Response<List<MapStoreListData>> response) {
                 if (response.isSuccessful()) {
                     mapStoreLiveData.setValue(response.body());
-                    Log.d("LOGAPI", "MAPAPI 호출");
-                    // ... any other logic
+                    Log.d("LOGAPIMapInquiryData", ""+response);
                 } else {
-                    // handle error...
-                    Log.d("LOGAPI", "AMPAPI 호출실패");
+                    Log.d("LOGAPIMapInquiryData", "AMPAPI 호출실패");
                 }
             }
 
             @Override
             public void onFailure(Call<List<MapStoreListData>> call, Throwable t) {
-                // handle failure...
-                Log.d("LOGAPI", "AMPAPI 호출실패2");
+                Log.d("LOGAPIMapInquiryData", "AMPAPI 호출실패2");
             }
         });
     }
