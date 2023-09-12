@@ -134,7 +134,7 @@ public class StoreDetailPageFragment extends Fragment {
             }
         });
 
-        //지도 플로팅 버튼을 눌렀을 때 네이버 지도 deep-link로 이동
+        //지도 버튼을 눌렀을 때 네이버 지도 deep-link로 이동
         mapBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
