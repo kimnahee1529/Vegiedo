@@ -38,7 +38,7 @@ public interface StoreApiService {
     );
 
     //가게 등록
-    @POST("/stores")
+    @POST("stores")
     Call<Void> createStore(
             @Body StoreRegisterRequestDTO createStore
     );
@@ -51,22 +51,51 @@ public interface StoreApiService {
     );
 
     //가게 수정
-    @PATCH("/stores/{storeId}")
+    @PATCH("stores/{storeId}")
     Call<Void> updateStore(
             @Path("storeId") Long storeId,
             @Body StoreModifyRequestDTO modifyStore
     );
 
     //가게 삭제
-    @DELETE("/stores/{storeId}")
+    @DELETE("stores/{storeId}")
     Call<Void> deleteStore(
             @Path("storeId") Long storeId
     );
 
     //가게 신고
-    @POST("/stores/{storeId}/reports")
+    @POST("stores/{storeId}/reports")
     Call<Void> reportStore(
             @Path("storeId") Long storeId,
             @Body StoreReportRequestDTO reportData
     );
+
+    //TODO 반환값이 없는지 보고 수정해야 함
+    //가게 좋아요
+    @POST("stores/{storeId}/likes")
+    Call<Void> likeStore(
+            @Path("storeId") Long storeId
+    );
+
+    //가게 좋아요 취소
+    @DELETE("stores/{storeId}/likes")
+    Call<Void> cancleLikeStore(
+            @Path("storeId") Long storeId
+    );
+
+    //가게 스탬프
+    @POST("stores/{storeId}/stamps")
+    Call<Void> activeStamp(
+            @Path("storeId") Long storeId
+    );
+
+    //가게 스탬프 취소
+    @DELETE("stores/{storeId}/stamps")
+    Call<Void> inactiveStamp(
+            @Path("storeId") Long storeId
+    );
+
+    //TODO
+    //마이페이지
+    //검색어 추천
 }

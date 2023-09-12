@@ -42,42 +42,11 @@ public class StoreBlogReviewFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // ViewModel 초기화
         viewModel = new ViewModelProvider(this).get(ActivityViewModel.class);
-
         recyclerView = view.findViewById(R.id.store_review_blog_recycler_view);
-
-//        populateData();
         setupRecyclerView();
-
         callReviewAPI();
     }
-
-    // ITEMS_COUNT(10)개 만큼의 아이템 생성
-//    private void populateData() {
-//        userReviewItems = new ArrayList<>();
-//        for (int i = 0; i < ITEMS_COUNT; i++) {
-//            userReviewItems.add(createItem(i));
-//        }
-//    }
-
-
-//    // 리사이클러뷰에 들어갈 아이템 추가
-//    private UserReviewItem createItem(int index) {
-//        UserReviewItem.ItemType itemType = STORE_DETAIL_BLOG_REVIEW_PAGE;
-//        String userName = "Title " + index;
-//        String content = "3천원 발렛 주차가능하며, 건물 지하 주차장에 주로 차를 댑니다.출차는 신속한 이동이 요구됩니다. 실내 분위기가 많이 활기차 보이며, 일반적인 레스토랑 대비 음식 종류별로 1만원가량 비싸지만 분위기로 대신하고 있습니다.";
-//        ArrayList<String> userReviewImageUrlList = new ArrayList<>();
-//
-//        userReviewImageUrlList.add(String.valueOf(R.drawable.ic_launcher_background));
-//        userReviewImageUrlList.add(String.valueOf(R.drawable.ic_launcher_background));
-//        userReviewImageUrlList.add(String.valueOf(R.drawable.ic_launcher_background));
-//        userReviewImageUrlList.add(String.valueOf(R.drawable.ic_launcher_background));
-//        userReviewImageUrlList.add(String.valueOf(R.drawable.ic_launcher_background));
-//        int ratingBar = 0;
-//
-//        return new UserReviewItem(reviewId, itemType, userName, ratingBar, content, userReviewImageUrlList);
-//    }
 
     private void setupRecyclerView() {
         recyclerView.setNestedScrollingEnabled(false);
@@ -113,5 +82,6 @@ public class StoreBlogReviewFragment extends Fragment {
         });
         // 데이터 로드
         viewModel.ReviewInquiryData(1L, 15, 0, true);
+        viewModel.setStoreId(1L);
     }
 }

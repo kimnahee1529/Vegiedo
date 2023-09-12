@@ -434,16 +434,13 @@ public class ActivityViewModel extends ViewModel {
                 if (response.isSuccessful()) {
                     storeDataLiveData.setValue(response.body());
                     Log.d("LOGAPI", "StoreAPI 호출");
-                    // ... any other logic
                 } else {
-                    // handle error...
                     Log.d("LOGAPI", "StoreAPI 호출실패");
                 }
             }
 
             @Override
             public void onFailure(Call<StoreInquiryResponseDTO> call, Throwable t) {
-                // handle failure...
                 Log.d("LOGAPI", "StoreAPI 호출실패2");
             }
         });
@@ -455,7 +452,7 @@ public class ActivityViewModel extends ViewModel {
         return storeDataLiveData;
     }
 
-    //가게 조회 API(MapMainFragment에서 사용)
+    //지도 가게 조회 API(MapMainFragment에서 사용)
     public void MapInquiryData() {
         float latitude = 41.40338f;
         float longitude = 41.40338f;
@@ -466,22 +463,20 @@ public class ActivityViewModel extends ViewModel {
             public void onResponse(Call<List<MapStoreListData>> call, Response<List<MapStoreListData>> response) {
                 if (response.isSuccessful()) {
                     mapStoreLiveData.setValue(response.body());
-                    Log.d("LOGAPI", "MAPAPI 호출");
-                    // ... any other logic
+                    Log.d("LOGAPIMapInquiryData", ""+response);
                 } else {
-                    // handle error...
-                    Log.d("LOGAPI", "AMPAPI 호출실패");
+                    Log.d("LOGAPIMapInquiryData", "AMPAPI 호출실패");
                 }
             }
 
             @Override
             public void onFailure(Call<List<MapStoreListData>> call, Throwable t) {
-                // handle failure...
-                Log.d("LOGAPI", "AMPAPI 호출실패2");
+                Log.d("LOGAPIMapInquiryData", "AMPAPI 호출실패2");
             }
         });
     }
 
+    //리뷰
     //리뷰 조회 API(StoreDetailPageFragment서 사용)
     public void ReviewInquiryData(Long storeId, int count, int cursor, boolean blogReview) {
         //리뷰 조회
@@ -526,6 +521,29 @@ public class ActivityViewModel extends ViewModel {
         });
     }
 
+    //리뷰 삭제 API(WritingReviewFragment에서 사용)
+    public void ReviewDeleteData(Long storeId, Long reviewId) {
+        //리뷰 수정
+        Call<Void> reviewDeleteRequestDTOCall = reviewApiService.deleteReview(storeId, reviewId);
+        reviewDeleteRequestDTOCall.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    Void responseData = response.body();
+//                    Log.d("LOGAPIReviewDeleteData", responseData.toString());
+                    Log.d("LOGAPI", "ReviewDeleteData 호출성공 " + response);
+                } else{
+                    Log.d("LOGAPI", "ReviewDeleteData 호출실패1 " + response);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("LOGAPI", "ReviewDeleteData 호출실패2"+ t.getMessage());
+            }
+        });
+    }
+
     //리뷰 수정 API(WritingReviewFragment에서 사용)
     public void ReviewModifyData(Long storeId, Long reviewId, ReviewModifyrRequestDTO requestDTO) {
         //리뷰 수정
@@ -535,7 +553,7 @@ public class ActivityViewModel extends ViewModel {
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
                     Void responseData = response.body();
-                    Log.d("LOGAPIReviewModifyData", responseData.toString());
+                    Log.d("LOGAPIReviewModifyData", response.toString());
                 } else{
                     Log.d("LOGAPI", "ReviewModifyData 호출실패1 "+response);
                 }
@@ -566,29 +584,6 @@ public class ActivityViewModel extends ViewModel {
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 Log.d("LOGAPI", "ReviewReportData 호출실패2");
-            }
-        });
-    }
-
-    //리뷰 삭제 API(WritingReviewFragment에서 사용)
-    public void ReviewDeleteData(Long storeId, Long reviewId) {
-        //리뷰 수정
-        Call<Void> reviewDeleteRequestDTOCall = reviewApiService.deleteReview(storeId, reviewId);
-        reviewDeleteRequestDTOCall.enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                if (response.isSuccessful()) {
-                    Void responseData = response.body();
-//                    Log.d("LOGAPIReviewDeleteData", responseData.toString());
-                    Log.d("LOGAPI", "ReviewDeleteData 호출성공 " + response);
-                } else{
-                    Log.d("LOGAPI", "ReviewDeleteData 호출실패1 " + response);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                Log.d("LOGAPI", "ReviewDeleteData 호출실패2"+ t.getMessage());
             }
         });
     }

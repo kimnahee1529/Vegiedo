@@ -29,7 +29,7 @@ public class RetrofitClient {
     }
 
     public static UserApiService getUserApiService(){
-        return getRetrofit(BASE_URL).create(UserApiService.class);
+        return getRetrofit("http://3.38.23.253:8080/test/").create(UserApiService.class);
     }
 
     public static StoreApiService getStoreApiService(){

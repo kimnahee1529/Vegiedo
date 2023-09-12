@@ -2,7 +2,6 @@ package com.devinsight.vegiedo.view.store;
 
 import static com.devinsight.vegiedo.view.store.UserReviewItem.ItemType.AD_BANNER;
 import static com.devinsight.vegiedo.view.store.UserReviewItem.ItemType.REVIEW_RC;
-import static com.devinsight.vegiedo.view.store.UserReviewItem.ItemType.STORE_DETAIL_REVIEW_PAGE;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
@@ -30,6 +29,7 @@ import com.devinsight.vegiedo.view.community.WritingFragment;
 import com.devinsight.vegiedo.view.search.ActivityViewModel;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.kakao.sdk.user.model.User;
 
 
@@ -56,7 +56,7 @@ public class StoreReviewFragment extends Fragment {
         // ViewModel 초기화
         viewModel = new ViewModelProvider(this).get(ActivityViewModel.class);
 
-//        AdView mAdView = view.findViewById(R.id.StoreDetial_adview);  // 여기서 뷰를 초기화합니다.
+//        AdView mAdView = view.findViewById(R.id.ad_banner_item_view);  // 여기서 뷰를 초기화합니다.
 //        AdRequest adRequest = new AdRequest.Builder().build();
 //        mAdView.loadAd(adRequest);
 
@@ -98,27 +98,22 @@ public class StoreReviewFragment extends Fragment {
                         updatedItems.add(item);
                     }
 
-//                    Log.d("LOGAPISize확인", updatedItems.toString());
-//                    Log.d("LOGAPISize1", ""+updatedItems.size());
 //                    for(int i = 0; i < reviewsSize / 3; i++){
 //                        int index = i * 4 + 3;
 //                        Log.d("LOGAPI", String.valueOf(index));
 //                        updatedItems.add(index, new UserReviewItem(UserReviewItem.ItemType.AD_BANNER));
-//
-////                        if ((i + 1) % 3 == 0 && i != reviewsSize - 1) {
-////                        updatedItems.add(new UserReviewItem(UserReviewItem.ItemType.AD_BANNER));
-////                        }
 //                    }
-//
-//                    Log.d("LOGAPISize2", ""+updatedItems.size());
-//                    Log.d("LOGAPISize확인", updatedItems.toString());
+
+                    updatedItems.add(3, new UserReviewItem(UserReviewItem.ItemType.AD_BANNER));
+
+                    Log.d("어댑터로 보내는 updatedItems", updatedItems.toString());
                     adapter.setReviewItems(updatedItems);  // 어댑터에 데이터 전달
                 }
             }
 
         });
         // 데이터 로드
-        viewModel.ReviewInquiryData(1L, 15, 0, false);
+        viewModel.ReviewInquiryData(1L, 10, 0, false);
         // 상세페이지를 보여주는 가게의 storeId
         viewModel.setStoreId(1L);
     }
