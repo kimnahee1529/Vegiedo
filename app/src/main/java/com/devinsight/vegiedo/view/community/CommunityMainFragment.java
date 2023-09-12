@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.devinsight.vegiedo.R;
+import com.devinsight.vegiedo.view.MainActivity;
 import com.devinsight.vegiedo.view.search.ActivityViewModel;
 
 
@@ -73,7 +74,9 @@ public class CommunityMainFragment extends Fragment {
         btn_writing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                transaction.replace(R.id.frame, writingFragment).addToBackStack(null).commit();
+                FragmentManager fragmentManager = ((MainActivity)getActivity()).getSupportFragmentManager();
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                transaction.replace(R.id.frame, writingFragment).commit();
             }
         });
 

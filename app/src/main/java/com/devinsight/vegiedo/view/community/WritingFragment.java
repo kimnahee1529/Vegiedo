@@ -55,8 +55,10 @@ public class WritingFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_writing, container, false);
-
+        /* 초기화 합니다 */
         initializeViews(rootView);
+
+
         setTitleTextWatcher();
         setContentTextWatcher();
         setRegisterButtonListener();
