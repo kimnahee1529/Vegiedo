@@ -4,8 +4,8 @@
     android:background="@drawable/dialog_background_round"
     android:layout_gravity="center"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="353dp"
-    android:layout_height="209dp">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -24,7 +24,8 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_margin="50dp">
 
             <TextView
                 android:id="@+id/put_text"

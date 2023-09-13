@@ -2,8 +2,11 @@ package com.devinsight.vegiedo.view.store;
 
 import static com.devinsight.vegiedo.utill.RetrofitClient.getStoreApiService;
 
+import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -34,6 +37,7 @@ import com.devinsight.vegiedo.R;
 import com.devinsight.vegiedo.data.response.MapStoreListData;
 import com.devinsight.vegiedo.data.response.ReviewListInquiryResponseDTO;
 import com.devinsight.vegiedo.data.response.StoreInquiryResponseDTO;
+import com.devinsight.vegiedo.data.ui.login.NickNameStatus;
 import com.devinsight.vegiedo.service.api.StoreApiService;
 import com.devinsight.vegiedo.view.search.ActivityViewModel;
 
@@ -46,19 +50,14 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class StoreDetailPageFragment extends Fragment {
-
-    StoreApiService storeApiService = getStoreApiService();
-    private static final int ITEMS_COUNT = 10;
-
-//    private RecyclerView recyclerView;
     TextView blogReviewText;
     TextView reviewText;
-    private UserReviewItemAdapter adapter;
-    private List<UserReviewItem> userReviewItems;
     ImageView storeDetail_store_image;
     TextView storeDetail_store_name;
     TextView storeDetail_store_address;
     TextView storeDetail_store_reviewers;
+    ImageView sheep_circle;
+    ImageView img_sheep;
     RatingBar ratingBar;
     RelativeLayout stampBtn;
     RelativeLayout mapBtn;
@@ -72,10 +71,11 @@ public class StoreDetailPageFragment extends Fragment {
     ImageView storeDetail_default_heart;
     ImageView storeDetail_selected_heart;
     Button StoreDetail_review_writing_btn;
+    Button StoreDetail_closure_report_btn;
     double Longitude;
     double Latitude;
     ActivityViewModel viewModel;
-    private static Long storeId;
+    private Long storeId;
 
 
     public StoreDetailPageFragment() {
@@ -89,7 +89,6 @@ public class StoreDetailPageFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_store_detail_page_seemore, container, false);
 
         initializeComponents(view);
-        // 기본 프래그먼트(리뷰 화면) 로드
         loadFragment(new StoreReviewFragment());
 
         //TODO 이 전페이지에서 받아온 storeId를 넣어줘야 함
@@ -98,6 +97,81 @@ public class StoreDetailPageFragment extends Fragment {
         storeId = 1L;
         Log.d("LOGAPI storeId갖고 오는 거 맞나?", String.valueOf(storeId));
         callStoreAPI(storeId);
+
+        // stamp 상태를 받아오고 넘겨주기 위한 LiveData Observer 설정
+        viewModel.getStoreStampLiveData().observe(getViewLifecycleOwner(), new Observer() {
+            @Override
+            public void onChanged(Object o) {
+                Log.d("stamp api", "뷰모델에서 넘겨준 code : "+o.toString());
+                //뷰모델에서 받아온 스탬프 api 호출 상태 코드가 200일 때
+                if("200".equals(o.toString())){
+                    if(isClickedStamp) {
+                        //스탬프가 이미 눌려져있을 때 취소 api 호출
+                        Log.d("stampinactive api", "stamp api 호출 성공");
+                        whiteStampBackground.setVisibility(View.INVISIBLE);
+                        whiteStamp.setVisibility(View.INVISIBLE);
+                        greenStampBackground.setVisibility(View.VISIBLE);
+                        greenStamp.setVisibility(View.VISIBLE);
+                    } else {
+                        //스탬프가 안 눌려져있을 때 활성화 api 호출
+                        Log.d("stampactive api", "stamp api 호출 성공");
+                        greenStampBackground.setVisibility(View.INVISIBLE);
+                        greenStamp.setVisibility(View.INVISIBLE);
+                        whiteStampBackground.setVisibility(View.VISIBLE);
+                        whiteStamp.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+        });
+
+        // 찜버튼 상태를 받아오고 넘겨주기 위한 LiveData Observer 설정
+        viewModel.getStoreLikeLiveData().observe(getViewLifecycleOwner(), new Observer() {
+            @Override
+            public void onChanged(Object o) {
+                Log.d("like api", "뷰모델에서 넘겨준 code : "+o.toString());
+                //뷰모델에서 받아온 찜버튼 api 호출 상태 코드가 200일 때
+                if("200".equals(o.toString())){
+                    if(isClickedLike) {
+                        //찜버튼이 이미 눌려져있을 때 취소 api 호출
+                        Log.d("likeinactive api", "찜 api 호출 성공");
+                        storeDetail_default_heart.setVisibility(View.VISIBLE);
+                        storeDetail_selected_heart.setVisibility(View.INVISIBLE);
+                    } else {
+                        //찜버튼이 안 눌려져있을 때 활성화 api 호출
+                        Log.d("likeactive api", "찜 api 호출 성공");
+                        storeDetail_default_heart.setVisibility(View.INVISIBLE);
+                        storeDetail_selected_heart.setVisibility(View.VISIBLE);
+
+                    }
+                    isClickedLike = !isClickedLike;
+                }
+            }
+        });
+
+        // 리뷰 가게 신고를 위한 LiveData Observer 설정
+//        viewModel.StoreReportData().observe(getViewLifecycleOwner(), new Observer() {
+//            @Override
+//            public void onChanged(Object o) {
+//                Log.d("like api", "뷰모델에서 넘겨준 code : "+o.toString());
+//                //뷰모델에서 받아온 찜버튼 api 호출 상태 코드가 200일 때
+//                if("200".equals(o.toString())){
+//                    if(isClickedLike) {
+//                        //찜버튼이 이미 눌려져있을 때 취소 api 호출
+//                        Log.d("likeinactive api", "찜 api 호출 성공");
+//                        storeDetail_default_heart.setVisibility(View.VISIBLE);
+//                        storeDetail_selected_heart.setVisibility(View.INVISIBLE);
+//                    } else {
+//                        //찜버튼이 안 눌려져있을 때 활성화 api 호출
+//                        Log.d("likeactive api", "찜 api 호출 성공");
+//                        storeDetail_default_heart.setVisibility(View.INVISIBLE);
+//                        storeDetail_selected_heart.setVisibility(View.VISIBLE);
+//
+//                    }
+//                    isClickedLike = !isClickedLike;
+//                }
+//            }
+//        });
+
 
         return view;
     }
@@ -114,6 +188,8 @@ public class StoreDetailPageFragment extends Fragment {
         storeDetail_store_name = view.findViewById(R.id.storeDetail_store_name);
         storeDetail_store_address = view.findViewById(R.id.storeDetail_store_address);
         storeDetail_store_reviewers = view.findViewById(R.id.storeDetail_store_reviewers);
+        sheep_circle = view.findViewById(R.id.sheep_circle);
+        img_sheep = view.findViewById(R.id.img_sheep);
         ratingBar = view.findViewById(R.id.storeDetail_ratingbar);
         stampBtn = view.findViewById(R.id.storeDetail_stamp_btn);
         mapBtn = view.findViewById(R.id.storeDetail_map_btn);
@@ -125,6 +201,7 @@ public class StoreDetailPageFragment extends Fragment {
         greenStampBackground = view.findViewById(R.id.storeDetail_green_background_stamp_btn);
         storeDetail_default_heart = view.findViewById(R.id.StoreDetail_default_heart);
         storeDetail_selected_heart = view.findViewById(R.id.StoreDetail_selected_heart);
+        StoreDetail_closure_report_btn = view.findViewById(R.id.StoreDetail_closure_report_btn);
         reviewText.setTypeface(null, Typeface.BOLD); // 글자를 bold로 설정
         reviewText.setTextColor(getResources().getColor(android.R.color.black)); // 글자를 검정색으로 설정
         stampBtn.setOnClickListener(new View.OnClickListener() {
@@ -194,65 +271,48 @@ public class StoreDetailPageFragment extends Fragment {
             }
 
         });
+
+        //폐점가게 신고 버튼 클릭 리스너
+        StoreDetail_closure_report_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getActivity(), "폐점가게신고", Toast.LENGTH_SHORT).show();
+                LayoutInflater inflater = getActivity().getLayoutInflater();
+                View dialogView = inflater.inflate(R.layout.accept_reporting_dialog, null);
+                ImageView closeIcon = dialogView.findViewById(R.id.green_x_circle);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setView(dialogView);
+                AlertDialog dialog = builder.create();
+                dialog.setContentView(R.layout.dialog_custom);
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                closeIcon.setOnClickListener(v -> dialog.dismiss());
+                dialog.show();
+            }
+        });
     }
 
     private void loadFragment(Fragment fragment) {
+
+        if (fragment instanceof StoreBlogReviewFragment) {
+            sheep_circle.setVisibility(View.GONE);
+            img_sheep.setVisibility(View.GONE);
+        } else {
+            sheep_circle.setVisibility(View.VISIBLE);
+            img_sheep.setVisibility(View.VISIBLE);
+        }
+
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
     }
 
-
-    private void onStampBtnClicked() {
-        Toast.makeText(getActivity(), "스탬프 버튼이 눌렸습니다.", Toast.LENGTH_SHORT).show();
-        Log.d("LOGAPIisClickedStamp is", String.valueOf(isClickedStamp));
-        if(isClickedStamp){
-            Log.d("LOGAPI스탬프는 이미 눌려져있음", String.valueOf(isClickedStamp));
-            isClickedStamp = false;
-            // Green background with white stamp
-            greenStampBackground.setVisibility(View.INVISIBLE);
-            greenStamp.setVisibility(View.INVISIBLE);
-            whiteStampBackground.setVisibility(View.VISIBLE);
-            whiteStamp.setVisibility(View.VISIBLE); // Change this line
-
-        }else{
-            Log.d("LOGAPI스탬프 안 눌려져있음", String.valueOf(isClickedStamp));
-            isClickedStamp = true;
-            // White background with green stamp
-            whiteStampBackground.setVisibility(View.INVISIBLE);
-            whiteStamp.setVisibility(View.INVISIBLE);
-            greenStampBackground.setVisibility(View.VISIBLE);
-            greenStamp.setVisibility(View.VISIBLE); // Change this line
-
-        }
-    }
-
-    private void onLikeBtnClicked() {
-        Toast.makeText(getActivity(), "찜 버튼이 눌렸습니다.", Toast.LENGTH_SHORT).show();
-        Log.d("LOGAPIisClickedLike is", String.valueOf(isClickedStamp));
-        if(isClickedLike){
-            Log.d("LOGAPI찜은 이미 눌려져있음", String.valueOf(isClickedLike));
-            isClickedLike = false;
-            storeDetail_default_heart.setVisibility(View.VISIBLE);
-            storeDetail_selected_heart.setVisibility(View.INVISIBLE);
-
-        }else{
-            Log.d("LOGAPI찜 안 눌려져있음", String.valueOf(isClickedLike));
-            isClickedLike = true;
-            storeDetail_selected_heart.setVisibility(View.VISIBLE);
-            storeDetail_default_heart.setVisibility(View.INVISIBLE);
-
-        }
-    }
-
-    //가게 조회 API
+    //가게 조회 API-맨 처음 상세페이지로 들어왔을 때 보여줌
     private void callStoreAPI(Long storeId){
         viewModel.getStoreDataLiveData().observe(getViewLifecycleOwner(), new Observer<StoreInquiryResponseDTO>() {
             @Override
             public void onChanged(StoreInquiryResponseDTO data) {
-                Log.d("LOGAPIStamp is", String.valueOf(data.isStamp()));
-                Log.d("LOGAPIHeart is", String.valueOf(data.isLike()));
 
                 // UI 업데이트
                 Glide.with(getActivity())
@@ -270,6 +330,7 @@ public class StoreDetailPageFragment extends Fragment {
                 Log.d("LOGAPI 위도 경도 is", Longitude + " " + Latitude);
 
                 isClickedLike = data.isLike();
+                Log.d("api 처음 가게 데이터가 불러졌을 때 상태", "isClickedStamp : "+isClickedStamp+"isClickedLike"+isClickedLike);
 
                 // data.isStamp()가 true일 때의 동작
                 if (isClickedStamp) {  // 이 부분에서 isClickedStamp를 사용
@@ -298,5 +359,51 @@ public class StoreDetailPageFragment extends Fragment {
         // 데이터 로드
         viewModel.StoreInquiryData(storeId);
     }
+    private void onStampBtnClicked() {
+        Toast.makeText(getActivity(), "스탬프 버튼이 눌렸습니다.", Toast.LENGTH_SHORT).show();
+        if(isClickedStamp){
+            callStoreStampAPI(storeId, isClickedStamp);
+            isClickedStamp = false;
+        } else {
+            callStoreStampAPI(storeId, isClickedStamp);
+            isClickedStamp = true;
+        }
+    }
+
+    private void callStoreStampAPI(Long storeId, boolean isClickedStamp){
+
+        if(isClickedStamp){
+            Log.d("stamp api", "inactive 시키는 api");
+            viewModel.StoreInactiveStampData(storeId);
+        } else {
+            Log.d("stamp api", "active 시키는 api");
+            viewModel.StoreActiveStampData(storeId);
+        }
+    }
+
+    private void onLikeBtnClicked() {
+        if(isClickedLike){
+            Toast.makeText(getActivity(), "찜 버튼 취소시키기", Toast.LENGTH_SHORT).show();
+            callStoreLikeAPI(storeId, isClickedLike);
+//            isClickedLike = false;
+        } else {
+            Toast.makeText(getActivity(), "찜 버튼 활성화시키기", Toast.LENGTH_SHORT).show();
+            callStoreLikeAPI(storeId, isClickedLike);
+//            isClickedLike = true;
+        }
+    }
+
+    private void callStoreLikeAPI(Long storeId, boolean isClickedLike){
+
+        if(isClickedLike){
+            Log.d("like api", "inactive 시키는 api");
+            viewModel.StoreInactiveLikeData(storeId);
+        } else {
+            Log.d("like api", "active 시키는 api");
+            viewModel.StoreActiveLikeData(storeId);
+        }
+    }
+
 
 }
+

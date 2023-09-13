@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class UserReviewItemAdapter extends RecyclerView.Adapter<UserReviewItemAdapter.BaseViewHolder> {
+public class TestAdMobAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     private List<UserReviewItem> userReviewItemList;
     private static ActivityViewModel viewModel;
     private static Long currentStoreId;
@@ -48,16 +48,16 @@ public class UserReviewItemAdapter extends RecyclerView.Adapter<UserReviewItemAd
         REPORT_TYPE,
     }
 
-    public UserReviewItemAdapter(List<UserReviewItem> userReviewItemList) {
+    public TestAdMobAdapter(List<UserReviewItem> userReviewItemList) {
         if (userReviewItemList != null) {
-//            Log.d("어댑터1-1:받는 updatefdItems", userReviewItemList.toString());
+//            Log.d("어댑터1-1:받는 updatedItems", userReviewItemList.toString());
             this.userReviewItemList = userReviewItemList;
         } else {
 //            Log.d("어댑터1:받는 updatedItems", userReviewItemList.toString());
             this.userReviewItemList = new ArrayList<>();
         }
     }
-    public UserReviewItemAdapter(List<UserReviewItem> items, ActivityViewModel viewModel) {
+    public TestAdMobAdapter(List<UserReviewItem> items, ActivityViewModel viewModel) {
         if(userReviewItemList!=null){
             Log.d("어댑터1-2:받는 updatedItems", userReviewItemList.toString());
         }
@@ -82,50 +82,97 @@ public class UserReviewItemAdapter extends RecyclerView.Adapter<UserReviewItemAd
 
     @NonNull
     @Override
-    public BaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View view;
-        Log.d("어댑터4 viewType", String.valueOf(viewType));
-        if (viewType == UserReviewItem.ItemType.STORE_DETAIL_BLOG_REVIEW_PAGE.ordinal()) {
-            view = inflater.inflate(R.layout.store_detail_blog_review_item, parent, false);
-            return new ViewHolderBlogReviewPage(view, userReviewItemList.get(viewType));
-        } else if (viewType == UserReviewItem.ItemType.REPORT_COMPELETE.ordinal()) {
-            view = inflater.inflate(R.layout.select_reporting_type_dialog, parent, false);
-            return new ViewHolderBlogReviewPage(view, userReviewItemList.get(viewType));
-        } else if (viewType == UserReviewItem.ItemType.REVIEW_RC.ordinal()) {
-            view = inflater.inflate(R.layout.store_detail_review_item, parent, false);
-            return new ViewHolderReviewRC(view, userReviewItemList.get(viewType));
-        } else if (viewType == UserReviewItem.ItemType.AD_BANNER.ordinal()) {
-            view = inflater.inflate(R.layout.ad_banner_item, parent, false);
-            return new ViewHolderAdBanner(view);
-        } else {
-            throw new IllegalArgumentException("Unknown view type");
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType){
+//        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        switch (viewType){
+            case AD_BANNER:
+                View bannerLayoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.ad_banner_item, parent, false);
+                ViewHolderAdBanner myAdViewHolder = new ViewHolderAdBanner(bannerLayoutView);
+                return myAdViewHolder;
+
+            case STORE_DETAIL_REVIEW_PAGE:
+                View blogView = LayoutInflater.from(parent.getContext()).inflate(R.layout.select_reporting_type_dialog, parent, false);
+                ViewHolderBlogReviewPage viewHolderBlogReviewPage = new ViewHolderBlogReviewPage(blogView);
+                return viewHolderBlogReviewPage;
+
+            case REVIEW_RC:
+            default:
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.store_detail_review_item, parent, false);
+                final ViewHolderReviewRC viewHolderReviewRC = new ViewHolderReviewRC(view);
+                return viewHolderReviewRC;
+
+
         }
+
+//        if (viewType == UserReviewItem.ItemType.STORE_DETAIL_BLOG_REVIEW_PAGE.ordinal()) {
+//            view = inflater.inflate(R.layout.store_detail_blog_review_item, parent, false);
+//            return new ViewHolderBlogReviewPage(view);
+//        } else if (viewType == UserReviewItem.ItemType.REPORT_COMPELETE.ordinal()) {
+//            view = inflater.inflate(R.layout.select_reporting_type_dialog, parent, false);
+//            return new ViewHolderBlogReviewPage(view);
+//        } else if (viewType == UserReviewItem.ItemType.REVIEW_RC.ordinal()) {
+//            view = inflater.inflate(R.layout.store_detail_review_item, parent, false);
+//            return new ViewHolderReviewRC(view);
+//        } else if (viewType == UserReviewItem.ItemType.AD_BANNER.ordinal()) {
+//            view = inflater.inflate(R.layout.ad_banner_item, parent, false);
+//            return new ViewHolderAdBanner(view);
+//        } else {
+//            throw new IllegalArgumentException("Unknown view type");
+//        }
     }
 
     @Override
-    public void onBindViewHolder(@NonNull BaseViewHolder holder, int position) {
-        UserReviewItem userReviewItem = userReviewItemList.get(position);
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        int viewType = getItemViewType(position);
 
-        if (holder instanceof ViewHolderBlogReviewPage) {
-            Log.d("어댑터5 onBindViewHolder", String.valueOf(holder));
-            ViewHolderBlogReviewPage viewHolder = (ViewHolderBlogReviewPage) holder;
-            UserReviewItem currentItem = userReviewItemList.get(position);
-            Log.d("LOGAPIbindData확인", String.valueOf(currentItem));
-            viewHolder.bindData(currentItem);
-        } else if (holder instanceof ViewHolderReviewRC) {
-            Log.d("어댑터5 onBindViewHolder", String.valueOf(holder));
-            ViewHolderReviewRC viewHolder = (ViewHolderReviewRC) holder;
-            UserReviewItem currentItem = userReviewItemList.get(position);
-            viewHolder.bindData(currentItem);
-        } else if (holder instanceof ViewHolderAdBanner) {
-            Log.d("어댑터5 onBindViewHolder", String.valueOf(holder));
-            ViewHolderAdBanner viewHolder = (ViewHolderAdBanner) holder;
-            com.google.android.gms.ads.AdRequest adRequest = new com.google.android.gms.ads.AdRequest.Builder().build();
-            viewHolder.adBannerView.loadAd(adRequest);
+        switch (viewType) {
+            case AD_BANNER: // Assuming you've defined this constant for AdView items.
+                Object adItem = userReviewItemList.get(position);
+                if (adItem instanceof AdView) {
+                    ViewHolderAdBanner adViewHolder = (ViewHolderAdBanner) holder;
+                    AdView adView = (AdView) adItem;
+                    ViewGroup adCardView = (ViewGroup) adViewHolder.itemView;
+
+                    if (adCardView.getChildCount() > 0) {
+                        adCardView.removeAllViews();
+                    }
+                    if (adView.getParent() != null) {
+                        ((ViewGroup) adView.getParent()).removeView(adView);
+                    }
+
+                    // Load the ad
+                    com.google.android.gms.ads.AdRequest adRequest = new com.google.android.gms.ads.AdRequest.Builder().build();
+                    adView.loadAd(adRequest);
+
+                    // Add the banner ad to the ad view.
+                    adCardView.addView(adView);
+                }
+                break;
+
+            case REVIEW_RC: // Assuming you've defined this constant for review items.
+                Object reviewItem = userReviewItemList.get(position);
+                if (reviewItem instanceof UserReviewItem) {
+                    ViewHolderReviewRC viewHolder = (ViewHolderReviewRC) holder;
+                    UserReviewItem currentItem = (UserReviewItem) reviewItem;
+                    viewHolder.bindData(currentItem);
+                }
+                break;
+
+            case STORE_DETAIL_REVIEW_PAGE: // Assuming you've defined this constant for blog review items.
+                Object blogReviewItem = userReviewItemList.get(position);
+                if (blogReviewItem instanceof UserReviewItem) {
+                    ViewHolderBlogReviewPage viewHolder = (ViewHolderBlogReviewPage) holder;
+                    UserReviewItem currentItem = (UserReviewItem) blogReviewItem;
+                    viewHolder.bindData(currentItem);
+                }
+                break;
+
+            default:
+                // Handle any other unknown view types if necessary.
+                break;
         }
-
     }
+
 
     @Override
     public int getItemCount() {
@@ -143,35 +190,29 @@ public class UserReviewItemAdapter extends RecyclerView.Adapter<UserReviewItemAd
         }
     }
 
-    class ViewHolderBlogReviewPage extends BaseViewHolder {
+    class ViewHolderBlogReviewPage extends RecyclerView.ViewHolder {
         TextView title;
         TextView content;
         ImageView imageView;
-        UserReviewItem userReviewItem;
 
-        ViewHolderBlogReviewPage(@NonNull View itemView, UserReviewItem item) {
+        ViewHolderBlogReviewPage(@NonNull View itemView) {
             super(itemView);
-            this.userReviewItem = item;
-
             title = itemView.findViewById(R.id.storeBlogReview_user_name);
             content = itemView.findViewById(R.id.storeBlogReview_content);
             imageView = itemView.findViewById(R.id.storeBlogReview_image);
         }
 
         void bindData(UserReviewItem item) {
-            this.userReviewItem = item;
-
             currentStoreId = viewModel.getStoreId().getValue();
-            title.setText(userReviewItem.getTitle());
-            content.setText(userReviewItem.getContent());
+            title.setText(item.getTitle());
+            content.setText(item.getContent());
 
-            List<String> imageUrls = userReviewItem.getUserReviewImageUrlList();
+            List<String> imageUrls = item.getUserReviewImageUrlList();
             if (imageUrls.size() > 0) Glide.with(itemView.getContext()).load(imageUrls.get(0)).into(imageView);
-
         }
     }
 
-    class ViewHolderReviewRC extends BaseViewHolder {
+    class ViewHolderReviewRC extends RecyclerView.ViewHolder {
         TextView title;
         TextView content;
         ImageView imageView1;
@@ -187,9 +228,9 @@ public class UserReviewItemAdapter extends RecyclerView.Adapter<UserReviewItemAd
         Long reviewId;
         Long storeId;
 
-        ViewHolderReviewRC(@NonNull View itemView, UserReviewItem item) {
+        ViewHolderReviewRC(@NonNull View itemView) {
             super(itemView);
-            this.userReviewItem = item;
+//            this.userReviewItem = item;
 
             title = itemView.findViewById(R.id.storeReview_title);
             content = itemView.findViewById(R.id.storeReview_content);
@@ -266,7 +307,7 @@ public class UserReviewItemAdapter extends RecyclerView.Adapter<UserReviewItemAd
         }
 
     }
-    static class ViewHolderAdBanner extends BaseViewHolder {
+    static class ViewHolderAdBanner extends RecyclerView.ViewHolder {
         AdView adBannerView;
 
         ViewHolderAdBanner(@NonNull View itemView) {
@@ -312,7 +353,7 @@ public class UserReviewItemAdapter extends RecyclerView.Adapter<UserReviewItemAd
         }
 
     }
-//    아래는 다이얼로그 관련 함수
+    //    아래는 다이얼로그 관련 함수
 //--------------------------------------------------------------------------------------------------------------------------------
     //삭제 다이얼로그 생성
     private void setupDeleteDialog(Context context, Long storeId, Long reviewId, View dialogView, AlertDialog dialog) {

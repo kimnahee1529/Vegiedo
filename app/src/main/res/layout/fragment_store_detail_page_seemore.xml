@@ -40,7 +40,7 @@
                     tools:layout_editor_absoluteY="0dp" />
 
                 <ImageView
-                    android:id="@+id/circle1"
+                    android:id="@+id/sheep_circle"
                     android:layout_width="70dp"
                     android:layout_height="70dp"
                     android:layout_marginEnd="23dp"
@@ -55,10 +55,10 @@
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:src="@drawable/img_sheep"
-                    app:layout_constraintTop_toTopOf="@+id/circle1"
-                    app:layout_constraintBottom_toBottomOf="@+id/circle1"
-                    app:layout_constraintStart_toStartOf="@+id/circle1"
-                    app:layout_constraintEnd_toEndOf="@+id/circle1"
+                    app:layout_constraintTop_toTopOf="@+id/sheep_circle"
+                    app:layout_constraintBottom_toBottomOf="@+id/sheep_circle"
+                    app:layout_constraintStart_toStartOf="@+id/sheep_circle"
+                    app:layout_constraintEnd_toEndOf="@+id/sheep_circle"
                     app:layout_constraintVertical_bias="0.5" />
 
                 <TextView
@@ -70,7 +70,7 @@
                     android:layout_marginEnd="10dp"
                     android:text="맛있다 메에에엥"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/circle1" />
+                    app:layout_constraintTop_toBottomOf="@+id/sheep_circle" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -323,7 +323,14 @@
             <FrameLayout
                 android:id="@+id/fragment_container"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="wrap_content"/>
+
+            <Button
+                android:id="@+id/StoreDetail_closure_report_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="폐점가게 신고"/>
 
 
 

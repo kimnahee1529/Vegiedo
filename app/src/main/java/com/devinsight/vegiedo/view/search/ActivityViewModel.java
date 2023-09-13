@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModel;
 import com.devinsight.vegiedo.data.request.ReviewModifyrRequestDTO;
 import com.devinsight.vegiedo.data.request.ReviewRegisterRequestDTO;
 import com.devinsight.vegiedo.data.request.ReviewReportRequestDTO;
+import com.devinsight.vegiedo.data.request.StoreReportRequestDTO;
 import com.devinsight.vegiedo.data.response.CommentListData;
 import com.devinsight.vegiedo.data.response.MapInquiryResponseDTO;
 import com.devinsight.vegiedo.data.response.MapStoreListData;
@@ -76,6 +77,14 @@ public class ActivityViewModel extends ViewModel {
     //가게-가게 조회 API 호출에서 쓸 라이브 데이터
     private MutableLiveData<StoreInquiryResponseDTO> storeDataLiveData = new MutableLiveData<>();
 
+    //가게-신고 API 호출에서 쓸 라이브 데이터
+    private MutableLiveData storeReportDataLiveData = new MutableLiveData<>();
+
+    //가게-스탬프 API 호출에서 쓸 라이브 데이터
+    private MutableLiveData storeStampLiveData = new MutableLiveData<>();
+
+    //가게-찜버튼 API 호출에서 쓸 라이브 데이터
+    private MutableLiveData storeLikeLiveData = new MutableLiveData<>();
 
     //지도-가게 조회 API 호출에서 쓸 라이브 데이터
     private MutableLiveData<List<MapStoreListData>> mapStoreLiveData = new MutableLiveData<>();
@@ -437,7 +446,6 @@ public class ActivityViewModel extends ViewModel {
 
     }
 
-
     //가게 조회 API(StoreDetailPageFragment서 사용)
     public void StoreInquiryData(Long storeId) {
         //가게 조회
@@ -459,10 +467,120 @@ public class ActivityViewModel extends ViewModel {
         });
     }
 
+//    //가게 신고(폐점) //TODO 이게 가게 신고랑 폐점신고 버튼이랑 다른 거지 않나?!
+//    public void StoreReportData(Long storeId, StoreReportRequestDTO requestDTO) {
+//        //가게 조회
+//        storeApiService.reportStore(storeId, requestDTO).enqueue(new Callback<Void>() {
+//            @Override
+//            public void onResponse(Call<Void> call, Response<Void> response) {
+//                if (response.isSuccessful()) {
+//                    storeReportDataLiveData.setValue(response.body());
+//                    Log.d("LOGAPI", "StoreReportAPI 호출");
+//                } else {
+//                    Log.d("LOGAPI", "StoreReportAPI 호출실패");
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<Void> call, Throwable t) {
+//                Log.d("LOGAPI", "StoreReportAPI 호출실패2");
+//            }
+//        });
+//    }
 
     //여기서 호출한 api 함수를 StoreDetailPageFragment서 씀
     public LiveData<StoreInquiryResponseDTO> getStoreDataLiveData() {
         return storeDataLiveData;
+    }
+
+    //가게 스탬프 활성화
+    public void StoreActiveStampData(Long storeId) {
+        //가게 스탬프 활성화
+        storeApiService.activeStamp(storeId).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    storeStampLiveData.setValue(response.code());
+                    Log.d("stampAPI", ""+response);
+                } else {
+                    storeStampLiveData.setValue(response.code());
+                    Log.d("stampAPI", "STAMPAPI 호출실패");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                storeStampLiveData.setValue(-1);
+            }
+        });
+    }
+
+    //가게 스탬프 취소
+    public void StoreInactiveStampData(Long storeId) {
+        //가게 스탬프 취소
+        storeApiService.inactiveStamp(storeId).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    storeStampLiveData.setValue(response.code());
+                    Log.d("stampAPI", ""+response);
+                } else {
+                    storeStampLiveData.setValue(response.code());
+                    Log.d("stampAPI", "STAMPAPI 호출실패");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                storeStampLiveData.setValue(-1);
+                Log.d("stampAPI", "STAMPAPI 호출실패");
+            }
+        });
+    }
+
+    //가게 찜버튼 활성화
+    public void StoreActiveLikeData(Long storeId) {
+        //가게 찜버튼 활성화
+        storeApiService.likeStore(storeId).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    storeLikeLiveData.setValue(response.code());
+                    Log.d("likeAPI", ""+response);
+                } else {
+                    storeLikeLiveData.setValue(response.code());
+                    Log.d("likeAPI", "LIKEAPI 호출실패");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                storeLikeLiveData.setValue(-1);
+                Log.d("likeAPI", "LIKEAPI 호출실패");
+            }
+        });
+    }
+    //가게 찜버튼 취소
+    public void StoreInactiveLikeData(Long storeId) {
+        //가게 찜버튼 활성화
+        storeApiService.cancleLikeStore(storeId).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    storeLikeLiveData.setValue(response.code());
+                    Log.d("likeAPI", ""+response);
+                } else {
+                    storeLikeLiveData.setValue(response.code());
+                    Log.d("likeAPI", "LIKEAPI 호출실패");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                storeLikeLiveData.setValue(-1);
+                Log.d("likeAPI", "LIKEAPI 호출실패");
+            }
+        });
     }
 
     //지도 가게 조회 API(MapMainFragment에서 사용)
@@ -708,8 +826,32 @@ public class ActivityViewModel extends ViewModel {
     public LiveData<Long> getPostIdLiveData(){
         return postIdLiveData;
     }
+    //가게 스탬프
+    public MutableLiveData getStoreStampLiveData() {
+        return storeStampLiveData;
+    }
 
+    public void setStoreStampLiveData(MutableLiveData storeStampLiveData) {
+        this.storeStampLiveData = storeStampLiveData;
+    }
 
+    //가게 찜버튼
+    public MutableLiveData getStoreLikeLiveData() {
+        return storeLikeLiveData;
+    }
+
+    public void setStoreLikeLiveData(MutableLiveData storeLikeLiveData) {
+        this.storeLikeLiveData = storeLikeLiveData;
+    }
+
+    //가게 신고
+    public MutableLiveData getStoreReportDataLiveData() {
+        return storeReportDataLiveData;
+    }
+
+    public void setStoreReportDataLiveData(MutableLiveData storeReportDataLiveData) {
+        this.storeReportDataLiveData = storeReportDataLiveData;
+    }
 }
 
 
