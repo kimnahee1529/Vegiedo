@@ -52,7 +52,7 @@ public class CommunityViewModel extends ViewModel {
                     List<PostListData> data = response.body();
                     popularPostLiveData.setValue(data);
                     Log.d("성공","this is post cursor : " + currentCursor);
-                }else {
+                } else {
                     // API 응답이 오류 상태일 때
                     Log.e("인기 포스트 요청 실패 1", "Error Code: " + response.code() + ", Message: " + response.message());
                     try {
@@ -61,9 +61,7 @@ public class CommunityViewModel extends ViewModel {
                         e.printStackTrace();
                     }
                 }
-
             }
-
             @Override
             public void onFailure(Call<List<PostListData>> call, Throwable t) {
                 Log.e("인기 포스트 요청 실패 2", "실패 2" + t.getMessage());
@@ -84,15 +82,14 @@ public class CommunityViewModel extends ViewModel {
                     generalPostLiveData.setValue(data);
                     Log.d("성공","this is post cursor : " + currentCursor);
 
-                    Log.d("일반 포스트 리스트 성공","this is post : " + data.get(4).toString());
-                    Log.d("일반 포스트 리스트 성공","this is post id: " + data.get(4).getPostId());
-                    Log.d("일반 포스트 리스트 성공","this is post userNAme: " + data.get(4).getUserName());
-                    Log.d("일반 포스트 리스트 성공","this is post time : " + data.get(4).getCreatedAt());
-                    Log.d("일반 포스트 리스트 성공","this is post like : " + data.get(4).getLike());
-                    Log.d("일반 포스트 리스트 성공","this is post imageUrl : " + data.get(4).getImageUrl());
-                    Log.d("일반 포스트 리스트 성공","this is post comment : " + data.get(4).getCommentCount());
-                    Log.d("일반 포스트 리스트 성공","this is post totalPage : " + data.get(4).getTotalPage());
-
+//                    Log.d("일반 포스트 리스트 성공","this is post : " + data.get(4*cursor).toString());
+//                    Log.d("일반 포스트 리스트 성공","this is post id: " + data.get(4*cursor).getPostId());
+//                    Log.d("일반 포스트 리스트 성공","this is post userNAme: " + data.get(4*cursor).getUserName());
+//                    Log.d("일반 포스트 리스트 성공","this is post time : " + data.get(4*cursor).getCreatedAt());
+//                    Log.d("일반 포스트 리스트 성공","this is post like : " + data.get(4*cursor).getLike());
+//                    Log.d("일반 포스트 리스트 성공","this is post imageUrl : " + data.get(4*cursor).getImageUrl());
+//                    Log.d("일반 포스트 리스트 성공","this is post comment : " + data.get(4*cursor).getCommentCount());
+//                    Log.d("일반 포스트 리스트 성공","this is post totalPage : " + data.get(4*cursor).getTotalPage());
 
                 }else {
                     // API 응답이 오류 상태일 때
