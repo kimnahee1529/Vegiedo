@@ -40,10 +40,9 @@ public class UserReviewItemAdapter extends RecyclerView.Adapter<UserReviewItemAd
     private List<UserReviewItem> userReviewItemList;
     private static ActivityViewModel viewModel;
     private static Long currentStoreId;
-    public static int STORE_DETAIL_REVIEW_PAGE = 0;
-    public static int REVIEW_RC = 1;
-    public static int AD_BANNER = 2;
-
+    public static final int STORE_DETAIL_REVIEW_PAGE = 0;
+    public static final int REVIEW_RC = 1;
+    public static final int AD_BANNER = 2;
     private enum DialogType {
         DELETE,
         REPORT_TYPE,
@@ -51,7 +50,7 @@ public class UserReviewItemAdapter extends RecyclerView.Adapter<UserReviewItemAd
 
     public UserReviewItemAdapter(List<UserReviewItem> userReviewItemList) {
         if (userReviewItemList != null) {
-//            Log.d("어댑터1-1:받는 updatedItems", userReviewItemList.toString());
+//            Log.d("어댑터1-1:받는 updatefdItems", userReviewItemList.toString());
             this.userReviewItemList = userReviewItemList;
         } else {
 //            Log.d("어댑터1:받는 updatedItems", userReviewItemList.toString());
@@ -121,9 +120,9 @@ public class UserReviewItemAdapter extends RecyclerView.Adapter<UserReviewItemAd
             viewHolder.bindData(currentItem);
         } else if (holder instanceof ViewHolderAdBanner) {
             Log.d("어댑터5 onBindViewHolder", String.valueOf(holder));
-//            ViewHolderAdBanner viewHolder = (ViewHolderAdBanner) holder;
-//            com.google.android.gms.ads.AdRequest adRequest = new com.google.android.gms.ads.AdRequest.Builder().build();
-//            viewHolder.adBannerView.loadAd(adRequest);
+            ViewHolderAdBanner viewHolder = (ViewHolderAdBanner) holder;
+            com.google.android.gms.ads.AdRequest adRequest = new com.google.android.gms.ads.AdRequest.Builder().build();
+            viewHolder.adBannerView.loadAd(adRequest);
         }
 
     }
