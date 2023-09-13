@@ -51,8 +51,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
 
-//  애드몹
-    implementation 'com.google.android.gms:play-services-ads:22.2.0'
 //  카카오톡 관련
     implementation "com.kakao.sdk:v2-all:2.15.0"
     implementation "com.kakao.sdk:v2-user:2.15.0"
