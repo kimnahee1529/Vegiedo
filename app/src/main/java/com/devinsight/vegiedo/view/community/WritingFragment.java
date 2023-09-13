@@ -234,20 +234,20 @@ public class WritingFragment extends Fragment {
                 }
             }
 
-            if (!files.isEmpty()) {
-                MultipartBody.Part firstFilePart = files.get(0);
-                RequestBody firstFileRequestBody = firstFilePart.body();
-                Log.d("첫 번째 파일 이름", firstFilePart.headers().value(0)); // 파일 이름
-                Log.d("첫 번째 파일 미디어 타입", firstFileRequestBody.contentType().toString()); // 미디어 타입
-                try {
-                    Log.d("첫 번째 파일 크기", String.valueOf(firstFileRequestBody.contentLength())); // 파일 크기
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-                // 나머지 파일 관련 정보도 필요하다면 추가로 출력할 수 있음
-            } else {
-                Log.d("files 리스트", "비어 있습니다.");
-            }
+//            if (!files.isEmpty()) {
+//                MultipartBody.Part firstFilePart = files.get(0);
+//                RequestBody firstFileRequestBody = firstFilePart.body();
+//                Log.d("첫 번째 파일 이름", firstFilePart.headers().value(0)); // 파일 이름
+//                Log.d("첫 번째 파일 미디어 타입", firstFileRequestBody.contentType().toString()); // 미디어 타입
+//                try {
+//                    Log.d("첫 번째 파일 크기", String.valueOf(firstFileRequestBody.contentLength())); // 파일 크기
+//                } catch (IOException e) {
+//                    throw new RuntimeException(e);
+//                }
+//                // 나머지 파일 관련 정보도 필요하다면 추가로 출력할 수 있음
+//            } else {
+//                Log.d("files 리스트", "비어 있습니다.");
+//            }
             Log.d("files 리스트 크기", "크기: " + files.size());
             RequestBody titleRequestBody = RequestBody.create(MediaType.parse("text/plain"), titleText);
             MultipartBody.Part titlePart = MultipartBody.Part.createFormData("postTitle", titleText, titleRequestBody);
