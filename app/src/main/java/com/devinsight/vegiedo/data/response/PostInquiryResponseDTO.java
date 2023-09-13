@@ -19,9 +19,9 @@ public class PostInquiryResponseDTO {
     @Expose
     @SerializedName("likeReceiveCnt")private String likeReceiveCnt;
     @Expose
-    @SerializedName("images")private List<String> images;
+    @SerializedName("imageUrls")private List<String> images;
     @Expose
-    @SerializedName("commentList")private List<CommentListData> commentList;
+    @SerializedName("comments")private List<CommentListData> commentList;
 
     public Long getPostId() {
         return postId;

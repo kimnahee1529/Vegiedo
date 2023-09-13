@@ -735,7 +735,8 @@ public class ActivityViewModel extends ViewModel {
     }
 
     public void getPostData(){
-        Call<PostInquiryResponseDTO> call = postApiService.getPost(postId);
+        Call<PostInquiryResponseDTO> call = postApiService.getPost(token, postId);
+        Log.d("post id","post Id" + postId);
         call.enqueue(new Callback<PostInquiryResponseDTO>() {
             @Override
             public void onResponse(Call<PostInquiryResponseDTO> call, Response<PostInquiryResponseDTO> response) {
@@ -744,15 +745,22 @@ public class ActivityViewModel extends ViewModel {
                     postContentLiveData.setValue(data);
                     postCommentLiveData.setValue(data.getCommentList());
                     postIdLiveData.setValue(data.getPostId());
-                    Log.d("post api 호출 성공 ","성공" + response);
+                    Log.d("클릭된 포스트 성공","this is post id: " + data.getPostId());
+                    Log.d("클릭된 포스트 성공","this is post userNAme: " + data.getUserName());
+                    Log.d("클릭된 포스트 성공","this is post userImage: " + data.getUserImageUrl());
+                    Log.d("클릭된 포스트 성공","this is post content: " + data.getContent());
+                    Log.d("클릭된 포스트 성공","this is post userImage: " + data.getCommentList().size());
+                    Log.d("클릭된 포스트 성공","this is post title: " + data.getPostTitle());
+//                    Log.d("클릭된 포스트 성공","this is post userImage: " + data.getImages().get(0));
+                    Log.d("post 단일 조회 api 호출 성공 ","성공" + response);
                 }else{
-                    Log.e("post api 호출 실패 ","실패1" + response);
+                    Log.e("post 단일 조회 api 호출 실패1  ","실패1" + response);
 
                 }
             }
             @Override
             public void onFailure(Call<PostInquiryResponseDTO> call, Throwable t) {
-                Log.e("post api 호출 실패 ","실패2" + t.getMessage());
+                Log.e("post 단일 조회 api 호출 실패3 ","실패2" + t.getMessage());
             }
         });
 

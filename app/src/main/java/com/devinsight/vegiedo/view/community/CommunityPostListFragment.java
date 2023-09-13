@@ -2,6 +2,8 @@ package com.devinsight.vegiedo.view.community;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -32,6 +34,8 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
     ActivityViewModel activityViewModel;
     CommunityViewModel communityViewModel;
     ImageView community_banner;
+
+    NestedScrollView scrollView;
     RecyclerView recyclerView;
     CommunityPostAdaptper adatper;
     List<PostListData> postList;
@@ -42,12 +46,14 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
     Fragment postMainFragment;
     FrameLayout community_Frame;
 
+    int cursor;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_post_list, container, false);
-
+        scrollView = view.findViewById(R.id.scrollView);
         community_banner = view.findViewById(R.id.community_banner);
         recyclerView = view.findViewById(R.id.post_recyclerview);
         postList = new ArrayList<>();
@@ -61,6 +67,11 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
 
         communityViewModel = new ViewModelProvider(this).get(CommunityViewModel.class);
         activityViewModel = new ViewModelProvider(requireActivity()).get(ActivityViewModel.class);
+
+
+        cursor = 1 ;
+
+
         activityViewModel.getToken().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String token) {
@@ -68,7 +79,7 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
             }
         });
 
-        communityViewModel.loadGeneralPostList();
+        communityViewModel.loadGeneralPostList(cursor);
         communityViewModel.getGeneralPostList().observe(getViewLifecycleOwner(), new Observer<List<PostListData>>() {
             @Override
             public void onChanged(List<PostListData> generalPostListData) {
@@ -80,20 +91,28 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
             @Override
             public void onChanged(Boolean postType) {
                 if(postType){
-                    communityViewModel.loadGeneralPostList();
+                    communityViewModel.loadGeneralPostList(cursor);
                     communityViewModel.getGeneralPostList().observe(getViewLifecycleOwner(), new Observer<List<PostListData>>() {
                         @Override
                         public void onChanged(List<PostListData> generalPostListData) {
-                            setPostList(generalPostListData);
+                            if(generalPostListData != null ) {
+                                setPostList(generalPostListData);
+                            } else {
+                                Log.d("CommunityPostListFragment","list == null");
+                            }
                         }
                     });
 
                 } else {
-                    communityViewModel.loadPopularPostList();
+                    communityViewModel.loadPopularPostList(cursor);
                     communityViewModel.getPopularPostList().observe(getViewLifecycleOwner(), new Observer<List<PostListData>>() {
                         @Override
                         public void onChanged(List<PostListData> popularPostListData) {
-                            setPostList(popularPostListData);
+                            if(popularPostListData != null ) {
+                                setPostList(popularPostListData);
+                            } else {
+                                Log.d("CommunityPostListFragment","list == null");
+                            }
 
                         }
                     });
@@ -101,6 +120,27 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
             }
         });
 
+
+        scrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(@NonNull NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                int childHeight =  recyclerView.getMeasuredHeight();
+                int scrollViewHeight = v.getMeasuredHeight();
+                if (scrollY + scrollViewHeight >= childHeight) {
+                    cursor ++;
+                    Log.d("curor","cursur" + cursor);
+//                    communityViewModel.getCursor(cursor);
+
+                    getPostList(cursor);
+                    Log.d("this id scroll Y : ","Y" + scrollY);
+                    Log.d("this id scroll childHeight : ","childHeight" + childHeight);
+                    Log.d("this id scroll scrollViewHeight : ","scrollViewHeight" + scrollViewHeight);
+
+                }
+            }
+        });
+
+        setCursor();
 
         return view;
     }
@@ -116,7 +156,7 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
         bundle.putString("createdAt", postList.get(position).getCreatedAt());
         bundle.putInt("likeReceiveCount", postList.get(position).getLike());
         bundle.putInt("commentCount", postList.get(position).getCommentCount());
-        Log.d("클릭된 데이터 ","클릭된 데이터" + postList.get(position).getPostTitle() + postList.get(position).getUserName());
+        Log.d("클릭된 데이터 ","클릭된 데이터" + postList.get(position).getPostTitle() + " : " +  postList.get(position).getUserName() + " : " +  postList.get(position).getPostId() + " : " +  postList.get(position).getCommentCount() + " : " +  postList.get(position).getLike() + " : " +  postList.get(position).getCreatedAt());
 
         postContentFragment.setArguments(bundle);
 
@@ -125,7 +165,6 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
         FragmentManager fragmentManager = ((MainActivity)getActivity()).getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.post_content_frame, postContentFragment).commit();
-
 
         activityViewModel.setClickedPostData(postListData);
 
@@ -144,5 +183,59 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
         recyclerView.setLayoutManager(linearLayoutManager);
         adatper.setPostList(list);
         adatper.notifyDataSetChanged();
+    }
+
+    public void addPostList(List<PostListData> list) {
+        recyclerView.setAdapter(adatper);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        adatper.addPostList(list);
+        adatper.notifyDataSetChanged();
+    }
+
+
+
+    public void setCursor(){
+        if( postList != null) {
+            cursor = ( postList.size() / 5) + 1;
+        } else {
+            cursor = 1;
+        }
+//        communityViewModel.getCursor(cursor);
+    }
+
+    public void getPostList( int cursor ){
+        activityViewModel.getPostType().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean postType) {
+                if(postType){
+                    communityViewModel.loadGeneralPostList( cursor);
+                    communityViewModel.getGeneralPostList().observe(getViewLifecycleOwner(), new Observer<List<PostListData>>() {
+                        @Override
+                        public void onChanged(List<PostListData> generalPostListData) {
+                            if(generalPostListData != null ) {
+                                addPostList(generalPostListData);
+                            } else {
+                                Log.d("CommunityPostListFragment","list == null");
+                            }
+                        }
+                    });
+
+                } else {
+                    communityViewModel.loadPopularPostList( cursor);
+                    communityViewModel.getPopularPostList().observe(getViewLifecycleOwner(), new Observer<List<PostListData>>() {
+                        @Override
+                        public void onChanged(List<PostListData> popularPostListData) {
+                            if(popularPostListData != null ) {
+                                addPostList(popularPostListData);
+                            } else {
+                                Log.d("CommunityPostListFragment","list == null");
+                            }
+
+                        }
+                    });
+                }
+            }
+        });
     }
 }

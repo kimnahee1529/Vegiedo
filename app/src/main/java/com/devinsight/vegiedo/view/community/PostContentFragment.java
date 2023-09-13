@@ -92,15 +92,19 @@ public class PostContentFragment extends Fragment implements PostContentAdapter.
         activityViewModel.getPostContentLiveData().observe(getViewLifecycleOwner(), new Observer<PostInquiryResponseDTO>() {
             @Override
             public void onChanged(PostInquiryResponseDTO postData) {
-                List<String> list =  postData.getImages();
-                List<ContentImage> imageList = new ArrayList<>();
-                for( int i = 0 ; i < list.size() ; i ++ ){
-                    ContentImage contentImage = new ContentImage();
-                    contentImage.setImageUrl(list.get(i));
-                    imageList.add(contentImage);
+                if(postData.getImages() != null) {
+                    List<String> list =  postData.getImages();
+                    List<ContentImage> imageList = new ArrayList<>();
+                    for( int i = 0 ; i < list.size() ; i ++ ){
+                        ContentImage contentImage = new ContentImage();
+                        contentImage.setImageUrl(list.get(i));
+                        imageList.add(contentImage);
+                    }
+                    adaptper.setImageList(imageList);
+                    Log.d("clicked post : ","this is image list " + imageList.size());
+                    adaptper.notifyDataSetChanged();
                 }
-                adaptper.setImageList(imageList);
-                adaptper.notifyDataSetChanged();
+
                 String userImageUrl = postData.getUserImageUrl();
                 if( userImageUrl != null ){
                     Glide.with(getContext()).load(userImageUrl).into(user_image);
@@ -109,7 +113,7 @@ public class PostContentFragment extends Fragment implements PostContentAdapter.
                 }
                 post_content.setText(postData.getContent());
 
-                Log.d("포스트 조호 호출","포스트 조회 호출" + postData.getContent());
+                Log.d("포스트 단일 조호 호출","포스트 단일 조회 호출" + postData.getContent());
             }
         });
 

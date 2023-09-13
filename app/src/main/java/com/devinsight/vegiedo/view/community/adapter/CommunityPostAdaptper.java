@@ -28,6 +28,16 @@ public class CommunityPostAdaptper extends RecyclerView.Adapter<CommunityPostAda
         this.postList.addAll(list);
     }
 
+    public void addPostList(List<PostListData> list){
+//        if( list.size() >= 20 ) {
+////            this.postList.clear();
+//        } else {
+            notifyItemRangeChanged(postList.size() - 1, 5 );
+//        }
+
+        this.postList.addAll(list);
+    }
+
     public CommunityPostAdaptper(Context context, List<PostListData> list, PostItemListnere postItemListnere){
         this.postList = list;
         this.context = context;

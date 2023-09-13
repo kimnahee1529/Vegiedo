@@ -56,7 +56,7 @@ public interface PostApiService {
             @Header("Authorization") String token,
             @Part List<MultipartBody.Part> images,
             @Part("postTitle") RequestBody postTitle,
-            @Part("content") RequestBody content
+            @Part("content") RequestBody postContent
     );
 
 //    @Multipart
@@ -71,6 +71,7 @@ public interface PostApiService {
     //게시글 조회
     @GET("/posts/{postId}")
     Call<PostInquiryResponseDTO> getPost(
+            @Header("Authorization") String token,
             @Path("postId") Long postId
 
     );

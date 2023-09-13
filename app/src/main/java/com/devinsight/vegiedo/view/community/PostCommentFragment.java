@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,9 +71,11 @@ public class PostCommentFragment extends Fragment implements PostCommentAdapter.
         activityViewModel.getPostCommentLiveData().observe(getViewLifecycleOwner(), new Observer<List<CommentListData>>() {
             @Override
             public void onChanged(List<CommentListData> commentList) {
-                adapter.setCommentList(commentList);
-                adapter.notifyDataSetChanged();
-                post_content_comment.setText("댓글 " + commentList.size());
+                if(commentList != null ) {
+                    adapter.setCommentList(commentList);
+                    adapter.notifyDataSetChanged();
+                    post_content_comment.setText("댓글 " + commentList.size());
+                }
             }
         });
 
@@ -80,6 +83,7 @@ public class PostCommentFragment extends Fragment implements PostCommentAdapter.
             @Override
             public void onChanged(Long postId) {
                 commentViewModel.getPostId(postId);
+                Log.d("포스트 아이디","포스트 아이디" + postId);
             }
         });
 
@@ -99,11 +103,6 @@ public class PostCommentFragment extends Fragment implements PostCommentAdapter.
                 post_content_comment.setText("댓글 " + commentList.size());
             }
         });
-
-
-
-
-
 
         return view;
     }

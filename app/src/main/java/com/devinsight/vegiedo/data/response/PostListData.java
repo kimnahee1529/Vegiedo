@@ -21,6 +21,9 @@ public class PostListData {
     @Expose
     @SerializedName("commentCount")private int commentCount;
 
+    @Expose
+    @SerializedName("totalPage") private int totalPage;
+
     public Long getPostId() {
         return postId;
     }
@@ -77,7 +80,15 @@ public class PostListData {
         this.commentCount = commentCount;
     }
 
-    public PostListData(Long postId, String postTitle, String userName, String createdAt, String imageUrl, int like, int commentCount) {
+    public int getTotalPage() {
+        return totalPage;
+    }
+
+    public void setTotalPage(int totalPage) {
+        this.totalPage = totalPage;
+    }
+
+    public PostListData(Long postId, String postTitle, String userName, String createdAt, String imageUrl, int like, int commentCount, int totalPage) {
         this.postId = postId;
         this.postTitle = postTitle;
         this.userName = userName;
@@ -85,5 +96,6 @@ public class PostListData {
         this.imageUrl = imageUrl;
         this.like = like;
         this.commentCount = commentCount;
+        this.totalPage = totalPage;
     }
 }
