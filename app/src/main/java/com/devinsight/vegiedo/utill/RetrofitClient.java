@@ -33,7 +33,7 @@ public class RetrofitClient {
     }
 
     public static StoreApiService getStoreApiService(){
-        return getRetrofit("http://3.38.23.253:8080/test/").create(StoreApiService.class);
+        return getRetrofit("http://3.38.23.253:8080/").create(StoreApiService.class);
     }
 
     public static PostApiService getPostApiService(){
