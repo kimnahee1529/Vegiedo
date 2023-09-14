@@ -61,7 +61,7 @@ public interface PostApiService {
     //게시글 수정
     @Multipart
     @PATCH("/posts/{postId}")
-    Call<Void> updatePost(
+    Call<PostInquiryResponseDTO> updatePost(
             @Header("Authorization") String token,
             @Path("postId") Long postId,
             @Part("postTitle") RequestBody postTitle,

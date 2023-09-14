@@ -29,27 +29,27 @@ public class RetrofitClient {
     }
 
     public static UserApiService getUserApiService(){
-        return getRetrofit("http://18.119.70.148:8080/").create(UserApiService.class);
+        return getRetrofit("http://3.38.23.253:8080/").create(UserApiService.class);
     }
 
     public static StoreApiService getStoreApiService(){
-        return getRetrofit("http://18.119.70.148:8080/").create(StoreApiService.class);
+        return getRetrofit("http://3.38.23.253:8080/").create(StoreApiService.class);
     }
 
     public static PostApiService getPostApiService(){
-        return getRetrofit("http://18.119.70.148:8080/").create(PostApiService.class);
+        return getRetrofit("http://3.38.23.253:8080/").create(PostApiService.class);
     }
 
     public static ReviewApiService getReviewApiService(){
-        return getRetrofit("http://18.119.70.148:8080/").create(ReviewApiService.class);
+        return getRetrofit("http://3.38.23.253:8080/").create(ReviewApiService.class);
     }
 
     public static CommentApiService getCommentApiService(){
-        return getRetrofit("http://18.119.70.148:8080/").create(CommentApiService.class);
+        return getRetrofit("http://3.38.23.253:8080/").create(CommentApiService.class);
     }
 
     public static MapApiService getMapApiService(){
-        return getRetrofit(BASE_URL).create(MapApiService.class);
+        return getRetrofit("http://3.38.23.253:8080/").create(MapApiService.class);
     }
 
 
