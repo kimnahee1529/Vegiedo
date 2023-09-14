@@ -1,6 +1,8 @@
 package com.devinsight.vegiedo.view.store;
 
 import android.app.AlertDialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -183,7 +185,12 @@ public class WritingReviewFragment extends Fragment {
             String contentText = storeDetail_review_content.getText().toString();
             float updatedRatingBarValue = starRating.getRating();
 
-            if (TextUtils.isEmpty(contentText)) {
+//            if (TextUtils.isEmpty(contentText)) {
+//                showDialog();
+//                return;
+//            }
+
+            if(contentText.length() < 15){
                 showDialog();
                 return;
             }
@@ -214,7 +221,7 @@ public class WritingReviewFragment extends Fragment {
     }
 
     private void showDialog() {
-        int layoutId = R.layout.request_input_content_dialog;
+        int layoutId = R.layout.short_text_alert_dialog;
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View dialogView = inflater.inflate(layoutId, null);
@@ -224,6 +231,8 @@ public class WritingReviewFragment extends Fragment {
         builder.setView(dialogView);
 
         final AlertDialog dialog = builder.create();
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setContentView(R.layout.dialog_custom);
         closeIcon.setOnClickListener(v -> dialog.dismiss());
         dialog.show();
     }

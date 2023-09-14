@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -42,12 +43,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StoreReviewFragment extends Fragment {
-    public static final int ITEMS_PER_AD = 3;
     private RecyclerView recyclerView;
     private List<UserReviewItem> userReviewItems;
     private UserReviewItemAdapter adapter;
     ActivityViewModel viewModel;
-
 
     @Nullable
     @Override
@@ -62,87 +61,38 @@ public class StoreReviewFragment extends Fragment {
         // ViewModel 초기화
         viewModel = new ViewModelProvider(this).get(ActivityViewModel.class);
 
-//        AdView mAdView = view.findViewById(R.id.ad_banner_item_view);  // 여기서 뷰를 초기화합니다.
-//        AdRequest adRequest = new AdRequest.Builder().build();
-//        mAdView.loadAd(adRequest);
-
         recyclerView = view.findViewById(R.id.store_review_recycler_view);
         setupRecyclerView();
-//        initAdMobAdsSDK();
-//        addAdMobBannerAds();
-//        loadBannerAds();
+
+
+        Button moreButton = view.findViewById(R.id.moreButton);
+
+        adapter.setMoreItemsListener(new UserReviewItemAdapter.MoreItemsListener() {
+            @Override
+            public void onHideMoreButton() {
+                moreButton.setVisibility(View.GONE);  // "더보기" 버튼 숨기기
+                Log.d("더보기", "onHideMoreButton");
+            }
+        });
+
+        moreButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                adapter.showMoreItems();
+            }
+        });
+
         callReviewAPI();
     }
 
     private void setupRecyclerView() {
         recyclerView.setNestedScrollingEnabled(false);
         adapter = new UserReviewItemAdapter(userReviewItems, viewModel);
-//        adapter = new TestAdMobAdapter(userReviewItems, viewModel);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
     }
 
-    private void initAdMobAdsSDK() {
-        MobileAds.initialize(getContext(), new OnInitializationCompleteListener() {
-            @Override
-            public void onInitializationComplete(InitializationStatus initializationStatus) {
-            }
-        });
-    }
 
-    private void addAdMobBannerAds() {
-        for (int i = ITEMS_PER_AD; i <= userReviewItems.size(); i += ITEMS_PER_AD) {
-            userReviewItems.add(i, new UserReviewItem(AD_BANNER));
-        }
-    }
-    private void loadBannerAds()
-    {
-        //Load the first banner ad in the items list (subsequent ads will be loaded automatically in sequence).
-        loadBannerAd(ITEMS_PER_AD);
-    }
-
-    private void loadBannerAd(final int index)
-    {
-        if (index >= userReviewItems.size())
-        {
-            return;
-        }
-
-        Object item = userReviewItems.get(index);
-        if (!(item instanceof AdView))
-        {
-            throw new ClassCastException("Expected item at index " + index + " to be a banner ad" + " ad.");
-        }
-
-        final AdView adView = (AdView) item;
-
-        // Set an AdListener on the AdView to wait for the previous banner ad
-        // to finish loading before loading the next ad in the items list.
-        adView.setAdListener(new AdListener()
-        {
-            @Override
-            public void onAdLoaded()
-            {
-                super.onAdLoaded();
-                // The previous banner ad loaded successfully, call this method again to
-                // load the next ad in the items list.
-                loadBannerAd(index + ITEMS_PER_AD);
-            }
-
-//            @Override
-//            public void onAdFailedToLoad(int errorCode)
-//            {
-//                // The previous banner ad failed to load. Call this method again to load
-//                // the next ad in the items list.
-//                Log.e("MainActivity", "The previous banner ad failed to load. Attempting to"
-//                        + " load the next banner ad in the items list.");
-//                loadBannerAd(index + ITEMS_PER_AD);
-//            }
-        });
-
-        // Load the banner ad.
-        adView.loadAd(new AdRequest.Builder().build());
-    }
     private void callReviewAPI() {
         viewModel.getReviewLiveData().observe(getViewLifecycleOwner(), new Observer<ReviewListInquiryResponseDTO>() {
             @Override

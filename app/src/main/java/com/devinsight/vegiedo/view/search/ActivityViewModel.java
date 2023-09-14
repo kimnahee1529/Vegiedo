@@ -96,6 +96,12 @@ public class ActivityViewModel extends ViewModel {
 
     //리뷰-리뷰 조회 API 호출에서 쓸 라이브 데이터
     private MutableLiveData<ReviewListInquiryResponseDTO> reviewLiveData = new MutableLiveData<>();
+    //리뷰-리뷰 신고 API 호출에서 쓸 라이브 데이터
+    private MutableLiveData reviewReportDataLiveData = new MutableLiveData<>();
+    //유저-사용자 닉네임 변경
+
+    //유저-사용자 프로필 이미지 변경
+
     /* 게시글 종류 확인 라이브 데이터*/
     private MutableLiveData<Boolean> postTypeLiveData = new MutableLiveData<>();
 
@@ -471,26 +477,26 @@ public class ActivityViewModel extends ViewModel {
         });
     }
 
-//    //가게 신고(폐점) //TODO 이게 가게 신고랑 폐점신고 버튼이랑 다른 거지 않나?!
-//    public void StoreReportData(Long storeId, StoreReportRequestDTO requestDTO) {
-//        //가게 조회
-//        storeApiService.reportStore(storeId, requestDTO).enqueue(new Callback<Void>() {
-//            @Override
-//            public void onResponse(Call<Void> call, Response<Void> response) {
-//                if (response.isSuccessful()) {
-//                    storeReportDataLiveData.setValue(response.body());
-//                    Log.d("LOGAPI", "StoreReportAPI 호출");
-//                } else {
-//                    Log.d("LOGAPI", "StoreReportAPI 호출실패");
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<Void> call, Throwable t) {
-//                Log.d("LOGAPI", "StoreReportAPI 호출실패2");
-//            }
-//        });
-//    }
+    //가게 신고(폐점)
+    public void StoreReportData(Long storeId) {
+        //가게 신고(폐점)
+        storeApiService.reportStore(storeId).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    Log.d("LOGAPI", "StoreReportAPI 호출 "+response.code());
+                    storeReportDataLiveData.setValue(response.code());
+                } else {
+                    Log.d("LOGAPI", "StoreReportAPI 호출실패");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("LOGAPI", "StoreReportAPI 호출실패2");
+            }
+        });
+    }
 
     //여기서 호출한 api 함수를 StoreDetailPageFragment서 씀
     public LiveData<StoreInquiryResponseDTO> getStoreDataLiveData() {
@@ -712,16 +718,21 @@ public class ActivityViewModel extends ViewModel {
                     Void responseData = response.body();
                     Log.d("LOGAPIReviewReportData", response.toString());
                 } else{
-                    Log.d("LOGAPI", "ReviewReportData 호출실패1 "+response);
+                    Log.d("LOGAPIReviewReportData", "ReviewReportData 호출실패1 "+response);
                 }
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Log.d("LOGAPI", "ReviewReportData 호출실패2");
+                Log.d("LOGAPIReviewReportData", "ReviewReportData 호출실패2");
             }
         });
     }
+
+    //유저-사용자 닉네임 변경
+
+
+    //유저-사용자 프로필 이미지 변경
 
     /* true : 일반 게시글, false : 인기 게시글*/
     public void setPostType(Boolean postType){
@@ -899,6 +910,16 @@ public class ActivityViewModel extends ViewModel {
 
     public LiveData<List<String>> getImageUrlListForModifyLiveData(){
         return imageUrlListForModifyLiveData;
+    }
+
+
+    //리뷰 신고
+    public MutableLiveData getReviewReportDataLiveData() {
+        return reviewReportDataLiveData;
+    }
+
+    public void setReviewReportDataLiveData(MutableLiveData reviewReportDataLiveData) {
+        this.reviewReportDataLiveData = reviewReportDataLiveData;
     }
 }
 

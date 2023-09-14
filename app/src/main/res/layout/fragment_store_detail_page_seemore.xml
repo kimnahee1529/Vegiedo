@@ -330,7 +330,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="폐점가게 신고"/>
+                android:text="@string/report_closure_store"/>
 
 
 

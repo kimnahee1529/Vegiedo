@@ -1,5 +1,6 @@
 package com.devinsight.vegiedo.view.store;
 
+import static android.view.View.GONE;
 import static com.devinsight.vegiedo.utill.RetrofitClient.getStoreApiService;
 
 import android.app.AlertDialog;
@@ -148,30 +149,18 @@ public class StoreDetailPageFragment extends Fragment {
             }
         });
 
-        // 리뷰 가게 신고를 위한 LiveData Observer 설정
-//        viewModel.StoreReportData().observe(getViewLifecycleOwner(), new Observer() {
-//            @Override
-//            public void onChanged(Object o) {
-//                Log.d("like api", "뷰모델에서 넘겨준 code : "+o.toString());
-//                //뷰모델에서 받아온 찜버튼 api 호출 상태 코드가 200일 때
-//                if("200".equals(o.toString())){
-//                    if(isClickedLike) {
-//                        //찜버튼이 이미 눌려져있을 때 취소 api 호출
-//                        Log.d("likeinactive api", "찜 api 호출 성공");
-//                        storeDetail_default_heart.setVisibility(View.VISIBLE);
-//                        storeDetail_selected_heart.setVisibility(View.INVISIBLE);
-//                    } else {
-//                        //찜버튼이 안 눌려져있을 때 활성화 api 호출
-//                        Log.d("likeactive api", "찜 api 호출 성공");
-//                        storeDetail_default_heart.setVisibility(View.INVISIBLE);
-//                        storeDetail_selected_heart.setVisibility(View.VISIBLE);
-//
-//                    }
-//                    isClickedLike = !isClickedLike;
-//                }
-//            }
-//        });
-
+        // 가게 신고(폐점)를 위한 LiveData Observer 설정
+        viewModel.getStoreReportDataLiveData().observe(getViewLifecycleOwner(), new Observer() {
+            @Override
+            public void onChanged(Object o) {
+                Log.d("store api", "뷰모델에서 넘겨준 code : " + o.toString());
+                if ("200".equals(o.toString())) {
+                    showReportDialog();
+                    //200일 때 폐점가게 신고 버튼 숨기기
+//                    StoreDetail_closure_report_btn.setVisibility(GONE);
+                }
+            }
+        });
 
         return view;
     }
@@ -276,18 +265,7 @@ public class StoreDetailPageFragment extends Fragment {
         StoreDetail_closure_report_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getActivity(), "폐점가게신고", Toast.LENGTH_SHORT).show();
-                LayoutInflater inflater = getActivity().getLayoutInflater();
-                View dialogView = inflater.inflate(R.layout.accept_reporting_dialog, null);
-                ImageView closeIcon = dialogView.findViewById(R.id.green_x_circle);
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setView(dialogView);
-                AlertDialog dialog = builder.create();
-                dialog.setContentView(R.layout.dialog_custom);
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                closeIcon.setOnClickListener(v -> dialog.dismiss());
-                dialog.show();
+                viewModel.StoreReportData(storeId); // This will trigger the LiveData Observer above.
             }
         });
     }
@@ -295,8 +273,8 @@ public class StoreDetailPageFragment extends Fragment {
     private void loadFragment(Fragment fragment) {
 
         if (fragment instanceof StoreBlogReviewFragment) {
-            sheep_circle.setVisibility(View.GONE);
-            img_sheep.setVisibility(View.GONE);
+            sheep_circle.setVisibility(GONE);
+            img_sheep.setVisibility(GONE);
         } else {
             sheep_circle.setVisibility(View.VISIBLE);
             img_sheep.setVisibility(View.VISIBLE);
@@ -404,6 +382,21 @@ public class StoreDetailPageFragment extends Fragment {
         }
     }
 
+    private void showReportDialog() {
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.accept_reporting_dialog, null);
+        ImageView closeIcon = dialogView.findViewById(R.id.green_x_circle);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setView(dialogView);
+        AlertDialog dialog = builder.create();
+        dialog.setContentView(R.layout.dialog_custom);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
+        closeIcon.setOnClickListener(v -> {
+            dialog.dismiss();
+            StoreDetail_closure_report_btn.setVisibility(View.GONE);
+        });
+    }
 
 }
 
