@@ -74,6 +74,7 @@ public class WritingFragment extends Fragment {
     private List<Uri> imageUrilist;
 
     private String token;
+    private Long postId;
 
     /* 수정을 위해 전달 받은 데이터를 담을 변수 */
     private String postTitle;
@@ -84,6 +85,7 @@ public class WritingFragment extends Fragment {
     private boolean isModify;
     private int imageListSizeForModify;
     private List<Uri> imageUriListForModify;
+    private List<String> imageUrlListForModify;
 
     ActivityViewModel activityViewModel;
 
@@ -102,6 +104,7 @@ public class WritingFragment extends Fragment {
             imageListSizeForModify = getArguments().getInt("imageListSize");
             imageListForModify = new ArrayList<>();
             isModify = getArguments().getBoolean("isModify");
+            postId = getArguments().getLong("postId");
 
         }
     }
@@ -113,6 +116,7 @@ public class WritingFragment extends Fragment {
 
         imageUrilist = new ArrayList<>();
         imageUriListForModify = new ArrayList<>();
+        imageUrlListForModify = new ArrayList<>();
 //        files = new ArrayList<>();
 
 
@@ -178,12 +182,14 @@ public class WritingFragment extends Fragment {
                         if (i < imageUrlList.size()) {
                             ImageView imageView = rootView.findViewById(imageViews[i]);
                             Glide.with(getActivity()).load(imageUrlList.get(i)).into(imageView);
+                            imageView.setTag(imageUrlList.get(i));
                             Log.d("수정을 위해 넘어온 image url 4 ", "this is url" + imageUrlList.get(i));
                         }
                     }
 
                 }
             });
+
         }
     }
 
@@ -268,67 +274,130 @@ public class WritingFragment extends Fragment {
 
 
             List<MultipartBody.Part> files = new ArrayList<>();
-            for (int i = 0; i < imageUrilist.size(); i++) {
-                String filePath = getFilePath(getActivity(), imageUrilist.get(i));
-
-                if (filePath != null) {
-//                    RequestBody fileBody = RequestBody.create(MediaType.parse("image/*"), new File(filePath));
-                    RequestBody fileBody = RequestBody.create(MediaType.parse("image/*"), new File(filePath));
-                    String fileName = "photo" + i + ".jpg";
-                    MultipartBody.Part filePart = MultipartBody.Part.createFormData("images", fileName, fileBody);
-                    files.add(filePart);
-                }
-            }
-
-            Log.d("files 리스트 크기", "크기: " + files.size());
-            RequestBody titleRequestBody = RequestBody.create(MediaType.parse("text/plain"), titleText);
-            MultipartBody.Part titlePart = MultipartBody.Part.createFormData("postTitle", titleText, titleRequestBody);
-
-            RequestBody contentRequestBody = RequestBody.create(MediaType.parse("text/plain"), contentText);
-            MultipartBody.Part contentPart = MultipartBody.Part.createFormData("content", contentText, contentRequestBody);
-
-            Log.d("this is content", "this is content : " + contentRequestBody);
-
-
-            Log.d("토큰", "토큰" + token);
-            postApiService.addPost("Bearer " + token, files, titleRequestBody, contentRequestBody).enqueue(new Callback<PostRegisterResponseDTO>() {
-                @Override
-                public void onResponse(Call<PostRegisterResponseDTO> call, Response<PostRegisterResponseDTO> response) {
-                    if (response.isSuccessful()) {
-                        PostRegisterResponseDTO data = response.body();
-                        String imageUrl = data.getImages().toString();
-                        Log.d("이미지 url", "url" + imageUrl);
-                        Log.d("내용", "content" + data.getContent());
-                        Log.d("내용", "title" + data.getPostTitle());
-
-                        Log.d("post 등록 api 호출 성공 ", "성공" + response);
-                    } else {
-                        Log.e("post 등록 api 호출 실패 ", "실패1" + response);
-
-                        // 예외처리 및 오류 로그
-                        try {
-                            // 오류 응답에서 오류 메시지를 가져와서 로그에 기록
-                            String errorBody = response.errorBody().string();
-                            Log.e("오류 응답 본문", errorBody);
-                        } catch (IOException e) {
-                            // 오류 본문을 읽어오지 못하는 경우에 대한 예외처리
-                            Log.e("오류 응답 본문 읽기 실패", e.getMessage(), e);
-                        }
-                        Log.e("post 등록 api 호출 실패 ", "실패1" + response);
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<PostRegisterResponseDTO> call, Throwable t) {
-                    Log.e("post 등록 api 호출 실패 ", "실패2" + t.getMessage());
-                }
-            });
-
+            List<MultipartBody.Part> imageUrlFromServer = new ArrayList<>();
+            imageUrlListForModify.clear();
             if (isModify) {
+                for( int i = 0 ; i < imageUriListForModify.size(); i ++ ) {
+                    String addedFilePath = getFilePath(getActivity(), imageUriListForModify.get(i));
+                    if(addedFilePath != null) {
+                        RequestBody fileBody = RequestBody.create(MediaType.parse("image/*"), new File(addedFilePath));
+                        String fileName = "photo" + i + ".jpg";
+                        MultipartBody.Part filePart = MultipartBody.Part.createFormData("images", fileName, fileBody);
+                        files.add(filePart);
+                    }
+
+                }
                 RequestBody modifyTitle = RequestBody.create(MediaType.parse("text/plain"), titleText);
                 RequestBody modifyContent = RequestBody.create(MediaType.parse("text/plain"), contentText);
 
+                activityViewModel.getImageUrlListForModifyLiveData().observe(getViewLifecycleOwner(), new Observer<List<String>>() {
+                    @Override
+                    public void onChanged(List<String> urlListFromServer) {
+                        for( String url : urlListFromServer ) {
+                            if ( url.equals(currentlySelectedImageView.getTag())) {
+                                imageUrlListForModify.add(url);
+                            }
+                        }
+                    }
+                });
 
+                for ( int i = 0 ; i < imageUrlListForModify.size() ; i ++ ) {
+                    String imageUrl = imageUrlListForModify.get(i);
+                    RequestBody urlBody = RequestBody.create(MediaType.parse("text/plain"), imageUrl);
+                    String urlName = "url" + i;
+                    MultipartBody.Part filePart = MultipartBody.Part.createFormData("imageUrls", urlName, urlBody);
+                    imageUrlFromServer.add(filePart);
+                }
+
+                postApiService.updatePost("Bearer" + token, postId, modifyTitle, modifyContent, files, imageUrlFromServer).enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        if (response.isSuccessful()) {
+                            Log.d("post 수정 api 호출 성공 ", "성공" + response);
+                        } else {
+                            Log.e("post 수정 api 호출 실패 ", "실패1" + response);
+
+                            // 예외처리 및 오류 로그
+                            try {
+                                // 오류 응답에서 오류 메시지를 가져와서 로그에 기록
+                                String errorBody = response.errorBody().string();
+                                Log.e("오류 응답 본문", errorBody);
+                            } catch (IOException e) {
+                                // 오류 본문을 읽어오지 못하는 경우에 대한 예외처리
+                                Log.e("오류 응답 본문 읽기 실패", e.getMessage(), e);
+                            }
+                            Log.e("post 수정 api 호출 실패 ", "실패1" + response);
+                        }
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        Log.e("post 수정 api 호출 실패 ", "실패2" + t.getMessage());
+
+                    }
+                });
+
+
+
+
+
+            } else {
+                for (int i = 0; i < imageUrilist.size(); i++) {
+                    String filePath = getFilePath(getActivity(), imageUrilist.get(i));
+
+                    if (filePath != null) {
+//                    RequestBody fileBody = RequestBody.create(MediaType.parse("image/*"), new File(filePath));
+                        RequestBody fileBody = RequestBody.create(MediaType.parse("image/*"), new File(filePath));
+                        String fileName = "photo" + i + ".jpg";
+                        MultipartBody.Part filePart = MultipartBody.Part.createFormData("images", fileName, fileBody);
+                        files.add(filePart);
+                    }
+                }
+
+                Log.d("files 리스트 크기", "크기: " + files.size());
+                RequestBody titleRequestBody = RequestBody.create(MediaType.parse("text/plain"), titleText);
+                MultipartBody.Part titlePart = MultipartBody.Part.createFormData("postTitle", titleText, titleRequestBody);
+
+                RequestBody contentRequestBody = RequestBody.create(MediaType.parse("text/plain"), contentText);
+                MultipartBody.Part contentPart = MultipartBody.Part.createFormData("content", contentText, contentRequestBody);
+
+                Log.d("this is content", "this is content : " + contentRequestBody);
+
+
+                Log.d("토큰", "토큰" + token);
+                postApiService.addPost("Bearer " + token, files, titleRequestBody, contentRequestBody).enqueue(new Callback<PostRegisterResponseDTO>() {
+                    @Override
+                    public void onResponse(Call<PostRegisterResponseDTO> call, Response<PostRegisterResponseDTO> response) {
+                        if (response.isSuccessful()) {
+                            PostRegisterResponseDTO data = response.body();
+                            String imageUrl = data.getImages().toString();
+                            Log.d("이미지 url", "url" + imageUrl);
+                            Log.d("내용", "content" + data.getContent());
+                            Log.d("내용", "title" + data.getPostTitle());
+
+                            Log.d("post 등록 api 호출 성공 ", "성공" + response);
+                        } else {
+                            Log.e("post 등록 api 호출 실패 ", "실패1" + response);
+
+                            // 예외처리 및 오류 로그
+                            try {
+                                // 오류 응답에서 오류 메시지를 가져와서 로그에 기록
+                                String errorBody = response.errorBody().string();
+                                Log.e("오류 응답 본문", errorBody);
+                            } catch (IOException e) {
+                                // 오류 본문을 읽어오지 못하는 경우에 대한 예외처리
+                                Log.e("오류 응답 본문 읽기 실패", e.getMessage(), e);
+                            }
+                            Log.e("post 등록 api 호출 실패 ", "실패1" + response);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<PostRegisterResponseDTO> call, Throwable t) {
+                        Log.e("post 등록 api 호출 실패 ", "실패2" + t.getMessage());
+                    }
+                });
             }
 
 
@@ -439,32 +508,10 @@ public class WritingFragment extends Fragment {
         }
     }
 
-    private void updateSelectedImages(List<Uri> imageUris) {
-        selectedImageUris.clear();
-
-        int[] imageViews = {R.id.main_image1, R.id.main_image2, R.id.main_image3, R.id.main_image4, R.id.main_image5};
-        for (int i = 0; i < Math.min(imageUris.size(), MAX_IMAGE_COUNT); i++) {
-            selectedImageUris.add(imageUris.get(i).toString());
-            ImageView imageView = getView().findViewById(imageViews[i]);
-            imageView.setImageURI(imageUris.get(i));
-            imageView.setBackground(null);
-        }
-    }
-
     private void goBack() {
         if (getFragmentManager() != null) {
             getFragmentManager().popBackStack();
         }
-    }
-
-    //갤러리 접근 권한
-    private boolean checkPermission() {
-        int result = ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.READ_EXTERNAL_STORAGE);
-        return result == PackageManager.PERMISSION_GRANTED;
-    }
-
-    private void requestPermission() {
-        ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
     }
 
     @Override
