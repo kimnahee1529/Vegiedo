@@ -240,6 +240,7 @@ public class ActivityViewModel extends ViewModel {
         }
         Log.d("여기까지 됨", "194번줄");
         Log.d("쿼리 재료","tag : " + tags + "latitude : " + latitude + "longitude : " + longitude );
+        Log.e("store List 요청 동작", "store List 요청 동작");
 
         storeApiService.getStoreLists(tags, latitude, longitude, distance, keyword, 10, 1, token).enqueue(new Callback<List<StoreListData>>() {
             @Override
@@ -250,16 +251,18 @@ public class ActivityViewModel extends ViewModel {
                     List<StoreListData> data = response.body();
                     storeListLiveData.setValue(data);
                     searchSummList();
-                    Log.e("성공","가져왔어요" + data.get(0).getStoreName());
+                    Log.e("store List 요청 성공","this is store List : " + data.get(0).getStoreName());
                 }
             }
 
             @Override
             public void onFailure(Call<List<StoreListData>> call, Throwable t) {
-                Log.e("실패", "실패" + t.getMessage());
+                Log.e("store List 요청 실패", "store List 요청 실패" + t.getMessage());
             }
 
         });
+
+        Log.e("store List 요청 동작", "store List 요청 동작");
 
     }
 
