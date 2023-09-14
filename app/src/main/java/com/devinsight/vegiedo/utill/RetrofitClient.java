@@ -29,11 +29,11 @@ public class RetrofitClient {
     }
 
     public static UserApiService getUserApiService(){
-        return getRetrofit("http://3.38.23.253:8080/test/").create(UserApiService.class);
+        return getRetrofit("http://18.119.70.148:8080/").create(UserApiService.class);
     }
 
     public static StoreApiService getStoreApiService(){
-        return getRetrofit("http://3.38.23.253:8080/").create(StoreApiService.class);
+        return getRetrofit(BASE_URL).create(StoreApiService.class);
     }
 
     public static PostApiService getPostApiService(){
@@ -49,7 +49,7 @@ public class RetrofitClient {
     }
 
     public static MapApiService getMapApiService(){
-        return getRetrofit("http://3.38.23.253:8080/").create(MapApiService.class);
+        return getRetrofit(BASE_URL).create(MapApiService.class);
     }
 
 
