@@ -25,7 +25,7 @@ import retrofit2.http.Query;
 public interface StoreApiService {
 
     //가게 리스트 조회
-    @GET("stores")
+    @GET("/test/stores")
     Call<List<StoreListData>> getStoreLists(
             @Query("tags") List<String> tags,
             @Query("latitude") float latitude,
