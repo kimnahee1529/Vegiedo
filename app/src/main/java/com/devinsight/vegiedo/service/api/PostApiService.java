@@ -59,12 +59,16 @@ public interface PostApiService {
     );
 
     //게시글 수정
+    @Multipart
     @PATCH("/posts/{postId}")
     Call<Void> updatePost(
+            @Header("Authorization") String token,
             @Path("postId") Long postId,
-            @Part List<MultipartBody.Part> images,
             @Part("postTitle") RequestBody postTitle,
-            @Part("postContent") RequestBody postContent
+            @Part("postContent") RequestBody postContent,
+            @Part List<MultipartBody.Part> images,
+            @Part List<MultipartBody.Part> imageUrls
+
     );
 
     //게시글 삭제

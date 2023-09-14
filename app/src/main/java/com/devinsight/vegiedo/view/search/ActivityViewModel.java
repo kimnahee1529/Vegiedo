@@ -265,22 +265,26 @@ public class ActivityViewModel extends ViewModel {
         Log.d("쿼리 재료","tag : " + tags + "latitude : " + latitude + "longitude : " + longitude );
         Log.e("store List 요청 동작", "store List 요청 동작");
 
-        storeApiService.getStoreLists(tags, latitude, longitude, distance, keyword, 10, 1, token).enqueue(new Callback<List<StoreListData>>() {
+        storeApiService.getStoreLists(tags, latitude, longitude, distance*1000, keyword, 10, 0, "Bearer " +  token).enqueue(new Callback<List<StoreListData>>() {
             @Override
             public void onResponse(Call<List<StoreListData>> call, Response<List<StoreListData>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-
-                    Log.d(" 가게 호출 쿼리","값" + tags + latitude + longitude + "거리 : " + distance + keyword);
+                    Log.d(" 가게 호출 쿼리","값" + tags + latitude + longitude + "거리 : " + distance + keyword + token);
                     List<StoreListData> data = response.body();
-                    storeListLiveData.setValue(data);
-                    searchSummList();
-                    Log.e("store List 요청 성공","this is store List : " + data.get(0).getStoreName());
+                    if ( data != null ) {
+                        Log.e("store List 요청 성공","this is store List : ");
+                        storeListLiveData.setValue(data);
+                        searchSummList();
+                    } else {
+                        Log.d(" 해당하는 가게 리스트가 없습니다","해당하는 가게 리스트가 없습니다" + data.size());
+                    }
+
                 }
             }
 
             @Override
             public void onFailure(Call<List<StoreListData>> call, Throwable t) {
-                Log.e("store List 요청 실패", "store List 요청 실패" + t.getMessage());
+                Log.e("store List 요청 실패 2", "store List 요청 실패 2" + t.getMessage());
             }
 
         });
@@ -886,7 +890,7 @@ public class ActivityViewModel extends ViewModel {
     }
 
     public void getPostData(){
-        Call<PostInquiryResponseDTO> call = postApiService.getPost(token, postId);
+        Call<PostInquiryResponseDTO> call = postApiService.getPost("Bearer " + token, postId);
         Log.d("post id","post Id" + postId);
         call.enqueue(new Callback<PostInquiryResponseDTO>() {
             @Override

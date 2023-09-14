@@ -163,6 +163,7 @@ public class PostContentFragment extends Fragment implements PostContentAdapter.
                 }
                 bundle.putInt("imageListSize", imageList.size());
                 bundle.putBoolean("isModify", true);
+                bundle.putLong("postId", postId);
 
                 writingFragment.setArguments(bundle);
 
