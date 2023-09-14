@@ -112,6 +112,7 @@ public class WritingFragment extends Fragment {
 
 
         imageUrilist = new ArrayList<>();
+        imageUriListForModify = new ArrayList<>();
 //        files = new ArrayList<>();
 
 
@@ -348,17 +349,6 @@ public class WritingFragment extends Fragment {
         return filePath;
     }
 
-    private void sendPostRequest(PostRegisterRequestDTO postRegisterRequestDTO) {
-//        Call<Void> call = RetrofitClient.getRetrofit("").create(PostApiService.class).addPost(postRegisterRequestDTO);
-//        call.enqueue(new Callback<Void>() {
-//            @Override
-//            public void onResponse(Call<Void> call, Response<Void> response) {}
-//
-//            @Override
-//            public void onFailure(Call<Void> call, Throwable t) {}
-//        });
-    }
-
     private void showDialog(DialogType type) {
         int layoutId = (type == DialogType.TITLE) ? R.layout.request_input_title_dialog : R.layout.request_input_content_dialog;
 
@@ -375,44 +365,8 @@ public class WritingFragment extends Fragment {
     }
 
 
-//    private void moveToCommunityFragment() {
-//        Fragment targetFragment;
-//
-//        if ("GeneralPostFragment".equals(previousFragment)) {
-//            targetFragment = new GeneralPostFragment();
-//        } else if ("PopuralPostFragment".equals(previousFragment)) {
-//            targetFragment = new PopuralPostFragment();
-//        } else {
-//            targetFragment = new GeneralPostFragment(); // 기본값
-//        }
-//
-//        getActivity().getSupportFragmentManager().beginTransaction()
-//                .replace(R.id.frame, targetFragment)
-//                .commit();
-//    }
-
-
-//    private void selectImagesFromGallery() {
-//        Intent intent = new Intent();
-//        intent.setType("image/*");
-//        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-//        intent.setAction(Intent.ACTION_GET_CONTENT);
-//        startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY_REQUEST_CODE);
-//    }
-
     private void selectImageForView(ImageView imageView) {
-        // Check if permission is already granted
-//        if (checkPermission()) {
-//            // If permission is already granted, allow user to select an image
-//            currentlySelectedImageView = imageView;
-//            Intent intent = new Intent();
-//            intent.setType("image/*");
-//            intent.setAction(Intent.ACTION_GET_CONTENT);
-//            startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY_REQUEST_CODE);
-//        } else {
-//            // If permission is not granted, request for permission
-//            requestPermission();
-//        }
+
         currentlySelectedImageView = imageView;
 
         if (PermissionUtils.checkPermission(getActivity())) {
@@ -449,42 +403,39 @@ public class WritingFragment extends Fragment {
                 /* Uri를 담아줍니다.*/
                 selectedImageUri = data.getData();
             }
-            /* 이미지뷰가 null이 아니고, uri도 null이 아니라면 Uri를 이미지뷰에 그려줍니다. */
-            if (currentlySelectedImageView != null && selectedImageUri != null) {
-                currentlySelectedImageView.setImageURI(selectedImageUri);
-                currentlySelectedImageView.setBackground(null);
-
-                /* 이미지뷰의 태그가 0-4까지, 해당 태그 위치의 값과 동일한 리스트상의 인덱스에 Uri를 넣어줍니다. */
-                int tag = Integer.parseInt((String) currentlySelectedImageView.getTag());
-                if (tag < selectedImageUris.size()) {
-                    selectedImageUris.set(tag, selectedImageUri.toString());
-                    imageUrilist.set(tag, selectedImageUri);
-                } else {
-                    selectedImageUris.add(selectedImageUri.toString());
-                    imageUrilist.add(selectedImageUri);
-                }
-
-
-            }
 
             /* 수정 요청을 위한 iamgeUri를 가져옵니다.*/
-            if (isModify) {
+            if(isModify){
                 if (currentlySelectedImageView != null && selectedImageUri != null) {
                     currentlySelectedImageView.setImageURI(selectedImageUri);
                     currentlySelectedImageView.setBackground(null);
                     int tag = Integer.parseInt((String) currentlySelectedImageView.getTag());
+
                     if (tag < selectedImageUris.size()) {
-                        selectedImageUris.set(tag, selectedImageUri.toString());
                         imageUriListForModify.set(tag, selectedImageUri);
                         Log.d("imageUri for modify 1 ", "imageUri for modify 1 : " + selectedImageUri);
                     } else {
-                        selectedImageUris.add(selectedImageUri.toString());
                         imageUriListForModify.add(selectedImageUri);
                         Log.d("imageUri for modify 2 ", "imageUri for modify 2 : " + selectedImageUri);
                     }
                 }
-            }
+            } else {
+                /* 이미지뷰가 null이 아니고, uri도 null이 아니라면 Uri를 이미지뷰에 그려줍니다. */
+                if (currentlySelectedImageView != null && selectedImageUri != null) {
+                    currentlySelectedImageView.setImageURI(selectedImageUri);
+                    currentlySelectedImageView.setBackground(null);
 
+                    /* 이미지뷰의 태그가 0-4까지, 해당 태그 위치의 값과 동일한 리스트상의 인덱스에 Uri를 넣어줍니다. */
+                    int tag = Integer.parseInt((String) currentlySelectedImageView.getTag());
+                    if (tag < selectedImageUris.size()) {
+                        selectedImageUris.set(tag, selectedImageUri.toString());
+                        imageUrilist.set(tag, selectedImageUri);
+                    } else {
+                        selectedImageUris.add(selectedImageUri.toString());
+                        imageUrilist.add(selectedImageUri);
+                    }
+                }
+            }
         }
     }
 
