@@ -759,6 +759,7 @@ public class ActivityViewModel extends ViewModel {
     public void getPostData(){
         Call<PostInquiryResponseDTO> call = postApiService.getPost("Bearer " + token, postId);
         Log.d("post id","post Id" + postId);
+        Log.d("this is token for post not list ","token : " + token);
         call.enqueue(new Callback<PostInquiryResponseDTO>() {
             @Override
             public void onResponse(Call<PostInquiryResponseDTO> call, Response<PostInquiryResponseDTO> response) {
