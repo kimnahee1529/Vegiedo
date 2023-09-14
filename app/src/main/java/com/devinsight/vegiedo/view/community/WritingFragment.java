@@ -338,10 +338,6 @@ public class WritingFragment extends Fragment {
                     }
                 });
 
-
-
-
-
             } else {
                 for (int i = 0; i < imageUrilist.size(); i++) {
                     String filePath = getFilePath(getActivity(), imageUrilist.get(i));
