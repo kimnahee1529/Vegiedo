@@ -83,6 +83,7 @@ public class WritingFragment extends Fragment {
     /* 수정하기 버튼으로부터 열린 페이지인지 */
     private boolean isModify;
     private int imageListSizeForModify;
+    private List<Uri> imageUriListForModify;
 
     ActivityViewModel activityViewModel;
 
@@ -322,10 +323,15 @@ public class WritingFragment extends Fragment {
                 }
             });
 
+            if (isModify) {
+                RequestBody modifyTitle = RequestBody.create(MediaType.parse("text/plain"), titleText);
+                RequestBody modifyContent = RequestBody.create(MediaType.parse("text/plain"), contentText);
+
+
+            }
+
 
             Log.d("files", "files" + files.size());
-//            sendPostRequest(postRegisterRequestDTO);
-//            moveToCommunityFragment();
 
         });
     }
@@ -442,7 +448,6 @@ public class WritingFragment extends Fragment {
             if (data.getData() != null) {
                 /* Uri를 담아줍니다.*/
                 selectedImageUri = data.getData();
-
             }
             /* 이미지뷰가 null이 아니고, uri도 null이 아니라면 Uri를 이미지뷰에 그려줍니다. */
             if (currentlySelectedImageView != null && selectedImageUri != null) {
@@ -458,7 +463,28 @@ public class WritingFragment extends Fragment {
                     selectedImageUris.add(selectedImageUri.toString());
                     imageUrilist.add(selectedImageUri);
                 }
+
+
             }
+
+            /* 수정 요청을 위한 iamgeUri를 가져옵니다.*/
+            if (isModify) {
+                if (currentlySelectedImageView != null && selectedImageUri != null) {
+                    currentlySelectedImageView.setImageURI(selectedImageUri);
+                    currentlySelectedImageView.setBackground(null);
+                    int tag = Integer.parseInt((String) currentlySelectedImageView.getTag());
+                    if (tag < selectedImageUris.size()) {
+                        selectedImageUris.set(tag, selectedImageUri.toString());
+                        imageUriListForModify.set(tag, selectedImageUri);
+                        Log.d("imageUri for modify 1 ", "imageUri for modify 1 : " + selectedImageUri);
+                    } else {
+                        selectedImageUris.add(selectedImageUri.toString());
+                        imageUriListForModify.add(selectedImageUri);
+                        Log.d("imageUri for modify 2 ", "imageUri for modify 2 : " + selectedImageUri);
+                    }
+                }
+            }
+
         }
     }
 

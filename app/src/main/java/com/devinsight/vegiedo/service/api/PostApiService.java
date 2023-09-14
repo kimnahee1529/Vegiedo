@@ -62,7 +62,9 @@ public interface PostApiService {
     @PATCH("/posts/{postId}")
     Call<Void> updatePost(
             @Path("postId") Long postId,
-            @Body PostRegisterRequestDTO updatePost
+            @Part List<MultipartBody.Part> images,
+            @Part("postTitle") RequestBody postTitle,
+            @Part("postContent") RequestBody postContent
     );
 
     //게시글 삭제
