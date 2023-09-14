@@ -100,11 +100,6 @@ public class WritingFragment extends Fragment {
             imageUrl = getArguments().getString("imageList");
             imageListSizeForModify = getArguments().getInt("imageListSize");
             imageListForModify = new ArrayList<>();
-            for( int i = 0 ; i < imageListSizeForModify ; i ++ ){
-                imageListForModify.add(i, imageUrl);
-                Log.d("imageList 3 ","WF imageList" + imageListForModify.get(i) + "i : " + i);
-            }
-            activityViewModel.setImageUrlForModify(imageListForModify);
             isModify = getArguments().getBoolean("isModify");
 
         }
@@ -116,7 +111,6 @@ public class WritingFragment extends Fragment {
 
 
         imageUrilist = new ArrayList<>();
-        imageListForModify = new ArrayList<>();
 //        files = new ArrayList<>();
 
 
@@ -124,7 +118,7 @@ public class WritingFragment extends Fragment {
         setTitleTextWatcher();
         setContentTextWatcher();
         setRegisterButtonListener();
-        if(!isModify){
+        if (!isModify) {
             restoreSelectedImages();
         }
 
@@ -171,19 +165,19 @@ public class WritingFragment extends Fragment {
         ImageView mainImage5 = rootView.findViewById(R.id.main_image5);
         mainImage5.setOnClickListener(v -> selectImageForView((ImageView) v));
 
-        if( isModify ){
+        if (isModify) {
             communityWritingTitleText.setText(postTitle);
             communityWritingContentText.setText(postContent);
             int[] imageViews = {R.id.main_image1, R.id.main_image2, R.id.main_image3, R.id.main_image4, R.id.main_image5};
             activityViewModel.getImageUrlListForModifyLiveData().observe(getViewLifecycleOwner(), new Observer<List<String>>() {
                 @Override
                 public void onChanged(List<String> imageUrlList) {
-                    for ( int i = 0 ; i < imageListSizeForModify ; i ++ ) {
-                        ImageView imageView = rootView.findViewById(imageViews[i + 1]);
-                        Glide.with(getContext()).load(imageUrlList.get(i)).into(imageView);
-                        Log.d("수정을 위해 넘어온 image url 4 ","this is url" + imageUrlList.get(i));
-//                imageView.setImageURI(Uri.parse(imageListForModify.get(i)));
-//                imageView.setBackground(null);
+                    for (int i = 0; i < imageViews.length; i++) {
+                        if (i < imageUrlList.size()) {
+                            ImageView imageView = rootView.findViewById(imageViews[i]);
+                            Glide.with(getActivity()).load(imageUrlList.get(i)).into(imageView);
+                            Log.d("수정을 위해 넘어온 image url 4 ", "this is url" + imageUrlList.get(i));
+                        }
                     }
 
                 }
@@ -291,7 +285,7 @@ public class WritingFragment extends Fragment {
             RequestBody contentRequestBody = RequestBody.create(MediaType.parse("text/plain"), contentText);
             MultipartBody.Part contentPart = MultipartBody.Part.createFormData("content", contentText, contentRequestBody);
 
-            Log.d("this is content","this is content : " + contentRequestBody);
+            Log.d("this is content", "this is content : " + contentRequestBody);
 
 
             Log.d("토큰", "토큰" + token);
@@ -327,10 +321,6 @@ public class WritingFragment extends Fragment {
                     Log.e("post 등록 api 호출 실패 ", "실패2" + t.getMessage());
                 }
             });
-
-
-
-
 
 
             Log.d("files", "files" + files.size());

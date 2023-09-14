@@ -798,6 +798,7 @@ public class ActivityViewModel extends ViewModel {
 
     public void setImageUrlForModify(List<String> list) {
         imageUrlListForModifyLiveData.setValue(list);
+        Log.d("수정을 위해 넘어온 image url 4 ", "this is url" + list);
     }
 
     public void getUriList(List<Uri> imageUri) {

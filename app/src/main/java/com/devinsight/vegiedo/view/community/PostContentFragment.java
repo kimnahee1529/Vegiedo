@@ -166,6 +166,13 @@ public class PostContentFragment extends Fragment implements PostContentAdapter.
 
                 writingFragment.setArguments(bundle);
 
+                List<String >imageListForModify = new ArrayList<>();
+                for( int j = 0 ; j < imageList.size() ; j ++ ) {
+                    imageListForModify.add(imageList.get(j).getImageUrl());
+                }
+
+                activityViewModel.setImageUrlForModify(imageListForModify);
+
                 ((MainActivity) getActivity()).replaceFragment(writingFragment);
 
                 FragmentManager fragmentManager = ((MainActivity) getActivity()).getSupportFragmentManager();
