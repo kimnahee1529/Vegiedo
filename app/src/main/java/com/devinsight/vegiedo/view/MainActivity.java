@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
 //                    Intent intent = new Intent(getApplicationContext(), CommunityMainActivity.class);
 //                    startActivity(intent);
 //                    finish();
-                    transaction.replace(R.id.frame, storeDetailPageFragment, "communityMainFragment").addToBackStack("communityMainFragment").commit();
+                    transaction.replace(R.id.frame, communityMainFragment, "communityMainFragment").addToBackStack("communityMainFragment").commit();
 
                     return true;
                 } else if (item.getItemId() == R.id.nav_home) {
