@@ -63,11 +63,10 @@ public interface StoreApiService {
             @Path("storeId") Long storeId
     );
 
-    //가게 신고
+    //가게 신고(폐점)
     @POST("stores/{storeId}/reports")
     Call<Void> reportStore(
-            @Path("storeId") Long storeId,
-            @Body StoreReportRequestDTO reportData
+            @Path("storeId") Long storeId
     );
 
     //TODO 반환값이 없는지 보고 수정해야 함

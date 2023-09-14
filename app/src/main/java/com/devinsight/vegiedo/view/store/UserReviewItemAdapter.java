@@ -40,9 +40,39 @@ public class UserReviewItemAdapter extends RecyclerView.Adapter<UserReviewItemAd
     private List<UserReviewItem> userReviewItemList;
     private static ActivityViewModel viewModel;
     private static Long currentStoreId;
-    public static final int STORE_DETAIL_REVIEW_PAGE = 0;
-    public static final int REVIEW_RC = 1;
-    public static final int AD_BANNER = 2;
+    private int currentMaxItems = 2; // 처음에는 2개만 표시
+    private int itemsPerPage = 7; // "더보기" 버튼을 클릭할 때마다 추가되는 아이템 수
+    private MoreItemsListener listener;
+
+    // "더보기" 버튼 숨기기와 관련된 이벤트를 처리할 콜백을 명시
+    public interface MoreItemsListener {
+        void onHideMoreButton();
+    }
+
+
+    // 더보기 버튼 기능을 위해 맨처음 실행되는 코드. 어댑터 내에서 해당 인터페이스를 구현한 리스너를 설정할 수 있는 메서드를 제공
+    // StoreReviewFragment에 setMoreItemsListener 콜백 설정 메서드
+    public void setMoreItemsListener(MoreItemsListener listener) {
+        this.listener = listener;
+        Log.d("더보기", "setMoreItemsListener");
+    }
+    public void showMoreItems() {
+        if (currentMaxItems < userReviewItemList.size()) {
+            currentMaxItems += itemsPerPage;
+            notifyDataSetChanged();
+        }
+        if (currentMaxItems >= userReviewItemList.size() && listener != null) {
+            Log.d("더보기", "더보기 버튼 다 누름");
+            listener.onHideMoreButton();
+        }
+    }
+    @Override
+    public int getItemCount() {
+        if (userReviewItemList != null) {
+            return Math.min(currentMaxItems, userReviewItemList.size());
+        }
+        return 0;
+    }
     private enum DialogType {
         DELETE,
         REPORT_TYPE,
@@ -127,15 +157,15 @@ public class UserReviewItemAdapter extends RecyclerView.Adapter<UserReviewItemAd
 
     }
 
-    @Override
-    public int getItemCount() {
-        if (userReviewItemList != null){
-//            Log.d("LOGAPIgetItemCount", String.valueOf(userReviewItemList.size())); //20으로 잘 나옴
-            Log.d("어댑터6 getItemCount", String.valueOf(userReviewItemList.size()));
-            return userReviewItemList.size();
-        }
-        return 0;
-    }
+//    @Override
+//    public int getItemCount() {
+//        if (userReviewItemList != null){
+////            Log.d("LOGAPIgetItemCount", String.valueOf(userReviewItemList.size())); //20으로 잘 나옴
+//            Log.d("어댑터6 getItemCount", String.valueOf(userReviewItemList.size()));
+//            return userReviewItemList.size();
+//        }
+//        return 0;
+//    }
 
     abstract static class BaseViewHolder extends RecyclerView.ViewHolder {
         BaseViewHolder(@NonNull View itemView) {
@@ -312,7 +342,7 @@ public class UserReviewItemAdapter extends RecyclerView.Adapter<UserReviewItemAd
         }
 
     }
-//    아래는 다이얼로그 관련 함수
+    //    아래는 다이얼로그 관련 함수
 //--------------------------------------------------------------------------------------------------------------------------------
     //삭제 다이얼로그 생성
     private void setupDeleteDialog(Context context, Long storeId, Long reviewId, View dialogView, AlertDialog dialog) {
