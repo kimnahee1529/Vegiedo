@@ -13,12 +13,11 @@
         android:scrollbarThumbVertical="@android:color/darker_gray"
         android:scrollbars="vertical" />
 
-<!--    <com.google.android.gms.ads.AdView-->
-<!--        android:id="@+id/StoreDetial_adview"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        ads:adSize="BANNER"-->
-<!--        ads:adUnitId="ca-app-pub-3940256099942544/6300978111">-->
-<!--    </com.google.android.gms.ads.AdView>-->
+    <Button
+        android:id="@+id/moreButton"
+        android:text="더보기"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>

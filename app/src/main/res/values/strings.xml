@@ -42,6 +42,7 @@
     <string name="delete_review_question">리뷰를 삭제하시겠어요?</string>
     <string name="input_title">제목을 입력 해주세요!</string>
     <string name="input_content">내용을 입력 해주세요!</string>
+    <string name="short_text_alert">글이 너무 짧습니다\n15글자 이상 작성해주세요!</string>
     <string name="delete_text_question">글을 삭제하시겠어요?</string>
     <string name="profile_image_question">어떤 프로필 사진을 사용하고 싶나요?</string>
     <string name="withdrawal_question">회원 탈퇴 하시겠어요.......?? 진짜??</string>
@@ -56,6 +57,7 @@
     <string name="report_type_lan">부적절한 언어 사용</string>
     <string name="report_type_falseInfo">허위 정보 기재</string>
     <string name="report_type_etc">기타</string>
+    <string name="report_closure_store">폐점가게 신고</string>
 
 
 </resources>
