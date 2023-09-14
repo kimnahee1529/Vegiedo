@@ -38,6 +38,11 @@ public class CommunityPostAdaptper extends RecyclerView.Adapter<CommunityPostAda
         this.postList.addAll(list);
     }
 
+    public void previousPostList(List<PostListData> list) {
+        notifyItemRangeChanged(postList.size() - 6, 5 );
+        this.postList.addAll(list);
+    }
+
     public CommunityPostAdaptper(Context context, List<PostListData> list, PostItemListnere postItemListnere){
         this.postList = list;
         this.context = context;

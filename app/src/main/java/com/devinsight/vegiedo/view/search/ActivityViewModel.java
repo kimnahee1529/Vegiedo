@@ -6,6 +6,7 @@ import android.location.Location;
 import android.net.Uri;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -36,6 +37,7 @@ import com.devinsight.vegiedo.utill.RetrofitClient;
 import com.devinsight.vegiedo.view.community.ClickedPostData;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -104,6 +106,8 @@ public class ActivityViewModel extends ViewModel {
     private MutableLiveData<List<CommentListData>> postCommentLiveData = new MutableLiveData<>();
 
     private MutableLiveData<Long> postIdLiveData = new MutableLiveData<>();
+
+    private MutableLiveData<List<String>> imageUrlListForModifyLiveData = new MutableLiveData<>();
 
 
     /* Query 요청 및 필터에 사용 하기 위한 전역 변수*/
@@ -749,7 +753,7 @@ public class ActivityViewModel extends ViewModel {
                     Log.d("클릭된 포스트 성공","this is post userNAme: " + data.getUserName());
                     Log.d("클릭된 포스트 성공","this is post userImage: " + data.getUserImageUrl());
                     Log.d("클릭된 포스트 성공","this is post content: " + data.getContent());
-                    Log.d("클릭된 포스트 성공","this is post userImage: " + data.getCommentList().size());
+//                    Log.d("클릭된 포스트 성공","this is post userImage: " + data.getCommentList().size());
                     Log.d("클릭된 포스트 성공","this is post title: " + data.getPostTitle());
 //                    Log.d("클릭된 포스트 성공","this is post userImage: " + data.getImages().get(0));
                     Log.d("post 단일 조회 api 호출 성공 ","성공" + response);
@@ -764,6 +768,36 @@ public class ActivityViewModel extends ViewModel {
             }
         });
 
+    }
+
+    public void deletePost(Long postId) {
+        Log.d(" 삭제 포스트 아이디","삭제 포스트 아이디 " + postId);
+        Call<Void> call = postApiService.deletePost("Bearer " + token, postId);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+                    Log.d("post 삭제 성공","post 삭제 성공");
+                } else {
+                    // API 응답이 오류 상태일 때
+                    Log.e("post 삭제 실패 1", "Error Code: " + response.code() + ", Message: " + response.message());
+                    try {
+                        Log.e("post 삭제 실패 1", "Error Body: " + response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.e("post 삭제 실패 2", "실패 2" + t.getMessage());
+            }
+        });
+    }
+
+    public void setImageUrlForModify(List<String> list) {
+        imageUrlListForModifyLiveData.setValue(list);
     }
 
     public void getUriList(List<Uri> imageUri) {
@@ -834,6 +868,7 @@ public class ActivityViewModel extends ViewModel {
     public LiveData<Long> getPostIdLiveData(){
         return postIdLiveData;
     }
+
     //가게 스탬프
     public MutableLiveData getStoreStampLiveData() {
         return storeStampLiveData;
@@ -859,6 +894,10 @@ public class ActivityViewModel extends ViewModel {
 
     public void setStoreReportDataLiveData(MutableLiveData storeReportDataLiveData) {
         this.storeReportDataLiveData = storeReportDataLiveData;
+    }
+
+    public LiveData<List<String>> getImageUrlListForModifyLiveData(){
+        return imageUrlListForModifyLiveData;
     }
 }
 

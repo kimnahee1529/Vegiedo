@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.devinsight.vegiedo.R;
 import com.devinsight.vegiedo.data.response.PostListData;
@@ -46,7 +47,10 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
     Fragment postMainFragment;
     FrameLayout community_Frame;
 
-    int cursor;
+    int cursor = 1;
+    int maxCursor;
+
+    boolean isScrollingUp;
 
 
     @Override
@@ -58,6 +62,9 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
         recyclerView = view.findViewById(R.id.post_recyclerview);
         postList = new ArrayList<>();
         adatper = new CommunityPostAdaptper(getContext(), postList, this);
+        recyclerView.setAdapter(adatper);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
+        recyclerView.setLayoutManager(linearLayoutManager);
 
         postMainFragment = new PostMainFragment();
 
@@ -68,9 +75,6 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
         communityViewModel = new ViewModelProvider(this).get(CommunityViewModel.class);
         activityViewModel = new ViewModelProvider(requireActivity()).get(ActivityViewModel.class);
 
-        /* 최초 게시글 리스트 요청 시 사용 되는 cursor 값*/
-        cursor = 1;
-
         /* 유저 토큰 값 프래그먼트 뷰 모델에 전달 */
         activityViewModel.getToken().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
@@ -79,14 +83,14 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
             }
         });
 
-        /* nav 바를 통한 화면 이동 시 보여질 최초 일반 게시글 리스트 */
-        communityViewModel.loadGeneralPostList(cursor);
-        communityViewModel.getGeneralPostList().observe(getViewLifecycleOwner(), new Observer<List<PostListData>>() {
-            @Override
-            public void onChanged(List<PostListData> generalPostListData) {
-                setPostList(generalPostListData);
-            }
-        });
+//        /* nav 바를 통한 화면 이동 시 보여질 최초 일반 게시글 리스트 */
+//        communityViewModel.loadGeneralPostList(cursor);
+//        communityViewModel.getGeneralPostList().observe(getViewLifecycleOwner(), new Observer<List<PostListData>>() {
+//            @Override
+//            public void onChanged(List<PostListData> generalPostListData) {
+//                setPostList(generalPostListData);
+//            }
+//        });
 
 
         /* 게시글 유형 구분 후 리스트 호출 */
@@ -125,34 +129,45 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
             }
         });
 
+
+
+
         /* 스크롤 위치에 따른 게시글 호출 */
         scrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(@NonNull NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                int childHeight = recyclerView.getMeasuredHeight();
+                /* 현재 Y 좌표가 이전 Y 좌표 보다 작다면 = 스크롤 내림*/
+                isScrollingUp = scrollY < oldScrollY;
+                int childHeight = v.getChildAt(0).getMeasuredHeight();
                 int scrollViewHeight = v.getMeasuredHeight();
-                if (scrollY + scrollViewHeight >= childHeight) {
-                    cursor ++;
-                    Log.d("curor", "cursur" + cursor);
-                    /*
-                    *  여기에 서버 에서 내려준 최대 커서 값으로 커서 값 제한 하는거 써야함
-                    *  scroll 맨 위로 갔을때 이전 커서 값에 담긴 리스트 호출 함
-                    */
-                    addPostList(cursor + 1 );
-                    Log.d("this id scroll Y : ", "Y" + scrollY);
-                    Log.d("this id scroll childHeight : ", "childHeight" + childHeight);
-                    Log.d("this id scroll scrollViewHeight : ", "scrollViewHeight" + scrollViewHeight);
+                communityViewModel.getMaxCursorLiveData().observe(getViewLifecycleOwner(), new Observer<Integer>() {
+                    @Override
+                    public void onChanged(Integer maxCursor) {
+                        if (scrollY == childHeight - scrollViewHeight && !isScrollingUp) {
 
-                }
+                            if( cursor <= maxCursor ){
+                                cursor ++;
+                                Log.d("cursor scroll ", "cursor up" + cursor);
+                                addPostList(cursor);
+                            } else {
+                                Toast.makeText(getContext(), " 마지막 페이지 입니다 ", Toast.LENGTH_SHORT).show();
+                            }
+
+                        }
+                        else if (isScrollingUp){
+                            if (cursor > 1) {
+                                cursor--;
+                                Log.d("cursor scroll", "cursor down" + cursor);
+                                previousPostList(cursor);
+                            }
+
+                        }
+
+                    }
+                });
             }
         });
 
-        recyclerView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
-            @Override
-            public void onScrollChange(View view, int i, int i1, int i2, int i3) {
-
-            }
-        });
 
 //        setCursor();
 
@@ -170,6 +185,7 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
         bundle.putString("createdAt", postList.get(position).getCreatedAt());
         bundle.putInt("likeReceiveCount", postList.get(position).getLike());
         bundle.putInt("commentCount", postList.get(position).getCommentCount());
+        bundle.putLong("postId", postList.get(position).getPostId());
         Log.d("클릭된 데이터 ", "클릭된 데이터" + postList.get(position).getPostTitle() + " : " + postList.get(position).getUserName() + " : " + postList.get(position).getPostId() + " : " + postList.get(position).getCommentCount() + " : " + postList.get(position).getLike() + " : " + postList.get(position).getCreatedAt());
 
         postContentFragment.setArguments(bundle);
@@ -192,29 +208,74 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
 
     /* 리사이클러뷰에 리스트 설정 */
     public void setPostList(List<PostListData> list) {
-        recyclerView.setAdapter(adatper);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
-        recyclerView.setLayoutManager(linearLayoutManager);
+//        recyclerView.setAdapter(adatper);
+//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
+//        recyclerView.setLayoutManager(linearLayoutManager);
         adatper.setPostList(list);
         adatper.notifyDataSetChanged();
     }
 
     /* 스크롤 위치에 따라 호출 된 게시글 목록을 기존 목록에 추가 */
     public void addPostList(List<PostListData> list) {
-        recyclerView.setAdapter(adatper);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
-        recyclerView.setLayoutManager(linearLayoutManager);
+//        recyclerView.setAdapter(adatper);
+//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
+//        recyclerView.setLayoutManager(linearLayoutManager);
         adatper.addPostList(list);
-        adatper.notifyDataSetChanged();
+//        adatper.notifyDataSetChanged();
     }
 
-    /* 스크롤 위치에 따른 게시글 목록 커서에 따라 호출 */
-    public void addPostList(int cursor) {
+    public void previousPostList(List<PostListData> list) {
+//        recyclerView.setAdapter(adatper);
+//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
+//        recyclerView.setLayoutManager(linearLayoutManager);
+        adatper.previousPostList(list);
+//        adatper.notifyDataSetChanged();
+    }
+
+
+    public void previousPostList(int currentCursor) {
         activityViewModel.getPostType().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean postType) {
                 if (postType) {
-                    communityViewModel.loadGeneralPostList(cursor);
+                    communityViewModel.loadGeneralPostList(currentCursor);
+                    communityViewModel.getGeneralPostList().observe(getViewLifecycleOwner(), new Observer<List<PostListData>>() {
+                        @Override
+                        public void onChanged(List<PostListData> generalPostListData) {
+                            if (generalPostListData != null) {
+                                previousPostList(generalPostListData);
+                            } else {
+                                Log.d("CommunityPostListFragment", "list == null");
+                            }
+                        }
+                    });
+
+                } else {
+                    communityViewModel.loadPopularPostList(currentCursor);
+                    communityViewModel.getPopularPostList().observe(getViewLifecycleOwner(), new Observer<List<PostListData>>() {
+                        @Override
+                        public void onChanged(List<PostListData> popularPostListData) {
+                            if (popularPostListData != null) {
+                                previousPostList(popularPostListData);
+                            } else {
+                                Log.d("CommunityPostListFragment", "list == null");
+                            }
+
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+
+    /* 스크롤 위치에 따른 게시글 목록 커서에 따라 호출 */
+    public void addPostList(int currentCursor) {
+        activityViewModel.getPostType().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean postType) {
+                if (postType) {
+                    communityViewModel.loadGeneralPostList(currentCursor);
                     communityViewModel.getGeneralPostList().observe(getViewLifecycleOwner(), new Observer<List<PostListData>>() {
                         @Override
                         public void onChanged(List<PostListData> generalPostListData) {
@@ -227,7 +288,7 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
                     });
 
                 } else {
-                    communityViewModel.loadPopularPostList(cursor);
+                    communityViewModel.loadPopularPostList(currentCursor);
                     communityViewModel.getPopularPostList().observe(getViewLifecycleOwner(), new Observer<List<PostListData>>() {
                         @Override
                         public void onChanged(List<PostListData> popularPostListData) {
@@ -252,5 +313,6 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
         }
 //        communityViewModel.getCursor(cursor);
     }
+
 
 }

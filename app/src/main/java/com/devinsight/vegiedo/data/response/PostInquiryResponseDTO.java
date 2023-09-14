@@ -17,11 +17,13 @@ public class PostInquiryResponseDTO {
     @Expose
     @SerializedName("userImageUrl")private String userImageUrl;
     @Expose
-    @SerializedName("likeReceiveCnt")private String likeReceiveCnt;
+    @SerializedName("likeReceiveCnt")private int likeReceiveCnt;
+    @Expose
+    @SerializedName("createdAt")private String createdAt;
     @Expose
     @SerializedName("imageUrls")private List<String> images;
     @Expose
-    @SerializedName("comments")private List<CommentListData> commentList;
+    @SerializedName("commentList")private List<CommentListData> commentList;
 
     public Long getPostId() {
         return postId;
@@ -63,12 +65,20 @@ public class PostInquiryResponseDTO {
         this.userImageUrl = userImageUrl;
     }
 
-    public String getLikeReceiveCnt() {
+    public int getLikeReceiveCnt() {
         return likeReceiveCnt;
     }
 
-    public void setLikeReceiveCnt(String likeReceiveCnt) {
+    public void setLikeReceiveCnt(int likeReceiveCnt) {
         this.likeReceiveCnt = likeReceiveCnt;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
     }
 
     public List<String> getImages() {
@@ -87,13 +97,14 @@ public class PostInquiryResponseDTO {
         this.commentList = commentList;
     }
 
-    public PostInquiryResponseDTO(Long postId, String postTitle, String content, String userName, String userImageUrl, String likeReceiveCnt, List<String> images, List<CommentListData> commentList) {
+    public PostInquiryResponseDTO(Long postId, String postTitle, String content, String userName, String userImageUrl, int likeReceiveCnt, String createdAt, List<String> images, List<CommentListData> commentList) {
         this.postId = postId;
         this.postTitle = postTitle;
         this.content = content;
         this.userName = userName;
         this.userImageUrl = userImageUrl;
         this.likeReceiveCnt = likeReceiveCnt;
+        this.createdAt = createdAt;
         this.images = images;
         this.commentList = commentList;
     }

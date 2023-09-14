@@ -1,8 +1,13 @@
 package com.devinsight.vegiedo.view.community;
 
+import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -12,6 +17,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,6 +26,7 @@ import com.bumptech.glide.Glide;
 import com.devinsight.vegiedo.R;
 import com.devinsight.vegiedo.data.response.ContentImage;
 import com.devinsight.vegiedo.data.response.PostInquiryResponseDTO;
+import com.devinsight.vegiedo.view.MainActivity;
 import com.devinsight.vegiedo.view.community.adapter.PostContentAdapter;
 import com.devinsight.vegiedo.view.search.ActivityViewModel;
 
@@ -42,11 +50,16 @@ public class PostContentFragment extends Fragment implements PostContentAdapter.
     RecyclerView recyclerView;
     List<ContentImage> imageList;
 
+    private Dialog dialog;
+
     String postTitle;
     String userName;
     String createdAt;
     int likeReceiveCount;
     int commentCount;
+    Long postId;
+
+    Fragment communityMainFragment;
 
     ActivityViewModel activityViewModel;
 
@@ -59,6 +72,7 @@ public class PostContentFragment extends Fragment implements PostContentAdapter.
             createdAt = getArguments().getString("createdAt");
             likeReceiveCount = getArguments().getInt("likeReceiveCount", 0);
             commentCount = getArguments().getInt("commentCount", 0);
+            postId = getArguments().getLong("postId",0);
         }
     }
 
@@ -78,6 +92,8 @@ public class PostContentFragment extends Fragment implements PostContentAdapter.
         post_content_recommend = view.findViewById(R.id.post_content_recommend);
         post_content_delete = view.findViewById(R.id.post_content_delete);
         post_content_modify = view.findViewById(R.id.post_content_modify);
+
+        communityMainFragment = new CommunityMainFragment();
 
         recyclerView = view.findViewById(R.id.content_image_rc);
         imageList = new ArrayList<>();
@@ -123,11 +139,78 @@ public class PostContentFragment extends Fragment implements PostContentAdapter.
         like_count.setText(String.valueOf(likeReceiveCount));
         post_recommend_count.setText(String.valueOf(likeReceiveCount));
 
+
+
+        post_content_delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setDialog("글을 삭제 하시겠어요?", postId);
+            }
+        });
+
+        post_content_modify.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                WritingFragment writingFragment = new WritingFragment();
+
+                Bundle bundle = new Bundle();
+                bundle.putString("postTitle", postTitle);
+                bundle.putString("postContent", post_content.getText().toString());
+                for(int i = 0 ; i < imageList.size() ; i ++ ) {
+                    bundle.putString("imageList", imageList.get(i).getImageUrl());
+                    Log.d("imageList 1","imageList num is : " + i + imageList.get(i).getImageUrl());
+                    Log.d("imageList 2","imageList size is : " + imageList.size());
+                }
+                bundle.putInt("imageListSize", imageList.size());
+                bundle.putBoolean("isModify", true);
+
+                writingFragment.setArguments(bundle);
+
+                ((MainActivity) getActivity()).replaceFragment(writingFragment);
+
+                FragmentManager fragmentManager = ((MainActivity) getActivity()).getSupportFragmentManager();
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                transaction.replace(R.id.frame, writingFragment).commit();
+            }
+        });
+
         return view;
     }
 
     @Override
     public void onImageClicked(View view, ContentImage image, int position) {
 
+    }
+
+    public void setDialog(String message, Long postId) {
+        Log.d(" 삭제 포스트 아이디 2","삭제 포스트 아이디 2 " + postId);
+        dialog = new Dialog(getContext());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setContentView(R.layout.delete_dialog);
+
+        Button yesDelete = dialog.findViewById(R.id.yes);
+        Button noDelete = dialog.findViewById(R.id.no);
+        TextView msg = dialog.findViewById(R.id.dialog);
+        msg.setText(message);
+
+        yesDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                activityViewModel.deletePost(postId);
+                getParentFragmentManager().beginTransaction().replace(R.id.frame, communityMainFragment).commit();
+                Log.d(" 삭제 포스트 아이디 3","삭제 포스트 아이디3 " + postId);
+                dialog.dismiss();
+            }
+        });
+
+        noDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 }

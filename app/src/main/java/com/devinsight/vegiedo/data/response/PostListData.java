@@ -20,7 +20,6 @@ public class PostListData {
     @SerializedName("likeReceiveCount")private int like;
     @Expose
     @SerializedName("commentCount")private int commentCount;
-
     @Expose
     @SerializedName("totalPage") private int totalPage;
 

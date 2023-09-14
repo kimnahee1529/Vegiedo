@@ -4,7 +4,6 @@ import com.devinsight.vegiedo.data.request.PostRegisterRequestDTO;
 import com.devinsight.vegiedo.data.request.PostReportRequestDTO;
 import com.devinsight.vegiedo.data.response.PostInquiryResponseDTO;
 import com.devinsight.vegiedo.data.response.PostListData;
-import com.devinsight.vegiedo.data.response.PostListInquiryResponseDTO;
 //import com.devinsight.vegiedo.data.response.
 import com.devinsight.vegiedo.data.response.PostRegisterResponseDTO;
 
@@ -44,29 +43,12 @@ public interface PostApiService {
     //게시글 등록
     @Multipart
     @POST("/posts")
-    Call<Void> addPost(
-            @Header("Authorization") String token,
-            @Part List<MultipartBody.Part> images,
-            @Part("postTitle") MultipartBody.Part postTitle,
-            @Part("content") MultipartBody.Part content
-    );
-    @Multipart
-    @POST("/posts")
-    Call<PostRegisterResponseDTO> addPost2(
+    Call<PostRegisterResponseDTO> addPost(
             @Header("Authorization") String token,
             @Part List<MultipartBody.Part> images,
             @Part("postTitle") RequestBody postTitle,
-            @Part("content") RequestBody postContent
+            @Part("postContent") RequestBody postContent
     );
-
-//    @Multipart
-//    @POST("/posts")
-//    Call<PostRegisterResponseDTO> addPost2(
-//            @Header("Authorization") String token,
-//            @Part List<MultipartBody.Part> images,
-//            @Part MultipartBody.Part postTitle,
-//            @Part MultipartBody.Part content
-//    );
 
     //게시글 조회
     @GET("/posts/{postId}")
@@ -86,6 +68,7 @@ public interface PostApiService {
     //게시글 삭제
     @DELETE("/posts/{postId}")
     Call<Void> deletePost(
+            @Header("Authorization") String token,
             @Path("postId") Long postId
     );
 

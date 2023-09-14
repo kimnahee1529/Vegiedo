@@ -2,15 +2,12 @@ package com.devinsight.vegiedo.view.community;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -24,12 +21,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
+import com.bumptech.glide.Glide;
 import com.devinsight.vegiedo.R;
 import com.devinsight.vegiedo.data.request.PostRegisterRequestDTO;
 import com.devinsight.vegiedo.data.response.PostRegisterResponseDTO;
@@ -74,13 +72,43 @@ public class WritingFragment extends Fragment {
     private ImageView currentlySelectedImageView;
 
     private List<Uri> imageUrilist;
-//    private List<MultipartBody.Part> files;
 
     private String token;
+
+    /* 수정을 위해 전달 받은 데이터를 담을 변수 */
+    private String postTitle;
+    private String postContent;
+    private String imageUrl;
+    private List<String> imageListForModify;
+    /* 수정하기 버튼으로부터 열린 페이지인지 */
+    private boolean isModify;
+    private int imageListSizeForModify;
 
     ActivityViewModel activityViewModel;
 
     PostApiService postApiService = RetrofitClient.getPostApiService();
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        activityViewModel = new ViewModelProvider(requireActivity()).get(ActivityViewModel.class);
+
+        if (getArguments() != null) {
+            postTitle = getArguments().getString("postTitle");
+            postContent = getArguments().getString("postContent");
+            imageUrl = getArguments().getString("imageList");
+            imageListSizeForModify = getArguments().getInt("imageListSize");
+            imageListForModify = new ArrayList<>();
+            for( int i = 0 ; i < imageListSizeForModify ; i ++ ){
+                imageListForModify.add(i, imageUrl);
+                Log.d("imageList 3 ","WF imageList" + imageListForModify.get(i) + "i : " + i);
+            }
+            activityViewModel.setImageUrlForModify(imageListForModify);
+            isModify = getArguments().getBoolean("isModify");
+
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -88,6 +116,7 @@ public class WritingFragment extends Fragment {
 
 
         imageUrilist = new ArrayList<>();
+        imageListForModify = new ArrayList<>();
 //        files = new ArrayList<>();
 
 
@@ -95,7 +124,9 @@ public class WritingFragment extends Fragment {
         setTitleTextWatcher();
         setContentTextWatcher();
         setRegisterButtonListener();
-        restoreSelectedImages();
+        if(!isModify){
+            restoreSelectedImages();
+        }
 
         AuthPrefRepository authPrefRepository = new AuthPrefRepository(getContext());
 
@@ -139,6 +170,25 @@ public class WritingFragment extends Fragment {
 
         ImageView mainImage5 = rootView.findViewById(R.id.main_image5);
         mainImage5.setOnClickListener(v -> selectImageForView((ImageView) v));
+
+        if( isModify ){
+            communityWritingTitleText.setText(postTitle);
+            communityWritingContentText.setText(postContent);
+            int[] imageViews = {R.id.main_image1, R.id.main_image2, R.id.main_image3, R.id.main_image4, R.id.main_image5};
+            activityViewModel.getImageUrlListForModifyLiveData().observe(getViewLifecycleOwner(), new Observer<List<String>>() {
+                @Override
+                public void onChanged(List<String> imageUrlList) {
+                    for ( int i = 0 ; i < imageListSizeForModify ; i ++ ) {
+                        ImageView imageView = rootView.findViewById(imageViews[i + 1]);
+                        Glide.with(getContext()).load(imageUrlList.get(i)).into(imageView);
+                        Log.d("수정을 위해 넘어온 image url 4 ","this is url" + imageUrlList.get(i));
+//                imageView.setImageURI(Uri.parse(imageListForModify.get(i)));
+//                imageView.setBackground(null);
+                    }
+
+                }
+            });
+        }
     }
 
     /* */
@@ -234,20 +284,6 @@ public class WritingFragment extends Fragment {
                 }
             }
 
-//            if (!files.isEmpty()) {
-//                MultipartBody.Part firstFilePart = files.get(0);
-//                RequestBody firstFileRequestBody = firstFilePart.body();
-//                Log.d("첫 번째 파일 이름", firstFilePart.headers().value(0)); // 파일 이름
-//                Log.d("첫 번째 파일 미디어 타입", firstFileRequestBody.contentType().toString()); // 미디어 타입
-//                try {
-//                    Log.d("첫 번째 파일 크기", String.valueOf(firstFileRequestBody.contentLength())); // 파일 크기
-//                } catch (IOException e) {
-//                    throw new RuntimeException(e);
-//                }
-//                // 나머지 파일 관련 정보도 필요하다면 추가로 출력할 수 있음
-//            } else {
-//                Log.d("files 리스트", "비어 있습니다.");
-//            }
             Log.d("files 리스트 크기", "크기: " + files.size());
             RequestBody titleRequestBody = RequestBody.create(MediaType.parse("text/plain"), titleText);
             MultipartBody.Part titlePart = MultipartBody.Part.createFormData("postTitle", titleText, titleRequestBody);
@@ -255,9 +291,11 @@ public class WritingFragment extends Fragment {
             RequestBody contentRequestBody = RequestBody.create(MediaType.parse("text/plain"), contentText);
             MultipartBody.Part contentPart = MultipartBody.Part.createFormData("content", contentText, contentRequestBody);
 
+            Log.d("this is content","this is content : " + contentRequestBody);
+
 
             Log.d("토큰", "토큰" + token);
-            postApiService.addPost2("Bearer " + token, files, titleRequestBody, contentRequestBody).enqueue(new Callback<PostRegisterResponseDTO>() {
+            postApiService.addPost("Bearer " + token, files, titleRequestBody, contentRequestBody).enqueue(new Callback<PostRegisterResponseDTO>() {
                 @Override
                 public void onResponse(Call<PostRegisterResponseDTO> call, Response<PostRegisterResponseDTO> response) {
                     if (response.isSuccessful()) {
@@ -291,35 +329,9 @@ public class WritingFragment extends Fragment {
             });
 
 
-//            postApiService.addPost(token, files, titleRequestBody, contentRequestBody ).enqueue(new Callback<Void>() {
-//                @Override
-//                public void onResponse(Call<Void> call, Response<Void> response) {
-//                    if(response.isSuccessful()){
-//                        PostRegisterResponseDTO data = response.body();
-//                        Log.d("post 등록 api 호출 성공 "," void 성공" + response);
-//                    }else{
-//                        Log.e("post 등록 api 호출 실패 "," void 실패1" + response);
-//
-//                        // 예외처리 및 오류 로그
-//                        try {
-//                            // 오류 응답에서 오류 메시지를 가져와서 로그에 기록
-//                            String errorBody = response.errorBody().string();
-//                            Log.e("오류 응답 본문", errorBody);
-//                        } catch (IOException e) {
-//                            // 오류 본문을 읽어오지 못하는 경우에 대한 예외처리
-//                            Log.e("오류 응답 본문 읽기 실패", e.getMessage(), e);
-//                        }
-//                        Log.e("post 등록 api 호출 실패 ","실패1" + response);
-//                    }
-//
-//                }
-//
-//                @Override
-//                public void onFailure(Call<Void> call, Throwable t) {
-//                    Log.e("post 등록 api 호출 실패 "," void 실패2" + t.getMessage());
-//
-//                }
-//            });
+
+
+
 
             Log.d("files", "files" + files.size());
 //            sendPostRequest(postRegisterRequestDTO);
