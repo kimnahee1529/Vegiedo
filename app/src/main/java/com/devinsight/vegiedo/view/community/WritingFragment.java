@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,7 +23,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -32,12 +32,12 @@ import com.devinsight.vegiedo.R;
 import com.devinsight.vegiedo.data.request.PostRegisterRequestDTO;
 import com.devinsight.vegiedo.data.response.PostInquiryResponseDTO;
 import com.devinsight.vegiedo.data.response.PostRegisterResponseDTO;
-import com.devinsight.vegiedo.data.response.response;
 import com.devinsight.vegiedo.repository.pref.AuthPrefRepository;
 import com.devinsight.vegiedo.service.api.PostApiService;
 import com.devinsight.vegiedo.utill.RetrofitClient;
 import com.devinsight.vegiedo.view.PermissionUtils;
 import com.devinsight.vegiedo.view.search.ActivityViewModel;
+import com.google.gson.Gson;
 
 import java.io.File;
 import java.io.IOException;
@@ -88,13 +88,19 @@ public class WritingFragment extends Fragment {
     private int imageListSizeForModify;
     private List<Uri> imageUriListForModify;
     private List<String> imageUrlListForModify;
-    private List<String> imageUrlListForCompare;
+    private List<String> imageUrlListOrigin;
 
     private List<String> imageUrlListToDelete;
+    private List<ImageViewData> imageViewDataList;
 
     ActivityViewModel activityViewModel;
 
     PostApiService postApiService = RetrofitClient.getPostApiService();
+
+    ImageViewData imageViewDataForModify;
+    ImageViewData imageViewDataForRegister;
+
+    private int actionOn;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -118,12 +124,19 @@ public class WritingFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_writing, container, false);
 
-
+        actionOn = 0;
         imageUrilist = new ArrayList<>();
         imageUriListForModify = new ArrayList<>();
-        imageUrlListForModify = new ArrayList<>();
-        imageUrlListForCompare = new ArrayList<>();
+
+        /* 기존 url*/
+        imageUrlListOrigin = new ArrayList<>();
+
+        /* 선택된 이미지 뷰의 URL 리스트-> 삭제 해야함 */
         imageUrlListToDelete = new ArrayList<>();
+        imageUrlListForModify = new ArrayList<>();
+        imageViewDataForModify = new ImageViewData();
+        imageViewDataList = new ArrayList<>();
+
 //        files = new ArrayList<>();
 
 
@@ -164,19 +177,49 @@ public class WritingFragment extends Fragment {
         backwardBtn.setOnClickListener(v -> goBack());
 
         mainImage = rootView.findViewById(R.id.main_image1);
-        mainImage.setOnClickListener(v -> selectImageForView((ImageView) v));
+        mainImage.setOnClickListener(v -> {
+            selectImageForView((ImageView) v);
+            if(getTag() != null){
+                actionOn ++ ;
+                Log.d("actionOn count is ","action on :: " + actionOn);
+            }
+        });
 
         ImageView mainImage2 = rootView.findViewById(R.id.main_image2);
-        mainImage2.setOnClickListener(v -> selectImageForView((ImageView) v));
+        mainImage2.setOnClickListener(v -> {
+            selectImageForView((ImageView) v);
+            if(getTag() != null){
+                actionOn ++ ;
+                Log.d("actionOn count is ","action on :: " + actionOn);
+            }
+        });
 
         ImageView mainImage3 = rootView.findViewById(R.id.main_image3);
-        mainImage3.setOnClickListener(v -> selectImageForView((ImageView) v));
+        mainImage3.setOnClickListener(v -> {
+            selectImageForView((ImageView) v);
+            if(getTag() != null){
+                actionOn ++ ;
+                Log.d("actionOn count is ","action on :: " + actionOn);
+            }
+        });
 
         ImageView mainImage4 = rootView.findViewById(R.id.main_image4);
-        mainImage4.setOnClickListener(v -> selectImageForView((ImageView) v));
+        mainImage4.setOnClickListener(v -> {
+            selectImageForView((ImageView) v);
+            if(getTag() != null){
+                actionOn ++ ;
+                Log.d("actionOn count is ","action on :: " + actionOn);
+            }
+        });
 
         ImageView mainImage5 = rootView.findViewById(R.id.main_image5);
-        mainImage5.setOnClickListener(v -> selectImageForView((ImageView) v));
+        mainImage5.setOnClickListener(v -> {
+            selectImageForView((ImageView) v);
+            if(getTag() != null){
+                actionOn ++ ;
+                Log.d("actionOn count is ","action on :: " + actionOn);
+            }
+        });
 
         if (isModify) {
             communityWritingTitleText.setText(postTitle);
@@ -189,15 +232,26 @@ public class WritingFragment extends Fragment {
                         if (i < imageUrlList.size()) {
                             ImageView imageView = rootView.findViewById(imageViews[i]);
                             Glide.with(getActivity()).load(imageUrlList.get(i)).into(imageView);
-                            imageView.setTag(imageUrlList.get(i));
-                            imageUrlListForCompare.add(imageUrlList.get(i));
+
+                            imageViewDataForModify = new ImageViewData();
+                            imageViewDataForModify.setIndex(i);
+                            imageViewDataForModify.setUrl(imageUrlList.get(i));
+
+                            imageViewDataList.add(imageViewDataForModify);
+                            imageView.setTag(imageViewDataForModify);
+                            Log.d("image View data ", "thi is i : " + i + "this i url : " + imageUrlList.get(i));
+
+                            imageUrlListOrigin.add(imageUrlList.get(i));
                             Log.d("수정을 위해 넘어온 image url 4 ", "this is url" + imageUrlList.get(i));
+                        } else {
+                            ImageView imageView = rootView.findViewById(imageViews[i]);
+                            imageViewDataForModify.setIndex(i);
+                            imageViewDataForModify.setUrl(null);
+                            imageView.setTag(imageViewDataForModify);
                         }
                     }
-
                 }
             });
-
         }
     }
 
@@ -209,6 +263,9 @@ public class WritingFragment extends Fragment {
             imageView.setImageURI(Uri.parse(selectedImageUris.get(i)));
             imageView.setBackground(null);
 
+            imageViewDataForRegister = new ImageViewData();
+            imageViewDataForRegister.setIndex(i);
+            imageView.setTag(imageViewDataForRegister.getIndex());
         }
     }
 
@@ -283,55 +340,80 @@ public class WritingFragment extends Fragment {
 
             List<MultipartBody.Part> files = new ArrayList<>();
             List<MultipartBody.Part> imageUrlFromServer = new ArrayList<>();
+            List<MultipartBody.Part> imageUrlFromServerJson = new ArrayList<>();
 //            imageUrlListForModify.clear();
             if (isModify) {
-                for( int i = 0 ; i < imageUriListForModify.size(); i ++ ) {
-                    String addedFilePath = getFilePath(getActivity(), imageUriListForModify.get(i));
-                    if(addedFilePath != null) {
+
+//                /* 기존 URL에서 삭제된 URL을 제외한 리스트 */
+//                imageUrlListForModify = new ArrayList<>();
+
+//                if (imageUrlListToDelete == null) { // 값 ok
+//                    imageUrlListForModify.addAll(imageUrlListOrigin);
+//                } else {
+//                    for (String url : imageUrlListOrigin) { // 값 ok
+//                        if (!imageUrlListToDelete.contains(url)) {
+//                            imageUrlListForModify.add(url); // 값 ok
+//                        }
+//                    }
+//                }
+                Log.d(" no change imageUrlListToDelete.size()","size : " + imageUrlListToDelete.size());
+                    if ( imageUrlListToDelete.size() == 0 ) { // 값 ok
+                        Log.d(" no change imageUrlListToDelete.size()","size : " + imageUrlListToDelete.size());
+                        imageUrlListForModify.addAll(imageUrlListOrigin);
+                    } else {
+                        for (String url : imageUrlListOrigin) { // 값 ok
+                            if (!imageUrlListToDelete.contains(url)) {
+                                imageUrlListForModify.add(url); // 값 ok
+                            }
+                        }
+                    }
+
+
+                /* 새로 추가된 사진 파일 리스트 생성 */
+                for (int i = 0; i < imageUriListForModify.size(); i++) {
+                    String addedFilePath = getFilePath(getActivity(), imageUriListForModify.get(i)); // 값 ok
+                    Log.d("this is new ur III to server ", " ur III : " + imageUriListForModify.get(i));
+                    if (addedFilePath != null) {
                         RequestBody fileBody = RequestBody.create(MediaType.parse("image/*"), new File(addedFilePath));
                         String fileName = "photo" + i + ".jpg";
                         MultipartBody.Part filePart = MultipartBody.Part.createFormData("images", fileName, fileBody);
                         files.add(filePart);
                     }
-
                 }
+
                 RequestBody modifyTitle = RequestBody.create(MediaType.parse("text/plain"), titleText);
                 RequestBody modifyContent = RequestBody.create(MediaType.parse("text/plain"), contentText);
 
-                activityViewModel.getImageUrlListForModifyLiveData().observe(getViewLifecycleOwner(), new Observer<List<String>>() {
-                    @Override
-                    public void onChanged(List<String> urlListFromServer) {
-                        for(String url : imageUrlListToDelete) {
-                            if(!urlListFromServer.contains(url)){
-                                imageUrlListForModify.add(url);
-                            }
-                        }
-//                        for( int i = 0 ; i < urlListFromServer.size() ; i ++) {
-//                            String url = imageUrlListToDelete.get(i);
-//                            if(!url.equals(urlListFromServer.get(i))){
-//                                imageUrlListForModify.add(url);
-//                            }
-//                        }
 
-                    }
-                });
-
-                for ( int i = 0 ; i < imageUrlListForModify.size() ; i ++ ) {
+                /* 기존에 서버로 부터 받고, 수정 후에도 남아 있는 이미지 Url String 리스트 */
+                for (int i = 0; i < imageUrlListForModify.size(); i++) {
                     String imageUrl = imageUrlListForModify.get(i);
-                    Log.d("imageUrl from server ","url : " + imageUrl);
+                    Log.d("imageUrl from server ", "url : " + imageUrl);
                     RequestBody urlBody = RequestBody.create(MediaType.parse("text/plain"), imageUrl);
                     String urlName = "url" + i;
                     MultipartBody.Part filePart = MultipartBody.Part.createFormData("imageUrls", urlName, urlBody);
                     imageUrlFromServer.add(filePart);
                 }
 
-                Log.d("token for modify post","token : " + token);
+                Gson gson = new Gson();
+                String serializedImageUrls = gson.toJson(imageUrlListForModify);
+                RequestBody imageUrlBody = RequestBody.create(serializedImageUrls, MediaType.parse("application/json"));
 
 
-                postApiService.updatePost("Bearer " + token, postId, modifyTitle, modifyContent, files, imageUrlFromServer).enqueue(new Callback<PostInquiryResponseDTO>() {
+                Log.d("token for modify post", "token : " + token);
+                Log.d("Data for modify post","list Json : " + serializedImageUrls );
+                Log.d("Data for modify post","files : " + files.get(0).toString());
+
+
+                postApiService.updatePost2("Bearer " + token, postId, modifyTitle, modifyContent, files, imageUrlBody).enqueue(new Callback<PostInquiryResponseDTO>() {
                     @Override
                     public void onResponse(Call<PostInquiryResponseDTO> call, Response<PostInquiryResponseDTO> response) {
                         if (response.isSuccessful()) {
+                            PostInquiryResponseDTO data = response.body();
+                            String imageUrl = data.getImages().toString();
+                            Log.d("이미지 url", "url" + imageUrl);
+                            Log.d("내용", "content" + data.getContent());
+                            Log.d("내용", "title" + data.getPostTitle());
                             Log.d("post 수정 api 호출 성공 ", "성공" + response);
                         } else {
                             Log.e("post 수정 api 호출 실패1 ", "실패1" + response);
@@ -416,8 +498,6 @@ public class WritingFragment extends Fragment {
             }
 
 
-            Log.d("files", "files" + files.size());
-
         });
     }
 
@@ -453,18 +533,28 @@ public class WritingFragment extends Fragment {
 
         currentlySelectedImageView = imageView;
 
+//        currentlySelectedImageView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                // view의 태그를 가져옴
+//                imageViewDataForModify = (ImageViewData) view.getTag();
+//                Log.d("imageView Data :","data : " + imageViewDataForModify.getUrl());
+//                if (imageViewDataForModify != null && imageViewDataForModify.getUrl() != null) {
+//                    actionOn++;
+//                    Log.d("actionOn count is ", "action on :: " + actionOn);
+//                }
+//            }
+//        });
+
         if (PermissionUtils.checkPermission(getActivity())) {
             // 권한이 이미 허용된 상태: 바로 관련 작업 수행
-//            currentlySelectedImageView = imageView;
             Intent intent = new Intent();
             intent.setType("image/*");
             intent.setAction(Intent.ACTION_GET_CONTENT);
             startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY_REQUEST_CODE);
         } else {
             // 권한이 허용되지 않은 상태: 권한 요청
-//            PermissionUtils.requestPermission(getActivity(), PERMISSION_REQUEST_CODE);
             requestGalleryPermission();
-//            requestPermission();
         }
     }
 
@@ -488,42 +578,44 @@ public class WritingFragment extends Fragment {
                 selectedImageUri = data.getData();
             }
 
+
+
             /* 수정 요청을 위한 iamgeUri를 가져옵니다.*/
-            if(isModify){
+            if (isModify) {
                 if (currentlySelectedImageView != null && selectedImageUri != null) {
                     currentlySelectedImageView.setImageURI(selectedImageUri);
                     currentlySelectedImageView.setBackground(null);
-//                    int tag = currentlySelectedImageView.getId();
-                    String url = (String) currentlySelectedImageView.getTag();
-                    Log.d("imageView tag","tag" + currentlySelectedImageView.getTag());
-                    imageUrlListToDelete.add(url);
-//                    if (tag < imageUrlListForCompare.size()) {
-
-
-//                        for( int i =  0 ; i < imageUrlListForCompare.size() ; i ++ ) {
-//                            if(imageUrlListForCompare.get(tag + 1).equals(imageUrlListForCompare.get(i))) {
-//                                imageUrlListToDelete.add(imageUrlListForCompare.get(i));
-//                            } else {
-//                                imageUriListForModify.set(tag, selectedImageUri);
-//                            }
+                    if (currentlySelectedImageView.getTag() instanceof ImageViewData) {
+                        imageViewDataForModify = (ImageViewData) currentlySelectedImageView.getTag();
+                        Log.d("imageView Data in activity:","data : " + imageViewDataForModify.getUrl());
+                        if(imageViewDataForModify != null ) { //이미지뷰의 태그 데이터의 url이 널이 아니면, delete에 넣고
+                            imageUrlListToDelete.add(imageViewDataForModify.getUrl());
+                            Log.d("this deleted url","url : " + imageViewDataForModify.getUrl());
+                        }
+                    }
+//                    if (currentlySelectedImageView.getTag() instanceof ImageViewData) {
+//                        int index = imageViewDataForModify.getIndex();
+//                        if (index < imageUriListForModify.size()) {
+//                            imageUriListForModify.set(index, selectedImageUri);
+//                        } else {
+//                            imageUriListForModify.add(selectedImageUri);
 //                        }
-//                        Log.d("imageUri for modify 1 ", "imageUri for modify 1 : " + selectedImageUri);
-//                    } else {
-//                        imageUriListForModify.add(selectedImageUri);
-//                        Log.d("imageUri for modify 2 ", "imageUri for modify 2 : " + selectedImageUri);
 //                    }
+                    imageUriListForModify.add(selectedImageUri);
+                    Log.d("this is new ur III","ur II : " + selectedImageUri);
+
                 }
             } else {
                 /* 이미지뷰가 null이 아니고, uri도 null이 아니라면 Uri를 이미지뷰에 그려줍니다. */
                 if (currentlySelectedImageView != null && selectedImageUri != null) {
                     currentlySelectedImageView.setImageURI(selectedImageUri);
                     currentlySelectedImageView.setBackground(null);
-
                     /* 이미지뷰의 태그가 0-4까지, 해당 태그 위치의 값과 동일한 리스트상의 인덱스에 Uri를 넣어줍니다. */
-                    int tag = Integer.parseInt((String) currentlySelectedImageView.getTag());
-                    if (tag < selectedImageUris.size()) {
-                        selectedImageUris.set(tag, selectedImageUri.toString());
-                        imageUrilist.set(tag, selectedImageUri);
+                    int tagg = Integer.parseInt((String) currentlySelectedImageView.getTag());
+//                    int tagg = imageViewDataForRegister.getIndex();
+                    if (tagg < selectedImageUris.size()) {
+                        selectedImageUris.set(tagg, selectedImageUri.toString());
+                        imageUrilist.set(tagg, selectedImageUri);
                     } else {
                         selectedImageUris.add(selectedImageUri.toString());
                         imageUrilist.add(selectedImageUri);
