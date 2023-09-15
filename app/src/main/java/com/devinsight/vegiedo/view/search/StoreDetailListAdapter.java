@@ -1,6 +1,7 @@
 package com.devinsight.vegiedo.view.search;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,8 +52,21 @@ public class StoreDetailListAdapter extends RecyclerView.Adapter<StoreDetailList
 
         String imageUrl = data.getImages();
         holder.storeName.setText(data.getStoreName());
-        holder.storeTag1.setText(data.getTags().get(0));
-        holder.storeTag2.setText(data.getTags().get(1));
+        for( int i = 0 ; i < searchList.size() ; i ++ ) {
+            if( searchList.get(i).getTags().size() == 2 && (searchList.get(i).getTags() != null && searchList.get(i).getTags().size() > 1 )){
+                holder.storeTag2.setText(data.getTags().get(0));
+                holder.storeTag2.setText(data.getTags().get(1));
+//                for( int j = 0 ; j < searchList.get(i).getTags().size() ; j ++ ) {
+//                    holder.storeTag2.setText(data.getTags().get(1))
+//                }
+            } else if ( searchList.get(i).getTags().size() == 1 ){
+                holder.storeTag1.setText(data.getTags().get(0));
+                holder.storeTag2.setText(null);
+                holder.storeTag2.setVisibility(View.INVISIBLE);
+            } else if ( searchList.get(i).getTags().size() == 0 ) {
+                Log.e("store tag is null","store tag is null");
+            }
+        }
         holder.address.setText(data.getAddress());
         holder.starRating.setRating(data.getStars());
         Glide.with(context).load(imageUrl).into(holder.storeImage);
