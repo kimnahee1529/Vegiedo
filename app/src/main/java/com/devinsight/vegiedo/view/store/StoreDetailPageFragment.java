@@ -34,6 +34,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.devinsight.vegiedo.R;
 import com.devinsight.vegiedo.data.response.MapStoreListData;
 import com.devinsight.vegiedo.data.response.ReviewListInquiryResponseDTO;
@@ -77,6 +78,7 @@ public class StoreDetailPageFragment extends Fragment {
     double Latitude;
     ActivityViewModel viewModel;
     private Long storeId;
+    private boolean canWriteReview;
 
 
     public StoreDetailPageFragment() {
@@ -89,13 +91,21 @@ public class StoreDetailPageFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_store_detail_page_seemore, container, false);
 
-        initializeComponents(view);
-        loadFragment(new StoreReviewFragment());
+        // ViewModel 초기화
+//        viewModel = new ViewModelProvider(this).get(ActivityViewModel.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(ActivityViewModel.class);
+//        viewModel = new ViewModelProvider(requireActivity()).get(ActivityViewModel.class);
 
+
+        initializeComponents(view);
         //TODO 이 전페이지에서 받아온 storeId를 넣어줘야 함
 //        storeId = viewModel.getStoreId().getValue();
 //        callStoreAPI(viewModel.getStoreId().getValue());
-        storeId = 1L;
+        storeId = 3L;
+
+        StoreReviewFragment initialFragment = StoreReviewFragment.newInstance(storeId);
+        loadFragment(initialFragment);
+
         Log.d("LOGAPI storeId갖고 오는 거 맞나?", String.valueOf(storeId));
         callStoreAPI(storeId);
 
@@ -113,6 +123,8 @@ public class StoreDetailPageFragment extends Fragment {
                         whiteStamp.setVisibility(View.INVISIBLE);
                         greenStampBackground.setVisibility(View.VISIBLE);
                         greenStamp.setVisibility(View.VISIBLE);
+                        sheep_circle.setVisibility(View.VISIBLE);
+                        img_sheep.setVisibility(View.VISIBLE);
                     } else {
                         //스탬프가 안 눌려져있을 때 활성화 api 호출
                         Log.d("stampactive api", "stamp api 호출 성공");
@@ -120,6 +132,8 @@ public class StoreDetailPageFragment extends Fragment {
                         greenStamp.setVisibility(View.INVISIBLE);
                         whiteStampBackground.setVisibility(View.VISIBLE);
                         whiteStamp.setVisibility(View.VISIBLE);
+                        sheep_circle.setVisibility(GONE);
+                        img_sheep.setVisibility(GONE);
                     }
                 }
             }
@@ -137,6 +151,7 @@ public class StoreDetailPageFragment extends Fragment {
                         Log.d("likeinactive api", "찜 api 호출 성공");
                         storeDetail_default_heart.setVisibility(View.VISIBLE);
                         storeDetail_selected_heart.setVisibility(View.INVISIBLE);
+
                     } else {
                         //찜버튼이 안 눌려져있을 때 활성화 api 호출
                         Log.d("likeactive api", "찜 api 호출 성공");
@@ -158,6 +173,7 @@ public class StoreDetailPageFragment extends Fragment {
                     showReportDialog();
                     //200일 때 폐점가게 신고 버튼 숨기기
 //                    StoreDetail_closure_report_btn.setVisibility(GONE);
+                    viewModel.resetStoreReportData();  // LiveData 값을 재설정
                 }
             }
         });
@@ -167,8 +183,6 @@ public class StoreDetailPageFragment extends Fragment {
 
     private void initializeComponents(View view) {
 
-        // ViewModel 초기화
-        viewModel = new ViewModelProvider(this).get(ActivityViewModel.class);
 
         reviewText = view.findViewById(R.id.StoreDetail_page_review_text);
         blogReviewText = view.findViewById(R.id.StoreDetail_page_blog_review_text);
@@ -228,35 +242,53 @@ public class StoreDetailPageFragment extends Fragment {
                 blogReviewText.setTypeface(null, Typeface.NORMAL);
                 reviewText.setTextColor(getResources().getColor(android.R.color.black)); // 글자를 검정색으로 설정
                 blogReviewText.setTextColor(getResources().getColor(android.R.color.darker_gray)); // 글자를 검정색으로 설정
-                loadFragment(new StoreReviewFragment());
+                Log.d("리뷰", "리뷰화면에 들어가기 직전");
+
+                StoreReviewFragment storeReviewFragment = StoreReviewFragment.newInstance(storeId);
+                loadFragment(storeReviewFragment);
             }
         });
 
         blogReviewText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                blogReviewText.setTypeface(null, Typeface.BOLD); // 글자를 bold로 설정
+                blogReviewText.setTypeface(null, Typeface.BOLD);
                 reviewText.setTypeface(null, Typeface.NORMAL);
-                blogReviewText.setTextColor(getResources().getColor(android.R.color.black)); // 글자를 검정색으로 설정
-                reviewText.setTextColor(getResources().getColor(android.R.color.darker_gray)); // 글자를 검정색으로 설정
-                loadFragment(new StoreBlogReviewFragment());
+                blogReviewText.setTextColor(getResources().getColor(android.R.color.black));
+                reviewText.setTextColor(getResources().getColor(android.R.color.darker_gray));
+                Log.d("리뷰", "블로그 리뷰화면에 들어가기 직전");
+
+                StoreBlogReviewFragment storeBlogReviewFragment = StoreBlogReviewFragment.newInstance(storeId);
+                loadFragment(storeBlogReviewFragment);
             }
         });
+
 
         StoreDetail_review_writing_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                WritingReviewFragment fragment = WritingReviewFragment.newInstance(
-                        storeId,
-                        5
-                );
+                viewModel.getCanWriteReview().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+                    @Override
+                    public void onChanged(Boolean aBoolean) {
+                        canWriteReview = viewModel.getCanWriteReview().getValue();
+                        Log.d("리뷰 작성 가능한지? DetailF", String.valueOf(canWriteReview));
+                    }
+                });
+                if(canWriteReview){
+                    WritingReviewFragment fragment = WritingReviewFragment.newInstance(
+                            storeId,
+                            5
+                    );
 
-                FragmentManager fragmentManager = ((FragmentActivity) view.getContext()).getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    FragmentManager fragmentManager = ((FragmentActivity) view.getContext()).getSupportFragmentManager();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-                fragmentTransaction.replace(android.R.id.content, fragment);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
+                    fragmentTransaction.replace(android.R.id.content, fragment);
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commit();
+                }else{
+                    Toast.makeText(getContext(), " 이미 작성한 리뷰가 있음", Toast.LENGTH_SHORT).show();
+                }
             }
 
         });
@@ -271,18 +303,9 @@ public class StoreDetailPageFragment extends Fragment {
     }
 
     private void loadFragment(Fragment fragment) {
-
-        if (fragment instanceof StoreBlogReviewFragment) {
-            sheep_circle.setVisibility(GONE);
-            img_sheep.setVisibility(GONE);
-        } else {
-            sheep_circle.setVisibility(View.VISIBLE);
-            img_sheep.setVisibility(View.VISIBLE);
-        }
-
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        Log.d("storeId 확인", String.valueOf(storeId));
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, fragment);
-        transaction.addToBackStack(null);
         transaction.commit();
     }
 
@@ -295,11 +318,16 @@ public class StoreDetailPageFragment extends Fragment {
                 // UI 업데이트
                 Glide.with(getActivity())
                         .load(data.getStoreImage())
+                        .transform(new CenterCrop())
                         .into(storeDetail_store_image);
                 storeDetail_store_name.setText(data.getStoreName());
                 storeDetail_store_address.setText(data.getAddress());
                 ratingBar.setRating(data.getStars());
-                storeDetail_store_reviewers.setText(data.getReviewCount() + " reviews");
+                if(data.getReviewCount() != null){
+                    storeDetail_store_reviewers.setText(data.getReviewCount() + " reviews");
+                }else{
+                    storeDetail_store_reviewers.setText("0 reviews");
+                }
                 Longitude = data.getLongitude();
                 Latitude = data.getLatitude();
 
@@ -312,11 +340,15 @@ public class StoreDetailPageFragment extends Fragment {
 
                 // data.isStamp()가 true일 때의 동작
                 if (isClickedStamp) {  // 이 부분에서 isClickedStamp를 사용
+                    sheep_circle.setVisibility(View.VISIBLE);
+                    img_sheep.setVisibility(View.VISIBLE);
                     whiteStampBackground.setVisibility(View.INVISIBLE);
                     whiteStamp.setVisibility(View.INVISIBLE);
                     greenStampBackground.setVisibility(View.VISIBLE);
                     greenStamp.setVisibility(View.VISIBLE);
                 } else {
+                    sheep_circle.setVisibility(GONE);
+                    img_sheep.setVisibility(GONE);
                     greenStampBackground.setVisibility(View.INVISIBLE);
                     greenStamp.setVisibility(View.INVISIBLE);
                     whiteStampBackground.setVisibility(View.VISIBLE);
@@ -340,9 +372,13 @@ public class StoreDetailPageFragment extends Fragment {
     private void onStampBtnClicked() {
         Toast.makeText(getActivity(), "스탬프 버튼이 눌렸습니다.", Toast.LENGTH_SHORT).show();
         if(isClickedStamp){
+            sheep_circle.setVisibility(GONE);
+            img_sheep.setVisibility(GONE);
             callStoreStampAPI(storeId, isClickedStamp);
             isClickedStamp = false;
         } else {
+            sheep_circle.setVisibility(View.VISIBLE);
+            img_sheep.setVisibility(View.VISIBLE);
             callStoreStampAPI(storeId, isClickedStamp);
             isClickedStamp = true;
         }

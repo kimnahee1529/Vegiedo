@@ -12,11 +12,13 @@ public class ReviewListData {
     @Expose
     @SerializedName("userName")private String userName;
     @Expose
-    @SerializedName("stars")private Integer stars;
+    @SerializedName("star")private Integer star;
     @Expose
     @SerializedName("content")private String content;
     @Expose
     @SerializedName("images")private List<String> images;
+    @Expose
+    @SerializedName("isMine")private boolean isMine;
 
     public Long getReviewId() {
         return reviewId;
@@ -34,12 +36,12 @@ public class ReviewListData {
         this.userName = userName;
     }
 
-    public Integer getStars() {
-        return stars;
+    public Integer getStar() {
+        return star;
     }
 
-    public void setStars(Integer stars) {
-        this.stars = stars;
+    public void setStar(Integer star) {
+        this.star = star;
     }
 
     public String getContent() {
@@ -58,10 +60,18 @@ public class ReviewListData {
         this.images = images;
     }
 
-    public ReviewListData(Long reviewId, String userName, Integer stars, String content, List<String> images) {
+    public boolean isMine() {
+        return isMine;
+    }
+
+    public void setMine(boolean mine) {
+        isMine = mine;
+    }
+
+    public ReviewListData(Long reviewId, String userName, Integer star, String content, List<String> images) {
         this.reviewId = reviewId;
         this.userName = userName;
-        this.stars = stars;
+        this.star = star;
         this.content = content;
         this.images = images;
     }

@@ -26,6 +26,8 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.devinsight.vegiedo.R;
 import com.devinsight.vegiedo.data.request.ReviewReportRequestDTO;
 import com.devinsight.vegiedo.view.search.ActivityViewModel;
@@ -118,13 +120,13 @@ public class UserReviewItemAdapter extends RecyclerView.Adapter<UserReviewItemAd
         Log.d("어댑터4 viewType", String.valueOf(viewType));
         if (viewType == UserReviewItem.ItemType.STORE_DETAIL_BLOG_REVIEW_PAGE.ordinal()) {
             view = inflater.inflate(R.layout.store_detail_blog_review_item, parent, false);
-            return new ViewHolderBlogReviewPage(view, userReviewItemList.get(viewType));
+            return new ViewHolderBlogReviewPage(view);
         } else if (viewType == UserReviewItem.ItemType.REPORT_COMPELETE.ordinal()) {
             view = inflater.inflate(R.layout.select_reporting_type_dialog, parent, false);
-            return new ViewHolderBlogReviewPage(view, userReviewItemList.get(viewType));
+            return new ViewHolderBlogReviewPage(view);
         } else if (viewType == UserReviewItem.ItemType.REVIEW_RC.ordinal()) {
             view = inflater.inflate(R.layout.store_detail_review_item, parent, false);
-            return new ViewHolderReviewRC(view, userReviewItemList.get(viewType));
+            return new ViewHolderReviewRC(view);
         } else if (viewType == UserReviewItem.ItemType.AD_BANNER.ordinal()) {
             view = inflater.inflate(R.layout.ad_banner_item, parent, false);
             return new ViewHolderAdBanner(view);
@@ -157,16 +159,6 @@ public class UserReviewItemAdapter extends RecyclerView.Adapter<UserReviewItemAd
 
     }
 
-//    @Override
-//    public int getItemCount() {
-//        if (userReviewItemList != null){
-////            Log.d("LOGAPIgetItemCount", String.valueOf(userReviewItemList.size())); //20으로 잘 나옴
-//            Log.d("어댑터6 getItemCount", String.valueOf(userReviewItemList.size()));
-//            return userReviewItemList.size();
-//        }
-//        return 0;
-//    }
-
     abstract static class BaseViewHolder extends RecyclerView.ViewHolder {
         BaseViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -179,9 +171,8 @@ public class UserReviewItemAdapter extends RecyclerView.Adapter<UserReviewItemAd
         ImageView imageView;
         UserReviewItem userReviewItem;
 
-        ViewHolderBlogReviewPage(@NonNull View itemView, UserReviewItem item) {
+        ViewHolderBlogReviewPage(@NonNull View itemView) {
             super(itemView);
-            this.userReviewItem = item;
 
             title = itemView.findViewById(R.id.storeBlogReview_user_name);
             content = itemView.findViewById(R.id.storeBlogReview_content);
@@ -197,9 +188,9 @@ public class UserReviewItemAdapter extends RecyclerView.Adapter<UserReviewItemAd
 
             List<String> imageUrls = userReviewItem.getUserReviewImageUrlList();
             if (imageUrls.size() > 0) Glide.with(itemView.getContext()).load(imageUrls.get(0)).into(imageView);
-
         }
     }
+
 
     class ViewHolderReviewRC extends BaseViewHolder {
         TextView title;
@@ -217,9 +208,8 @@ public class UserReviewItemAdapter extends RecyclerView.Adapter<UserReviewItemAd
         Long reviewId;
         Long storeId;
 
-        ViewHolderReviewRC(@NonNull View itemView, UserReviewItem item) {
+        ViewHolderReviewRC(@NonNull View itemView) {
             super(itemView);
-            this.userReviewItem = item;
 
             title = itemView.findViewById(R.id.storeReview_title);
             content = itemView.findViewById(R.id.storeReview_content);
@@ -232,7 +222,6 @@ public class UserReviewItemAdapter extends RecyclerView.Adapter<UserReviewItemAd
             storeReview_modify_text = itemView.findViewById(R.id.storeReview_modify_text);
             storeReview_delete_text = itemView.findViewById(R.id.storeReview_delete_text);
             storeReview_report_btn = itemView.findViewById(R.id.btn_comment_report);
-
         }
         void bindData(UserReviewItem item) {
             this.userReviewItem = item;
@@ -243,6 +232,7 @@ public class UserReviewItemAdapter extends RecyclerView.Adapter<UserReviewItemAd
             reviewId = userReviewItem.getReviewId();
             currentStoreId = viewModel.getStoreId().getValue();
             String reviewWriter = userReviewItem.getTitle();
+            int radius = 20;
 
             Log.d("LOGAPI아이디!!!!!", "" + userName + ", " + reviewWriter +", "+currentStoreId + " " + reviewId);
 
@@ -250,13 +240,69 @@ public class UserReviewItemAdapter extends RecyclerView.Adapter<UserReviewItemAd
             content.setText(userReviewItem.getContent());
 
             List<String> imageUrls = userReviewItem.getUserReviewImageUrlList();
-            if (imageUrls.size() > 0) Glide.with(itemView.getContext()).load(imageUrls.get(0)).into(imageView1);
-            if (imageUrls.size() > 1) Glide.with(itemView.getContext()).load(imageUrls.get(1)).into(imageView2);
-            if (imageUrls.size() > 2) Glide.with(itemView.getContext()).load(imageUrls.get(2)).into(imageView3);
-            if (imageUrls.size() > 3) Glide.with(itemView.getContext()).load(imageUrls.get(3)).into(imageView4);
-            if (imageUrls.size() > 4) Glide.with(itemView.getContext()).load(imageUrls.get(4)).into(imageView5);
+            Log.d("이미지 null아님?", imageUrls.toString());
 
-            ratingBar.setRating(userReviewItem.getRatingBar());
+            if (imageUrls == null) {
+                imageView1.setVisibility(View.GONE);
+                imageView2.setVisibility(View.GONE);
+                imageView3.setVisibility(View.GONE);
+                imageView4.setVisibility(View.GONE);
+                imageView5.setVisibility(View.GONE);
+                return; // 이미지 URL이 null이면 아래 로직을 실행할 필요가 없으므로 return 합니다.
+            }
+
+            if (imageUrls.size() > 0) {
+                Glide.with(itemView.getContext())
+                        .load(imageUrls.get(0))
+                        .transform(new CenterCrop(), new RoundedCorners(radius))
+                        .into(imageView1);
+                imageView1.setVisibility(View.VISIBLE);
+            } else {
+                imageView1.setVisibility(View.GONE);
+            }
+
+            if (imageUrls.size() > 1) {
+                Glide.with(itemView.getContext())
+                        .load(imageUrls.get(1))
+                        .transform(new CenterCrop(), new RoundedCorners(radius))
+                        .into(imageView2);
+                imageView2.setVisibility(View.VISIBLE);
+            } else {
+                imageView2.setVisibility(View.GONE);
+            }
+
+            if (imageUrls.size() > 2) {
+                Glide.with(itemView.getContext())
+                        .load(imageUrls.get(2))
+                        .transform(new CenterCrop(), new RoundedCorners(radius))
+                        .into(imageView3);
+                imageView3.setVisibility(View.VISIBLE);
+            } else {
+                imageView3.setVisibility(View.GONE);
+            }
+
+            if (imageUrls.size() > 3) {
+                Glide.with(itemView.getContext())
+                        .load(imageUrls.get(3))
+                        .transform(new CenterCrop(), new RoundedCorners(radius))
+                        .into(imageView4);
+                imageView4.setVisibility(View.VISIBLE);
+            } else {
+                imageView4.setVisibility(View.GONE);
+            }
+
+            if (imageUrls.size() > 4) {
+                Glide.with(itemView.getContext())
+                        .load(imageUrls.get(4))
+                        .transform(new CenterCrop(), new RoundedCorners(radius))
+                        .into(imageView5);
+                imageView5.setVisibility(View.VISIBLE);
+            } else {
+                imageView5.setVisibility(View.GONE);
+            }
+
+
+            ratingBar.setRating(userReviewItem.getStars());
 
             storeReview_modify_text.setOnClickListener(v -> {
                 WritingReviewFragment fragment = WritingReviewFragment.newInstance(
@@ -264,7 +310,7 @@ public class UserReviewItemAdapter extends RecyclerView.Adapter<UserReviewItemAd
                         userReviewItem.getReviewId(),
                         userReviewItem.getContent(),
                         userReviewItem.getUserReviewImageUrlList(),
-                        userReviewItem.getRatingBar()
+                        userReviewItem.getStars()
                 );
 
                 FragmentManager fragmentManager = ((FragmentActivity) itemView.getContext()).getSupportFragmentManager();
@@ -284,7 +330,8 @@ public class UserReviewItemAdapter extends RecyclerView.Adapter<UserReviewItemAd
                 showDialog(DialogType.REPORT_TYPE, itemView.getContext(), currentStoreId, reviewId);
             });
 
-            if(Objects.equals(reviewWriter, userName)){
+            //내가 작성한 리뷰일 경우 수정/삭제 가능
+            if(userReviewItem.getMine()){
                 storeReview_modify_text.setVisibility(View.VISIBLE);
                 storeReview_delete_text.setVisibility(View.VISIBLE);
                 storeReview_report_btn.setVisibility(View.INVISIBLE);
@@ -294,7 +341,6 @@ public class UserReviewItemAdapter extends RecyclerView.Adapter<UserReviewItemAd
                 storeReview_report_btn.setVisibility(View.VISIBLE);
             }
         }
-
     }
     static class ViewHolderAdBanner extends BaseViewHolder {
         AdView adBannerView;

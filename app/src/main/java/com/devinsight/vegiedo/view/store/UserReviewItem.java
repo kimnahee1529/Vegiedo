@@ -15,19 +15,21 @@ public class UserReviewItem {
     private ItemType itemType;
     private String userName;
     private String content;
-    private Integer ratingBar;
+    private Integer stars;
     private Long storeId;
     private Long reviewId;
+    private Boolean isMine;
     private ArrayList<String> userReviewImageUrlList;
 
     //별점 있는 리뷰
-    public UserReviewItem(Long reviewId, ItemType itemType, String userName, int ratingBar, String content, ArrayList<String> userReviewImageUrlList) {
+    public UserReviewItem(Long reviewId, ItemType itemType, String userName, Integer stars, String content, ArrayList<String> userReviewImageUrlList, Boolean isMine) {
         this.reviewId = reviewId;
         this.itemType = itemType;
         this.userName = userName;
-        this.ratingBar = ratingBar;
+        this.stars = stars;
         this.content = content;
         this.userReviewImageUrlList = userReviewImageUrlList;
+        this.isMine = isMine;
     }
 
     //별점 없는 블로그 리뷰
@@ -82,13 +84,20 @@ public class UserReviewItem {
         this.userReviewImageUrlList = userReviewImageUrlList;
     }
 
-    public int getRatingBar() {
-        return ratingBar;
+    public int getStars() {
+        return stars;
     }
 
-    public void setRatingBar(int ratingBar) {
-        this.ratingBar = ratingBar;
+    public void setStars(int stars) {
+        this.stars = stars;
     }
 
+    public Boolean getMine() {
+        return isMine;
+    }
+
+    public void setMine(Boolean mine) {
+        isMine = mine;
+    }
 
 }
