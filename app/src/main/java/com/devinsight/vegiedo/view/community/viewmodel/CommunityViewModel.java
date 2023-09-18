@@ -47,7 +47,11 @@ public class CommunityViewModel extends ViewModel {
                     Log.d("인기 포스트 요청 성공","인기 포스트 요청 성공" + response.isSuccessful());
                     List<PostListData> data = response.body();
                     popularPostLiveData.setValue(data);
-                    maxCursorLiveData.setValue(data.get(data.size() - 1).getTotalPage());
+                    if(data.size() == 0 ) {
+                        maxCursorLiveData.setValue(1);
+                    } else {
+                        maxCursorLiveData.setValue(data.get(data.size() - 1).getTotalPage());
+                    }
                     Log.d( "this is max cursor","max cursor" + data.get(data.size() - 1).getTotalPage());
                     Log.d("성공","this is post cursor : " + cursor);
                 } else {
