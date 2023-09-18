@@ -16,14 +16,17 @@ import com.devinsight.vegiedo.data.request.ReviewModifyrRequestDTO;
 import com.devinsight.vegiedo.data.request.ReviewRegisterRequestDTO;
 import com.devinsight.vegiedo.data.request.ReviewReportRequestDTO;
 import com.devinsight.vegiedo.data.request.StoreReportRequestDTO;
+import com.devinsight.vegiedo.data.request.UserNicknameModifyRequestDTO;
 import com.devinsight.vegiedo.data.response.CommentListData;
 import com.devinsight.vegiedo.data.response.MapInquiryResponseDTO;
 import com.devinsight.vegiedo.data.response.MapStoreListData;
 import com.devinsight.vegiedo.data.response.PostInquiryResponseDTO;
 import com.devinsight.vegiedo.data.response.PostListData;
 import com.devinsight.vegiedo.data.response.ReviewListInquiryResponseDTO;
+import com.devinsight.vegiedo.data.response.StampBookInquiryResponseDTO;
 import com.devinsight.vegiedo.data.response.StoreInquiryResponseDTO;
 import com.devinsight.vegiedo.data.response.StoreListData;
+import com.devinsight.vegiedo.data.response.StoreStampDetailDTO;
 import com.devinsight.vegiedo.data.ui.login.TagStatus;
 import com.devinsight.vegiedo.data.ui.map.MapStoreCardUiData;
 import com.devinsight.vegiedo.data.ui.search.SearchStorSummaryeUiData;
@@ -33,6 +36,7 @@ import com.devinsight.vegiedo.service.api.MapApiService;
 import com.devinsight.vegiedo.service.api.PostApiService;
 import com.devinsight.vegiedo.service.api.ReviewApiService;
 import com.devinsight.vegiedo.service.api.StoreApiService;
+import com.devinsight.vegiedo.service.api.UserApiService;
 import com.devinsight.vegiedo.utill.RetrofitClient;
 import com.devinsight.vegiedo.view.community.ClickedPostData;
 
@@ -96,11 +100,22 @@ public class ActivityViewModel extends ViewModel {
 
     //리뷰-리뷰 조회 API 호출에서 쓸 라이브 데이터
     private MutableLiveData<ReviewListInquiryResponseDTO> reviewLiveData = new MutableLiveData<>();
+
+    //리뷰-블로그 리뷰 조회 API 호출에서 쓸 라이브 데이터
+    private MutableLiveData<ReviewListInquiryResponseDTO> blogReviewLiveData = new MutableLiveData<>();
+    //리뷰-작성한 리뷰가 있는지 여부를 확인하는 라이브 데이터
+    private final MutableLiveData<Boolean> canWriteReview = new MutableLiveData<>(true);
+
     //리뷰-리뷰 신고 API 호출에서 쓸 라이브 데이터
     private MutableLiveData reviewReportDataLiveData = new MutableLiveData<>();
-    //유저-사용자 닉네임 변경
 
+    //유저-사용자 닉네임 변경에서 쓸 라이브 데이터
+    private MutableLiveData userNickNameDataLiveData = new MutableLiveData<>();
     //유저-사용자 프로필 이미지 변경
+
+
+    //스탬프북에서 쓸 라이브 데이터
+    private MutableLiveData<StampBookInquiryResponseDTO> stampBookDataLiveData = new MutableLiveData<>();
 
     /* 게시글 종류 확인 라이브 데이터*/
     private MutableLiveData<Boolean> postTypeLiveData = new MutableLiveData<>();
@@ -130,6 +145,7 @@ public class ActivityViewModel extends ViewModel {
     private String keyword;
 
     private String currentInput;
+    //TODO 토큰 적어놓은 거 지우기
     private String token;
 
     private Long postId;
@@ -143,6 +159,7 @@ public class ActivityViewModel extends ViewModel {
     private MutableLiveData<Long> storeId = new MutableLiveData<>();
 
     /* API 호출을 위한 레트로핏 초기화 */
+    UserApiService userApiService = RetrofitClient.getUserApiService();
     StoreApiService storeApiService = RetrofitClient.getStoreApiService();
     MapApiService mapApiService = RetrofitClient.getMapApiService();
     ReviewApiService reviewApiService = RetrofitClient.getReviewApiService();
@@ -461,16 +478,28 @@ public class ActivityViewModel extends ViewModel {
 
     //가게 조회 API(StoreDetailPageFragment서 사용)
     public void StoreInquiryData(Long storeId) {
+        Log.d("토큰", token);
         //가게 조회
-        storeApiService.readStore(storeId).enqueue(new Callback<StoreInquiryResponseDTO>() {
+        storeApiService.readStore("Bearer " + token, storeId).enqueue(new Callback<StoreInquiryResponseDTO>() {
             @Override
             public void onResponse(Call<StoreInquiryResponseDTO> call, Response<StoreInquiryResponseDTO> response) {
-                if (response.isSuccessful()) {
-                    storeDataLiveData.setValue(response.body());
-                    Log.d("LOGAPI", "StoreAPI 호출");
+                if(response.isSuccessful()){
+                    Log.d("StoreAPI 성공","StoreAPI 호출 성공");
                 } else {
-                    Log.d("LOGAPI", "StoreAPI 호출실패");
+                    // API 응답이 오류 상태일 때
+                    Log.e("StoreAPI실패 1", "Error Code: " + response.code() + ", Message: " + response.message());
+                    try {
+                        Log.e("StoreAPI실패 1", "Error Body: " + response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
+                //                if (response.isSuccessful()) {
+//                    storeDataLiveData.setValue(response.body());
+//                    Log.d("LOGAPI", "StoreAPI 호출");
+//                } else {
+//                    Log.d("LOGAPI", "StoreAPI 호출실패 "+response.);
+//                }
             }
 
             @Override
@@ -483,7 +512,7 @@ public class ActivityViewModel extends ViewModel {
     //가게 신고(폐점)
     public void StoreReportData(Long storeId) {
         //가게 신고(폐점)
-        storeApiService.reportStore(storeId).enqueue(new Callback<Void>() {
+        storeApiService.reportStore("Bearer " + token,storeId).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
@@ -500,6 +529,9 @@ public class ActivityViewModel extends ViewModel {
             }
         });
     }
+    public void resetStoreReportData() {
+        storeReportDataLiveData.setValue(null);
+    }
 
     //여기서 호출한 api 함수를 StoreDetailPageFragment서 씀
     public LiveData<StoreInquiryResponseDTO> getStoreDataLiveData() {
@@ -509,7 +541,7 @@ public class ActivityViewModel extends ViewModel {
     //가게 스탬프 활성화
     public void StoreActiveStampData(Long storeId) {
         //가게 스탬프 활성화
-        storeApiService.activeStamp(storeId).enqueue(new Callback<Void>() {
+        storeApiService.activeStamp("Bearer " + token, storeId).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
@@ -531,7 +563,7 @@ public class ActivityViewModel extends ViewModel {
     //가게 스탬프 취소
     public void StoreInactiveStampData(Long storeId) {
         //가게 스탬프 취소
-        storeApiService.inactiveStamp(storeId).enqueue(new Callback<Void>() {
+        storeApiService.inactiveStamp("Bearer " + token, storeId).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
@@ -554,7 +586,7 @@ public class ActivityViewModel extends ViewModel {
     //가게 찜버튼 활성화
     public void StoreActiveLikeData(Long storeId) {
         //가게 찜버튼 활성화
-        storeApiService.likeStore(storeId).enqueue(new Callback<Void>() {
+        storeApiService.likeStore("Bearer " + token, storeId).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
@@ -576,7 +608,7 @@ public class ActivityViewModel extends ViewModel {
     //가게 찜버튼 취소
     public void StoreInactiveLikeData(Long storeId) {
         //가게 찜버튼 활성화
-        storeApiService.cancleLikeStore(storeId).enqueue(new Callback<Void>() {
+        storeApiService.cancleLikeStore("Bearer " + token, storeId).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
@@ -596,13 +628,63 @@ public class ActivityViewModel extends ViewModel {
         });
     }
 
+    //스탬프북
+//    public void MypageStampBookData() {
+//        //가게 찜버튼 활성화
+//        storeApiService.myPageStampBook("Bearer " + token).enqueue(new Callback<StampBookInquiryResponseDTO>() {
+//            @Override
+//            public void onResponse(Call<StampBookInquiryResponseDTO> call, Response<StampBookInquiryResponseDTO> response) {
+//                if (response.isSuccessful()) {
+//                    stampBookDataLiveData.setValue(response.code());
+//                    Log.d("likeAPI", ""+response);
+//                } else {
+////                    stampBookDataLiveData.setValue(response.code());
+//                    Log.d("likeAPI", "LIKEAPI 호출실패");
+//                }
+//            }
+//
+//        });
+//    }
+    public void MyPageStampBookData() {
+        storeApiService.myPageStampBook("Bearer " + token).enqueue(new Callback<StampBookInquiryResponseDTO>() {
+            @Override
+            public void onResponse(Call<StampBookInquiryResponseDTO> call, Response<StampBookInquiryResponseDTO> response) {
+                if (response.isSuccessful()) {
+                    stampBookDataLiveData.setValue(response.body());
+
+                    // 각 필드 값 가져오기
+//                    String storeName = storeDetail.getStoreName();
+//                    String address = storeDetail.getAddress();
+//                    int stars = storeDetail.getStars();
+//                    int reviewCount = storeDetail.getReviewCount();
+//                    String images = storeDetail.getImages();
+//
+//                    // 로그로 값 확인하기
+//                    Log.d("stampAPI", "가게 이름: " + storeName);
+//                    Log.d("stampAPI", "주소: " + address);
+//                    Log.d("stampAPI", "별점: " + stars);
+//                    Log.d("stampAPI", "리뷰 수: " + reviewCount);
+//                    Log.d("stampAPI", "이미지 URL: " + images);
+                } else {
+                    Log.d("stampAPI", "stampAPI 호출실패1");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<StampBookInquiryResponseDTO> call, Throwable t) {
+                Log.d("stampAPI", "stampAPI 호출실패2");
+            }
+        });
+    }
+
+
     //지도 가게 조회 API(MapMainFragment에서 사용)
     public void MapInquiryData() {
-        float latitude = 41.40338f;
-        float longitude = 41.40338f;
-        Integer distance = 5000;
+        float latitude = 37.559254f;
+        float longitude = 126.985985f;
+        Integer distance = 1500;
 
-        mapApiService.getStoresOnMap(latitude, longitude, distance).enqueue(new Callback<List<MapStoreListData>>() {
+        mapApiService.getStoresOnMap("Bearer " + token, latitude, longitude, distance).enqueue(new Callback<List<MapStoreListData>>() {
             @Override
             public void onResponse(Call<List<MapStoreListData>> call, Response<List<MapStoreListData>> response) {
                 if (response.isSuccessful()) {
@@ -624,13 +706,19 @@ public class ActivityViewModel extends ViewModel {
     //리뷰 조회 API(StoreDetailPageFragment서 사용)
     public void ReviewInquiryData(Long storeId, int count, int cursor, boolean blogReview) {
         //리뷰 조회
-        Call<ReviewListInquiryResponseDTO> reviewListInquiryResponseDTOCall = reviewApiService.getReviews(storeId, count, cursor, blogReview);
+        Call<ReviewListInquiryResponseDTO> reviewListInquiryResponseDTOCall = reviewApiService.getReviews("Bearer " + token, storeId, count, cursor, blogReview);
         reviewListInquiryResponseDTOCall.enqueue(new Callback<ReviewListInquiryResponseDTO>() {
             @Override
             public void onResponse(Call<ReviewListInquiryResponseDTO> call, Response<ReviewListInquiryResponseDTO> response) {
                 if (response.isSuccessful()) {
+                    Log.d("LOGAPI", "ReviewAPI 호출성공1 "+response);
                     ReviewListInquiryResponseDTO responseData = response.body();
-                    reviewLiveData.setValue(responseData);
+                    Log.d("LOGAPI", "ReviewAPI 호출성공2 "+ responseData.getReviews());
+                    if(blogReview){
+                        blogReviewLiveData.setValue(responseData);
+                    }else{
+                        reviewLiveData.setValue(responseData);
+                    }
                 } else {
                     Log.d("LOGAPI", "ReviewAPI 호출실패2");
                 }
@@ -646,7 +734,7 @@ public class ActivityViewModel extends ViewModel {
     //리뷰 등록 API(WritingReviewFragment에서 사용)
     public void ReviewRegisterData(Long storeId, ReviewRegisterRequestDTO requestDTO) {
         //리뷰 등록
-        Call<Void> reviewRegisterRequestDTOCall = reviewApiService.postReview(storeId, requestDTO);
+        Call<Void> reviewRegisterRequestDTOCall = reviewApiService.postReview("Bearer " + token, storeId, requestDTO);
         reviewRegisterRequestDTOCall.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
@@ -668,7 +756,7 @@ public class ActivityViewModel extends ViewModel {
     //리뷰 삭제 API(WritingReviewFragment에서 사용)
     public void ReviewDeleteData(Long storeId, Long reviewId) {
         //리뷰 수정
-        Call<Void> reviewDeleteRequestDTOCall = reviewApiService.deleteReview(storeId, reviewId);
+        Call<Void> reviewDeleteRequestDTOCall = reviewApiService.deleteReview("Bearer " + token, storeId, reviewId);
         reviewDeleteRequestDTOCall.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
@@ -691,7 +779,7 @@ public class ActivityViewModel extends ViewModel {
     //리뷰 수정 API(WritingReviewFragment에서 사용)
     public void ReviewModifyData(Long storeId, Long reviewId, ReviewModifyrRequestDTO requestDTO) {
         //리뷰 수정
-        Call<Void> reviewModifyrRequestDTOCall = reviewApiService.modifyReview(storeId, reviewId, requestDTO);
+        Call<Void> reviewModifyrRequestDTOCall = reviewApiService.modifyReview("Bearer " + token, storeId, reviewId, requestDTO);
         reviewModifyrRequestDTOCall.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
@@ -713,7 +801,7 @@ public class ActivityViewModel extends ViewModel {
     //리뷰 신고 API(WritingReviewFragment에서 사용)
     public void ReviewReportData(Long storeId, Long reviewId, ReviewReportRequestDTO requestDTO) {
         //리뷰 수정
-        Call<Void> reviewReportRequestDTOCall = reviewApiService.reportReview(storeId, reviewId, requestDTO);
+        Call<Void> reviewReportRequestDTOCall = reviewApiService.reportReview("Bearer " + token, storeId, reviewId, requestDTO);
         reviewReportRequestDTOCall.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
@@ -733,9 +821,54 @@ public class ActivityViewModel extends ViewModel {
     }
 
     //유저-사용자 닉네임 변경
+    public void UserNicknameChange(UserNicknameModifyRequestDTO requestDTO) {
+        Log.d("닉네임", String.valueOf(requestDTO));
+        Log.d("닉네임token", token);
+        //리뷰 수정
+        Call<Void> userNicknameChangeRequestDTOCall = userApiService.changeNickname("Bearer " + token, requestDTO);
+        userNicknameChangeRequestDTOCall.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                Log.d("뷰모델 닉네임 onResponse", String.valueOf(response.code()));
+                if (response.isSuccessful()) {
+                    Void responseData = response.body();
+                    Log.d("뷰모델에서 보낸 닉네임 api 성공", response.toString());
+                    userNickNameDataLiveData.setValue(response.code());
+                } else{
+                    Log.d("뷰모델에서 보낸 닉네임 api", "UserNicknameChange 호출실패1 "+response);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("뷰모델에서 보낸 닉네임 api", "UserNicknameChange 호출실패2");
+            }
+        });
+    }
+
+//    //유저-사용자 프로필 이미지 변경
+//    public void UserProfileImageChange(String ) {
+//        //리뷰 수정
+//        Call<Void> userProfileChangeRequestDTOCall = userApiService.changeProfileImage("Bearer " + token, );
+//        userProfileChangeRequestDTOCall.enqueue(new Callback<Void>() {
+//            @Override
+//            public void onResponse(Call<Void> call, Response<Void> response) {
+//                if (response.isSuccessful()) {
+//                    Void responseData = response.body();
+//                    Log.d("LOGAPIUserProfileChange", response.toString());
+//                } else{
+//                    Log.d("LOGAPIUserProfileChange", "UserProfileChange 호출실패1 "+response);
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<Void> call, Throwable t) {
+//                Log.d("LOGAPIUserProfileChange", "UserProfileChange 호출실패2");
+//            }
+//        });
+//    }
 
 
-    //유저-사용자 프로필 이미지 변경
 
     /* true : 일반 게시글, false : 인기 게시글*/
     public void setPostType(Boolean postType){
@@ -828,7 +961,15 @@ public class ActivityViewModel extends ViewModel {
     public void setReviewLiveData(MutableLiveData<ReviewListInquiryResponseDTO> reviewLiveData) {
         this.reviewLiveData = reviewLiveData;
     }
-    //리뷰 조회
+
+    //블로그 리뷰 조회
+    public MutableLiveData<ReviewListInquiryResponseDTO> getBlogReviewLiveData() {
+        return blogReviewLiveData;
+    }
+
+    public void setBlogReviewLiveData(MutableLiveData<ReviewListInquiryResponseDTO> blogReviewLiveData) {
+        this.blogReviewLiveData = blogReviewLiveData;
+    }
 
     /* StoreMainList에 보여질 필터링 된 가게 리스트*/
     public LiveData<List<StoreListData>> getFilteredStoreListLiveData() {
@@ -924,7 +1065,34 @@ public class ActivityViewModel extends ViewModel {
     public void setReviewReportDataLiveData(MutableLiveData reviewReportDataLiveData) {
         this.reviewReportDataLiveData = reviewReportDataLiveData;
     }
+
+    //유저 닉네임 변경
+    public MutableLiveData getUserNickNameDataLiveData() {
+        return userNickNameDataLiveData;
+    }
+
+    public void setUserNickNameDataLiveData(MutableLiveData userNickNameDataLiveData) {
+        this.userNickNameDataLiveData = userNickNameDataLiveData;
+    }
+
+    //스탬프북
+    public MutableLiveData<StampBookInquiryResponseDTO> getStampBookDataLiveData() {
+        return stampBookDataLiveData;
+    }
+
+    public void setStampBookDataLiveData(MutableLiveData<StampBookInquiryResponseDTO> stampBookDataLiveData) {
+        this.stampBookDataLiveData = stampBookDataLiveData;
+    }
+    //리뷰 작성 여부
+    public MutableLiveData<Boolean> getCanWriteReview() {
+        return canWriteReview;
+    }
+
+    public void setCanWriteReview(Boolean canWrite) {
+        this.canWriteReview.setValue(canWrite);
+    }
 }
+
 
 
 
