@@ -11,6 +11,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
@@ -21,6 +22,7 @@ public interface ReviewApiService {
     // 리뷰 조회
     @GET("stores/{storeId}/reviews")
     Call<ReviewListInquiryResponseDTO> getReviews(
+            @Header("Authorization") String token,
             @Path("storeId") Long storeId,
             @Query("count") int count,
             @Query("cursor") int cursor,
@@ -30,6 +32,7 @@ public interface ReviewApiService {
     // 리뷰 등록
     @POST("stores/{storeId}/reviews")
     Call<Void> postReview(
+            @Header("Authorization") String token,
             @Path("storeId") Long storeId,
             @Body ReviewRegisterRequestDTO reviewRegisterRequestDTO
     );
@@ -37,6 +40,7 @@ public interface ReviewApiService {
     // 리뷰 삭제
     @DELETE("stores/{storeId}/reviews/{reviewId}")
     Call<Void> deleteReview(
+            @Header("Authorization") String token,
             @Path("storeId") Long storeId,
             @Path("reviewId") Long reviewId
     );
@@ -44,6 +48,7 @@ public interface ReviewApiService {
     // 리뷰 수정
     @PUT("stores/{storeId}/reviews/{reviewId}")
     Call<Void> modifyReview(
+            @Header("Authorization") String token,
             @Path("storeId") Long storeId,
             @Path("reviewId") Long reviewId,
             @Body ReviewModifyrRequestDTO reviewModifyrRequestDTO
@@ -52,6 +57,7 @@ public interface ReviewApiService {
     // 리뷰 신고
     @POST("stores/{storeId}/reviews/{reviewId}/reports")
     Call<Void> reportReview(
+            @Header("Authorization") String token,
             @Path("storeId") Long storeId,
             @Path("reviewId") Long reviewId,
             @Body ReviewReportRequestDTO reviewReportRequestDTO

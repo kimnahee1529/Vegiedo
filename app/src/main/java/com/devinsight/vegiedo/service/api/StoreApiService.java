@@ -3,6 +3,7 @@ package com.devinsight.vegiedo.service.api;
 import com.devinsight.vegiedo.data.request.StoreModifyRequestDTO;
 import com.devinsight.vegiedo.data.request.StoreRegisterRequestDTO;
 import com.devinsight.vegiedo.data.request.StoreReportRequestDTO;
+import com.devinsight.vegiedo.data.response.StampBookInquiryResponseDTO;
 import com.devinsight.vegiedo.data.response.StoreInquiryResponseDTO;
 import com.devinsight.vegiedo.data.response.StoreListData;
 import com.devinsight.vegiedo.data.response.StoreListData;
@@ -40,19 +41,22 @@ public interface StoreApiService {
     //가게 등록
     @POST("stores")
     Call<Void> createStore(
+            @Header("Authorization") String token,
             @Body StoreRegisterRequestDTO createStore
     );
 
 
     //가게 조회
-    @GET("stores/{storeId}")
+    @GET("/stores/{storeId}")
     Call<StoreInquiryResponseDTO> readStore(
+            @Header("Authorization") String token,
             @Path("storeId") Long storeId
     );
 
     //가게 수정
     @PATCH("stores/{storeId}")
     Call<Void> updateStore(
+            @Header("Authorization") String token,
             @Path("storeId") Long storeId,
             @Body StoreModifyRequestDTO modifyStore
     );
@@ -60,12 +64,14 @@ public interface StoreApiService {
     //가게 삭제
     @DELETE("stores/{storeId}")
     Call<Void> deleteStore(
+            @Header("Authorization") String token,
             @Path("storeId") Long storeId
     );
 
     //가게 신고(폐점)
     @POST("stores/{storeId}/reports")
     Call<Void> reportStore(
+            @Header("Authorization") String token,
             @Path("storeId") Long storeId
     );
 
@@ -73,28 +79,35 @@ public interface StoreApiService {
     //가게 좋아요
     @POST("stores/{storeId}/likes")
     Call<Void> likeStore(
+            @Header("Authorization") String token,
             @Path("storeId") Long storeId
     );
 
     //가게 좋아요 취소
     @DELETE("stores/{storeId}/likes")
     Call<Void> cancleLikeStore(
+            @Header("Authorization") String token,
             @Path("storeId") Long storeId
     );
 
     //가게 스탬프
     @POST("stores/{storeId}/stamps")
     Call<Void> activeStamp(
+            @Header("Authorization") String token,
             @Path("storeId") Long storeId
     );
 
     //가게 스탬프 취소
     @DELETE("stores/{storeId}/stamps")
     Call<Void> inactiveStamp(
+            @Header("Authorization") String token,
             @Path("storeId") Long storeId
     );
 
-    //TODO
     //마이페이지
+    @GET("stores/stamps")
+    Call<StampBookInquiryResponseDTO> myPageStampBook(
+            @Header("Authorization") String token
+    );
     //검색어 추천
 }

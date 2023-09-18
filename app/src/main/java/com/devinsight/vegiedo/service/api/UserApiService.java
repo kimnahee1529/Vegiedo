@@ -1,5 +1,6 @@
 package com.devinsight.vegiedo.service.api;
 
+import com.devinsight.vegiedo.data.request.UserNicknameModifyRequestDTO;
 import com.devinsight.vegiedo.data.request.UserRegisterRequestDTO;
 
 import retrofit2.Call;
@@ -60,5 +61,18 @@ public interface UserApiService {
             @Header("Authorization") String token
     );
 
+    //프로필 사진 변경
+    @POST("userService/profileImage")
+    Call<Void> changeProfileImage(
+            @Header("Authorization") String token,
+            @Body UserNicknameModifyRequestDTO userNicknameModifyRequestDTO
+    );
+
+    //닉네임 변경
+    @POST("userService/nickName")
+    Call<Void> changeNickname(
+            @Header("Authorization") String token,
+            @Body UserNicknameModifyRequestDTO userNicknameModifyRequestDTO
+    );
 
 }
