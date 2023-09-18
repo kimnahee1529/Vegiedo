@@ -1,4 +1,4 @@
-package com.devinsight.vegiedo.view.login;
+package com.devinsight.vegiedo.view.home.login;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,7 +16,6 @@ import android.widget.ImageView;
 
 import com.devinsight.vegiedo.ConstLoginTokenType;
 import com.devinsight.vegiedo.R;
-import com.devinsight.vegiedo.data.request.UserRegisterRequestDTO;
 import com.devinsight.vegiedo.utill.RetrofitClient;
 import com.devinsight.vegiedo.utill.UserInfoTag;
 import com.devinsight.vegiedo.repository.pref.AuthPrefRepository;

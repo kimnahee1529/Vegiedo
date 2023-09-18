@@ -26,8 +26,12 @@ public class CommunityViewModel extends ViewModel {
     private MutableLiveData<List<PostListData>> popularPostLiveData = new MutableLiveData<>();
     /* 게시글 커서 값 */
     private MutableLiveData<Integer> maxCursorLiveData = new MutableLiveData<>();
+
+    private MutableLiveData<Boolean> isLastItemLiveData = new MutableLiveData<>();
     private String token;
     private int maxCursor;
+
+    private boolean isLastItem;
 
     public void getToken(String token){
         this.token = token;
@@ -37,10 +41,14 @@ public class CommunityViewModel extends ViewModel {
         this.maxCursor = maxCursorLiveData.getValue();
     }
 
+    public void getLastItem(boolean isLastItem){
+        this.isLastItem = isLastItem;
+    }
+
     public void loadPopularPostList( int cursor ){
         Log.d("인기 포스트 요청을 위한 토큰"," 포스트 요청 토큰" + token);
 
-        postApiService.getPopularPostList(5,cursor, "Bearer " + token).enqueue(new Callback<List<PostListData>>() {
+        postApiService.getPopularPostList(8,cursor, "Bearer " + token).enqueue(new Callback<List<PostListData>>() {
             @Override
             public void onResponse(Call<List<PostListData>> call, Response<List<PostListData>> response) {
                 if(response.isSuccessful() && response.body() != null ){
@@ -75,7 +83,7 @@ public class CommunityViewModel extends ViewModel {
     public void loadGeneralPostList( int cursor ){
 
         Log.d("일반 포스트 요청을 위한 토큰"," 포스트 요청 토큰" + token);
-        postApiService.getGeneralPostList(5,cursor,"Bearer " + token).enqueue(new Callback<List<PostListData>>() {
+        postApiService.getGeneralPostList(8,cursor,"Bearer " + token).enqueue(new Callback<List<PostListData>>() {
             @Override
             public void onResponse(Call<List<PostListData>> call, Response<List<PostListData>> response) {
                 if(response.isSuccessful() && response.body() != null ){
@@ -125,6 +133,10 @@ public class CommunityViewModel extends ViewModel {
 
     public LiveData<Integer> getMaxCursorLiveData(){
         return maxCursorLiveData;
+    }
+
+    public LiveData<Boolean> getIsLastItem(){
+        return isLastItemLiveData;
     }
 
 

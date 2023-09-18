@@ -2,9 +2,12 @@ package com.devinsight.vegiedo.view.community;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
@@ -16,9 +19,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -100,6 +105,8 @@ public class WritingFragment extends Fragment {
     ImageViewData imageViewDataForModify;
     ImageViewData imageViewDataForRegister;
 
+    Dialog dialog;
+
     private int actionOn;
 
     @Override
@@ -166,6 +173,8 @@ public class WritingFragment extends Fragment {
         }
 
 
+
+
         return rootView;
     }
 
@@ -181,46 +190,40 @@ public class WritingFragment extends Fragment {
         mainImage = rootView.findViewById(R.id.main_image1);
         mainImage.setOnClickListener(v -> {
             selectImageForView((ImageView) v);
-            if(getTag() != null){
-                actionOn ++ ;
-                Log.d("actionOn count is ","action on :: " + actionOn);
-            }
+            setLongClickListenerForImageView(mainImage);
+
         });
+
 
         ImageView mainImage2 = rootView.findViewById(R.id.main_image2);
         mainImage2.setOnClickListener(v -> {
             selectImageForView((ImageView) v);
-            if(getTag() != null){
-                actionOn ++ ;
-                Log.d("actionOn count is ","action on :: " + actionOn);
-            }
+            setLongClickListenerForImageView(mainImage2);
+
+
         });
 
         ImageView mainImage3 = rootView.findViewById(R.id.main_image3);
         mainImage3.setOnClickListener(v -> {
             selectImageForView((ImageView) v);
-            if(getTag() != null){
-                actionOn ++ ;
-                Log.d("actionOn count is ","action on :: " + actionOn);
-            }
+            setLongClickListenerForImageView(mainImage3);
+
+
         });
 
         ImageView mainImage4 = rootView.findViewById(R.id.main_image4);
         mainImage4.setOnClickListener(v -> {
             selectImageForView((ImageView) v);
-            if(getTag() != null){
-                actionOn ++ ;
-                Log.d("actionOn count is ","action on :: " + actionOn);
-            }
+            setLongClickListenerForImageView(mainImage4);
+
+
         });
 
         ImageView mainImage5 = rootView.findViewById(R.id.main_image5);
         mainImage5.setOnClickListener(v -> {
             selectImageForView((ImageView) v);
-            if(getTag() != null){
-                actionOn ++ ;
-                Log.d("actionOn count is ","action on :: " + actionOn);
-            }
+            setLongClickListenerForImageView(mainImage5);
+
         });
 
         if (isModify) {
@@ -254,6 +257,19 @@ public class WritingFragment extends Fragment {
                 }
             });
         }
+    }
+
+    private void setLongClickListenerForImageView(ImageView imageView) {
+        imageView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                if(currentlySelectedImageView != null && view.getId() == currentlySelectedImageView.getId()){
+                    Log.d("iamgeView id ", "이미지뷰 아이디 : " + view.getId() + " 선택된 이미지뷰 아이디 : " + currentlySelectedImageView.getId());
+                    setDialog("이미지를 삭제 하시겠습니까?");
+                }
+                return false;
+            }
+        });
     }
 
     /* */
@@ -522,19 +538,6 @@ public class WritingFragment extends Fragment {
 
         currentlySelectedImageView = imageView;
 
-//        currentlySelectedImageView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                // view의 태그를 가져옴
-//                imageViewDataForModify = (ImageViewData) view.getTag();
-//                Log.d("imageView Data :","data : " + imageViewDataForModify.getUrl());
-//                if (imageViewDataForModify != null && imageViewDataForModify.getUrl() != null) {
-//                    actionOn++;
-//                    Log.d("actionOn count is ", "action on :: " + actionOn);
-//                }
-//            }
-//        });
-
         if (PermissionUtils.checkPermission(getActivity())) {
             // 권한이 이미 허용된 상태: 바로 관련 작업 수행
             Intent intent = new Intent();
@@ -643,5 +646,34 @@ public class WritingFragment extends Fragment {
                 }
                 break;
         }
+    }
+
+    public void setDialog(String message) {
+        dialog = new Dialog(getContext());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setContentView(R.layout.delete_dialog);
+
+        Button yesDelete = dialog.findViewById(R.id.yes);
+        Button noDelete = dialog.findViewById(R.id.no);
+        TextView msg = dialog.findViewById(R.id.dialog);
+        msg.setText(message);
+
+        yesDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                dialog.dismiss();
+            }
+        });
+
+        noDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 }
