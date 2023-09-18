@@ -14,7 +14,7 @@
         android:scrollbars="vertical" />
 
     <Button
-        android:id="@+id/moreButton"
+        android:id="@+id/Review_moreButton"
         android:text="더보기"
         android:layout_gravity="center"
         android:layout_width="wrap_content"

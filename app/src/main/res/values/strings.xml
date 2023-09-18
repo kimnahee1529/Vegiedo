@@ -6,8 +6,9 @@
     <string name="set_nickname">닉네임을 설정해주세요</string>
 
     <string name="min_char">닉네임은 최소 2글자 이상 입력하셔야해요!</string>
-    <string name="duplication_name">누군가 쓰고있는 닉네입 입니다.</string>
+    <string name="duplication_name">누군가 쓰고있는 닉네임 입니다.</string>
     <string name="try_again">다시 적어주세요!</string>
+    <string name="enter_nickname">닉네임을 입력해주세요</string>
 
     <string name="hey_rabbit">모든걸먹는토끼430님</string>
     <string name="interested_tag">관심 태그를  </string>
@@ -58,6 +59,8 @@
     <string name="report_type_falseInfo">허위 정보 기재</string>
     <string name="report_type_etc">기타</string>
     <string name="report_closure_store">폐점가게 신고</string>
+    <string name="mypage_already_use_nickname">누군가가 쓰고 있는 닉네임입니다.\n다시 적어주세요!</string>
+    <string name="nickname_change_rule">특수문자X, 최소 2~10글자</string>
 
 
 </resources>

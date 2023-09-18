@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="15dp">
+
+
+    <TextView
+        android:id="@+id/stamBook_store_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="5dp"
+        android:text="Little forest"
+        android:textSize="15sp"
+        app:layout_constraintStart_toEndOf="@+id/stamBook_store_image"
+        app:layout_constraintTop_toTopOf="@+id/stamBook_store_image" />
+
+    <RatingBar
+        android:id="@+id/stamBook_store_ratingbar"
+        style="@style/Widget.AppCompat.RatingBar.Small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="8dp"
+        android:numStars="5"
+        android:progressTint="@color/yellow_star"
+        android:scaleX="1.3"
+        android:scaleY="1.3"
+        android:stepSize="1.0"
+        app:layout_constraintStart_toEndOf="@+id/stamBook_store_image"
+        app:layout_constraintTop_toBottomOf="@+id/stamBook_store_address" />
+
+    <TextView
+        android:id="@+id/stamBook_store_numOfreview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="8dp"
+        android:text="43"
+        android:textColor="@color/orange"
+        android:textSize="14sp"
+        app:layout_constraintStart_toEndOf="@+id/stamBook_store_ratingbar"
+        app:layout_constraintTop_toBottomOf="@+id/stamBook_store_address" />
+
+    <TextView
+        android:id="@+id/stamBook_store_address"
+        android:layout_width="230dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="서울특별시 강남구 강남대로 98길 12-5 주소"
+        app:layout_constraintStart_toEndOf="@+id/stamBook_store_image"
+        app:layout_constraintTop_toBottomOf="@+id/stamBook_store_name" />
+
+    <ImageView
+        android:id="@+id/stamBook_store_image"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/stamBook_white_circle"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/profile_circle"
+        tools:layout_editor_absoluteX="27dp"
+        tools:layout_editor_absoluteY="43dp"
+        app:layout_constraintBottom_toBottomOf="@+id/stamBook_store_image"
+        app:layout_constraintEnd_toEndOf="@+id/stamBook_store_image"
+        app:layout_constraintStart_toStartOf="@+id/stamBook_store_image"
+        app:layout_constraintTop_toTopOf="@+id/stamBook_store_image"/>
+
+    <ImageView
+        android:id="@+id/stamBook_sheep_img"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:src="@drawable/img_sheep"
+        app:layout_constraintBottom_toBottomOf="@+id/stamBook_white_circle"
+        app:layout_constraintEnd_toEndOf="@+id/stamBook_white_circle"
+        app:layout_constraintStart_toStartOf="@+id/stamBook_white_circle"
+        app:layout_constraintTop_toTopOf="@+id/stamBook_white_circle" />
+
+    <ImageView
+        android:id="@+id/stamBook_x_circle"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="40dp"
+        android:paddingLeft="8dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:src="@drawable/x_circle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/stamBook_store_address"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
