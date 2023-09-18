@@ -104,7 +104,7 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
 
     private void setupViewModel() {
         // You mentioned to leave the viewModel part out, so this is just a placeholder.
-        viewModel = new ViewModelProvider(requireActivity()).get(ActivityViewModel.class);
+        viewModel = new ViewModelProvider(this).get(ActivityViewModel.class);
     }
 
     private void setupLocationSource() {
@@ -157,12 +157,12 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
         }
     }
     private void onFloatingListButtonClick() {
-//        StoreListMainFragment storeListMainFragment  = new StoreListMainFragment();
-//        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-//        transaction.replace(R.id.frame, storeListMainFragment);
-//        transaction.addToBackStack(null);
-//        transaction.commit();
+        StoreListMainFragment storeListMainFragment  = new StoreListMainFragment();
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+        transaction.replace(R.id.frame, storeListMainFragment);
+        transaction.commit();
     }
+
 
     private void callMapAPI(){
         viewModel.getMapStoreLiveData().observe(getViewLifecycleOwner(), new Observer<List<MapStoreListData>>() {

@@ -92,19 +92,6 @@ public class MapStoreCardUiAdapter extends RecyclerView.Adapter<MapStoreCardUiAd
                     }
                 }
             });
-            // 하트 버튼 토글
-//            like.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//                @Override
-//                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                    if (isChecked) {
-//                        like.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.ic_heart_selected));
-//                        cardData.setLike(true);
-//                    } else {
-//                        like.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.ic_heart_default));
-//                        cardData.setLike(false);
-//                    }
-//                }
-//            });
         }
 
         public void setData(MapStoreCardUiData cardData) {
@@ -122,7 +109,6 @@ public class MapStoreCardUiAdapter extends RecyclerView.Adapter<MapStoreCardUiAd
             distance.setText(cardData.getDistance() + "m");
             reviewers.setText(cardData.getReviewNum() + " reviews");
 
-//            like.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.ic_heart_selected));
             if(cardData.isLike()) {
                 like.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.ic_heart_selected));
             } else {
