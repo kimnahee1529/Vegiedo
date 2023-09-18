@@ -137,6 +137,8 @@ public class WritingFragment extends Fragment {
         imageViewDataForModify = new ImageViewData();
         imageViewDataList = new ArrayList<>();
 
+//        imageViewDataForModify = new ImageViewData();
+
 //        files = new ArrayList<>();
 
 
@@ -233,16 +235,15 @@ public class WritingFragment extends Fragment {
                             ImageView imageView = rootView.findViewById(imageViews[i]);
                             Glide.with(getActivity()).load(imageUrlList.get(i)).into(imageView);
 
-                            imageViewDataForModify = new ImageViewData();
+                            ImageViewData imageViewDataForModify = new ImageViewData();
                             imageViewDataForModify.setIndex(i);
                             imageViewDataForModify.setUrl(imageUrlList.get(i));
 
                             imageViewDataList.add(imageViewDataForModify);
                             imageView.setTag(imageViewDataForModify);
-                            Log.d("image View data ", "thi is i : " + i + "this i url : " + imageUrlList.get(i));
+                            Log.d("DEBUG_TAG", "setTag called for imageView with ID: " + imageView.getId());
 
                             imageUrlListOrigin.add(imageUrlList.get(i));
-                            Log.d("수정을 위해 넘어온 image url 4 ", "this is url" + imageUrlList.get(i));
                         } else {
                             ImageView imageView = rootView.findViewById(imageViews[i]);
                             imageViewDataForModify.setIndex(i);
@@ -344,18 +345,6 @@ public class WritingFragment extends Fragment {
 //            imageUrlListForModify.clear();
             if (isModify) {
 
-//                /* 기존 URL에서 삭제된 URL을 제외한 리스트 */
-//                imageUrlListForModify = new ArrayList<>();
-
-//                if (imageUrlListToDelete == null) { // 값 ok
-//                    imageUrlListForModify.addAll(imageUrlListOrigin);
-//                } else {
-//                    for (String url : imageUrlListOrigin) { // 값 ok
-//                        if (!imageUrlListToDelete.contains(url)) {
-//                            imageUrlListForModify.add(url); // 값 ok
-//                        }
-//                    }
-//                }
                 Log.d(" no change imageUrlListToDelete.size()","size : " + imageUrlListToDelete.size());
                     if ( imageUrlListToDelete.size() == 0 ) { // 값 ok
                         Log.d(" no change imageUrlListToDelete.size()","size : " + imageUrlListToDelete.size());
@@ -590,6 +579,11 @@ public class WritingFragment extends Fragment {
                         Log.d("imageView Data in activity:","data : " + imageViewDataForModify.getUrl());
                         if(imageViewDataForModify != null ) { //이미지뷰의 태그 데이터의 url이 널이 아니면, delete에 넣고
                             imageUrlListToDelete.add(imageViewDataForModify.getUrl());
+                            Log.d("DEBUG_TAG", "imageViewDataForModify is properly initialized.");
+                            Log.d("DEBUG_TAG", "imageView id : " + currentlySelectedImageView.getId());
+                            Log.d("DEBUG_TAG", "imageView id : " + ((ImageViewData) currentlySelectedImageView.getTag()).getUrl());
+
+
                             Log.d("this deleted url","url : " + imageViewDataForModify.getUrl());
                         }
                     }
