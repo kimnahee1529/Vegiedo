@@ -209,23 +209,25 @@ public class LoginMainActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            Log.d("커스텀 토큰 요청", "성공" + customToken);
+                            Log.d("토큰:커스텀 토큰 요청1", "성공" + customToken);
                             FirebaseUser user = googleAuth.getCurrentUser();
+                            Log.e("토큰:커스텀 토큰 요청2","성공" + user);
                             String firebaseToken2 = task.getResult().getUser().getIdToken(false).getResult().getToken();
-
+                            Log.e("토큰:커스텀 토큰 요청2","성공" + firebaseToken2);
                             Call<Void> call = RetrofitClient.getUserApiService().sendUserGoogleToken(firebaseToken2);
                             call.enqueue(new Callback<Void>() {
                                 @Override
                                 public void onResponse(Call<Void> call, Response<Void> response) {
                                     /* 최종 사용자 토큰을 받아옵니다. */
                                     String userGoogleToken = response.headers().get("Authorization");
+                                    Log.e("토큰:최종 구글 로그인1","성공" + response.headers());
                                     /* 최종적으로 구글 로그인 유저의 정보를 담은 토큰을 로컬에 저장합니다.*/
                                     authPrefRepository.saveAuthToken("GOOGLE", userGoogleToken);
-                                    Log.e("최종 구글 로그인","성공" + userGoogleToken);
+                                    Log.e("토큰:최종 구글 로그인2","성공" + userGoogleToken);
                                 }
                                 @Override
                                 public void onFailure(Call<Void> call, Throwable t) {
-                                    Log.e("최종 구글 로그인", "실패" + t.getMessage());
+                                    Log.e("토큰:최종 구글 로그인", "실패" + t.getMessage());
                                 }
                             });
 
