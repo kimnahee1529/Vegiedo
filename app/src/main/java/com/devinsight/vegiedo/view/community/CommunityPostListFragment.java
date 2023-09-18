@@ -56,7 +56,7 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
 
     boolean isScrollingUp;
     private long lastScrollEventTime = System.currentTimeMillis();
-    private final int SCROLL_DEBOUNCE_TIME = 3000; // 3초
+    private final int SCROLL_DEBOUNCE_TIME = 5000; // 3초
 
 
     @Override
@@ -212,6 +212,13 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
                 if (!recyclerView.canScrollVertically(1)) { // Check if reached the last item
                     Log.d("ScrollCheck", "Reached the last item");
                     communityViewModel.getLastItem(true);
+                }
+
+                if (!recyclerView.canScrollVertically(-1)) {  // Check if reached the top
+                    Log.d("ScrollCheck", "Reached the top");
+                    communityViewModel.getFirstItem(true);
+
+                    // 여기에서 맨 위에 도달했을 때의 로직을 수행
                 }
             }
         });
