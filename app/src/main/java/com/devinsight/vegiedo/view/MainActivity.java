@@ -40,10 +40,13 @@ import com.devinsight.vegiedo.view.community.CommunityMainFragment;
 import com.devinsight.vegiedo.view.home.HomeMainFragment;
 import com.devinsight.vegiedo.view.map.MapMainFragment;
 import com.devinsight.vegiedo.view.mypage.MyPageFragment;
+import com.devinsight.vegiedo.view.mypage.StampBookFragment;
 import com.devinsight.vegiedo.view.search.SearchFilterFragment;
 import com.devinsight.vegiedo.view.search.ActivityViewModel;
 import com.devinsight.vegiedo.view.search.SearchMainFragment;
+import com.devinsight.vegiedo.view.store.StoreBlogReviewFragment;
 import com.devinsight.vegiedo.view.store.StoreDetailPageFragment;
+import com.devinsight.vegiedo.view.store.StoreReviewFragment;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -72,6 +75,9 @@ public class MainActivity extends AppCompatActivity {
     Fragment myPageFragment;
     Fragment communityFragment;
     Fragment storeDetailPageFragment;
+    Fragment storeBlogReviewFragment;
+    Fragment storeReviewFragment;
+    Fragment stampBookFragment;
     Fragment communityMainFragment;
 
     /* 뷰모델 */
@@ -107,6 +113,9 @@ public class MainActivity extends AppCompatActivity {
         searchMainFragment = new SearchMainFragment();
         storeListMainFragment = new StoreListMainFragment();
         storeDetailPageFragment = new StoreDetailPageFragment();
+        storeBlogReviewFragment = new StoreBlogReviewFragment();
+        storeReviewFragment = new StoreReviewFragment();
+        stampBookFragment = new StampBookFragment();
         communityMainFragment = new CommunityMainFragment();
 
         /* 액티비티 뷰 모델 */
@@ -163,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 } else if (item.getItemId() == R.id.nav_home) {
                     toolBar.setVisibility(View.VISIBLE);
-                    transaction.replace(R.id.frame, homeMainFragment,"homeMainFragment").addToBackStack("homeMainFragment").commit();
+                    transaction.replace(R.id.frame, storeDetailPageFragment,"homeMainFragment").addToBackStack("homeMainFragment").commit();
 
                     return true;
                 } else if (item.getItemId() == R.id.nav_map) {
