@@ -402,7 +402,7 @@ public class WritingFragment extends Fragment {
 
                 Log.d("token for modify post", "token : " + token);
                 Log.d("Data for modify post","list Json : " + serializedImageUrls );
-                Log.d("Data for modify post","files : " + files.get(0).toString());
+//                Log.d("Data for modify post","files : " + files.get(0).toString());
 
 
                 postApiService.updatePost2("Bearer " + token, postId, modifyTitle, modifyContent, files, imageUrlBody).enqueue(new Callback<PostInquiryResponseDTO>() {
