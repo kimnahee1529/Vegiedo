@@ -5,6 +5,7 @@ public class SummaryData {
     private String storeImage;
     private String storeName;
     private String storeAddress;
+    private Long storeId;
 
     public String getStoreImage() {
         return storeImage;
@@ -30,13 +31,21 @@ public class SummaryData {
         this.storeAddress = storeAddress;
     }
 
-    public SummaryData(String storeImage, String storeName, String storeAddress) {
+    public Long getStoreId() {
+        return storeId;
+    }
+
+    public void setStoreId(Long storeId) {
+        this.storeId = storeId;
+    }
+
+    public SummaryData() {
+    }
+
+    public SummaryData(String storeImage, String storeName, String storeAddress, Long storeId) {
         this.storeImage = storeImage;
         this.storeName = storeName;
         this.storeAddress = storeAddress;
-    }
-
-    public SummaryData () {
-
+        this.storeId = storeId;
     }
 }

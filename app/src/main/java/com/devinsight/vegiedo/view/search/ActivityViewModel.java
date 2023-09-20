@@ -5,8 +5,6 @@ import static com.google.android.gms.common.util.CollectionUtils.listOf;
 import android.location.Location;
 import android.net.Uri;
 import android.util.Log;
-import android.view.View;
-import android.widget.Toast;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -15,10 +13,8 @@ import androidx.lifecycle.ViewModel;
 import com.devinsight.vegiedo.data.request.ReviewModifyrRequestDTO;
 import com.devinsight.vegiedo.data.request.ReviewRegisterRequestDTO;
 import com.devinsight.vegiedo.data.request.ReviewReportRequestDTO;
-import com.devinsight.vegiedo.data.request.StoreReportRequestDTO;
 import com.devinsight.vegiedo.data.request.UserNicknameModifyRequestDTO;
 import com.devinsight.vegiedo.data.response.CommentListData;
-import com.devinsight.vegiedo.data.response.MapInquiryResponseDTO;
 import com.devinsight.vegiedo.data.response.MapStoreListData;
 import com.devinsight.vegiedo.data.response.PostInquiryResponseDTO;
 import com.devinsight.vegiedo.data.response.PostListData;
@@ -26,7 +22,6 @@ import com.devinsight.vegiedo.data.response.ReviewListInquiryResponseDTO;
 import com.devinsight.vegiedo.data.response.StampBookInquiryResponseDTO;
 import com.devinsight.vegiedo.data.response.StoreInquiryResponseDTO;
 import com.devinsight.vegiedo.data.response.StoreListData;
-import com.devinsight.vegiedo.data.response.StoreStampDetailDTO;
 import com.devinsight.vegiedo.data.ui.login.TagStatus;
 import com.devinsight.vegiedo.data.ui.map.MapStoreCardUiData;
 import com.devinsight.vegiedo.data.ui.search.SearchStorSummaryeUiData;
@@ -40,13 +35,10 @@ import com.devinsight.vegiedo.service.api.UserApiService;
 import com.devinsight.vegiedo.utill.RetrofitClient;
 import com.devinsight.vegiedo.view.community.ClickedPostData;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -149,13 +141,16 @@ public class ActivityViewModel extends ViewModel {
 
     private Long postId;
 
+    private Long storeId;
+
+
     private List<Uri> imageUriList;
 
 
     ClickedPostData postData;
 
     // 선택한 가게를 알기 위한 storeId(StoreReviewFragment에서 본인이 쓴 리뷰 수정, 삭제하기 위함)
-    private MutableLiveData<Long> storeId = new MutableLiveData<>();
+    private MutableLiveData<Long> storeIdLiveData = new MutableLiveData<>();
 
     /* API 호출을 위한 레트로핏 초기화 */
     UserApiService userApiService = RetrofitClient.getUserApiService();
@@ -233,12 +228,14 @@ public class ActivityViewModel extends ViewModel {
         this.distance = distance;
     }
 
-
-
     /* 실시간으로 입력 받는 검색어 */
     private LiveData<String> getInputText() {
         return inputTextLiveData;
     }
+//
+//    public void getStoreId(Long storeId){
+//        this.storeId = storeId;
+//    }
 
     /* 가게 리스트 API 호출 */
     public void storeApiData() {
@@ -308,6 +305,7 @@ public class ActivityViewModel extends ViewModel {
             summaryData.setStoreImage(data.getImages());
             summaryData.setStoreName(data.getStoreName());
             summaryData.setStoreAddress(data.getAddress());
+            summaryData.setStoreId(data.getStoreId());
 
             summaryList.add(summaryData);
         }
@@ -965,12 +963,13 @@ public class ActivityViewModel extends ViewModel {
     }
 
     //선택한 가게를 알기 위한 storeId
-    public void setStoreId(Long id) {
-        storeId.setValue(id);
+    public void setStoreIdLiveData(Long id) {
+        this.storeId = id;
+        storeIdLiveData.setValue(id);
     }
 
-    public LiveData<Long> getStoreId() {
-        return storeId;
+    public LiveData<Long> getStoreIdLiveData() {
+        return storeIdLiveData;
     }
 
     public LiveData<Boolean> getPostType(){

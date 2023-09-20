@@ -35,7 +35,6 @@ import com.google.android.gms.ads.AdView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class UserReviewItemAdapter extends RecyclerView.Adapter<UserReviewItemAdapter.BaseViewHolder> {
@@ -118,7 +117,7 @@ public class UserReviewItemAdapter extends RecyclerView.Adapter<UserReviewItemAd
         }
         this.userReviewItemList = items;
         this.viewModel = viewModel;
-        this.currentStoreId = viewModel.getStoreId().getValue();
+        this.currentStoreId = viewModel.getStoreIdLiveData().getValue();
     }
 
     @Override
@@ -205,7 +204,7 @@ public class UserReviewItemAdapter extends RecyclerView.Adapter<UserReviewItemAd
         void bindData(UserReviewItem item) {
             this.userReviewItem = item;
 
-            currentStoreId = viewModel.getStoreId().getValue();
+            currentStoreId = viewModel.getStoreIdLiveData().getValue();
             title.setText(userReviewItem.getTitle());
             content.setText(userReviewItem.getContent());
 
@@ -253,7 +252,7 @@ public class UserReviewItemAdapter extends RecyclerView.Adapter<UserReviewItemAd
             SharedPreferences sharedPreferences = itemView.getContext().getSharedPreferences("user_info", Context.MODE_PRIVATE);
             String userName = sharedPreferences.getString("userName", "기본값");
             reviewId = userReviewItem.getReviewId();
-            currentStoreId = viewModel.getStoreId().getValue();
+            currentStoreId = viewModel.getStoreIdLiveData().getValue();
             String reviewWriter = userReviewItem.getTitle();
             int radius = 20;
 

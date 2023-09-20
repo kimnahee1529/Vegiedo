@@ -91,6 +91,7 @@ public interface PostApiService {
     //게시글 추천
     @PATCH("/posts/{postId}/recommendations")
     Call<Void> recommendPost(
+            @Header("Authorization") String token,
             @Path("postId") Long postId
     );
 

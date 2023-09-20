@@ -79,14 +79,14 @@ public class SearchSummaryListAdapter extends RecyclerView.Adapter<SearchSummary
         @Override
         public void onClick(View view) {
             if(searchItemListner != null){
-                searchItemListner.onSearchSummaryItemClick(data);
+                searchItemListner.onSearchSummaryItemClick(data, getLayoutPosition());
             }
         }
 
     }
 
     public interface searchSummaryItemListner{
-        void onSearchSummaryItemClick(SummaryData searchData);
+        void onSearchSummaryItemClick(SummaryData searchData, int position);
     }
 
 }

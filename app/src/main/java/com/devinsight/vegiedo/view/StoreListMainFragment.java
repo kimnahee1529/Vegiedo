@@ -25,7 +25,6 @@ import com.devinsight.vegiedo.data.response.StoreListData;
 import com.devinsight.vegiedo.view.search.ActivityViewModel;
 import com.devinsight.vegiedo.view.search.StoreDetailListAdapter;
 import com.devinsight.vegiedo.view.store.StoreDetailPageDDFragment;
-import com.devinsight.vegiedo.view.store.StoreDetailPageFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -160,6 +159,9 @@ public class StoreListMainFragment extends Fragment implements StoreDetailListAd
         transaction.replace(R.id.frame, detailFragment);  // R.id.container는 당신의 FrameLayout 또는 호스트 뷰의 ID여야 합니다.
         transaction.addToBackStack(null);
         transaction.commit();
+
+        /* 가게의 스토어 아이디를 액티비티 뷰모델로 넘김*/
+        viewModel.setStoreIdLiveData(storeList.get(position).getStoreId());
 
     }
 

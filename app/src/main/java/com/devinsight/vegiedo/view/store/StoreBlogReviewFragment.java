@@ -1,6 +1,5 @@
 package com.devinsight.vegiedo.view.store;
 
-import static com.devinsight.vegiedo.view.store.UserReviewItem.ItemType.REVIEW_RC;
 import static com.devinsight.vegiedo.view.store.UserReviewItem.ItemType.STORE_DETAIL_BLOG_REVIEW_PAGE;
 
 import android.os.Bundle;
@@ -135,6 +134,6 @@ public class StoreBlogReviewFragment extends Fragment {
         });
         // 데이터 로드
         viewModel.ReviewInquiryData(mStoreId, 100, 0, true);
-        viewModel.setStoreId(mStoreId);
+        viewModel.setStoreIdLiveData(mStoreId);
     }
 }

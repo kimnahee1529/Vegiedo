@@ -26,12 +26,19 @@ import com.bumptech.glide.Glide;
 import com.devinsight.vegiedo.R;
 import com.devinsight.vegiedo.data.response.ContentImage;
 import com.devinsight.vegiedo.data.response.PostInquiryResponseDTO;
+import com.devinsight.vegiedo.repository.pref.AuthPrefRepository;
+import com.devinsight.vegiedo.service.api.PostApiService;
+import com.devinsight.vegiedo.utill.RetrofitClient;
 import com.devinsight.vegiedo.view.MainActivity;
 import com.devinsight.vegiedo.view.community.adapter.PostContentAdapter;
 import com.devinsight.vegiedo.view.search.ActivityViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class PostContentFragment extends Fragment implements PostContentAdapter.ImageClickListener {
 
@@ -45,6 +52,7 @@ public class PostContentFragment extends Fragment implements PostContentAdapter.
     TextView post_content_recommend;
     TextView post_content_delete;
     TextView post_content_modify;
+    ImageView recommend_btn;
 
     PostContentAdapter adaptper;
     RecyclerView recyclerView;
@@ -58,10 +66,13 @@ public class PostContentFragment extends Fragment implements PostContentAdapter.
     int likeReceiveCount;
     int commentCount;
     Long postId;
+    String token;
 
     Fragment communityMainFragment;
 
     ActivityViewModel activityViewModel;
+    PostApiService postApiService = RetrofitClient.getPostApiService();
+    AuthPrefRepository authPrefRepository;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -92,6 +103,7 @@ public class PostContentFragment extends Fragment implements PostContentAdapter.
         post_content_recommend = view.findViewById(R.id.post_content_recommend);
         post_content_delete = view.findViewById(R.id.post_content_delete);
         post_content_modify = view.findViewById(R.id.post_content_modify);
+        recommend_btn = view.findViewById(R.id.content_heart);
 
         communityMainFragment = new CommunityMainFragment();
 
@@ -101,6 +113,16 @@ public class PostContentFragment extends Fragment implements PostContentAdapter.
         recyclerView.setAdapter(adaptper);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
+
+        String social;
+        if( authPrefRepository.getAuthToken("KAKAO") != null) {
+            social = "KAKAO";
+        } else {
+            social = "GOOGLE";
+        }
+        token = authPrefRepository.getAuthToken(social);
+
+
 
         activityViewModel = new ViewModelProvider(requireActivity()).get(ActivityViewModel.class);
 
@@ -179,6 +201,28 @@ public class PostContentFragment extends Fragment implements PostContentAdapter.
                 FragmentManager fragmentManager = ((MainActivity) getActivity()).getSupportFragmentManager();
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
                 transaction.replace(R.id.frame, writingFragment).commit();
+            }
+        });
+
+        recommend_btn.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                postApiService.recommendPost(token, postId).enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        if(response.isSuccessful()){
+                            Log.d("post 추천 api 호출 성공 ","성공" + response);
+                        }else{
+                            Log.e("post 추천 api 호출 실패 ","실패1" + response);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        Log.e("post 추천 api 호출 실패 ","실패2" + t.getMessage());
+                    }
+                });
+                return false;
             }
         });
 

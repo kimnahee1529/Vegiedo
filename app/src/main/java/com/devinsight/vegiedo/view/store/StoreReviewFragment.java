@@ -1,10 +1,7 @@
 package com.devinsight.vegiedo.view.store;
 
-import static com.devinsight.vegiedo.view.store.UserReviewItem.ItemType.AD_BANNER;
 import static com.devinsight.vegiedo.view.store.UserReviewItem.ItemType.REVIEW_RC;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,14 +10,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -29,21 +22,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.devinsight.vegiedo.R;
 import com.devinsight.vegiedo.data.request.ReviewReportRequestDTO;
 import com.devinsight.vegiedo.data.response.ReviewListInquiryResponseDTO;
-import com.devinsight.vegiedo.view.community.WritingFragment;
 import com.devinsight.vegiedo.view.search.ActivityViewModel;
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.initialization.InitializationStatus;
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
-import com.kakao.sdk.user.model.User;
 
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class StoreReviewFragment extends Fragment {
     private RecyclerView recyclerView;
@@ -196,7 +179,7 @@ public class StoreReviewFragment extends Fragment {
         // 데이터 로드
         viewModel.ReviewInquiryData(mStoreId, 100, 0, false);
         // 상세페이지를 보여주는 가게의 storeId
-        viewModel.setStoreId(mStoreId);
+        viewModel.setStoreIdLiveData(mStoreId);
     }
 
 }

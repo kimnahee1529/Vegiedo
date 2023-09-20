@@ -117,7 +117,7 @@ public class SearchMainFragment extends Fragment implements SearchSummaryListAda
     }
 
     @Override
-    public void onSearchSummaryItemClick(SummaryData searchData) {
-
+    public void onSearchSummaryItemClick(SummaryData searchData, int position) {
+        viewModel.setStoreIdLiveData(storeList.get(position).getStoreId());
     }
 }

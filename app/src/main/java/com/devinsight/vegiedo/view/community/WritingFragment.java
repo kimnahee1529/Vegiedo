@@ -572,9 +572,6 @@ public class WritingFragment extends Fragment {
                 /* Uri를 담아줍니다.*/
                 selectedImageUri = data.getData();
             }
-
-
-
             /* 수정 요청을 위한 iamgeUri를 가져옵니다.*/
             if (isModify) {
                 if (currentlySelectedImageView != null && selectedImageUri != null) {
