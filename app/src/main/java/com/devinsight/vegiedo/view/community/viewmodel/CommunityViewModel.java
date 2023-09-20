@@ -67,7 +67,7 @@ public class CommunityViewModel extends ViewModel {
                     } else {
                         maxCursorLiveData.setValue(data.get(data.size() - 1).getTotalPage());
                     }
-                    Log.d( "this is max cursor","max cursor" + data.get(data.size() - 1).getTotalPage());
+//                    Log.d( "this is max cursor","max cursor" + data.get(data.size() - 1).getTotalPage());
                     Log.d("성공","this is post cursor : " + cursor);
                 } else {
                     // API 응답이 오류 상태일 때
