@@ -267,6 +267,7 @@ public class ActivityViewModel extends ViewModel {
             @Override
             public void onResponse(Call<List<StoreListData>> call, Response<List<StoreListData>> response) {
                 if (response.isSuccessful() && response.body() != null) {
+                    Log.d("RetrofitRequestURL", "Requested URL: " + call.request().url());
                     Log.d(" 가게 호출 쿼리","값" + tags + "위도 : " +latitude + "경도 : " +longitude + "거리 : " + distance*1000 + keyword + token);
                     List<StoreListData> data = response.body();
                     Log.e("store List 요청 성공","this is store List : " + response.body().toString());
@@ -300,7 +301,7 @@ public class ActivityViewModel extends ViewModel {
 
 
 
-        Log.e("store List 요청 동작", "store List 요청 동작");
+        Log.e("store List 요청 동작 ", "store List 요청 동작");
 
     }
 

@@ -32,7 +32,6 @@ public interface StoreApiService {
             @Query("latitude") float latitude,
             @Query("longitude") float longitude,
             @Query("distance") int distance,
-//            @Query("keyword") String keyword,
             @Query("count") int count,
             @Query("cursor") int cursor,
             @Header("Authorization") String token
