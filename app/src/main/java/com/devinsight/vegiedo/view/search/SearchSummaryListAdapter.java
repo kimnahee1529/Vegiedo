@@ -31,6 +31,7 @@ public class SearchSummaryListAdapter extends RecyclerView.Adapter<SearchSummary
     public SearchSummaryListAdapter(Context context, List<SummaryData> summaryDataList, searchSummaryItemListner searchItemListner) {
         this.summaryDataList = summaryDataList;
         this.context = context;
+        this.searchItemListner = searchItemListner;
     }
 
 
@@ -45,6 +46,7 @@ public class SearchSummaryListAdapter extends RecyclerView.Adapter<SearchSummary
     @Override
     public void onBindViewHolder(@NonNull SearchSummaryListAdapter.SummaryViewHolder holder, int position) {
         SummaryData data = summaryDataList.get(position);
+        holder.data = data;
         String imageUrl = data.getStoreImage();
         holder.searchStoreName.setText(data.getStoreName());
         holder.searchStoreAddress.setText(data.getStoreAddress());

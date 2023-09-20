@@ -121,6 +121,9 @@ public class SearchMainFragment extends Fragment implements SearchSummaryListAda
     @Override
     public void onSearchSummaryItemClick(View view, SummaryData searchData, int position) {
 
+        viewModel.setStoreIdLiveData(storeList.get(position).getStoreId());
+
+
         StoreDetailPageFragment detailFragment = new StoreDetailPageFragment();
 
         Bundle bundle = new Bundle();
@@ -138,6 +141,5 @@ public class SearchMainFragment extends Fragment implements SearchSummaryListAda
         transaction.commit();
 
         /* 가게의 스토어 아이디를 액티비티 뷰모델로 넘김*/
-        viewModel.setStoreIdLiveData(storeList.get(position).getStoreId());
     }
 }
