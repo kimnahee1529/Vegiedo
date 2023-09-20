@@ -51,12 +51,12 @@
             app:layout_constraintTop_toBottomOf="@+id/my_page_gray_line5" />
 
         <TextView
-            android:id="@+id/open_source_text"
+            android:id="@+id/mypage_open_source_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:layout_marginStart="40dp"
-            android:text="오픈소스"
+            android:text="@string/mypage_open_source"
             android:textColor="@color/black"
             app:layout_constraintBottom_toTopOf="@+id/my_page_gray_line5"
             app:layout_constraintStart_toStartOf="parent"
@@ -85,17 +85,17 @@
             app:layout_constraintBottom_toTopOf="@+id/my_page_gray_line5"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.864"
-            app:layout_constraintStart_toEndOf="@+id/open_source_text"
+            app:layout_constraintStart_toEndOf="@+id/mypage_open_source_text"
             app:layout_constraintTop_toBottomOf="@+id/my_page_gray_line4"
             app:layout_constraintVertical_bias="1.0" />
 
         <TextView
-            android:id="@+id/policy_text"
+            android:id="@+id/mypage_policy_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:layout_marginStart="40dp"
-            android:text="약관정책"
+            android:text="@string/mypage_policy"
             android:textColor="@color/black"
             app:layout_constraintBottom_toTopOf="@+id/my_page_gray_line4"
             app:layout_constraintStart_toStartOf="parent"
@@ -128,12 +128,12 @@
             app:layout_constraintTop_toBottomOf="@+id/my_page_gray_line3" />
 
         <TextView
-            android:id="@+id/inquiry_text"
+            android:id="@+id/mypage_inquiry_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:layout_marginStart="40dp"
-            android:text="문의기능"
+            android:text="@string/mypage_inquiry"
             android:textColor="@color/black"
             app:layout_constraintBottom_toTopOf="@+id/my_page_gray_line3"
             app:layout_constraintStart_toStartOf="parent"
@@ -172,7 +172,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="40dp"
             android:layout_marginTop="15dp"
-            android:text="신규 가게 등록"
+            android:text="@string/mypage_register_new_store"
             android:textColor="@color/black"
             app:layout_constraintBottom_toTopOf="@+id/my_page_gray_line2"
             app:layout_constraintStart_toStartOf="parent"

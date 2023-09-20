@@ -61,6 +61,10 @@
     <string name="report_closure_store">폐점가게 신고</string>
     <string name="mypage_already_use_nickname">누군가가 쓰고 있는 닉네임입니다.\n다시 적어주세요!</string>
     <string name="nickname_change_rule">특수문자X, 최소 2~10글자</string>
+    <string name="mypage_register_new_store">신규 가게 등록</string>
+    <string name="mypage_inquiry">문의기능</string>
+    <string name="mypage_policy">약관정책</string>
+    <string name="mypage_open_source">오픈소스</string>
 
 
 </resources>
