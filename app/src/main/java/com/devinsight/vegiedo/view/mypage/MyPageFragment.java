@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -35,6 +36,9 @@ import com.devinsight.vegiedo.R;
 import com.devinsight.vegiedo.view.PermissionUtils;
 import com.devinsight.vegiedo.view.login.LoginMainActivity;
 import com.devinsight.vegiedo.view.login.NickNameActivity;
+import com.google.android.gms.oss.licenses.OssLicensesMenuActivity;
+
+import org.w3c.dom.Text;
 
 // TODO : 로그아웃 기능 구현해야 함
 public class MyPageFragment extends Fragment {
@@ -42,6 +46,9 @@ public class MyPageFragment extends Fragment {
     private static final int PERMISSION_REQUEST_CODE = 200; // 권한 요청 코드
     private TextView MyPage_nickname;
     private ImageView MyPage_profile_image;
+    private TextView mypage_inquiry_text;
+    private TextView mypage_policy_text;
+    private TextView mypage_open_source_text;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -50,6 +57,7 @@ public class MyPageFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_my_page, container, false);
         MyPage_nickname = rootView.findViewById(R.id.MyPage_nickname);
         MyPage_profile_image = rootView.findViewById(R.id.MyPage_profile_image);
+
 
         // SharedPreferences 객체 얻기(회원가입 때 정한 닉네임, 태그 얻기 위함)
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_info", Context.MODE_PRIVATE);
@@ -104,17 +112,9 @@ public class MyPageFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 StampBookFragment stampBookFragment = new StampBookFragment();
-
-                // FragmentTransaction 시작
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
-
-                // 현재 fragment를 StampBookFragment로 교체
-                transaction.replace(R.id.frame, stampBookFragment); // 'fragment_container'는 해당 Fragment를 추가하거나 교체할 레이아웃의 ID입니다. 이 이름을 실제 사용하는 이름으로 변경해야 합니다.
-
-                // (선택사항) 백스택에 추가
+                transaction.replace(R.id.frame, stampBookFragment);
                 transaction.addToBackStack(null);
-
-                // 변경사항 커밋
                 transaction.commit();
             }
         });
@@ -130,6 +130,49 @@ public class MyPageFragment extends Fragment {
             }
         });
 
+        //문의기능 텍스트 클릭
+        mypage_inquiry_text = rootView.findViewById(R.id.mypage_inquiry_text);
+        mypage_inquiry_text.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String email = "one.month.one.project@gmail.com";  // 받는 사람의 이메일 주소를 여기에 입력하세요.
+
+                Intent intent = new Intent(Intent.ACTION_SENDTO); // 이 액션은 기본 메일 앱만을 대상으로 합니다.
+                intent.setData(Uri.parse("mailto:" + email));
+//                intent.putExtra(Intent.EXTRA_SUBJECT, "베지도 메일 문의 드립니다"); // 메일 제목을 설정합니다.
+
+                // 사용자의 장치에 이메일 클라이언트가 설치되어 있는지 확인합니다.
+                if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(getActivity(), "No email client available", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        //약관정책 텍스트 클릭
+        mypage_policy_text = rootView.findViewById(R.id.mypage_policy_text);
+        mypage_policy_text.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String url = "https://mammoth-tortoise-7d3.notion.site/60347bd4ed18422188e283ae90b788b6";
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(url));
+                startActivity(intent);
+            }
+        });
+
+        //오픈소스 텍스트 클릭
+        mypage_open_source_text = rootView.findViewById(R.id.mypage_open_source_text);
+        mypage_open_source_text.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), OssLicensesMenuActivity.class);
+                intent.putExtra("activityTitle", "오픈소스 라이선스 목록");
+//                OssLicensesMenuActivity.setActivityTitle("오픈소스 라이선스 목록"); //액티비티 제목 셋팅
+                startActivity(intent);
+            }
+        });
 
         //로그아웃 텍스트 클릭
         TextView logoutText = rootView.findViewById(R.id.logout_text); // 가정: logout 텍스트의 ID는 logout입니다.
@@ -139,7 +182,6 @@ public class MyPageFragment extends Fragment {
             public void onClick(View v) {
                 // 로그아웃 로직 (예: 사용자 정보, 세션, 토큰 삭제 등)
                 logoutUser();
-
 
                 // LoginMainActivity로 이동
                 Activity activity = getActivity();
