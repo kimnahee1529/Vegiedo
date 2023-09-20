@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id("com.google.gms.google-services")
+    id 'com.google.android.gms.oss-licenses-plugin'
 }
 
 Properties properties = new Properties()
@@ -80,7 +81,8 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.8'
 //  애드몹
     implementation 'com.google.android.gms:play-services-ads:22.3.0'
-
-
+//  라이선스
+//    implementation("com.google.android.gms:play-services-oss-licenses:17.0.1")
+    implementation 'com.google.android.gms:play-services-oss-licenses:17.0.1'
 
 }
