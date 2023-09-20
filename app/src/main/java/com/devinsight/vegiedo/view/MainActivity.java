@@ -172,7 +172,9 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 } else if (item.getItemId() == R.id.nav_home) {
                     toolBar.setVisibility(View.VISIBLE);
-                    transaction.replace(R.id.frame, storeDetailPageFragment,"homeMainFragment").addToBackStack("homeMainFragment").commit();
+//                    transaction.replace(R.id.frame, storeDetailPageFragment,"homeMainFragment").addToBackStack("homeMainFragment").commit();
+                                        transaction.replace(R.id.frame, homeMainFragment,"homeMainFragment").addToBackStack("homeMainFragment").commit();
+
 
                     return true;
                 } else if (item.getItemId() == R.id.nav_map) {

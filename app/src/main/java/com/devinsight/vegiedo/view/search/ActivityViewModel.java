@@ -272,7 +272,7 @@ public class ActivityViewModel extends ViewModel {
                     Log.d(" 가게 호출 쿼리","값" + tags + latitude + longitude + "거리 : " + distance + keyword + token);
                     List<StoreListData> data = response.body();
                     if ( data != null ) {
-                        Log.e("store List 요청 성공","this is store List : ");
+                        Log.e("store List 요청 성공","this is store List : " +data.toArray().toString());
                         storeListLiveData.setValue(data);
                         searchSummList();
                     } else {
