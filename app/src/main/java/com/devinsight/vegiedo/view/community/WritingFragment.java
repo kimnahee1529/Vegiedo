@@ -2,9 +2,14 @@ package com.devinsight.vegiedo.view.community;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.media.Image;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,14 +20,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -30,12 +36,14 @@ import androidx.lifecycle.ViewModelProvider;
 import com.bumptech.glide.Glide;
 import com.devinsight.vegiedo.R;
 import com.devinsight.vegiedo.data.request.PostRegisterRequestDTO;
+import com.devinsight.vegiedo.data.response.PostInquiryResponseDTO;
 import com.devinsight.vegiedo.data.response.PostRegisterResponseDTO;
 import com.devinsight.vegiedo.repository.pref.AuthPrefRepository;
 import com.devinsight.vegiedo.service.api.PostApiService;
 import com.devinsight.vegiedo.utill.RetrofitClient;
 import com.devinsight.vegiedo.view.PermissionUtils;
 import com.devinsight.vegiedo.view.search.ActivityViewModel;
+import com.google.gson.Gson;
 
 import java.io.File;
 import java.io.IOException;
@@ -74,6 +82,7 @@ public class WritingFragment extends Fragment {
     private List<Uri> imageUrilist;
 
     private String token;
+    private Long postId;
 
     /* 수정을 위해 전달 받은 데이터를 담을 변수 */
     private String postTitle;
@@ -84,10 +93,22 @@ public class WritingFragment extends Fragment {
     private boolean isModify;
     private int imageListSizeForModify;
     private List<Uri> imageUriListForModify;
+    private List<String> imageUrlListForModify;
+    private List<String> imageUrlListOrigin;
+
+    private List<String> imageUrlListToDelete;
+    private List<ImageViewData> imageViewDataList;
 
     ActivityViewModel activityViewModel;
 
     PostApiService postApiService = RetrofitClient.getPostApiService();
+
+    ImageViewData imageViewDataForModify;
+    ImageViewData imageViewDataForRegister;
+
+    Dialog dialog;
+
+    private int actionOn;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -102,6 +123,7 @@ public class WritingFragment extends Fragment {
             imageListSizeForModify = getArguments().getInt("imageListSize");
             imageListForModify = new ArrayList<>();
             isModify = getArguments().getBoolean("isModify");
+            postId = getArguments().getLong("postId");
 
         }
     }
@@ -110,8 +132,21 @@ public class WritingFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_writing, container, false);
 
-
+        actionOn = 0;
         imageUrilist = new ArrayList<>();
+        imageUriListForModify = new ArrayList<>();
+
+        /* 기존 url*/
+        imageUrlListOrigin = new ArrayList<>();
+
+        /* 선택된 이미지 뷰의 URL 리스트-> 삭제 해야함 */
+        imageUrlListToDelete = new ArrayList<>();
+        imageUrlListForModify = new ArrayList<>();
+        imageViewDataForModify = new ImageViewData();
+        imageViewDataList = new ArrayList<>();
+
+//        imageViewDataForModify = new ImageViewData();
+
 //        files = new ArrayList<>();
 
 
@@ -139,6 +174,8 @@ public class WritingFragment extends Fragment {
         }
 
 
+
+
         return rootView;
     }
 
@@ -152,19 +189,43 @@ public class WritingFragment extends Fragment {
         backwardBtn.setOnClickListener(v -> goBack());
 
         mainImage = rootView.findViewById(R.id.main_image1);
-        mainImage.setOnClickListener(v -> selectImageForView((ImageView) v));
+        mainImage.setOnClickListener(v -> {
+            selectImageForView((ImageView) v);
+            setLongClickListenerForImageView(mainImage);
+
+        });
+
 
         ImageView mainImage2 = rootView.findViewById(R.id.main_image2);
-        mainImage2.setOnClickListener(v -> selectImageForView((ImageView) v));
+        mainImage2.setOnClickListener(v -> {
+            selectImageForView((ImageView) v);
+            setLongClickListenerForImageView(mainImage2);
+
+
+        });
 
         ImageView mainImage3 = rootView.findViewById(R.id.main_image3);
-        mainImage3.setOnClickListener(v -> selectImageForView((ImageView) v));
+        mainImage3.setOnClickListener(v -> {
+            selectImageForView((ImageView) v);
+            setLongClickListenerForImageView(mainImage3);
+
+
+        });
 
         ImageView mainImage4 = rootView.findViewById(R.id.main_image4);
-        mainImage4.setOnClickListener(v -> selectImageForView((ImageView) v));
+        mainImage4.setOnClickListener(v -> {
+            selectImageForView((ImageView) v);
+            setLongClickListenerForImageView(mainImage4);
+
+
+        });
 
         ImageView mainImage5 = rootView.findViewById(R.id.main_image5);
-        mainImage5.setOnClickListener(v -> selectImageForView((ImageView) v));
+        mainImage5.setOnClickListener(v -> {
+            selectImageForView((ImageView) v);
+            setLongClickListenerForImageView(mainImage5);
+
+        });
 
         if (isModify) {
             communityWritingTitleText.setText(postTitle);
@@ -177,13 +238,39 @@ public class WritingFragment extends Fragment {
                         if (i < imageUrlList.size()) {
                             ImageView imageView = rootView.findViewById(imageViews[i]);
                             Glide.with(getActivity()).load(imageUrlList.get(i)).into(imageView);
-                            Log.d("수정을 위해 넘어온 image url 4 ", "this is url" + imageUrlList.get(i));
+
+                            ImageViewData imageViewDataForModify = new ImageViewData();
+                            imageViewDataForModify.setIndex(i);
+                            imageViewDataForModify.setUrl(imageUrlList.get(i));
+
+                            imageViewDataList.add(imageViewDataForModify);
+                            imageView.setTag(imageViewDataForModify);
+                            Log.d("DEBUG_TAG", "setTag called for imageView with ID: " + imageView.getId());
+
+                            imageUrlListOrigin.add(imageUrlList.get(i));
+                        } else {
+                            ImageView imageView = rootView.findViewById(imageViews[i]);
+                            imageViewDataForModify.setIndex(i);
+                            imageViewDataForModify.setUrl(null);
+                            imageView.setTag(imageViewDataForModify);
                         }
                     }
-
                 }
             });
         }
+    }
+
+    private void setLongClickListenerForImageView(ImageView imageView) {
+        imageView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                if(currentlySelectedImageView != null && view.getId() == currentlySelectedImageView.getId()){
+                    Log.d("iamgeView id ", "이미지뷰 아이디 : " + view.getId() + " 선택된 이미지뷰 아이디 : " + currentlySelectedImageView.getId());
+                    setDialog("이미지를 삭제 하시겠습니까?");
+                }
+                return false;
+            }
+        });
     }
 
     /* */
@@ -194,6 +281,9 @@ public class WritingFragment extends Fragment {
             imageView.setImageURI(Uri.parse(selectedImageUris.get(i)));
             imageView.setBackground(null);
 
+            ImageViewData imageViewDataForRegister = new ImageViewData();
+            imageViewDataForRegister.setIndex(i);
+            imageView.setTag(imageViewDataForRegister.getIndex());
         }
     }
 
@@ -267,67 +357,150 @@ public class WritingFragment extends Fragment {
 
 
             List<MultipartBody.Part> files = new ArrayList<>();
-            for (int i = 0; i < imageUrilist.size(); i++) {
-                String filePath = getFilePath(getActivity(), imageUrilist.get(i));
+            List<MultipartBody.Part> imageUrlFromServer = new ArrayList<>();
+            List<MultipartBody.Part> imageUrlFromServerJson = new ArrayList<>();
+//            imageUrlListForModify.clear();
+            if (isModify) {
 
-                if (filePath != null) {
-//                    RequestBody fileBody = RequestBody.create(MediaType.parse("image/*"), new File(filePath));
-                    RequestBody fileBody = RequestBody.create(MediaType.parse("image/*"), new File(filePath));
-                    String fileName = "photo" + i + ".jpg";
-                    MultipartBody.Part filePart = MultipartBody.Part.createFormData("images", fileName, fileBody);
-                    files.add(filePart);
-                }
-            }
-
-            Log.d("files 리스트 크기", "크기: " + files.size());
-            RequestBody titleRequestBody = RequestBody.create(MediaType.parse("text/plain"), titleText);
-            MultipartBody.Part titlePart = MultipartBody.Part.createFormData("postTitle", titleText, titleRequestBody);
-
-            RequestBody contentRequestBody = RequestBody.create(MediaType.parse("text/plain"), contentText);
-            MultipartBody.Part contentPart = MultipartBody.Part.createFormData("content", contentText, contentRequestBody);
-
-            Log.d("this is content", "this is content : " + contentRequestBody);
-
-
-            Log.d("토큰", "토큰" + token);
-            postApiService.addPost("Bearer " + token, files, titleRequestBody, contentRequestBody).enqueue(new Callback<PostRegisterResponseDTO>() {
-                @Override
-                public void onResponse(Call<PostRegisterResponseDTO> call, Response<PostRegisterResponseDTO> response) {
-                    if (response.isSuccessful()) {
-                        PostRegisterResponseDTO data = response.body();
-                        String imageUrl = data.getImages().toString();
-                        Log.d("이미지 url", "url" + imageUrl);
-                        Log.d("내용", "content" + data.getContent());
-                        Log.d("내용", "title" + data.getPostTitle());
-
-                        Log.d("post 등록 api 호출 성공 ", "성공" + response);
+                Log.d(" no change imageUrlListToDelete.size()","size : " + imageUrlListToDelete.size());
+                    if ( imageUrlListToDelete.size() == 0 ) { // 값 ok
+                        Log.d(" no change imageUrlListToDelete.size()","size : " + imageUrlListToDelete.size());
+                        imageUrlListForModify.addAll(imageUrlListOrigin);
                     } else {
-                        Log.e("post 등록 api 호출 실패 ", "실패1" + response);
-
-                        // 예외처리 및 오류 로그
-                        try {
-                            // 오류 응답에서 오류 메시지를 가져와서 로그에 기록
-                            String errorBody = response.errorBody().string();
-                            Log.e("오류 응답 본문", errorBody);
-                        } catch (IOException e) {
-                            // 오류 본문을 읽어오지 못하는 경우에 대한 예외처리
-                            Log.e("오류 응답 본문 읽기 실패", e.getMessage(), e);
+                        for (String url : imageUrlListOrigin) { // 값 ok
+                            if (!imageUrlListToDelete.contains(url)) {
+                                imageUrlListForModify.add(url); // 값 ok
+                            }
                         }
-                        Log.e("post 등록 api 호출 실패 ", "실패1" + response);
+                    }
+
+
+                /* 새로 추가된 사진 파일 리스트 생성 */
+                for (int i = 0; i < imageUriListForModify.size(); i++) {
+                    String addedFilePath = getFilePath(getActivity(), imageUriListForModify.get(i)); // 값 ok
+                    Log.d("this is new ur III to server ", " ur III : " + imageUriListForModify.get(i));
+                    if (addedFilePath != null) {
+                        RequestBody fileBody = RequestBody.create(MediaType.parse("image/*"), new File(addedFilePath));
+                        String fileName = "photo" + i + ".jpg";
+                        MultipartBody.Part filePart = MultipartBody.Part.createFormData("images", fileName, fileBody);
+                        files.add(filePart);
                     }
                 }
 
-                @Override
-                public void onFailure(Call<PostRegisterResponseDTO> call, Throwable t) {
-                    Log.e("post 등록 api 호출 실패 ", "실패2" + t.getMessage());
-                }
-            });
-
-            if (isModify) {
                 RequestBody modifyTitle = RequestBody.create(MediaType.parse("text/plain"), titleText);
                 RequestBody modifyContent = RequestBody.create(MediaType.parse("text/plain"), contentText);
 
 
+                /* 기존에 서버로 부터 받고, 수정 후에도 남아 있는 이미지 Url String 리스트 */
+                for (int i = 0; i < imageUrlListForModify.size(); i++) {
+                    String imageUrl = imageUrlListForModify.get(i);
+                    Log.d("imageUrl from server ", "url : " + imageUrl);
+                    RequestBody urlBody = RequestBody.create(MediaType.parse("text/plain"), imageUrl);
+                    String urlName = "url" + i;
+                    MultipartBody.Part filePart = MultipartBody.Part.createFormData("imageUrls", urlName, urlBody);
+                    imageUrlFromServer.add(filePart);
+                }
+
+                Gson gson = new Gson();
+                String serializedImageUrls = gson.toJson(imageUrlListForModify);
+                RequestBody imageUrlBody = RequestBody.create(serializedImageUrls, MediaType.parse("application/json"));
+
+
+                Log.d("token for modify post", "token : " + token);
+                Log.d("Data for modify post","list Json : " + serializedImageUrls );
+//                Log.d("Data for modify post","files : " + files.get(0).toString());
+
+
+                postApiService.updatePost2("Bearer " + token, postId, modifyTitle, modifyContent, files, imageUrlBody).enqueue(new Callback<PostInquiryResponseDTO>() {
+                    @Override
+                    public void onResponse(Call<PostInquiryResponseDTO> call, Response<PostInquiryResponseDTO> response) {
+                        if (response.isSuccessful()) {
+                            PostInquiryResponseDTO data = response.body();
+                            String imageUrl = data.getImages().toString();
+                            Log.d("이미지 url", "url" + imageUrl);
+                            Log.d("내용", "content" + data.getContent());
+                            Log.d("내용", "title" + data.getPostTitle());
+                            Log.d("post 수정 api 호출 성공 ", "성공" + response);
+                        } else {
+                            Log.e("post 수정 api 호출 실패1 ", "실패1" + response);
+
+                            // 예외처리 및 오류 로그
+                            try {
+                                // 오류 응답에서 오류 메시지를 가져와서 로그에 기록
+                                String errorBody = response.errorBody().string();
+                                Log.e("오류 응답 본문", errorBody);
+                            } catch (IOException e) {
+                                // 오류 본문을 읽어오지 못하는 경우에 대한 예외처리
+                                Log.e("오류 응답 본문 읽기 실패", e.getMessage(), e);
+                            }
+                            Log.e("post 수정 api 호출 실패 1", "실패1" + response);
+                        }
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<PostInquiryResponseDTO> call, Throwable t) {
+                        Log.e("post 수정 api 호출 실패2 ", "실패2" + t.getMessage());
+
+                    }
+                });
+
+            } else {
+                for (int i = 0; i < imageUrilist.size(); i++) {
+                    String filePath = getFilePath(getActivity(), imageUrilist.get(i));
+
+                    if (filePath != null) {
+//                    RequestBody fileBody = RequestBody.create(MediaType.parse("image/*"), new File(filePath));
+                        RequestBody fileBody = RequestBody.create(MediaType.parse("image/*"), new File(filePath));
+                        String fileName = "photo" + i + ".jpg";
+                        MultipartBody.Part filePart = MultipartBody.Part.createFormData("images", fileName, fileBody);
+                        files.add(filePart);
+                    }
+                }
+
+                Log.d("files 리스트 크기", "크기: " + files.size());
+                RequestBody titleRequestBody = RequestBody.create(MediaType.parse("text/plain"), titleText);
+                MultipartBody.Part titlePart = MultipartBody.Part.createFormData("postTitle", titleText, titleRequestBody);
+
+                RequestBody contentRequestBody = RequestBody.create(MediaType.parse("text/plain"), contentText);
+                MultipartBody.Part contentPart = MultipartBody.Part.createFormData("content", contentText, contentRequestBody);
+
+                Log.d("this is content", "this is content : " + contentRequestBody);
+
+
+                Log.d("토큰", "토큰" + token);
+                postApiService.addPost("Bearer " + token, files, titleRequestBody, contentRequestBody).enqueue(new Callback<PostRegisterResponseDTO>() {
+                    @Override
+                    public void onResponse(Call<PostRegisterResponseDTO> call, Response<PostRegisterResponseDTO> response) {
+                        if (response.isSuccessful()) {
+                            PostRegisterResponseDTO data = response.body();
+                            String imageUrl = data.getImages().toString();
+                            Log.d("이미지 url", "url" + imageUrl);
+                            Log.d("내용", "content" + data.getContent());
+                            Log.d("내용", "title" + data.getPostTitle());
+
+                            Log.d("post 등록 api 호출 성공 ", "성공" + response);
+                        } else {
+                            Log.e("post 등록 api 호출 실패 ", "실패1" + response);
+
+                            // 예외처리 및 오류 로그
+                            try {
+                                // 오류 응답에서 오류 메시지를 가져와서 로그에 기록
+                                String errorBody = response.errorBody().string();
+                                Log.e("오류 응답 본문", errorBody);
+                            } catch (IOException e) {
+                                // 오류 본문을 읽어오지 못하는 경우에 대한 예외처리
+                                Log.e("오류 응답 본문 읽기 실패", e.getMessage(), e);
+                            }
+                            Log.e("post 등록 api 호출 실패 ", "실패1" + response);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<PostRegisterResponseDTO> call, Throwable t) {
+                        Log.e("post 등록 api 호출 실패 ", "실패2" + t.getMessage());
+                    }
+                });
             }
 
 
@@ -348,17 +521,6 @@ public class WritingFragment extends Fragment {
         return filePath;
     }
 
-    private void sendPostRequest(PostRegisterRequestDTO postRegisterRequestDTO) {
-//        Call<Void> call = RetrofitClient.getRetrofit("").create(PostApiService.class).addPost(postRegisterRequestDTO);
-//        call.enqueue(new Callback<Void>() {
-//            @Override
-//            public void onResponse(Call<Void> call, Response<Void> response) {}
-//
-//            @Override
-//            public void onFailure(Call<Void> call, Throwable t) {}
-//        });
-    }
-
     private void showDialog(DialogType type) {
         int layoutId = (type == DialogType.TITLE) ? R.layout.request_input_title_dialog : R.layout.request_input_content_dialog;
 
@@ -375,58 +537,19 @@ public class WritingFragment extends Fragment {
     }
 
 
-//    private void moveToCommunityFragment() {
-//        Fragment targetFragment;
-//
-//        if ("GeneralPostFragment".equals(previousFragment)) {
-//            targetFragment = new GeneralPostFragment();
-//        } else if ("PopuralPostFragment".equals(previousFragment)) {
-//            targetFragment = new PopuralPostFragment();
-//        } else {
-//            targetFragment = new GeneralPostFragment(); // 기본값
-//        }
-//
-//        getActivity().getSupportFragmentManager().beginTransaction()
-//                .replace(R.id.frame, targetFragment)
-//                .commit();
-//    }
-
-
-//    private void selectImagesFromGallery() {
-//        Intent intent = new Intent();
-//        intent.setType("image/*");
-//        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-//        intent.setAction(Intent.ACTION_GET_CONTENT);
-//        startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY_REQUEST_CODE);
-//    }
-
     private void selectImageForView(ImageView imageView) {
-        // Check if permission is already granted
-//        if (checkPermission()) {
-//            // If permission is already granted, allow user to select an image
-//            currentlySelectedImageView = imageView;
-//            Intent intent = new Intent();
-//            intent.setType("image/*");
-//            intent.setAction(Intent.ACTION_GET_CONTENT);
-//            startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY_REQUEST_CODE);
-//        } else {
-//            // If permission is not granted, request for permission
-//            requestPermission();
-//        }
+
         currentlySelectedImageView = imageView;
 
         if (PermissionUtils.checkPermission(getActivity())) {
             // 권한이 이미 허용된 상태: 바로 관련 작업 수행
-//            currentlySelectedImageView = imageView;
             Intent intent = new Intent();
             intent.setType("image/*");
             intent.setAction(Intent.ACTION_GET_CONTENT);
             startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY_REQUEST_CODE);
         } else {
             // 권한이 허용되지 않은 상태: 권한 요청
-//            PermissionUtils.requestPermission(getActivity(), PERMISSION_REQUEST_CODE);
             requestGalleryPermission();
-//            requestPermission();
         }
     }
 
@@ -449,54 +572,56 @@ public class WritingFragment extends Fragment {
                 /* Uri를 담아줍니다.*/
                 selectedImageUri = data.getData();
             }
-            /* 이미지뷰가 null이 아니고, uri도 null이 아니라면 Uri를 이미지뷰에 그려줍니다. */
-            if (currentlySelectedImageView != null && selectedImageUri != null) {
-                currentlySelectedImageView.setImageURI(selectedImageUri);
-                currentlySelectedImageView.setBackground(null);
-
-                /* 이미지뷰의 태그가 0-4까지, 해당 태그 위치의 값과 동일한 리스트상의 인덱스에 Uri를 넣어줍니다. */
-                int tag = Integer.parseInt((String) currentlySelectedImageView.getTag());
-                if (tag < selectedImageUris.size()) {
-                    selectedImageUris.set(tag, selectedImageUri.toString());
-                    imageUrilist.set(tag, selectedImageUri);
-                } else {
-                    selectedImageUris.add(selectedImageUri.toString());
-                    imageUrilist.add(selectedImageUri);
-                }
 
 
-            }
 
             /* 수정 요청을 위한 iamgeUri를 가져옵니다.*/
             if (isModify) {
                 if (currentlySelectedImageView != null && selectedImageUri != null) {
                     currentlySelectedImageView.setImageURI(selectedImageUri);
                     currentlySelectedImageView.setBackground(null);
-                    int tag = Integer.parseInt((String) currentlySelectedImageView.getTag());
-                    if (tag < selectedImageUris.size()) {
-                        selectedImageUris.set(tag, selectedImageUri.toString());
-                        imageUriListForModify.set(tag, selectedImageUri);
-                        Log.d("imageUri for modify 1 ", "imageUri for modify 1 : " + selectedImageUri);
+                    if (currentlySelectedImageView.getTag() instanceof ImageViewData) {
+                        imageViewDataForModify = (ImageViewData) currentlySelectedImageView.getTag();
+                        Log.d("imageView Data in activity:","data : " + imageViewDataForModify.getUrl());
+                        if(imageViewDataForModify != null ) { //이미지뷰의 태그 데이터의 url이 널이 아니면, delete에 넣고
+                            imageUrlListToDelete.add(imageViewDataForModify.getUrl());
+                            Log.d("DEBUG_TAG", "imageViewDataForModify is properly initialized.");
+                            Log.d("DEBUG_TAG", "imageView id : " + currentlySelectedImageView.getId());
+                            Log.d("DEBUG_TAG", "imageView id : " + ((ImageViewData) currentlySelectedImageView.getTag()).getUrl());
+
+
+                            Log.d("this deleted url","url : " + imageViewDataForModify.getUrl());
+                        }
+                    }
+//                    if (currentlySelectedImageView.getTag() instanceof ImageViewData) {
+//                        int index = imageViewDataForModify.getIndex();
+//                        if (index < imageUriListForModify.size()) {
+//                            imageUriListForModify.set(index, selectedImageUri);
+//                        } else {
+//                            imageUriListForModify.add(selectedImageUri);
+//                        }
+//                    }
+                    imageUriListForModify.add(selectedImageUri);
+                    Log.d("this is new ur III","ur II : " + selectedImageUri);
+
+                }
+            } else {
+                /* 이미지뷰가 null이 아니고, uri도 null이 아니라면 Uri를 이미지뷰에 그려줍니다. */
+                if (currentlySelectedImageView != null && selectedImageUri != null) {
+                    currentlySelectedImageView.setImageURI(selectedImageUri);
+                    currentlySelectedImageView.setBackground(null);
+                    /* 이미지뷰의 태그가 0-4까지, 해당 태그 위치의 값과 동일한 리스트상의 인덱스에 Uri를 넣어줍니다. */
+                    int tagg = Integer.parseInt((String) currentlySelectedImageView.getTag());
+//                    int tagg = imageViewDataForRegister.getIndex();
+                    if (tagg < selectedImageUris.size()) {
+                        selectedImageUris.set(tagg, selectedImageUri.toString());
+                        imageUrilist.set(tagg, selectedImageUri);
                     } else {
                         selectedImageUris.add(selectedImageUri.toString());
-                        imageUriListForModify.add(selectedImageUri);
-                        Log.d("imageUri for modify 2 ", "imageUri for modify 2 : " + selectedImageUri);
+                        imageUrilist.add(selectedImageUri);
                     }
                 }
             }
-
-        }
-    }
-
-    private void updateSelectedImages(List<Uri> imageUris) {
-        selectedImageUris.clear();
-
-        int[] imageViews = {R.id.main_image1, R.id.main_image2, R.id.main_image3, R.id.main_image4, R.id.main_image5};
-        for (int i = 0; i < Math.min(imageUris.size(), MAX_IMAGE_COUNT); i++) {
-            selectedImageUris.add(imageUris.get(i).toString());
-            ImageView imageView = getView().findViewById(imageViews[i]);
-            imageView.setImageURI(imageUris.get(i));
-            imageView.setBackground(null);
         }
     }
 
@@ -504,16 +629,6 @@ public class WritingFragment extends Fragment {
         if (getFragmentManager() != null) {
             getFragmentManager().popBackStack();
         }
-    }
-
-    //갤러리 접근 권한
-    private boolean checkPermission() {
-        int result = ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.READ_EXTERNAL_STORAGE);
-        return result == PackageManager.PERMISSION_GRANTED;
-    }
-
-    private void requestPermission() {
-        ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
     }
 
     @Override
@@ -534,5 +649,34 @@ public class WritingFragment extends Fragment {
                 }
                 break;
         }
+    }
+
+    public void setDialog(String message) {
+        dialog = new Dialog(getContext());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setContentView(R.layout.delete_dialog);
+
+        Button yesDelete = dialog.findViewById(R.id.yes);
+        Button noDelete = dialog.findViewById(R.id.no);
+        TextView msg = dialog.findViewById(R.id.dialog);
+        msg.setText(message);
+
+        yesDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                dialog.dismiss();
+            }
+        });
+
+        noDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 }

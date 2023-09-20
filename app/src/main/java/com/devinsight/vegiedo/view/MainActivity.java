@@ -172,7 +172,9 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 } else if (item.getItemId() == R.id.nav_home) {
                     toolBar.setVisibility(View.VISIBLE);
-                    transaction.replace(R.id.frame, storeDetailPageFragment,"homeMainFragment").addToBackStack("homeMainFragment").commit();
+//                    transaction.replace(R.id.frame, storeDetailPageFragment,"homeMainFragment").addToBackStack("homeMainFragment").commit();
+                                        transaction.replace(R.id.frame, homeMainFragment,"homeMainFragment").addToBackStack("homeMainFragment").commit();
+
 
                     return true;
                 } else if (item.getItemId() == R.id.nav_map) {
@@ -266,7 +268,7 @@ public class MainActivity extends AppCompatActivity {
         btn_filter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+//                inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.frame, searchFilterFragment,"searchFilterFragment").addToBackStack("searchFilterFragment").commit();
             }

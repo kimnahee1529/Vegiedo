@@ -3,14 +3,14 @@ package com.devinsight.vegiedo.utill;
 import com.devinsight.vegiedo.R;
 
 public enum VeganTag {
-    FRUITTARIAN(R.id.tag_fruittarian, "프루테리언",0),
-    VEGAN(R.id.tag_vegan, "비건",0),
+    FRUITTARIAN(R.id.tag_fruittarian, "식물성 베이커리",0),
+    VEGAN(R.id.tag_vegan, "완전 비건",0),
     LACTO(R.id.tag_lacto,"락토",0),
-    OVO(R.id.tag_ovo,"오보",0),
+    OVO(R.id.tag_ovo,"대체육",0),
     LACTO_OVO(R.id.tag_lacto_ovo,"락토 오보",0),
-    PESCO(R.id.tag_pesca,"페스코",0),
+    PESCO(R.id.tag_pesca,"페스코테리언",0),
     POLLO(R.id.tag_pollo,"폴로",0),
-    KETO(R.id.tag_keto,"키토",0),
+    KETO(R.id.tag_keto,"키토식단",0),
     GLUTEN_FREE(R.id.tag_gluten,"글루텐프리",0);
 
 

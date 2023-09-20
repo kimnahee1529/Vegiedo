@@ -34,8 +34,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.bumptech.glide.Glide;
 import com.devinsight.vegiedo.R;
 import com.devinsight.vegiedo.view.PermissionUtils;
-import com.devinsight.vegiedo.view.login.LoginMainActivity;
-import com.devinsight.vegiedo.view.login.NickNameActivity;
+import com.devinsight.vegiedo.view.home.login.LoginMainActivity;
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity;
 
 import org.w3c.dom.Text;
@@ -182,6 +181,7 @@ public class MyPageFragment extends Fragment {
             public void onClick(View v) {
                 // 로그아웃 로직 (예: 사용자 정보, 세션, 토큰 삭제 등)
                 logoutUser();
+
 
                 // LoginMainActivity로 이동
                 Activity activity = getActivity();

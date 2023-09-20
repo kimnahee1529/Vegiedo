@@ -1,4 +1,4 @@
-package com.devinsight.vegiedo.view.login;
+package com.devinsight.vegiedo.view.home.login;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,7 +16,6 @@ import android.widget.ImageView;
 
 import com.devinsight.vegiedo.ConstLoginTokenType;
 import com.devinsight.vegiedo.R;
-import com.devinsight.vegiedo.data.request.UserRegisterRequestDTO;
 import com.devinsight.vegiedo.utill.RetrofitClient;
 import com.devinsight.vegiedo.utill.UserInfoTag;
 import com.devinsight.vegiedo.repository.pref.AuthPrefRepository;
@@ -38,6 +37,7 @@ import com.kakao.sdk.user.UserApiClient;
 import com.kakao.sdk.user.model.User;
 
 
+import java.io.IOException;
 import java.security.MessageDigest;
 
 import kotlin.Unit;
@@ -274,10 +274,21 @@ public class LoginMainActivity extends AppCompatActivity {
                 call.enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
-                        String userKaKAoToken = response.headers().get("Authorization");
-                        authPrefRepository.saveAuthToken("KAKAO",userKaKAoToken);
-                        Log.e("KAKAO"," 서버토큰 " + userKaKAoToken);
-                        Log.e("KAKAO", "연동성공" + kakaoAuth);
+                        if(response.isSuccessful()) {
+                            String userKaKAoToken = response.headers().get("Authorization");
+                            authPrefRepository.saveAuthToken("KAKAO",userKaKAoToken);
+                            Log.e("KAKAO"," 서버토큰 " + userKaKAoToken);
+                            Log.e("KAKAO", "연동성공" + kakaoAuth);
+                        }else {
+                            // API 응답이 오류 상태일 때
+                            Log.e("일반 포스트 요청 실패1 ", "Error Code: " + response.code() + ", Message: " + response.message());
+                            try {
+                                Log.e("일반 포스트 요청 실패1", "Error Body: " + response.errorBody().string());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
                     }
 
                     @Override

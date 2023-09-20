@@ -39,7 +39,7 @@ public class PostCommentViewModel extends ViewModel {
 
     public void getCommentContent(String input){
         CommentRegisterRequestDTO commentRegisterRequestDTO = new CommentRegisterRequestDTO(input);
-        commentApiService.addComment(postId, token, commentRegisterRequestDTO).enqueue(new Callback<Void>() {
+        commentApiService.addComment(postId, "Bearer " + token, commentRegisterRequestDTO).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if(response.isSuccessful()){
@@ -54,7 +54,7 @@ public class PostCommentViewModel extends ViewModel {
             }
         });
 
-        commentApiService.getCommentList(token, postId).enqueue(new Callback<CommentInquiryResponseDTO>() {
+        commentApiService.getCommentList("Bearer " + token, postId).enqueue(new Callback<CommentInquiryResponseDTO>() {
             @Override
             public void onResponse(Call<CommentInquiryResponseDTO> call, Response<CommentInquiryResponseDTO> response) {
                 if(response.isSuccessful()){

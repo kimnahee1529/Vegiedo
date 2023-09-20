@@ -55,16 +55,30 @@ public interface PostApiService {
     Call<PostInquiryResponseDTO> getPost(
             @Header("Authorization") String token,
             @Path("postId") Long postId
-
     );
 
     //게시글 수정
+    @Multipart
     @PATCH("/posts/{postId}")
-    Call<Void> updatePost(
+    Call<PostInquiryResponseDTO> updatePost(
+            @Header("Authorization") String token,
             @Path("postId") Long postId,
-            @Part List<MultipartBody.Part> images,
             @Part("postTitle") RequestBody postTitle,
-            @Part("postContent") RequestBody postContent
+            @Part("postContent") RequestBody postContent,
+            @Part List<MultipartBody.Part> images,
+            @Part("imageUrlsJson") String imageUrls
+    );
+
+    @Multipart
+    @PATCH("/posts/{postId}")
+    Call<PostInquiryResponseDTO> updatePost2(
+            @Header("Authorization") String token,
+            @Path("postId") Long postId,
+            @Part("postTitle") RequestBody postTitle,
+            @Part("postContent") RequestBody postContent,
+            @Part List<MultipartBody.Part> images,
+            @Part("imageUrlsJson") RequestBody imageUrls
+
     );
 
     //게시글 삭제

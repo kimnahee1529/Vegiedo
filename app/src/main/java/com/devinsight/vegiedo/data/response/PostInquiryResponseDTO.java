@@ -24,6 +24,10 @@ public class PostInquiryResponseDTO {
     @SerializedName("imageUrls")private List<String> images;
     @Expose
     @SerializedName("commentList")private List<CommentListData> commentList;
+    @Expose
+    @SerializedName("like")private boolean like;
+    @Expose
+    @SerializedName("report")private boolean report;
 
     public Long getPostId() {
         return postId;
@@ -97,7 +101,23 @@ public class PostInquiryResponseDTO {
         this.commentList = commentList;
     }
 
-    public PostInquiryResponseDTO(Long postId, String postTitle, String content, String userName, String userImageUrl, int likeReceiveCnt, String createdAt, List<String> images, List<CommentListData> commentList) {
+    public boolean isLike() {
+        return like;
+    }
+
+    public void setLike(boolean like) {
+        this.like = like;
+    }
+
+    public boolean isReport() {
+        return report;
+    }
+
+    public void setReport(boolean report) {
+        this.report = report;
+    }
+
+    public PostInquiryResponseDTO(Long postId, String postTitle, String content, String userName, String userImageUrl, int likeReceiveCnt, String createdAt, List<String> images, List<CommentListData> commentList, boolean like, boolean report) {
         this.postId = postId;
         this.postTitle = postTitle;
         this.content = content;
@@ -107,5 +127,7 @@ public class PostInquiryResponseDTO {
         this.createdAt = createdAt;
         this.images = images;
         this.commentList = commentList;
+        this.like = like;
+        this.report = report;
     }
 }
