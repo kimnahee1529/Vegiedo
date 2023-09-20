@@ -33,8 +33,7 @@ public class StampBookFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_stamp_book, container, false);
-        viewModel = new ViewModelProvider(this).get(ActivityViewModel.class);
-//        viewModel = new ViewModelProvider(requireActivity()).get(ActivityViewModel.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(ActivityViewModel.class);
         backwardBtn = view.findViewById(R.id.backward_btn);
         callStampBookAPI();
 

@@ -65,7 +65,6 @@ public class StoreBlogReviewFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-//        viewModel = new ViewModelProvider(this).get(ActivityViewModel.class);
         recyclerView = view.findViewById(R.id.store_review_blog_recycler_view);
         setupRecyclerView();
 
