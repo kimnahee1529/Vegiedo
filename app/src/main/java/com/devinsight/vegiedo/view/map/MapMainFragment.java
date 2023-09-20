@@ -2,8 +2,6 @@
 package com.devinsight.vegiedo.view.map;
 
 import android.Manifest;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -21,22 +19,19 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.devinsight.vegiedo.R;
-import com.devinsight.vegiedo.data.response.MapInquiryResponseDTO;
 import com.devinsight.vegiedo.data.response.MapStoreListData;
+import com.devinsight.vegiedo.data.response.StoreInquiryResponseDTO;
 import com.devinsight.vegiedo.data.ui.map.MapStoreCardUiData;
 import com.devinsight.vegiedo.service.api.MapApiService;
-import com.devinsight.vegiedo.service.api.StoreApiService;
 import com.devinsight.vegiedo.utill.RetrofitClient;
 import com.devinsight.vegiedo.view.StoreListMainFragment;
 import com.devinsight.vegiedo.view.search.ActivityViewModel;
-import com.devinsight.vegiedo.view.search.SearchMainFragment;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -44,7 +39,6 @@ import com.naver.maps.geometry.LatLng;
 import com.naver.maps.geometry.LatLngBounds;
 import com.naver.maps.map.CameraAnimation;
 import com.naver.maps.map.CameraUpdate;
-import com.naver.maps.map.LocationTrackingMode;
 import com.naver.maps.map.MapView;
 import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.OnMapReadyCallback;
@@ -53,12 +47,7 @@ import com.naver.maps.map.overlay.OverlayImage;
 import com.naver.maps.map.util.FusedLocationSource;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class MapMainFragment extends Fragment implements OnMapReadyCallback {
 
@@ -92,6 +81,7 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
         setupFloatingActionButton(view);
         setupRecyclerView(view);
         callMapAPI();
+
         return view;
     }
 
@@ -104,7 +94,7 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
 
     private void setupViewModel() {
         // You mentioned to leave the viewModel part out, so this is just a placeholder.
-        viewModel = new ViewModelProvider(this).get(ActivityViewModel.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(ActivityViewModel.class);
     }
 
     private void setupLocationSource() {
@@ -130,6 +120,25 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
         recyclerView.setAdapter(cardUiAdapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
+
+        //지도 어댑터에서의 찜버튼 리스너
+        //찜시킬 때
+        cardUiAdapter.setLikeBtnListener(new MapStoreCardUiAdapter.LikeBtnListener() {
+            @Override
+            public void onLikeButton(Long storeId) {
+                Log.d("찜버튼 시킬 때", "onLikeButton, storeId:"+storeId);
+                viewModel.StoreActiveLikeData(storeId);
+            }
+        });
+
+        //찜취소 시킬 때
+        cardUiAdapter.setCancleLikeBtnListener(new MapStoreCardUiAdapter.CancleLikeBtnListener() {
+            @Override
+            public void onCancleLiketButton(Long storeId) {
+                Log.d("찜버튼 취소 시킬 때", "onCancleLiketButton, storeId:"+storeId);
+                viewModel.StoreInactiveLikeData(storeId);
+            }
+        });
     }
 
     private void onCardClick(MapStoreCardUiData item, int position) {
@@ -199,6 +208,7 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
         }
 
         return new MapStoreCardUiData(
+                listData.getStoreId(),
                 listData.getImages(),          // storeImage
                 tag1,                          // storeTag1
                 tag2,                          // storeTag2

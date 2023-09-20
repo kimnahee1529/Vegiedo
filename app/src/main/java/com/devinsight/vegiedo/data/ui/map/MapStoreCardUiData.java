@@ -3,6 +3,7 @@ package com.devinsight.vegiedo.data.ui.map;
 import com.devinsight.vegiedo.data.ui.home.HomeReviewUiData;
 
 public class MapStoreCardUiData {
+    private Long storeId;
     private String storeImage;
     private String storeTag1;
     private String storeTag2;
@@ -18,7 +19,8 @@ public class MapStoreCardUiData {
     public MapStoreCardUiData() {
 
     }
-    public MapStoreCardUiData(String storeImage, String storeTag1, String storeTag2, int reviewer, int starRating, int distance, String storeName, String address, boolean like, float latitude, float longitude) {
+    public MapStoreCardUiData(Long storeId, String storeImage, String storeTag1, String storeTag2, int reviewer, int starRating, int distance, String storeName, String address, boolean like, float latitude, float longitude) {
+        this.storeId = storeId;
         this.storeImage = storeImage;
         this.storeTag1 = storeTag1;
         this.storeTag2 = storeTag2;
@@ -32,8 +34,9 @@ public class MapStoreCardUiData {
         this.longitude = longitude;
     }
 
-    public void setData(String storeImage, String storeTag1, String storeTag2, int reviewer, int starRating,
+    public void setData(Long storeId, String storeImage, String storeTag1, String storeTag2, int reviewer, int starRating,
                         int distance, String storeName, String address, boolean like, float latitude, float longitude) {
+        this.storeId = storeId;
         this.storeImage = storeImage;
         this.storeTag1 = storeTag1;
         this.storeTag2 = storeTag2;
@@ -45,6 +48,14 @@ public class MapStoreCardUiData {
         this.like = like;
         this.latitude = latitude;
         this.longitude = longitude;
+    }
+
+    public Long getStoreId() {
+        return storeId;
+    }
+
+    public void setStoreId(Long storeId) {
+        this.storeId = storeId;
     }
 
     public String getStoreImage() {

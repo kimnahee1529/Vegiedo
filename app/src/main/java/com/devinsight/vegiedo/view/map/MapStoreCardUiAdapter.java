@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.devinsight.vegiedo.R;
 import com.devinsight.vegiedo.data.ui.map.MapStoreCardUiData;
+import com.devinsight.vegiedo.view.store.UserReviewItemAdapter;
 
 import java.util.ArrayList;
 
@@ -27,11 +28,29 @@ public class MapStoreCardUiAdapter extends RecyclerView.Adapter<MapStoreCardUiAd
     private ArrayList<MapStoreCardUiData> cardDataList;
     Context context;
     protected mapCardItemListner mapCardItemListner;
+    private LikeBtnListener likeBtnListener;
+    private CancleLikeBtnListener cancleLikeBtnListener;
 
     public MapStoreCardUiAdapter(Context context, ArrayList<MapStoreCardUiData> cardList, mapCardItemListner itemListner) {
         this.cardDataList = cardList;
         this.context = context;
         this.mapCardItemListner = itemListner;
+    }
+
+    public interface LikeBtnListener {
+        void onLikeButton(Long storeId);
+    }
+    public interface CancleLikeBtnListener {
+        void onCancleLiketButton(Long storeId);
+    }
+
+    public void setLikeBtnListener(LikeBtnListener likeBtnListener) {
+        this.likeBtnListener = likeBtnListener;
+        Log.d("찜버튼리스너", "setLikeBtnListener");
+    }
+    public void setCancleLikeBtnListener(CancleLikeBtnListener cancleLikeBtnListener) {
+        this.cancleLikeBtnListener = cancleLikeBtnListener;
+        Log.d("찜버튼취소리스너", "setCancleLikeBtnListener");
     }
 
     @NonNull
@@ -84,9 +103,13 @@ public class MapStoreCardUiAdapter extends RecyclerView.Adapter<MapStoreCardUiAd
                 @Override
                 public void onClick(View view) {
                     if(cardData.isLike()){
+                        Log.d("찜버튼되어있음", String.valueOf(cardData.isLike())+", "+cardData.getStoreId());
+                        cancleLikeBtnListener.onCancleLiketButton(cardData.getStoreId());
                         cardData.setLike(false);
                         notifyDataSetChanged();
                     }else{
+                        Log.d("찜버튼취소되어있었음", String.valueOf(cardData.isLike())+", "+cardData.getStoreId());
+                        likeBtnListener.onLikeButton(cardData.getStoreId());
                         cardData.setLike(true);
                         notifyDataSetChanged();
                     }
@@ -102,6 +125,9 @@ public class MapStoreCardUiAdapter extends RecyclerView.Adapter<MapStoreCardUiAd
                     .into(storeImage);
 
             storeName.setText(cardData.getStoreName());
+//            if(storeTag1.)
+
+
             storeTag1.setText(String.valueOf(cardData.getStoreTag1()));
             storeTag2.setText(String.valueOf(cardData.getStoreTag2()));
             address.setText(cardData.getAddress());
@@ -113,6 +139,17 @@ public class MapStoreCardUiAdapter extends RecyclerView.Adapter<MapStoreCardUiAd
                 like.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.ic_heart_selected));
             } else {
                 like.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.ic_heart_default));
+            }
+
+            if (storeTag1.getText().toString().trim().isEmpty()) {
+                storeTag1.setVisibility(View.GONE);
+            } else {
+                storeTag1.setVisibility(View.VISIBLE);
+            }
+            if (storeTag2.getText().toString().trim().isEmpty()) {
+                storeTag2.setVisibility(View.GONE);
+            } else {
+                storeTag2.setVisibility(View.VISIBLE);
             }
         }
 

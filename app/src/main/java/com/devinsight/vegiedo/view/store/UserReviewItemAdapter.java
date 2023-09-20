@@ -44,28 +44,51 @@ public class UserReviewItemAdapter extends RecyclerView.Adapter<UserReviewItemAd
     private static Long currentStoreId;
     private int currentMaxItems = 2; // 처음에는 2개만 표시
     private int itemsPerPage = 7; // "더보기" 버튼을 클릭할 때마다 추가되는 아이템 수
-    private MoreItemsListener listener;
+    private MoreItemsListener moreItemsListener;
+    private ReviewDeleteListener reviewDeleteListener;
+    private ReportCompleteListener ReportCompleteListener;
 
-    // "더보기" 버튼 숨기기와 관련된 이벤트를 처리할 콜백을 명시
+    // "더보기" 버튼 숨기기와 관련된 이벤트를 처리할 콜백
     public interface MoreItemsListener {
         void onHideMoreButton();
     }
 
+    // 리뷰 삭제와 관련된 이벤트를 처리할 콜백
+    public interface ReviewDeleteListener {
+        void ReviewDelete(Long storeId, Long reviewId);
+    }
+
+    // 신고 완료 버튼과 관련된 이벤트를 처리할 콜백
+    public interface ReportCompleteListener{
+        void ReportListener(Long storeId, Long reviewId, ReviewReportRequestDTO requestDTO);
+    }
 
     // 더보기 버튼 기능을 위해 맨처음 실행되는 코드. 어댑터 내에서 해당 인터페이스를 구현한 리스너를 설정할 수 있는 메서드를 제공
     // StoreReviewFragment에 setMoreItemsListener 콜백 설정 메서드
-    public void setMoreItemsListener(MoreItemsListener listener) {
-        this.listener = listener;
-        Log.d("더보기", "setMoreItemsListener");
+    public void setMoreItemsListener(MoreItemsListener moreItemsListener) {
+        this.moreItemsListener = moreItemsListener;
+        Log.d("더보기리스너", "setMoreItemsListener");
     }
+
+    public void setDeleteListener(ReviewDeleteListener reviewDeleteListener) {
+        this.reviewDeleteListener = reviewDeleteListener;
+        Log.d("삭제리스너", "reviewDeleteListener");
+    }
+
+    public void setReportListener(ReportCompleteListener ReportCompleteListener) {
+        this.ReportCompleteListener = ReportCompleteListener;
+        Log.d("삭제리스너", "reviewDeleteListener");
+    }
+
+
     public void showMoreItems() {
         if (currentMaxItems < userReviewItemList.size()) {
             currentMaxItems += itemsPerPage;
             notifyDataSetChanged();
         }
-        if (currentMaxItems >= userReviewItemList.size() && listener != null) {
+        if (currentMaxItems >= userReviewItemList.size() && moreItemsListener != null) {
             Log.d("더보기", "더보기 버튼 다 누름");
-            listener.onHideMoreButton();
+            moreItemsListener.onHideMoreButton();
         }
     }
     @Override
@@ -322,7 +345,8 @@ public class UserReviewItemAdapter extends RecyclerView.Adapter<UserReviewItemAd
             });
 
             storeReview_delete_text.setOnClickListener(v -> {
-                Log.d("LOG삭제", "삭제 버튼 눌림");
+//                reviewDeleteListener.ReviewDelete(storeId, reviewId);
+//                Log.d("LOG삭제", "삭제 버튼 눌림");
                 showDialog(DialogType.DELETE, itemView.getContext(), currentStoreId, reviewId);
             });
             storeReview_report_btn.setOnClickListener(v -> {
@@ -399,8 +423,7 @@ public class UserReviewItemAdapter extends RecyclerView.Adapter<UserReviewItemAd
         yesBtn.setOnClickListener(v -> {
             Toast.makeText(context, "예 버튼입니다.", Toast.LENGTH_SHORT).show();
             Log.d("LOG리뷰삭제", "예 " + storeId);
-            // viewModel이 여기서 접근 가능하다면 이렇게 호출할 수 있습니다.
-            viewModel.ReviewDeleteData(storeId, reviewId);
+            reviewDeleteListener.ReviewDelete(storeId, reviewId);
             notifyDataSetChanged();
             dialog.dismiss();
         });
@@ -497,16 +520,18 @@ public class UserReviewItemAdapter extends RecyclerView.Adapter<UserReviewItemAd
         reporting_btn.setOnClickListener(v -> {
 
             ReviewReportRequestDTO requestDTO = new ReviewReportRequestDTO();
-            Log.d("ReviewReportData", "reportType:" + reportType + ", opinion:" + opinion);
             requestDTO.setReportType(reportType.get());
             requestDTO.setOpinion(opinion.get());
-            viewModel.ReviewReportData(storeId, reviewId, requestDTO);
+            Log.d("ReviewReportData", "storeId:"+storeId+", reviewId:"+reviewId+", reportType:" + reportType + ", opinion:" + opinion +", DTO:"+requestDTO);
+//            viewModel.ReviewReportData(storeId, reviewId, requestDTO);
+            ReportCompleteListener.ReportListener(storeId, reviewId, requestDTO);
             dialog.dismiss(); // 다이얼로그 닫기
         });
 
         closeIcon.setOnClickListener(v -> dialog.dismiss());
 
     }
+
 
 
 
