@@ -25,6 +25,7 @@ import com.devinsight.vegiedo.data.response.StoreListData;
 import com.devinsight.vegiedo.view.search.ActivityViewModel;
 import com.devinsight.vegiedo.view.search.StoreDetailListAdapter;
 import com.devinsight.vegiedo.view.store.StoreDetailPageDDFragment;
+import com.devinsight.vegiedo.view.store.StoreDetailPageFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -141,8 +142,8 @@ public class StoreListMainFragment extends Fragment implements StoreDetailListAd
     @Override
     public void onSearchClick(View view, StoreListData searchData, int position) {
 
-        StoreDetailPageDDFragment detailFragment = new StoreDetailPageDDFragment();
-//        StoreDetailPageFragment detailFragment = new StoreDetailPageFragment();
+//        StoreDetailPageDDFragment detailFragment = new StoreDetailPageDDFragment();
+        StoreDetailPageFragment detailFragment = new StoreDetailPageFragment();
 
         Bundle bundle = new Bundle();
         bundle.putString("storeImage", storeList.get(position).getImages());

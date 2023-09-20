@@ -22,6 +22,7 @@ import com.devinsight.vegiedo.data.response.ReviewListInquiryResponseDTO;
 import com.devinsight.vegiedo.data.response.StampBookInquiryResponseDTO;
 import com.devinsight.vegiedo.data.response.StoreInquiryResponseDTO;
 import com.devinsight.vegiedo.data.response.StoreListData;
+import com.devinsight.vegiedo.data.response.StoreListInquiryResponseDTO;
 import com.devinsight.vegiedo.data.ui.login.TagStatus;
 import com.devinsight.vegiedo.data.ui.map.MapStoreCardUiData;
 import com.devinsight.vegiedo.data.ui.search.SearchStorSummaryeUiData;
@@ -257,24 +258,36 @@ public class ActivityViewModel extends ViewModel {
         if (distance == 0) {
             distance = initialDistance;
         }
-        Log.d("여기까지 됨", "194번줄");
-        Log.d("쿼리 재료","tag : " + tags + "latitude : " + latitude + "longitude : " + longitude );
-        Log.e("store List 요청 동작", "store List 요청 동작");
 
-        storeApiService.getStoreLists(tags, latitude, longitude, distance*1000, keyword, 10, 0, "Bearer " +  token).enqueue(new Callback<List<StoreListData>>() {
+        Log.d(" 가게 호출 쿼리","값" + tags + "위도 : " +latitude + "경도 : " +longitude + "거리 : " + distance  + token);
+
+        Log.d("여기까지 됨", "194번줄");
+
+        storeApiService.getStoreLists(tags, latitude, longitude, distance*1000,10, 0, "Bearer " + token).enqueue(new Callback<List<StoreListData>>() {
             @Override
             public void onResponse(Call<List<StoreListData>> call, Response<List<StoreListData>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    Log.d(" 가게 호출 쿼리","값" + tags + latitude + longitude + "거리 : " + distance + keyword + token);
+                    Log.d(" 가게 호출 쿼리","값" + tags + "위도 : " +latitude + "경도 : " +longitude + "거리 : " + distance*1000 + keyword + token);
                     List<StoreListData> data = response.body();
+                    Log.e("store List 요청 성공","this is store List : " + response.body().toString());
                     if ( data != null ) {
-                        Log.e("store List 요청 성공","this is store List : ");
+                        for(int i = 0 ; i < data.size() ; i ++ ) {
+                            Log.e("store List 요청 성공","this is store List : " + response.body().get(i).toString());
+                        }
                         storeListLiveData.setValue(data);
                         searchSummList();
                     } else {
                         Log.d(" 해당하는 가게 리스트가 없습니다","해당하는 가게 리스트가 없습니다" + data.size());
                     }
 
+                }else {
+                    // API 응답이 오류 상태일 때
+                    Log.e("store List 요청 실패 1", "Error Code: " + response.code() + ", Message: " + response.message());
+                    try {
+                        Log.e("store List 요청 실패 1", "Error Body: " + response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 
@@ -284,6 +297,8 @@ public class ActivityViewModel extends ViewModel {
             }
 
         });
+
+
 
         Log.e("store List 요청 동작", "store List 요청 동작");
 
@@ -478,7 +493,7 @@ public class ActivityViewModel extends ViewModel {
     }
 
     //가게 조회 API(StoreDetailPageFragment서 사용)
-    public void StoreInquiryData(Long storeId) {
+    public void StoreInquiryData(Long storeIdd) {
         Log.d("StoreAPI", token + " " + storeId);
         //가게 조회
         storeApiService.readStore("Bearer " + token, storeId).enqueue(new Callback<StoreInquiryResponseDTO>() {

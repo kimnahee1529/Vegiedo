@@ -93,6 +93,8 @@ public class PostContentFragment extends Fragment implements PostContentAdapter.
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main_post, container, false);
 
+        authPrefRepository = new AuthPrefRepository(getActivity());
+
         user_image = view.findViewById(R.id.user_image);
         post_title = view.findViewById(R.id.post_title);
         user_name = view.findViewById(R.id.user_name);
