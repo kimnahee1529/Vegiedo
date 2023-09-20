@@ -145,7 +145,6 @@ public class ActivityViewModel extends ViewModel {
     private String keyword;
 
     private String currentInput;
-    //TODO 토큰 적어놓은 거 지우기
     private String token;
 
     private Long postId;
@@ -478,15 +477,15 @@ public class ActivityViewModel extends ViewModel {
 
     //가게 조회 API(StoreDetailPageFragment서 사용)
     public void StoreInquiryData(Long storeId) {
-        Log.d("토큰", token);
+        Log.d("StoreAPI", token + " " + storeId);
         //가게 조회
         storeApiService.readStore("Bearer " + token, storeId).enqueue(new Callback<StoreInquiryResponseDTO>() {
             @Override
             public void onResponse(Call<StoreInquiryResponseDTO> call, Response<StoreInquiryResponseDTO> response) {
-                if(response.isSuccessful()){
-                    Log.d("StoreAPI 성공","StoreAPI 호출 성공");
+                if (response.isSuccessful()) {
+                    storeDataLiveData.setValue(response.body());
+                    Log.d("LOGAPI", "StoreAPI 호출");
                 } else {
-                    // API 응답이 오류 상태일 때
                     Log.e("StoreAPI실패 1", "Error Code: " + response.code() + ", Message: " + response.message());
                     try {
                         Log.e("StoreAPI실패 1", "Error Body: " + response.errorBody().string());
@@ -494,12 +493,6 @@ public class ActivityViewModel extends ViewModel {
                         e.printStackTrace();
                     }
                 }
-                //                if (response.isSuccessful()) {
-//                    storeDataLiveData.setValue(response.body());
-//                    Log.d("LOGAPI", "StoreAPI 호출");
-//                } else {
-//                    Log.d("LOGAPI", "StoreAPI 호출실패 "+response.);
-//                }
             }
 
             @Override
@@ -571,7 +564,7 @@ public class ActivityViewModel extends ViewModel {
                     Log.d("stampAPI", ""+response);
                 } else {
                     storeStampLiveData.setValue(response.code());
-                    Log.d("stampAPI", "STAMPAPI 호출실패");
+                    Log.d("stampAPI", "STAMPAPI 호출실패 "+response);
                 }
             }
 
@@ -591,39 +584,39 @@ public class ActivityViewModel extends ViewModel {
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
                     storeLikeLiveData.setValue(response.code());
-                    Log.d("likeAPI", ""+response);
+                    Log.d("찜버튼 api", ""+response.code());
                 } else {
                     storeLikeLiveData.setValue(response.code());
-                    Log.d("likeAPI", "LIKEAPI 호출실패");
+                    Log.d("찜버튼 api", "LIKEAPI 호출실패 "+response);
                 }
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 storeLikeLiveData.setValue(-1);
-                Log.d("likeAPI", "LIKEAPI 호출실패");
+                Log.d("찜버튼 api", "LIKEAPI 호출실패 "+t);
             }
         });
     }
     //가게 찜버튼 취소
     public void StoreInactiveLikeData(Long storeId) {
-        //가게 찜버튼 활성화
+        //가게 찜버튼 취소
         storeApiService.cancleLikeStore("Bearer " + token, storeId).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
                     storeLikeLiveData.setValue(response.code());
-                    Log.d("likeAPI", ""+response);
+                    Log.d("찜버튼취소 api", ""+response.code());
                 } else {
                     storeLikeLiveData.setValue(response.code());
-                    Log.d("likeAPI", "LIKEAPI 호출실패");
+                    Log.d("찜버튼취소 api", "LIKEAPI 호출실패 "+response);
                 }
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 storeLikeLiveData.setValue(-1);
-                Log.d("likeAPI", "LIKEAPI 호출실패");
+                Log.d("찜버튼취소 api", "LIKEAPI 호출실패 "+t);
             }
         });
     }
@@ -680,8 +673,8 @@ public class ActivityViewModel extends ViewModel {
 
     //지도 가게 조회 API(MapMainFragment에서 사용)
     public void MapInquiryData() {
-        float latitude = 37.559254f;
-        float longitude = 126.985985f;
+        float latitude = 37.5129174f;
+        float longitude = 127.0389008f;
         Integer distance = 1500;
 
         mapApiService.getStoresOnMap("Bearer " + token, latitude, longitude, distance).enqueue(new Callback<List<MapStoreListData>>() {
