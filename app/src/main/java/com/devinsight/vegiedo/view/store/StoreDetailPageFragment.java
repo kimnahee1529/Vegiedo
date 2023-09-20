@@ -92,9 +92,7 @@ public class StoreDetailPageFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_store_detail_page_seemore, container, false);
 
         // ViewModel 초기화
-//        viewModel = new ViewModelProvider(this).get(ActivityViewModel.class);
         viewModel = new ViewModelProvider(requireActivity()).get(ActivityViewModel.class);
-//        viewModel = new ViewModelProvider(requireActivity()).get(ActivityViewModel.class);
 
 
         initializeComponents(view);
@@ -311,10 +309,11 @@ public class StoreDetailPageFragment extends Fragment {
 
     //가게 조회 API-맨 처음 상세페이지로 들어왔을 때 보여줌
     private void callStoreAPI(Long storeId){
+        Log.d("StoreAPI", "가게 상세페이지로 들어옴");
         viewModel.getStoreDataLiveData().observe(getViewLifecycleOwner(), new Observer<StoreInquiryResponseDTO>() {
             @Override
             public void onChanged(StoreInquiryResponseDTO data) {
-
+                Log.d("StoreAPI", "가게 상세페이지onChanged");
                 // UI 업데이트
                 Glide.with(getActivity())
                         .load(data.getStoreImage())
@@ -361,6 +360,10 @@ public class StoreDetailPageFragment extends Fragment {
                 }else{
                     storeDetail_default_heart.setVisibility(View.VISIBLE);
                     storeDetail_selected_heart.setVisibility(View.INVISIBLE);
+                }
+
+                if(data.isReport()){
+                    StoreDetail_closure_report_btn.setVisibility(GONE);
                 }
 
             }

@@ -32,7 +32,8 @@ public class StoreInquiryResponseDTO {
     @SerializedName("stamp") private boolean stamp;
     @Expose
     @SerializedName("reviewContent") private List<String> images;
-
+    @Expose
+    @SerializedName("report") private boolean report;
 
     public Long getStoreId() {
         return storeId;
@@ -128,6 +129,24 @@ public class StoreInquiryResponseDTO {
     public void setLongitude(float longitude) {
         this.longitude = longitude;
     }
+
+    public List<String> getImages() {
+        return images;
+    }
+
+    public void setImages(List<String> images) {
+        this.images = images;
+    }
+
+
+    public boolean isReport() {
+        return report;
+    }
+
+    public void setReport(boolean report) {
+        this.report = report;
+    }
+
 
     public StoreInquiryResponseDTO(Long storeId, String storeName, String address, Integer stars, List<String> tags, boolean like, boolean stamp, List<String> images, float latitude, float longitude) {
         this.storeId = storeId;

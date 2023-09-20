@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,6 +27,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.devinsight.vegiedo.R;
+import com.devinsight.vegiedo.data.request.ReviewReportRequestDTO;
 import com.devinsight.vegiedo.data.response.ReviewListInquiryResponseDTO;
 import com.devinsight.vegiedo.view.community.WritingFragment;
 import com.devinsight.vegiedo.view.search.ActivityViewModel;
@@ -50,6 +52,7 @@ public class StoreReviewFragment extends Fragment {
     ActivityViewModel viewModel;
     private static final String ARG_STORE_ID = "storeId";
     private Long mStoreId;
+    boolean canWriteReview;
 //    public boolean canWriteReview = true;
 
     public static StoreReviewFragment newInstance(Long storeId) {
@@ -81,8 +84,6 @@ public class StoreReviewFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        // ViewModel 초기화
-//        viewModel = new ViewModelProvider(this).get(ActivityViewModel.class);
         recyclerView = view.findViewById(R.id.store_review_recycler_view);
         setupRecyclerView();
 
@@ -90,7 +91,8 @@ public class StoreReviewFragment extends Fragment {
         TextView storeReview_modify_text = view.findViewById(R.id.storeReview_modify_text);
         TextView storeReview_delete_text = view.findViewById(R.id.storeReview_delete_text);
         ImageView storeReview_report_btn = view.findViewById(R.id.btn_comment_report);
-
+        canWriteReview = viewModel.getCanWriteReview().getValue();
+        Log.d("11리뷰 작성 가능함? reviewF", String.valueOf(canWriteReview));
 
         //TODO 전체 리스트 사이즈 알아내서 이 부분 수정해야 할 듯,
 //        if(adapter.getItemCount() < 4){
@@ -98,6 +100,7 @@ public class StoreReviewFragment extends Fragment {
 //            Log.d("review더보기", "getItemCount<2");
 //        }
 
+        //어댑터에서의 더보기 버튼 리스너
         adapter.setMoreItemsListener(new UserReviewItemAdapter.MoreItemsListener() {
             @Override
             public void onHideMoreButton() {
@@ -105,6 +108,26 @@ public class StoreReviewFragment extends Fragment {
                 Log.d("review더보기", "onHideMoreButton");
             }
         });
+        //어댑터에서의 삭제 버튼 리스너
+        adapter.setDeleteListener(new UserReviewItemAdapter.ReviewDeleteListener() {
+            @Override
+            public void ReviewDelete(Long storeId, Long reviewId) {
+                Log.d("리뷰삭제", "ReviewDelete");
+                viewModel.ReviewDeleteData(storeId, reviewId);
+                viewModel.setCanWriteReview(true);
+                adapter.notifyDataSetChanged();
+            }
+        });
+        //어댑터에서의 신고완료 버튼 리스너
+        adapter.setReportListener(new UserReviewItemAdapter.ReportCompleteListener() {
+            @Override
+            public void ReportListener(Long storeId, Long reviewId, ReviewReportRequestDTO requestDTO) {
+                Log.d("report완료", "ReportListener storeId:"+storeId+", reviewId:"+reviewId+", DTO:"+requestDTO);
+                viewModel.ReviewReportData(storeId, reviewId, requestDTO);
+            }
+        });
+
+//        adapter.
 
         review_more_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -146,14 +169,13 @@ public class StoreReviewFragment extends Fragment {
                         boolean isMine = data.getReviews().get(i).isMine();
                         //만약 내가 쓴 리뷰가 있을 경우
                         if(isMine){
-                            Log.d("내가 쓴 리뷰가 있음 reviewF", String.valueOf(isMine));
+                            Log.d("내가 쓴 리뷰가 있음!! reviewF", String.valueOf(isMine));
                             viewModel.setCanWriteReview(false);
-                            Log.d("리뷰 작성 가능한지? reviewF", String.valueOf(viewModel.getCanWriteReview().getValue()));
+                        }else{
+                            Log.d("내가 쓴 리뷰가 아님 reviewF", String.valueOf(isMine));
+//                            viewModel.setCanWriteReview(true);
                         }
-//                        Log.d("리뷰 확인용 로그", "userName:"+userName.toString()+" star:"+star+" content:"+content+" images:"+images+"reviewId:"+reviewId + " "+isMine);
-
                         UserReviewItem item = new UserReviewItem(reviewId, REVIEW_RC, userName, star, content, userReviewImageUrlList, isMine);
-//                        Log.d("리뷰 item", String.valueOf(item));
 //                        item.setStoreId(reviewId);  // storeId 값을 설정합니다.
                         updatedItems.add(item);
                     }
@@ -164,10 +186,9 @@ public class StoreReviewFragment extends Fragment {
                         updatedItems.add(index, new UserReviewItem(UserReviewItem.ItemType.AD_BANNER));
                     }
 
-//                    updatedItems.add(3, new UserReviewItem(UserReviewItem.ItemType.AD_BANNER));
-
                     Log.d("어댑터로 보내는 updatedItems", updatedItems.toString());
                     adapter.setReviewItems(updatedItems);  // 어댑터에 데이터 전달
+                    adapter.notifyDataSetChanged();
                 }
             }
 
