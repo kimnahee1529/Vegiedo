@@ -622,42 +622,12 @@ public class ActivityViewModel extends ViewModel {
     }
 
     //스탬프북
-//    public void MypageStampBookData() {
-//        //가게 찜버튼 활성화
-//        storeApiService.myPageStampBook("Bearer " + token).enqueue(new Callback<StampBookInquiryResponseDTO>() {
-//            @Override
-//            public void onResponse(Call<StampBookInquiryResponseDTO> call, Response<StampBookInquiryResponseDTO> response) {
-//                if (response.isSuccessful()) {
-//                    stampBookDataLiveData.setValue(response.code());
-//                    Log.d("likeAPI", ""+response);
-//                } else {
-////                    stampBookDataLiveData.setValue(response.code());
-//                    Log.d("likeAPI", "LIKEAPI 호출실패");
-//                }
-//            }
-//
-//        });
-//    }
     public void MyPageStampBookData() {
         storeApiService.myPageStampBook("Bearer " + token).enqueue(new Callback<StampBookInquiryResponseDTO>() {
             @Override
             public void onResponse(Call<StampBookInquiryResponseDTO> call, Response<StampBookInquiryResponseDTO> response) {
                 if (response.isSuccessful()) {
                     stampBookDataLiveData.setValue(response.body());
-
-                    // 각 필드 값 가져오기
-//                    String storeName = storeDetail.getStoreName();
-//                    String address = storeDetail.getAddress();
-//                    int stars = storeDetail.getStars();
-//                    int reviewCount = storeDetail.getReviewCount();
-//                    String images = storeDetail.getImages();
-//
-//                    // 로그로 값 확인하기
-//                    Log.d("stampAPI", "가게 이름: " + storeName);
-//                    Log.d("stampAPI", "주소: " + address);
-//                    Log.d("stampAPI", "별점: " + stars);
-//                    Log.d("stampAPI", "리뷰 수: " + reviewCount);
-//                    Log.d("stampAPI", "이미지 URL: " + images);
                 } else {
                     Log.d("stampAPI", "stampAPI 호출실패1");
                 }
