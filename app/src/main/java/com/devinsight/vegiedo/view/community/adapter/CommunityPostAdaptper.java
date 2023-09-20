@@ -23,27 +23,29 @@ public class CommunityPostAdaptper extends RecyclerView.Adapter<CommunityPostAda
     Context context;
     protected PostItemListnere postItemListnere;
 
-    public void setPostList(List<PostListData> list){
+    public void setPostList(List<PostListData> list) {
         this.postList.clear();
         this.postList.addAll(list);
+        notifyDataSetChanged();
     }
 
-    public void addPostList(List<PostListData> list){
-//        if( list.size() >= 20 ) {
-////            this.postList.clear();
-//        } else {
-            notifyItemRangeChanged(postList.size() - 1, 5 );
-//        }
-
+    public void addPostList(List<PostListData> list) {
+        int positionStart = postList.size();
         this.postList.addAll(list);
+//        notifyItemRangeInserted(postList.size() - 1, 5);
+        notifyItemRangeInserted(positionStart, list.size());
+
     }
 
     public void previousPostList(List<PostListData> list) {
-        notifyItemRangeChanged(postList.size() - 6, 5 );
-        this.postList.addAll(list);
+        this.postList.addAll(0, list);
+//        notifyItemRangeInserted(postList.size() - 6, 5);
+        notifyItemRangeInserted(0, list.size());
+
+
     }
 
-    public CommunityPostAdaptper(Context context, List<PostListData> list, PostItemListnere postItemListnere){
+    public CommunityPostAdaptper(Context context, List<PostListData> list, PostItemListnere postItemListnere) {
         this.postList = list;
         this.context = context;
         this.postItemListnere = postItemListnere;
@@ -60,13 +62,13 @@ public class CommunityPostAdaptper extends RecyclerView.Adapter<CommunityPostAda
     public void onBindViewHolder(@NonNull CommunityPostAdaptper.PostViewHolder holder, int position) {
         PostListData data = postList.get(position);
         String imageUrl = data.getImageUrl();
-        if(imageUrl != null ) {
+        if (imageUrl != null) {
             Glide.with(context).load(imageUrl).into(holder.postImage);
         } else {
             holder.postImage.setVisibility(View.GONE);
         }
         holder.postTitle.setText(data.getPostTitle());
-        holder.postCommentCount.setText(String.valueOf("[" + data.getCommentCount() + "]" ));
+        holder.postCommentCount.setText(String.valueOf("[" + data.getCommentCount() + "]"));
         holder.postUserName.setText(data.getUserName());
         holder.postCreatedAt.setText(String.valueOf(data.getCreatedAt()));
         holder.postLikeCount.setText(String.valueOf(data.getLike()));
@@ -91,7 +93,6 @@ public class CommunityPostAdaptper extends RecyclerView.Adapter<CommunityPostAda
         PostListData postListData;
 
 
-
         public PostViewHolder(@NonNull View itemView) {
             super(itemView);
 
@@ -107,7 +108,7 @@ public class CommunityPostAdaptper extends RecyclerView.Adapter<CommunityPostAda
 
         @Override
         public void onClick(View view) {
-            if(postItemListnere != null){
+            if (postItemListnere != null) {
                 postItemListnere.onPostClicked(view, postList.get(getLayoutPosition()), getLayoutPosition());
             }
 

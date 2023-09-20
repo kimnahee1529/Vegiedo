@@ -1,4 +1,4 @@
-package com.devinsight.vegiedo.view.login;
+package com.devinsight.vegiedo.view.home.login;
 
 import android.content.Context;
 

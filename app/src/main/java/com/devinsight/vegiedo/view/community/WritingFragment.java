@@ -2,9 +2,13 @@ package com.devinsight.vegiedo.view.community;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.media.Image;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
@@ -16,9 +20,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -100,6 +106,8 @@ public class WritingFragment extends Fragment {
     ImageViewData imageViewDataForModify;
     ImageViewData imageViewDataForRegister;
 
+    Dialog dialog;
+
     private int actionOn;
 
     @Override
@@ -137,6 +145,8 @@ public class WritingFragment extends Fragment {
         imageViewDataForModify = new ImageViewData();
         imageViewDataList = new ArrayList<>();
 
+//        imageViewDataForModify = new ImageViewData();
+
 //        files = new ArrayList<>();
 
 
@@ -164,6 +174,8 @@ public class WritingFragment extends Fragment {
         }
 
 
+
+
         return rootView;
     }
 
@@ -179,46 +191,40 @@ public class WritingFragment extends Fragment {
         mainImage = rootView.findViewById(R.id.main_image1);
         mainImage.setOnClickListener(v -> {
             selectImageForView((ImageView) v);
-            if(getTag() != null){
-                actionOn ++ ;
-                Log.d("actionOn count is ","action on :: " + actionOn);
-            }
+            setLongClickListenerForImageView(mainImage);
+
         });
+
 
         ImageView mainImage2 = rootView.findViewById(R.id.main_image2);
         mainImage2.setOnClickListener(v -> {
             selectImageForView((ImageView) v);
-            if(getTag() != null){
-                actionOn ++ ;
-                Log.d("actionOn count is ","action on :: " + actionOn);
-            }
+            setLongClickListenerForImageView(mainImage2);
+
+
         });
 
         ImageView mainImage3 = rootView.findViewById(R.id.main_image3);
         mainImage3.setOnClickListener(v -> {
             selectImageForView((ImageView) v);
-            if(getTag() != null){
-                actionOn ++ ;
-                Log.d("actionOn count is ","action on :: " + actionOn);
-            }
+            setLongClickListenerForImageView(mainImage3);
+
+
         });
 
         ImageView mainImage4 = rootView.findViewById(R.id.main_image4);
         mainImage4.setOnClickListener(v -> {
             selectImageForView((ImageView) v);
-            if(getTag() != null){
-                actionOn ++ ;
-                Log.d("actionOn count is ","action on :: " + actionOn);
-            }
+            setLongClickListenerForImageView(mainImage4);
+
+
         });
 
         ImageView mainImage5 = rootView.findViewById(R.id.main_image5);
         mainImage5.setOnClickListener(v -> {
             selectImageForView((ImageView) v);
-            if(getTag() != null){
-                actionOn ++ ;
-                Log.d("actionOn count is ","action on :: " + actionOn);
-            }
+            setLongClickListenerForImageView(mainImage5);
+
         });
 
         if (isModify) {
@@ -233,16 +239,15 @@ public class WritingFragment extends Fragment {
                             ImageView imageView = rootView.findViewById(imageViews[i]);
                             Glide.with(getActivity()).load(imageUrlList.get(i)).into(imageView);
 
-                            imageViewDataForModify = new ImageViewData();
+                            ImageViewData imageViewDataForModify = new ImageViewData();
                             imageViewDataForModify.setIndex(i);
                             imageViewDataForModify.setUrl(imageUrlList.get(i));
 
                             imageViewDataList.add(imageViewDataForModify);
                             imageView.setTag(imageViewDataForModify);
-                            Log.d("image View data ", "thi is i : " + i + "this i url : " + imageUrlList.get(i));
+                            Log.d("DEBUG_TAG", "setTag called for imageView with ID: " + imageView.getId());
 
                             imageUrlListOrigin.add(imageUrlList.get(i));
-                            Log.d("수정을 위해 넘어온 image url 4 ", "this is url" + imageUrlList.get(i));
                         } else {
                             ImageView imageView = rootView.findViewById(imageViews[i]);
                             imageViewDataForModify.setIndex(i);
@@ -255,6 +260,19 @@ public class WritingFragment extends Fragment {
         }
     }
 
+    private void setLongClickListenerForImageView(ImageView imageView) {
+        imageView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                if(currentlySelectedImageView != null && view.getId() == currentlySelectedImageView.getId()){
+                    Log.d("iamgeView id ", "이미지뷰 아이디 : " + view.getId() + " 선택된 이미지뷰 아이디 : " + currentlySelectedImageView.getId());
+                    setDialog("이미지를 삭제 하시겠습니까?");
+                }
+                return false;
+            }
+        });
+    }
+
     /* */
     private void restoreSelectedImages() {
         int[] imageViews = {R.id.main_image1, R.id.main_image2, R.id.main_image3, R.id.main_image4, R.id.main_image5};
@@ -263,7 +281,7 @@ public class WritingFragment extends Fragment {
             imageView.setImageURI(Uri.parse(selectedImageUris.get(i)));
             imageView.setBackground(null);
 
-            imageViewDataForRegister = new ImageViewData();
+            ImageViewData imageViewDataForRegister = new ImageViewData();
             imageViewDataForRegister.setIndex(i);
             imageView.setTag(imageViewDataForRegister.getIndex());
         }
@@ -344,18 +362,6 @@ public class WritingFragment extends Fragment {
 //            imageUrlListForModify.clear();
             if (isModify) {
 
-//                /* 기존 URL에서 삭제된 URL을 제외한 리스트 */
-//                imageUrlListForModify = new ArrayList<>();
-
-//                if (imageUrlListToDelete == null) { // 값 ok
-//                    imageUrlListForModify.addAll(imageUrlListOrigin);
-//                } else {
-//                    for (String url : imageUrlListOrigin) { // 값 ok
-//                        if (!imageUrlListToDelete.contains(url)) {
-//                            imageUrlListForModify.add(url); // 값 ok
-//                        }
-//                    }
-//                }
                 Log.d(" no change imageUrlListToDelete.size()","size : " + imageUrlListToDelete.size());
                     if ( imageUrlListToDelete.size() == 0 ) { // 값 ok
                         Log.d(" no change imageUrlListToDelete.size()","size : " + imageUrlListToDelete.size());
@@ -498,6 +504,8 @@ public class WritingFragment extends Fragment {
             }
 
 
+            Log.d("files", "files" + files.size());
+
         });
     }
 
@@ -532,19 +540,6 @@ public class WritingFragment extends Fragment {
     private void selectImageForView(ImageView imageView) {
 
         currentlySelectedImageView = imageView;
-
-//        currentlySelectedImageView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                // view의 태그를 가져옴
-//                imageViewDataForModify = (ImageViewData) view.getTag();
-//                Log.d("imageView Data :","data : " + imageViewDataForModify.getUrl());
-//                if (imageViewDataForModify != null && imageViewDataForModify.getUrl() != null) {
-//                    actionOn++;
-//                    Log.d("actionOn count is ", "action on :: " + actionOn);
-//                }
-//            }
-//        });
 
         if (PermissionUtils.checkPermission(getActivity())) {
             // 권한이 이미 허용된 상태: 바로 관련 작업 수행
@@ -590,6 +585,11 @@ public class WritingFragment extends Fragment {
                         Log.d("imageView Data in activity:","data : " + imageViewDataForModify.getUrl());
                         if(imageViewDataForModify != null ) { //이미지뷰의 태그 데이터의 url이 널이 아니면, delete에 넣고
                             imageUrlListToDelete.add(imageViewDataForModify.getUrl());
+                            Log.d("DEBUG_TAG", "imageViewDataForModify is properly initialized.");
+                            Log.d("DEBUG_TAG", "imageView id : " + currentlySelectedImageView.getId());
+                            Log.d("DEBUG_TAG", "imageView id : " + ((ImageViewData) currentlySelectedImageView.getTag()).getUrl());
+
+
                             Log.d("this deleted url","url : " + imageViewDataForModify.getUrl());
                         }
                     }
@@ -649,5 +649,34 @@ public class WritingFragment extends Fragment {
                 }
                 break;
         }
+    }
+
+    public void setDialog(String message) {
+        dialog = new Dialog(getContext());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setContentView(R.layout.delete_dialog);
+
+        Button yesDelete = dialog.findViewById(R.id.yes);
+        Button noDelete = dialog.findViewById(R.id.no);
+        TextView msg = dialog.findViewById(R.id.dialog);
+        msg.setText(message);
+
+        yesDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                dialog.dismiss();
+            }
+        });
+
+        noDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 }

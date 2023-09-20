@@ -26,8 +26,15 @@ public class CommunityViewModel extends ViewModel {
     private MutableLiveData<List<PostListData>> popularPostLiveData = new MutableLiveData<>();
     /* 게시글 커서 값 */
     private MutableLiveData<Integer> maxCursorLiveData = new MutableLiveData<>();
+
+    private MutableLiveData<Boolean> isLastItemLiveData = new MutableLiveData<>();
+    private MutableLiveData<Boolean> isFirstItemLiveData = new MutableLiveData<>();
     private String token;
     private int maxCursor;
+
+    private boolean isLastItem;
+
+    private boolean isFirstItem;
 
     public void getToken(String token){
         this.token = token;
@@ -35,6 +42,14 @@ public class CommunityViewModel extends ViewModel {
 
     public void getMaxCursor(){
         this.maxCursor = maxCursorLiveData.getValue();
+    }
+
+    public void getLastItem(boolean isLastItem){
+        this.isLastItem = isLastItem;
+    }
+
+    public void getFirstItem(boolean isFirstItem){
+        this.isFirstItem = isFirstItem;
     }
 
     public void loadPopularPostList( int cursor ){
@@ -125,6 +140,14 @@ public class CommunityViewModel extends ViewModel {
 
     public LiveData<Integer> getMaxCursorLiveData(){
         return maxCursorLiveData;
+    }
+
+    public LiveData<Boolean> getIsLastItem(){
+        return isLastItemLiveData;
+    }
+
+    public LiveData<Boolean> getIsFirstItem(){
+        return isFirstItemLiveData;
     }
 
 

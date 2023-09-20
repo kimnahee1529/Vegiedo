@@ -34,6 +34,7 @@ public class CommunityMainFragment extends Fragment {
     Fragment writingFragment;
 
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -53,6 +54,7 @@ public class CommunityMainFragment extends Fragment {
         transaction = fragmentManager.beginTransaction();
 
         transaction.replace(R.id.community_frame, communityPostListFragment, "communityPostListFragment").addToBackStack("communityPostListFragment").commit();
+
         activityViewModel.setPostType(true);
 
         general_post.setOnClickListener(new View.OnClickListener() {
