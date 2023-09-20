@@ -51,6 +51,7 @@ public class ActivityViewModel extends ViewModel {
     private MutableLiveData<List<SummaryData>> storeListSummaryLiveData = new MutableLiveData<>();
     /* 최근 검색 목록 리스트*/
     private MutableLiveData<List<SummaryData>> storeListCurrentLiveData = new MutableLiveData<>();
+    private MutableLiveData<List<SummaryData>> storeListCurrentLiveData2 = new MutableLiveData<>();
 
     /* 검색 창 클릭 시 간략하게 보여 줄 가게 데이터 */
     private MutableLiveData<List<SearchStorSummaryeUiData>> storeLiveData = new MutableLiveData<>();
@@ -312,7 +313,6 @@ public class ActivityViewModel extends ViewModel {
 
     /* 더미데이터에서 필요한 부분*/
     public void searchSummList() {
-//        List<StoreListData> storeListData = dummyData();
         Log.d("필요 데이터 추출 함수"," public void searchSummList()");
         List<StoreListData> storeListData = storeListLiveData.getValue();
         List<SummaryData> summaryList = new ArrayList<>();
@@ -353,6 +353,24 @@ public class ActivityViewModel extends ViewModel {
         } else {
             storeListCurrentLiveData.setValue(null);
         }
+    }
+
+    public void currentList2(List<Long> storeIdList) {
+        Log.d("최근 검색어에 따른 리스트 ","public void currentList()");
+        if(storeIdList != null && storeListSummaryLiveData.getValue() != null) {
+            List<SummaryData> summaryList = storeListSummaryLiveData.getValue();
+            List<Long> storeIdLists = storeIdList;
+            List<SummaryData> selectedStoreList = new ArrayList<>();
+            for(SummaryData data : summaryList){
+                if(storeIdLists.contains(data.getStoreId())){
+                    selectedStoreList.add(data);
+                }
+            }
+            storeListCurrentLiveData2.setValue(selectedStoreList);
+        } else {
+            storeListCurrentLiveData2.setValue(null);
+        }
+
     }
 
     /* 요약리스트에서 실시간 검색 */
@@ -968,6 +986,9 @@ public class ActivityViewModel extends ViewModel {
     /* 최근 검색어에 따른 가게 리스트*/
     public LiveData<List<SummaryData>> getCurrentListLiveData() {
         return storeListCurrentLiveData;
+    }
+    public LiveData<List<SummaryData>> getCurrentListLiveData2() {
+        return storeListCurrentLiveData2;
     }
 
     public LiveData<List<StoreListData>> getStoreListLiveData() {

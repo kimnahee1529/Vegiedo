@@ -35,6 +35,7 @@ import android.widget.TextView;
 //import com.devinsight.vegiedo.Manifest;
 import com.devinsight.vegiedo.R;
 import com.devinsight.vegiedo.repository.pref.AuthPrefRepository;
+import com.devinsight.vegiedo.repository.pref.StorePrefRepository;
 import com.devinsight.vegiedo.repository.pref.UserPrefRepository;
 import com.devinsight.vegiedo.view.community.CommunityMainFragment;
 import com.devinsight.vegiedo.view.home.HomeMainFragment;
@@ -125,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
         String token = authPrefRepository.getAuthToken("KAKAO");
         List<String> initialTagList = userPrefRepository.loadTagList();
         int initialDistance = INITIAL_DISTANCE;
+
 
         //애드몹 초기화
         MobileAds.initialize(this, initializationStatus -> {});

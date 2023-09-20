@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.devinsight.vegiedo.R;
 import com.devinsight.vegiedo.data.ui.search.SearchStorSummaryeUiData;
+import com.devinsight.vegiedo.repository.pref.StorePrefRepository;
 import com.devinsight.vegiedo.view.store.StoreDetailPageFragment;
 
 import java.util.ArrayList;
@@ -76,6 +77,9 @@ public class SearchMainFragment extends Fragment implements SearchSummaryListAda
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
 
+        StorePrefRepository storePrefRepository = new StorePrefRepository(getActivity());
+        List<Long> storeIdList = storePrefRepository.getStoreIdList();
+
         viewModel = new ViewModelProvider(requireActivity()).get(ActivityViewModel.class);
 //        viewModel.searchSummList();
 //        viewModel.getSummaryListLiveData().observe(getViewLifecycleOwner(), new Observer<List<SummaryData>>() {
@@ -87,20 +91,25 @@ public class SearchMainFragment extends Fragment implements SearchSummaryListAda
 //        });
 
 //        viewModel.storeApiData();
-        /* 최근 검색어를 기준으로 최초 요f약된 리스트를 보여줍니다.*/
-        viewModel.currentList();
-        viewModel.getCurrentListLiveData().observe(getViewLifecycleOwner(), new Observer<List<SummaryData>>() {
-            @Override
-            public void onChanged(List<SummaryData> summaryDataList) {
-                if(summaryDataList != null) {
-                    searchAdapter.setSearchList(summaryDataList);
-                    searchAdapter.notifyDataSetChanged();
-                } else {
-                    Toast.makeText(getContext(), "최근 검색어가 없습니다. ", Toast.LENGTH_SHORT).show();
-                }
 
-            }
-        });
+
+
+        /* 최근 검색어를 기준으로 최초 요f약된 리스트를 보여줍니다.*/
+//        viewModel.currentList();
+//        viewModel.getCurrentListLiveData().observe(getViewLifecycleOwner(), new Observer<List<SummaryData>>() {
+//            @Override
+//            public void onChanged(List<SummaryData> summaryDataList) {
+//                if(summaryDataList != null) {
+//                    searchAdapter.setSearchList(summaryDataList);
+//                    searchAdapter.notifyDataSetChanged();
+//                } else {
+//                    Toast.makeText(getContext(), "최근 검색어가 없습니다. ", Toast.LENGTH_SHORT).show();
+//                }
+//
+//            }
+//        });
+
+
 
         viewModel.storeApiData();
         /* 검색창에 입력된 글자를 기준으로 리스트를 보여줍니다.*/
@@ -113,7 +122,18 @@ public class SearchMainFragment extends Fragment implements SearchSummaryListAda
             }
         });
 
-
+        viewModel.currentList2(storeIdList);
+        viewModel.getCurrentListLiveData2().observe(getViewLifecycleOwner(), new Observer<List<SummaryData>>() {
+            @Override
+            public void onChanged(List<SummaryData> summaryDataList) {
+                if(summaryDataList != null) {
+                    searchAdapter.setSearchList(summaryDataList);
+                    searchAdapter.notifyDataSetChanged();
+                } else {
+                    Toast.makeText(getContext(), "최근 검색어가 없습니다. ", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
         return view;
     }
@@ -130,7 +150,7 @@ public class SearchMainFragment extends Fragment implements SearchSummaryListAda
         bundle.putString("storeImage", storeList.get(position).getStoreImage());
         bundle.putString("storeName", storeList.get(position).getStoreName());
         bundle.putString("storeAddress", storeList.get(position).getStoreAddress());
-        bundle.putLong("storeId", storeList.get(position).getStoreId());
+        bundle.putLong("storeIdFromS", storeList.get(position).getStoreId());
 
         detailFragment.setArguments(bundle);
 
