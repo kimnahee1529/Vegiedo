@@ -95,6 +95,7 @@ public class MyPageFragment extends Fragment {
         mypagePencil.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d("닉네임 클릭", "MyPageFragment");
                 ChangeNicknameFragment changeNicknameFragment = new ChangeNicknameFragment();
 
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
