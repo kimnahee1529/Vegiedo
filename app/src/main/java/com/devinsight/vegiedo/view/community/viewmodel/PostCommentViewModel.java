@@ -10,6 +10,7 @@ import com.devinsight.vegiedo.data.request.CommentRegisterRequestDTO;
 import com.devinsight.vegiedo.data.response.CommentInquiryResponseDTO;
 import com.devinsight.vegiedo.data.response.CommentListData;
 import com.devinsight.vegiedo.data.response.PostInquiryResponseDTO;
+import com.devinsight.vegiedo.data.response.response;
 import com.devinsight.vegiedo.service.api.CommentApiService;
 import com.devinsight.vegiedo.utill.RetrofitClient;
 import com.google.gson.Gson;
@@ -60,6 +61,26 @@ public class PostCommentViewModel extends ViewModel {
             @Override
             public void onFailure(Call<List<CommentListData>> call, Throwable t) {
                 Log.e("comment 등록 api 호출 실패 ","실패2" + t.getMessage());
+            }
+        });
+    }
+
+    public void deleteComment(Long postId, Long commentId){
+        commentApiService.deleteComment("Bearer " + token, postId, commentId).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+                    Log.d("comment 삭제 api 호출 성공 ","성공" + response);
+
+                }else{
+                    Log.e("comment 삭제 api 호출 실패 1","실패1" + response);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.e("comment 삭제 api 호출 실패 2 ","실패2" + t.getMessage());
+
             }
         });
     }

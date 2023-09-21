@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class PostCommentFragment extends Fragment implements PostCommentAdapter.CommentClickListener {
+public class PostCommentFragment extends Fragment implements PostCommentAdapter.CommentReportClickListener, PostCommentAdapter.CommentDeleteClickListener {
 
     TextView post_content_comment;
     EditText et_comment_input;
@@ -41,6 +41,15 @@ public class PostCommentFragment extends Fragment implements PostCommentAdapter.
 
     Long postId;
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            postId = getArguments().getLong("postIdForComment",0);
+            Log.d("포스트 아이디 코멘트","포스트 아이디 코멘트" + postId);
+        }
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,7 +62,7 @@ public class PostCommentFragment extends Fragment implements PostCommentAdapter.
 
         recyclerView = view.findViewById(R.id.post_content_comment_rc);
         commentList = new ArrayList<>();
-        adapter = new PostCommentAdapter(getContext(), commentList, this);
+        adapter = new PostCommentAdapter(getContext(), commentList, this, this);
         recyclerView.setAdapter(adapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -112,7 +121,15 @@ public class PostCommentFragment extends Fragment implements PostCommentAdapter.
     }
 
     @Override
-    public void onCommentClicked(View view, CommentListData comment, int position) {
+    public void onCommentReportClicked(View view, CommentListData comment, int position) {
+        Log.d("댓글 신고 버튼 클릭!"," 댓글 신고 버튼 클릭!");
 
+
+    }
+
+    @Override
+    public void onCommentDeleteClicked(View view, CommentListData comment, int position) {
+        Log.d("댓글 삭제 버튼 클릭!"," 댓글 삭제 버튼 클릭!");
+        commentViewModel.deleteComment(postId, comment.getCommentId());
     }
 }

@@ -31,6 +31,7 @@ public interface CommentApiService {
     //댓글 삭제
     @DELETE("/posts/{postId}/comments/{commentId}")
     Call<Void > deleteComment(
+            @Header("Authorization") String token,
             @Path("postId") Long postId,
             @Path("commentId") Long commentId
     );
@@ -39,6 +40,7 @@ public interface CommentApiService {
     //댓글 신고
     @POST("/posts/{postId}/comments/{commentsId}/reports")
     Call<Void> reportComment(
+            @Header("Authorization") String token,
             @Path("postId") Long postId,
             @Path("commentId") Long commentId,
             @Body CommentReportRequestDTO reportComment

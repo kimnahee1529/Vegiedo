@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
-    android:padding="10dp">
+    android:layout_marginTop="15dp">
 
     <TextView
         android:id="@+id/comment_user_name"
@@ -35,6 +35,15 @@
         app:layout_constraintTop_toTopOf="@id/comment_created_at" />
 
     <TextView
+        android:id="@+id/comment_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:text="삭제"
+        android:textSize="12sp"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <TextView
         android:id="@+id/comment_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -44,6 +53,8 @@
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="@id/comment_user_name"
         app:layout_constraintTop_toBottomOf="@id/comment_created_at" />
+
+
 
     <View
         android:layout_width="match_parent"

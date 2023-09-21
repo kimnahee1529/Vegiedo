@@ -247,11 +247,17 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
 
         postContentFragment.setArguments(bundle);
 
+        PostCommentFragment postCommentFragment = new PostCommentFragment();
+        Bundle commentBundle = new Bundle();
+        commentBundle.putLong("postIdForComment", postList.get(position).getPostId());
+        postCommentFragment.setArguments(commentBundle);
+
         ((MainActivity) getActivity()).replaceFragment(postMainFragment);
 
         FragmentManager fragmentManager = ((MainActivity) getActivity()).getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.post_content_frame, postContentFragment).commit();
+        transaction.replace(R.id.post_content_frame, postContentFragment);
+        transaction.replace(R.id.post_comment_frame, postCommentFragment).commit();
 
         activityViewModel.setClickedPostData(postListData);
 
