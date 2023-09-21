@@ -127,6 +127,8 @@ public class ActivityViewModel extends ViewModel {
 
     private MutableLiveData<List<String>> imageUrlListForModifyLiveData = new MutableLiveData<>();
 
+    private MutableLiveData<Boolean> yesDeleteLiveData = new MutableLiveData<>();
+
 
     /* Query 요청 및 필터에 사용 하기 위한 전역 변수*/
     private float userCurrentLat;
@@ -150,6 +152,8 @@ public class ActivityViewModel extends ViewModel {
     private Long postId;
 
     private Long storeId;
+
+    private boolean yesDelete;
     private List<StoreInquiryResponseDTO> clickedStoreListData = new ArrayList<>();
 
 
@@ -243,6 +247,11 @@ public class ActivityViewModel extends ViewModel {
 //    public void getStoreId(Long storeId){
 //        this.storeId = storeId;
 //    }
+
+    public void getIsDeletePhoto(boolean yesDelete){
+        this.yesDelete = yesDelete;
+        yesDeleteLiveData.setValue(yesDelete);
+    }
 
     /* 가게 리스트 API 호출 */
     public void storeApiData() {
@@ -1234,6 +1243,14 @@ public class ActivityViewModel extends ViewModel {
     public void setCanWriteReview(Boolean canWrite) {
         this.canWriteReview.setValue(canWrite);
     }
+
+    public MutableLiveData<Boolean> getIsDeleteLiveData() {
+        return yesDeleteLiveData;
+    }
+
+
+
+
 }
 
 

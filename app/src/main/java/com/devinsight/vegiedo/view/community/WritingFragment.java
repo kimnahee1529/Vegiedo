@@ -99,6 +99,8 @@ public class WritingFragment extends Fragment {
     private List<String> imageUrlListToDelete;
     private List<ImageViewData> imageViewDataList;
 
+    final boolean yesDelete = true;
+
     ActivityViewModel activityViewModel;
 
     PostApiService postApiService = RetrofitClient.getPostApiService();
@@ -265,7 +267,33 @@ public class WritingFragment extends Fragment {
             public boolean onLongClick(View view) {
                 if(currentlySelectedImageView != null && view.getId() == currentlySelectedImageView.getId()){
                     Log.d("iamgeView id ", "이미지뷰 아이디 : " + view.getId() + " 선택된 이미지뷰 아이디 : " + currentlySelectedImageView.getId());
-                    setDialog("이미지를 삭제 하시겠습니까?");
+                    setDialog("이미지를 삭제 하시겠습니까?", (ImageView) view);
+                    if(isModify){
+                        imageViewDataForModify = (ImageViewData) currentlySelectedImageView.getTag();
+                        int index = imageViewDataForModify.getIndex();
+                        activityViewModel.getIsDeleteLiveData().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+                            @Override
+                            public void onChanged(Boolean yesDelete) {
+                                if(yesDelete){
+
+                                }
+                            }
+                        });
+                        Log.d("사진을 삭제 할 뷰 태그","" + view.getTag());
+                    } else {
+                        int tag = Integer.parseInt((String) currentlySelectedImageView.getTag());
+                        activityViewModel.getIsDeleteLiveData().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+                            @Override
+                            public void onChanged(Boolean yesDelete) {
+                                if(yesDelete){
+                                    imageUrilist.remove(tag);
+                                    currentlySelectedImageView.setImageURI(null);
+                                }
+                            }
+                        });
+                        Log.d("사진을 삭제 할 뷰 태그","" + view.getTag().toString());
+                        Log.d("사진을 삭제 할 뷰 태그","" + tag);
+                    }
                 }
                 return false;
             }
@@ -598,8 +626,6 @@ public class WritingFragment extends Fragment {
                             Log.d("DEBUG_TAG", "imageViewDataForModify is properly initialized.");
                             Log.d("DEBUG_TAG", "imageView id : " + currentlySelectedImageView.getId());
                             Log.d("DEBUG_TAG", "imageView id : " + ((ImageViewData) currentlySelectedImageView.getTag()).getUrl());
-
-
                             Log.d("this deleted url","url : " + imageViewDataForModify.getUrl());
                         }
                     }
@@ -623,6 +649,7 @@ public class WritingFragment extends Fragment {
                         selectedImageUris.add(selectedImageUri.toString());
                         imageUrilist.add(selectedImageUri);
                     }
+
                 }
             }
         }
@@ -654,7 +681,7 @@ public class WritingFragment extends Fragment {
         }
     }
 
-    public void setDialog(String message) {
+    public void setDialog(String message, View imageView) {
         dialog = new Dialog(getContext());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -668,7 +695,8 @@ public class WritingFragment extends Fragment {
         yesDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                boolean yesDelete = true;
+                activityViewModel.getIsDeletePhoto(yesDelete);
                 dialog.dismiss();
             }
         });
@@ -682,4 +710,13 @@ public class WritingFragment extends Fragment {
 
         dialog.show();
     }
+
+    public void getDeleteUriForRegister(int tag, boolean yesDelete){
+
+    }
+
+
+
+
+
 }
