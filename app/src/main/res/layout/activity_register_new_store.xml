@@ -26,6 +26,7 @@
             app:layout_constraintVertical_bias="0.287">
 
             <ToggleButton
+                android:id="@+id/mypage_tbFruittarian"
                 android:layout_width="100dp"
                 android:layout_height="40dp"
                 android:layout_margin="5dp"
@@ -37,6 +38,7 @@
                 android:textOn="@string/tag_fruittarian"/>
 
             <ToggleButton
+                android:id="@+id/mypage_tbVegan"
                 android:layout_width="100dp"
                 android:layout_height="40dp"
                 android:layout_margin="5dp"
@@ -48,6 +50,7 @@
                 android:textOn="@string/tag_vegan"/>
 
             <ToggleButton
+                android:id="@+id/mypage_tbLacto"
                 android:layout_width="100dp"
                 android:layout_height="40dp"
                 android:layout_margin="5dp"
@@ -72,6 +75,7 @@
             app:layout_constraintVertical_bias="0.444">
 
             <ToggleButton
+                android:id="@+id/mypage_tbOvo"
                 android:layout_width="100dp"
                 android:layout_height="40dp"
                 android:layout_margin="5dp"
@@ -83,6 +87,7 @@
                 android:textOn="@string/tag_ovo"/>
 
             <ToggleButton
+                android:id="@+id/mypage_tbLactoOvo"
                 android:layout_width="100dp"
                 android:layout_height="40dp"
                 android:layout_margin="5dp"
@@ -94,6 +99,7 @@
                 android:textOn="@string/tag_lacto_ovo"/>
 
             <ToggleButton
+                android:id="@+id/mypage_tbPescatarian"
                 android:layout_width="100dp"
                 android:layout_height="40dp"
                 android:layout_margin="5dp"
@@ -117,6 +123,7 @@
             app:layout_constraintVertical_bias="0.129">
 
             <ToggleButton
+                android:id="@+id/mypage_tbPollo"
                 android:layout_width="100dp"
                 android:layout_height="40dp"
                 android:layout_margin="5dp"
@@ -128,6 +135,7 @@
                 android:textOn="@string/tag_pollo"/>
 
             <ToggleButton
+                android:id="@+id/mypage_tbKeto"
                 android:layout_width="100dp"
                 android:layout_height="40dp"
                 android:layout_margin="5dp"
@@ -139,6 +147,7 @@
                 android:textOn="@string/tag_keto"/>
 
             <ToggleButton
+                android:id="@+id/mypage_tbGlutenFree"
                 android:layout_width="100dp"
                 android:layout_height="40dp"
                 android:layout_margin="5dp"
