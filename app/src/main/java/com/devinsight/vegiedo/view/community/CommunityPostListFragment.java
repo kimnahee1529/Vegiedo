@@ -90,16 +90,6 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
             }
         });
 
-//        /* nav 바를 통한 화면 이동 시 보여질 최초 일반 게시글 리스트 */
-//        communityViewModel.loadGeneralPostList(cursor);
-//        communityViewModel.getGeneralPostList().observe(getViewLifecycleOwner(), new Observer<List<PostListData>>() {
-//            @Override
-//            public void onChanged(List<PostListData> generalPostListData) {
-//                setPostList(generalPostListData);
-//            }
-//        });
-
-
         /* 게시글 유형 구분 후 리스트 호출 */
         activityViewModel.getPostType().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
@@ -111,7 +101,10 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
                         @Override
                         public void onChanged(List<PostListData> generalPostListData) {
                             if (generalPostListData != null) {
-                                setPostList(generalPostListData);
+//                                setPostList(generalPostListData);
+                                adatper.setList(generalPostListData);
+                                adatper.notifyItemRangeInserted((cursor - 1)*5, 5);
+
                             } else {
                                 Log.d("CommunityPostListFragment", "list == null");
                             }
@@ -136,63 +129,6 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
             }
         });
 
-
-
-
-        /* 스크롤 위치에 따른 게시글 호출 */
-        scrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
-            @Override
-            public void onScrollChange(@NonNull NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                /* 현재 Y 좌표가 이전 Y 좌표 보다 작다면 = 스크롤이 위로 올라감*/
-                /* scrollY 값은 화면의 상단 에서 시작 하여 아래로 스크롤 될 때 커짐 */
-                isScrollingUp = scrollY < oldScrollY;
-                int childHeight = v.getChildAt(0).getMeasuredHeight();
-                int scrollViewHeight = v.getMeasuredHeight();
-
-                long currentTime = System.currentTimeMillis();
-                communityViewModel.getIsLastItem().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
-                    @Override
-                    public void onChanged(Boolean aBoolean) {
-                        Log.d("ScrollCheck", "Current Time: " + currentTime);
-                        Log.d("ScrollCheck", "Last Scroll Time: " + lastScrollEventTime);
-                        if(currentTime - lastScrollEventTime < SCROLL_DEBOUNCE_TIME) {
-                            return;
-                        }
-                        lastScrollEventTime = currentTime;
-                        Log.d("ScrollCheck", "Time Diff: " + (currentTime - lastScrollEventTime));
-                    }
-                });
-
-                communityViewModel.getMaxCursorLiveData().observe(getViewLifecycleOwner(), new Observer<Integer>() {
-                    @Override
-                    public void onChanged(Integer maxCursor) {
-
-                        if (scrollY == childHeight - scrollViewHeight && !isScrollingUp) {
-                            if( cursor < maxCursor ){
-                                cursor ++;
-                                Log.d("cursor scroll ", "cursor up" + cursor);
-                                addPostListFromApi(cursor);
-                                progressBar.setVisibility(View.VISIBLE);
-                            } else {
-                                Toast.makeText(getContext(), " 마지막 페이지 입니다 ", Toast.LENGTH_SHORT).show();
-                                progressBar.setVisibility(View.INVISIBLE);
-                            }
-
-                        }
-                        else if (isScrollingUp){
-                            if (cursor > 1) {
-                                cursor--;
-                                Log.d("cursor scroll", "cursor down" + cursor);
-                                previousPostListFromApi(cursor);
-                            }
-
-                        }
-
-                    }
-                });
-            }
-        });
-
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
@@ -203,43 +139,88 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-                int lastVisibleItemPosition = layoutManager.findLastCompletelyVisibleItemPosition(); // 화면에 보이는 마지막 아이템의 position
-                int itemTotalCount = recyclerView.getAdapter().getItemCount() - 1; // 어댑터에 등록된 아이템의 총 개수 -1
-                // 스크롤이 끝에 도달했는지 확인
+                int lastVisibleItemPosition = layoutManager.findLastCompletelyVisibleItemPosition();
+                int itemTotalCount = recyclerView.getAdapter().getItemCount() - 1;
                 if (lastVisibleItemPosition == itemTotalCount) {
-                    Log.d("게시글의 끝","게시글의 끝" + lastVisibleItemPosition + " : " + itemTotalCount);
+                    // 마지막 아이템에 도달했을 때, 다음 페이지의 데이터 로드
+                    // loadMoreData(++currentPage);
+                    adatper.deleteLoading();
+                    communityViewModel.getMaxCursorLiveData().observe(getViewLifecycleOwner(), new Observer<Integer>() {
+                        @Override
+                        public void onChanged(Integer maxCursor) {
+                            if (cursor < maxCursor) {
+                                cursor++;
+                                Log.d("cursor scroll ", "cursor up" + cursor);
+                                addPostListFromApi(cursor);
+                                progressBar.setVisibility(View.VISIBLE);
+                            } else {
+                                Toast.makeText(getContext(), " 마지막 페이지 입니다 ", Toast.LENGTH_SHORT).show();
+                                progressBar.setVisibility(View.INVISIBLE);
+                            }
+                        }
+                    });
+
                 }
-
-
-
-
-
-//                long currentTime = System.currentTimeMillis();
-//
-//                if(currentTime - lastScrollEventTime < SCROLL_DEBOUNCE_TIME) {
-//                    return; // Do not process if the time difference is less than debounce time.
-//                }
-//
-//                lastScrollEventTime = currentTime;
-//
-//                if (!recyclerView.canScrollVertically(1)) { // Check if reached the last item
-//                    Log.d("ScrollCheck", "Reached the last item");
-//                    communityViewModel.getLastItem(true);
-//                }
-//
-//                if (!recyclerView.canScrollVertically(-1)) {  // Check if reached the top
-//                    Log.d("ScrollCheck", "Reached the top");
-//                    communityViewModel.getFirstItem(true);
-//
-//                    // 여기에서 맨 위에 도달했을 때의 로직을 수행
-//                }
             }
         });
 
 
 
 
-//        setCursor();
+        /* 스크롤 위치에 따른 게시글 호출 */
+//        scrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+//            @Override
+//            public void onScrollChange(@NonNull NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+//                /* 현재 Y 좌표가 이전 Y 좌표 보다 작다면 = 스크롤이 위로 올라감*/
+//                /* scrollY 값은 화면의 상단 에서 시작 하여 아래로 스크롤 될 때 커짐 */
+//                isScrollingUp = scrollY < oldScrollY;
+//                int childHeight = v.getChildAt(0).getMeasuredHeight();
+//                int scrollViewHeight = v.getMeasuredHeight();
+//
+//                long currentTime = System.currentTimeMillis();
+//                communityViewModel.getIsLastItem().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+//                    @Override
+//                    public void onChanged(Boolean aBoolean) {
+//                        Log.d("ScrollCheck", "Current Time: " + currentTime);
+//                        Log.d("ScrollCheck", "Last Scroll Time: " + lastScrollEventTime);
+//                        if (currentTime - lastScrollEventTime < SCROLL_DEBOUNCE_TIME) {
+//                            return;
+//                        }
+//                        lastScrollEventTime = currentTime;
+//                        Log.d("ScrollCheck", "Time Diff: " + (currentTime - lastScrollEventTime));
+//                    }
+//                });
+//
+//                communityViewModel.getMaxCursorLiveData().observe(getViewLifecycleOwner(), new Observer<Integer>() {
+//                    @Override
+//                    public void onChanged(Integer maxCursor) {
+//
+//                        if (scrollY == childHeight - scrollViewHeight && !isScrollingUp) {
+//                            if (cursor < maxCursor) {
+//                                cursor++;
+//                                Log.d("cursor scroll ", "cursor up" + cursor);
+//                                addPostListFromApi(cursor);
+//                                progressBar.setVisibility(View.VISIBLE);
+//                            } else {
+//                                Toast.makeText(getContext(), " 마지막 페이지 입니다 ", Toast.LENGTH_SHORT).show();
+//                                progressBar.setVisibility(View.INVISIBLE);
+//                            }
+//
+//                        } else if (isScrollingUp) {
+//                            if (cursor > 1) {
+//                                cursor--;
+//                                Log.d("cursor scroll", "cursor down" + cursor);
+//                                previousPostListFromApi(cursor);
+//                            }
+//
+//                        }
+//
+//                    }
+//                });
+//            }
+//        });
+
+
 
         return view;
     }
@@ -291,17 +272,6 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
     public void setPostList(List<PostListData> list) {
         adatper.setPostList(list);
         adatper.notifyDataSetChanged();
-    }
-
-    /* 스크롤 위치에 따라 호출 된 게시글 목록을 기존 목록에 추가 */
-    public void addPostListFromApi(List<PostListData> list) {
-
-        adatper.addPostList(list);
-    }
-
-    public void previousPostListFromApi(List<PostListData> list) {
-
-        adatper.previousPostList(list);
     }
 
 
