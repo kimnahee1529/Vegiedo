@@ -1,9 +1,12 @@
 package com.devinsight.vegiedo.view.mypage;
 
 import android.app.AlertDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -41,6 +44,26 @@ public class ChangeNicknameFragment extends Fragment {
         changeNickname_complete_btn = view.findViewById(R.id.ChangeNickname_complete_btn);
         changeNickname_rule = view.findViewById(R.id.ChangeNickname_rule);
 
+        viewModel.getUserNickNameDataLiveData().observe(getViewLifecycleOwner(), new Observer() {
+            @Override
+            public void onChanged(Object o) {
+                Log.d("받은 닉네임 api","code:"+o.toString());
+                if("200".equals(o.toString())){
+                    Log.d("닉네임 api성공","code:"+o);
+
+                    String updatedNickname = changeNicknameText.getText().toString(); // 새로운 닉네임으로 변경할 값
+                    updateNickname(updatedNickname);
+
+                    FragmentManager fragmentManager = getParentFragmentManager();
+                    fragmentManager.popBackStack();
+
+                }else{
+                    showNicknameAlertDialog();
+                    Log.d("닉네임 api실패","code:"+o);
+                }
+            }
+        });
+
         changeNickname_complete_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -60,25 +83,10 @@ public class ChangeNicknameFragment extends Fragment {
                     changeNickname_rule.setTextColor(getResources().getColor(R.color.nickname_alert_red));
                     return;
                 }
-                // 서버-공통 닉네임일 때
-                else{
-//                    viewModel.getStoreStampLiveData().observe(getViewLifecycleOwner(), new Observer() {
-                    viewModel.getUserNickNameDataLiveData().observe(getViewLifecycleOwner(), new Observer() {
-                        @Override
-                        public void onChanged(Object o) {
-                            Log.d("닉네임 api","code:"+o.toString());
-                            if("200".equals(o.toString())){
-                                Log.d("닉네임 api성공","code:"+o.toString());
-                            }else{
-                                showNicknameAlertDialog();
-                                Log.d("닉네임 api실패","code:"+o.toString());
-                            }
-                        }
-                    });
-                    viewModel.UserNicknameChange(userNicknamedto);
-                }
+                // 서버-공통 닉네임 확인
+                viewModel.UserNicknameChange(userNicknamedto);
 
-                Log.d("ChangeNickname", "Entered text: " + enteredText);  // 로그로 입력된 텍스트 출력
+                Log.d("바꾸려고 하는 닉네임", "Entered text: " + enteredText);  // 로그로 입력된 텍스트 출력
             }
         });
 
@@ -99,5 +107,12 @@ public class ChangeNicknameFragment extends Fragment {
                 dialog.dismiss(); // 다이얼로그 닫기
             }
         });
+    }
+
+    private void updateNickname(String newNickname) {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_info", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("userName", newNickname); // "userName" 키에 새로운 닉네임을 저장
+        editor.apply();
     }
 }

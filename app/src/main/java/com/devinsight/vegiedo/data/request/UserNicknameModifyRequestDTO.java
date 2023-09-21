@@ -4,17 +4,17 @@ import java.util.List;
 
 public class UserNicknameModifyRequestDTO {
 
-    private String nickName;
+    private String nickname;
 
     public String getNickName() {
-        return nickName;
+        return nickname;
     }
 
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
+    public void setNickName(String nickname) {
+        this.nickname = nickname;
     }
 
-    public UserNicknameModifyRequestDTO(String nickName) {
-        this.nickName = nickName;
+    public UserNicknameModifyRequestDTO(String nickname) {
+        this.nickname = nickname;
     }
 }
