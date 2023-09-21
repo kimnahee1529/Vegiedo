@@ -93,6 +93,8 @@ public class PostContentFragment extends Fragment implements PostContentAdapter.
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main_post, container, false);
 
+        authPrefRepository = new AuthPrefRepository(getActivity());
+
         user_image = view.findViewById(R.id.user_image);
         post_title = view.findViewById(R.id.post_title);
         user_name = view.findViewById(R.id.user_name);
@@ -204,25 +206,10 @@ public class PostContentFragment extends Fragment implements PostContentAdapter.
             }
         });
 
-        recommend_btn.setOnLongClickListener(new View.OnLongClickListener() {
+        recommend_btn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onLongClick(View view) {
-                postApiService.recommendPost(token, postId).enqueue(new Callback<Void>() {
-                    @Override
-                    public void onResponse(Call<Void> call, Response<Void> response) {
-                        if(response.isSuccessful()){
-                            Log.d("post 추천 api 호출 성공 ","성공" + response);
-                        }else{
-                            Log.e("post 추천 api 호출 실패 ","실패1" + response);
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<Void> call, Throwable t) {
-                        Log.e("post 추천 api 호출 실패 ","실패2" + t.getMessage());
-                    }
-                });
-                return false;
+            public void onClick(View view) {
+                activityViewModel.recommendPost(postId);
             }
         });
 

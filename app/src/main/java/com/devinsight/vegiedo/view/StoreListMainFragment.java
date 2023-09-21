@@ -25,6 +25,7 @@ import com.devinsight.vegiedo.data.response.StoreListData;
 import com.devinsight.vegiedo.view.search.ActivityViewModel;
 import com.devinsight.vegiedo.view.search.StoreDetailListAdapter;
 import com.devinsight.vegiedo.view.store.StoreDetailPageDDFragment;
+import com.devinsight.vegiedo.view.store.StoreDetailPageFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -98,15 +99,13 @@ public class StoreListMainFragment extends Fragment implements StoreDetailListAd
         viewModel = new ViewModelProvider(requireActivity()).get(ActivityViewModel.class);
         Log.d("가게메인리스트2", "가게메인리스트2");
 
-//        viewModel.storeApiData();
-        viewModel.searchDetailList();
-        Log.d("가게메인리스트3", "가게메인리스트3");
+        viewModel.storeApiData();
+//        viewModel.searchDetailList();
+//        Log.d("가게메인리스트3", "가게메인리스트3");
 
-
-        viewModel.getFilteredStoreListLiveData().observe(getViewLifecycleOwner(), new Observer<List<StoreListData>>() {
+        viewModel.getStoreListLiveData().observe(getViewLifecycleOwner(), new Observer<List<StoreListData>>() {
             @Override
             public void onChanged(List<StoreListData> storeListData) {
-
                 if (storeListData.size() == 0) {
                     Log.d("검색 리스트 없음 ", " 검색리스트 갯수 : " + storeListData.size());
                     setNotificationVisible();
@@ -119,6 +118,27 @@ public class StoreListMainFragment extends Fragment implements StoreDetailListAd
                 }
             }
         });
+
+
+//        viewModel.getFilteredStoreListLiveData().observe(getViewLifecycleOwner(), new Observer<List<StoreListData>>() {
+//            @Override
+//            public void onChanged(List<StoreListData> storeListData) {
+//
+//                if (storeListData.size() == 0) {
+//                    Log.d("검색 리스트 없음 ", " 검색리스트 갯수 : " + storeListData.size());
+//                    setNotificationVisible();
+//                } else {
+//                    Log.d("가게메인리스트4", "가게메인리스트4");
+//                    setNotificationInVisible();
+//                    storeDetailListAdapter.setStoreList(storeListData);
+//                    storeDetailListAdapter.notifyDataSetChanged();
+//
+//                }
+//            }
+//        });
+//
+//        viewModel.searchDetailList();
+//        Log.d("가게메인리스트3", "가게메인리스트3");
 
 
         return view;
@@ -141,8 +161,8 @@ public class StoreListMainFragment extends Fragment implements StoreDetailListAd
     @Override
     public void onSearchClick(View view, StoreListData searchData, int position) {
 
-        StoreDetailPageDDFragment detailFragment = new StoreDetailPageDDFragment();
-//        StoreDetailPageFragment detailFragment = new StoreDetailPageFragment();
+//        StoreDetailPageDDFragment detailFragment = new StoreDetailPageDDFragment();
+        StoreDetailPageFragment detailFragment = new StoreDetailPageFragment();
 
         Bundle bundle = new Bundle();
         bundle.putString("storeImage", storeList.get(position).getImages());
@@ -150,7 +170,7 @@ public class StoreListMainFragment extends Fragment implements StoreDetailListAd
         bundle.putString("storeAddress", storeList.get(position).getAddress());
         bundle.putInt("storeRating", storeList.get(position).getStars());
         bundle.putInt("storeReview", storeList.get(position).getReviewCount());
-        bundle.putLong("storeId", storeList.get(position).getStoreId());
+        bundle.putLong("storeIdFromD", storeList.get(position).getStoreId());
 
         detailFragment.setArguments(bundle);
 

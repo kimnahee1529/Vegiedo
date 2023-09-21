@@ -26,17 +26,18 @@ import retrofit2.http.Query;
 public interface StoreApiService {
 
     //가게 리스트 조회
-    @GET("/stores")
+    @GET("stores")
     Call<List<StoreListData>> getStoreLists(
             @Query("tags") List<String> tags,
             @Query("latitude") float latitude,
             @Query("longitude") float longitude,
             @Query("distance") int distance,
-            @Query("keyword") String keyword,
             @Query("count") int count,
             @Query("cursor") int cursor,
             @Header("Authorization") String token
     );
+
+
 
     //가게 등록
     @POST("/stores")

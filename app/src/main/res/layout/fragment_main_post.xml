@@ -98,6 +98,16 @@
         app:layout_constraintBottom_toBottomOf="@id/post_card"
         app:layout_constraintLeft_toRightOf="@id/heart" />
 
+    <ImageView
+        android:id="@+id/btn_post_report"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:layout_marginLeft="10dp"
+        android:tint="@color/grey"
+        android:src="@drawable/alert_triangle"
+
+    />
+
 
     <View
         android:id="@+id/view_line"

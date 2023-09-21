@@ -40,6 +40,7 @@ import com.devinsight.vegiedo.data.response.MapStoreListData;
 import com.devinsight.vegiedo.data.response.ReviewListInquiryResponseDTO;
 import com.devinsight.vegiedo.data.response.StoreInquiryResponseDTO;
 import com.devinsight.vegiedo.data.ui.login.NickNameStatus;
+import com.devinsight.vegiedo.repository.pref.StorePrefRepository;
 import com.devinsight.vegiedo.service.api.StoreApiService;
 import com.devinsight.vegiedo.view.search.ActivityViewModel;
 
@@ -79,11 +80,33 @@ public class StoreDetailPageFragment extends Fragment {
     ActivityViewModel viewModel;
     private Long storeId;
     private boolean canWriteReview;
+    /* 해당 페이지의 storeId 입니다. */
+    Long storeIdFromDetailPage;
+    Long storeIdFromSummaryPage;
 
+
+    /* 검색 리스트로 부터 storeId를 받아 옵니다. */
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            storeIdFromDetailPage = getArguments().getLong("storeIdFromD",0);
+            storeIdFromSummaryPage = getArguments().getLong("storeIdFromS",0);
+            StorePrefRepository storePrefRepository = new StorePrefRepository(getContext());
+            if(storeIdFromDetailPage != null && storeIdFromDetailPage != 0 ){
+                storePrefRepository.addStoreId(storeIdFromDetailPage);
+            } else if (storeIdFromSummaryPage != null && storeIdFromSummaryPage != 0) {
+                storePrefRepository.addStoreId(storeIdFromSummaryPage);
+            }
+
+            Log.d("가게 아이디","디테일 : " + storeIdFromDetailPage + "요약 : " + storeIdFromSummaryPage);
+        }
+    }
 
     public StoreDetailPageFragment() {
         // Required empty public constructor
     }
+
 
     @Nullable
     @Override

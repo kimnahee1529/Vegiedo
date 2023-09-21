@@ -9,31 +9,29 @@ import java.util.List;
 public class StoreInquiryResponseDTO {
 
     @Expose
-    @SerializedName("storeId") private Long storeId;
+    @SerializedName("storeId") private Long storeId;//
     @Expose
-    @SerializedName("storeName") private String storeName;
+    @SerializedName("storeName") private String storeName;//
     @Expose
-    @SerializedName("images") private String storeImage;
+    @SerializedName("images") private String storeImage;//
     @Expose
-    @SerializedName("address") private String address;
+    @SerializedName("address") private String address;//
     @Expose
-    @SerializedName("stars") private Integer stars;
+    @SerializedName("stars") private Integer stars;//
     @Expose
-    @SerializedName("reviewCount") private Integer reviewCount;
+    @SerializedName("reviewCount") private Integer reviewCount;//
     @Expose
-    @SerializedName("tags") private List<String> tags;
+    @SerializedName("tags") private List<String> tags;//
     @Expose
-    @SerializedName("latitude") private float latitude;
+    @SerializedName("latitude") private float latitude;//
     @Expose
-    @SerializedName("longitude") private float longitude;
+    @SerializedName("longitude") private float longitude;//
     @Expose
-    @SerializedName("like") private boolean like;
+    @SerializedName("like") private boolean like;//
     @Expose
-    @SerializedName("stamp") private boolean stamp;
+    @SerializedName("stamp") private boolean stamp;//
     @Expose
-    @SerializedName("reviewContent") private List<String> images;
-    @Expose
-    @SerializedName("report") private boolean report;
+    @SerializedName("report") private boolean report;//
 
     public Long getStoreId() {
         return storeId;
@@ -51,20 +49,20 @@ public class StoreInquiryResponseDTO {
         this.storeName = storeName;
     }
 
+    public String getStoreImage() {
+        return storeImage;
+    }
+
+    public void setStoreImage(String storeImage) {
+        this.storeImage = storeImage;
+    }
+
     public String getAddress() {
         return address;
     }
 
     public void setAddress(String address) {
         this.address = address;
-    }
-
-    public Integer getReviewCount() {
-        return reviewCount;
-    }
-
-    public void setReviewCount(Integer reviewCount) {
-        this.reviewCount = reviewCount;
     }
 
     public Integer getStars() {
@@ -75,12 +73,36 @@ public class StoreInquiryResponseDTO {
         this.stars = stars;
     }
 
+    public Integer getReviewCount() {
+        return reviewCount;
+    }
+
+    public void setReviewCount(Integer reviewCount) {
+        this.reviewCount = reviewCount;
+    }
+
     public List<String> getTags() {
         return tags;
     }
 
     public void setTags(List<String> tags) {
         this.tags = tags;
+    }
+
+    public float getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(float latitude) {
+        this.latitude = latitude;
+    }
+
+    public float getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(float longitude) {
+        this.longitude = longitude;
     }
 
     public boolean isLike() {
@@ -99,46 +121,6 @@ public class StoreInquiryResponseDTO {
         this.stamp = stamp;
     }
 
-//    public String getImages() {
-//        return images;
-//    }
-//
-//    public void setImages(String images) {
-//        this.images = images;
-//    }
-
-    public String getStoreImage() {
-        return storeImage;
-    }
-
-    public void setStoreImage(String storeImage) {
-        this.storeImage = storeImage;
-    }
-    public float getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(float latitude) {
-        this.latitude = latitude;
-    }
-
-    public float getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(float longitude) {
-        this.longitude = longitude;
-    }
-
-    public List<String> getImages() {
-        return images;
-    }
-
-    public void setImages(List<String> images) {
-        this.images = images;
-    }
-
-
     public boolean isReport() {
         return report;
     }
@@ -147,17 +129,18 @@ public class StoreInquiryResponseDTO {
         this.report = report;
     }
 
-
-    public StoreInquiryResponseDTO(Long storeId, String storeName, String address, Integer stars, List<String> tags, boolean like, boolean stamp, List<String> images, float latitude, float longitude) {
+    public StoreInquiryResponseDTO(Long storeId, String storeName, String storeImage, String address, Integer stars, Integer reviewCount, List<String> tags, float latitude, float longitude, boolean like, boolean stamp, boolean report) {
         this.storeId = storeId;
         this.storeName = storeName;
+        this.storeImage = storeImage;
         this.address = address;
         this.stars = stars;
+        this.reviewCount = reviewCount;
         this.tags = tags;
-        this.like = like;
-        this.stamp = stamp;
-        this.images = images;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.like = like;
+        this.stamp = stamp;
+        this.report = report;
     }
 }
