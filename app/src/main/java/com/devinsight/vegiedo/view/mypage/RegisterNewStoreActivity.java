@@ -162,6 +162,8 @@ public class RegisterNewStoreActivity extends AppCompatActivity {
 
 //                StoreRegisterRequestDTO requestDTO = new StoreRegisterRequestDTO(storeName,storeAddress,);
 //                requestDTO.setStoreName(storeName);
+//                requestDTO.setAddress(storeAddress);
+//                requestDTO.setTags(selectedDietList);
 //                requestDTO.setReportType(reportType.get());
 //                requestDTO.setOpinion(opinion.get());
 
