@@ -19,14 +19,18 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.devinsight.vegiedo.R;
+import com.devinsight.vegiedo.data.request.StoreRegisterRequestDTO;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -43,6 +47,13 @@ public class RegisterNewStoreActivity extends AppCompatActivity {
     private ImageView plusBtn;
     private TextView btnCheckAddress;
     private ImageView backwardBtn;
+//    private ToggleButton tbFruittarian, tbVegan, tbLacto, tbOvo, tbLactoOvo, tbPescatarian, tbPollo, tbKeto, tbGlutenFree;
+//    private List<String> selectedDietList = new ArrayList<>();
+    private ToggleButton[] toggleButtons;
+    private List<String> selectedDietList = new ArrayList<>();
+    private String[] dietNames = {
+            "Fruittarian", "Vegan", "Lacto", "Ovo", "LactoOvo", "Pescatarian", "Pollo", "Keto", "GlutenFree"
+    };
 
     //Geocoding 사용
     private OkHttpClient client = new OkHttpClient();
@@ -52,6 +63,23 @@ public class RegisterNewStoreActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_new_store);
+
+        toggleButtons = new ToggleButton[] {
+                findViewById(R.id.mypage_tbFruittarian),
+                findViewById(R.id.mypage_tbVegan),
+                findViewById(R.id.mypage_tbLacto),
+                findViewById(R.id.mypage_tbOvo),
+                findViewById(R.id.mypage_tbLactoOvo),
+                findViewById(R.id.mypage_tbPescatarian),
+                findViewById(R.id.mypage_tbPollo),
+                findViewById(R.id.mypage_tbKeto),
+                findViewById(R.id.mypage_tbGlutenFree)
+        };
+
+        for (int i = 0; i < toggleButtons.length; i++) {
+            int finalI = i;
+            toggleButtons[i].setOnCheckedChangeListener((buttonView, isChecked) -> updateDietList(dietNames[finalI], isChecked));
+        }
 
         //상호명 입력
         final EditText storeNameEditText = findViewById(R.id.store_name_edit_text);
@@ -127,9 +155,29 @@ public class RegisterNewStoreActivity extends AppCompatActivity {
                     // 주소가 비어있는 경우에 대한 처리 (예: Toast 메시지 표시)
                     Toast.makeText(RegisterNewStoreActivity.this, "주소를 입력해주세요.", Toast.LENGTH_SHORT).show();
                 }
+
+                Log.d("주소 등록", "상호명:"+storeNameEditText.getText()+", 주소:"+mEtAddress.getText());
+                String storeName = storeNameEditText.getText().toString();
+                String storeAddress = mEtAddress.getText().toString();
+
+//                StoreRegisterRequestDTO requestDTO = new StoreRegisterRequestDTO(storeName,storeAddress,);
+//                requestDTO.setStoreName(storeName);
+//                requestDTO.setReportType(reportType.get());
+//                requestDTO.setOpinion(opinion.get());
+
+//                Log.d("주소 등록", requestDTO.getStoreName() + ", " + requestDTO.getAddress());
+                Log.d("태그 리스트", selectedDietList.toString());
             }
         });
 
+    }
+
+    private void updateDietList(String diet, boolean isChecked) {
+        if (isChecked) {
+            selectedDietList.add(diet);
+        } else {
+            selectedDietList.remove(diet);
+        }
     }
 
     //Geocoding : 주소로 위도, 경도 구하기

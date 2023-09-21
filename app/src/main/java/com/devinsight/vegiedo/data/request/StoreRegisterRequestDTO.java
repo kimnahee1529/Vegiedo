@@ -68,4 +68,9 @@ public class StoreRegisterRequestDTO {
         this.latitude = latitude;
         this.longitude = longitude;
     }
+    public StoreRegisterRequestDTO(String storeName, String address, List<VeganTag> tags) {
+        this.storeName = storeName;
+        this.address = address;
+        this.tags = tags;
+    }
 }
