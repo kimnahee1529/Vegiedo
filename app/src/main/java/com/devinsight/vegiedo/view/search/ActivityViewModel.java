@@ -134,6 +134,9 @@ public class ActivityViewModel extends ViewModel {
     private float mapLong;
     private float latitude;
     private float longitude;
+
+    private float INITIAL_LAT = 37.4979f;
+    private float INITIAL_LONG = 127.0276f;
     private List<String> tags;
     private List<String> initialTags;
     private int distance;
@@ -244,13 +247,16 @@ public class ActivityViewModel extends ViewModel {
     public void storeApiData() {
         Log.d("api 가져오는 함수 ", "  public void storeApiData() ");
         boolean noMapLocation = mapLat + mapLong == 0.0f;
-
+        boolean noUserLocation = userCurrentLat + userCurrentLong == 0.0f;
         if (noMapLocation) {
             latitude = userCurrentLat;
             longitude = userCurrentLong;
-        } else {
+        } else if (noUserLocation){
             latitude = mapLat;
             longitude = mapLong;
+        } else if(noMapLocation && noUserLocation){
+            latitude = INITIAL_LAT;
+            longitude = INITIAL_LONG;
         }
 
         if (tags == null) {
@@ -1006,6 +1012,32 @@ public class ActivityViewModel extends ViewModel {
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 Log.e("post 삭제 실패 2", "실패 2" + t.getMessage());
+            }
+        });
+    }
+
+    public void recommendPost(Long postId){
+        Log.d(" 추천 포스트 아이디", "추천 포스트 아이디 " + postId);
+
+        postApiService.recommendPost("Bearer " + token, postId).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+                    Log.d("RetrofitRequestURL 성공", "Requested URL: " + call.request().url());
+                    Log.d("post 추천 api 호출 성공 ","성공" + response);
+                }else{
+                    Log.d("RetrofitRequestURL 실패", "Requested URL: " + call.request().url());
+                    Log.e("post 추천 api 호출 실패 1 ","실패1" + response);
+                    try {
+                        Log.e("post 추천 실패 1", "Error Body: " + response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.e("post 추천 api 호출 실패 2 ","실패2" + t.getMessage());
             }
         });
     }

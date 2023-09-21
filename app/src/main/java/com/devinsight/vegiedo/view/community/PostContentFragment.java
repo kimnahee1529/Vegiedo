@@ -206,25 +206,10 @@ public class PostContentFragment extends Fragment implements PostContentAdapter.
             }
         });
 
-        recommend_btn.setOnLongClickListener(new View.OnLongClickListener() {
+        recommend_btn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onLongClick(View view) {
-                postApiService.recommendPost(token, postId).enqueue(new Callback<Void>() {
-                    @Override
-                    public void onResponse(Call<Void> call, Response<Void> response) {
-                        if(response.isSuccessful()){
-                            Log.d("post 추천 api 호출 성공 ","성공" + response);
-                        }else{
-                            Log.e("post 추천 api 호출 실패 ","실패1" + response);
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<Void> call, Throwable t) {
-                        Log.e("post 추천 api 호출 실패 ","실패2" + t.getMessage());
-                    }
-                });
-                return false;
+            public void onClick(View view) {
+                activityViewModel.recommendPost(postId);
             }
         });
 
