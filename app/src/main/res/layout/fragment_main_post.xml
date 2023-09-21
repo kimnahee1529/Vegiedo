@@ -103,10 +103,10 @@
         android:layout_width="12dp"
         android:layout_height="12dp"
         android:layout_marginLeft="10dp"
-        android:tint="@color/grey"
         android:src="@drawable/alert_triangle"
-
-    />
+        app:tint="@color/grey"
+        app:layout_constraintLeft_toRightOf="@+id/like_count"
+        app:layout_constraintBottom_toBottomOf="@id/like_count"/>
 
 
     <View
