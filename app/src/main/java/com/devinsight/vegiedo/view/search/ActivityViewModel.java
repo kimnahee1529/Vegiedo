@@ -794,19 +794,20 @@ public class ActivityViewModel extends ViewModel {
         userNicknameChangeRequestDTOCall.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                Log.d("뷰모델 닉네임 onResponse", String.valueOf(response.code()));
+//                Log.d("뷰모델 닉네임 onResponse", String.valueOf(response.code()));
                 if (response.isSuccessful()) {
                     Void responseData = response.body();
                     Log.d("뷰모델에서 보낸 닉네임 api 성공", response.toString());
                     userNickNameDataLiveData.setValue(response.code());
                 } else{
                     Log.d("뷰모델에서 보낸 닉네임 api", "UserNicknameChange 호출실패1 "+response);
+                    userNickNameDataLiveData.setValue(response.code());
                 }
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Log.d("뷰모델에서 보낸 닉네임 api", "UserNicknameChange 호출실패2");
+                Log.d("뷰모델에서 보낸 닉네임 api", "UserNicknameChange 호출실패2 "+ t);
             }
         });
     }
