@@ -101,6 +101,8 @@ public class WritingFragment extends Fragment {
 
     final boolean yesDelete = true;
 
+    private int deleteCount;
+
     ActivityViewModel activityViewModel;
 
     PostApiService postApiService = RetrofitClient.getPostApiService();
@@ -133,6 +135,8 @@ public class WritingFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_writing, container, false);
+
+        deleteCount = 0;
 
         actionOn = 0;
         imageUrilist = new ArrayList<>();
@@ -251,6 +255,7 @@ public class WritingFragment extends Fragment {
                         } else {
                             /* 기존 URL 리스트의 숫자보다 이미지뷰의 인덱스가 클 경우, url을 넣지 않습니다. */
                             ImageView imageView = rootView.findViewById(imageViews[i]);
+                            ImageViewData imageViewDataForModify = new ImageViewData();
                             imageViewDataForModify.setIndex(i);
                             imageViewDataForModify.setUrl(null);
                             imageView.setTag(imageViewDataForModify);
@@ -270,11 +275,22 @@ public class WritingFragment extends Fragment {
                     setDialog("이미지를 삭제 하시겠습니까?", (ImageView) view);
                     if(isModify){
                         imageViewDataForModify = (ImageViewData) currentlySelectedImageView.getTag();
+                        String urlToDelete = imageViewDataForModify.getUrl();
                         int index = imageViewDataForModify.getIndex();
+                        int uriIndex = index - imageUrlListOrigin.size();
+                        Log.d("수정 인덱스","수정 인덱스" + index);
                         activityViewModel.getIsDeleteLiveData().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
                             @Override
                             public void onChanged(Boolean yesDelete) {
                                 if(yesDelete){
+                                    if(index < imageUrlListOrigin.size()) {
+                                        imageUrlListToDelete.add(urlToDelete);
+                                        Log.d("롱클릭 시 삭제할 url","롱클릭 시 삭제할 url" + urlToDelete + " 리스트 " + imageUrlListToDelete.size());
+                                        currentlySelectedImageView.setImageDrawable(null);
+                                    } else {
+                                        imageUriListForModify.remove(uriIndex);
+                                        currentlySelectedImageView.setImageURI(null);
+                                    }
 
                                 }
                             }
