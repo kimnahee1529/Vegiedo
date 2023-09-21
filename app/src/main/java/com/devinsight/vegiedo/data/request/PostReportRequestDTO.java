@@ -1,27 +1,48 @@
 package com.devinsight.vegiedo.data.request;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 public class PostReportRequestDTO {
-    private Integer reportType;
-    private String opinion;
 
-    public Integer getReportType() {
-        return reportType;
+    @Expose
+    @SerializedName("contentType")private String contentType;
+    @Expose
+    @SerializedName("trollType")private String trollType;
+    @Expose
+    @SerializedName("memo")private String memo;
+
+    public PostReportRequestDTO(String contentType, String trollType, String memo) {
+        this.contentType = contentType;
+        this.trollType = trollType;
+        this.memo = memo;
+    }
+    public PostReportRequestDTO() {
+
     }
 
-    public void setReportType(Integer reportType) {
-        this.reportType = reportType;
+
+    public String getContentType() {
+        return contentType;
     }
 
-    public String getOpinion() {
-        return opinion;
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
     }
 
-    public void setOpinion(String opinion) {
-        this.opinion = opinion;
+    public String getTrollType() {
+        return trollType;
     }
 
-    public PostReportRequestDTO(Integer reportType, String opinion) {
-        this.reportType = reportType;
-        this.opinion = opinion;
+    public void setTrollType(String trollType) {
+        this.trollType = trollType;
+    }
+
+    public String getMemo() {
+        return memo;
+    }
+
+    public void setMemo(String memo) {
+        this.memo = memo;
     }
 }

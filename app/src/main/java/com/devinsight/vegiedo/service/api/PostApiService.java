@@ -98,6 +98,7 @@ public interface PostApiService {
     //게시글 신고
     @POST("/posts/{postId}/reports")
     Call<Void> reportPost(
+            @Header("Authorization") String token,
             @Path("postId") Long postId,
             @Body PostReportRequestDTO postReportRequestDTO
     );

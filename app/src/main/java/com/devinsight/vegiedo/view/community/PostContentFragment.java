@@ -1,6 +1,8 @@
 package com.devinsight.vegiedo.view.community;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -13,32 +15,39 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.bumptech.glide.Glide;
 import com.devinsight.vegiedo.R;
+import com.devinsight.vegiedo.data.request.PostReportRequestDTO;
+import com.devinsight.vegiedo.data.request.ReviewReportRequestDTO;
 import com.devinsight.vegiedo.data.response.ContentImage;
 import com.devinsight.vegiedo.data.response.PostInquiryResponseDTO;
 import com.devinsight.vegiedo.repository.pref.AuthPrefRepository;
+import com.devinsight.vegiedo.repository.pref.UserPrefRepository;
 import com.devinsight.vegiedo.service.api.PostApiService;
 import com.devinsight.vegiedo.utill.RetrofitClient;
+import com.devinsight.vegiedo.utill.UserInfoTag;
 import com.devinsight.vegiedo.view.MainActivity;
 import com.devinsight.vegiedo.view.community.adapter.PostContentAdapter;
 import com.devinsight.vegiedo.view.search.ActivityViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class PostContentFragment extends Fragment implements PostContentAdapter.ImageClickListener {
 
@@ -53,6 +62,7 @@ public class PostContentFragment extends Fragment implements PostContentAdapter.
     TextView post_content_delete;
     TextView post_content_modify;
     ImageView recommend_btn;
+    ImageView btn_post_report;
 
     PostContentAdapter adaptper;
     RecyclerView recyclerView;
@@ -73,6 +83,7 @@ public class PostContentFragment extends Fragment implements PostContentAdapter.
     ActivityViewModel activityViewModel;
     PostApiService postApiService = RetrofitClient.getPostApiService();
     AuthPrefRepository authPrefRepository;
+    UserPrefRepository userPrefRepository;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -94,6 +105,7 @@ public class PostContentFragment extends Fragment implements PostContentAdapter.
         View view = inflater.inflate(R.layout.fragment_main_post, container, false);
 
         authPrefRepository = new AuthPrefRepository(getActivity());
+        userPrefRepository = new UserPrefRepository(getActivity());
 
         user_image = view.findViewById(R.id.user_image);
         post_title = view.findViewById(R.id.post_title);
@@ -106,6 +118,7 @@ public class PostContentFragment extends Fragment implements PostContentAdapter.
         post_content_delete = view.findViewById(R.id.post_content_delete);
         post_content_modify = view.findViewById(R.id.post_content_modify);
         recommend_btn = view.findViewById(R.id.content_heart);
+        btn_post_report = view.findViewById(R.id.btn_post_report);
 
         communityMainFragment = new CommunityMainFragment();
 
@@ -123,6 +136,18 @@ public class PostContentFragment extends Fragment implements PostContentAdapter.
             social = "GOOGLE";
         }
         token = authPrefRepository.getAuthToken(social);
+
+        String myName = userPrefRepository.loadUserInfo(UserInfoTag.USER_NICKNAME.getInfoType());
+
+        if(Objects.equals(userName, myName)) {
+            btn_post_report.setVisibility(View.INVISIBLE);
+            post_content_delete.setVisibility(View.VISIBLE);
+            post_content_modify.setVisibility(View.VISIBLE);
+        } else {
+            btn_post_report.setVisibility(View.VISIBLE);
+            post_content_delete.setVisibility(View.INVISIBLE);
+            post_content_modify.setVisibility(View.INVISIBLE);
+        }
 
 
 
@@ -168,7 +193,7 @@ public class PostContentFragment extends Fragment implements PostContentAdapter.
         post_content_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setDialog("글을 삭제 하시겠어요?", postId);
+                setDeleteDialog("글을 삭제 하시겠어요?", postId);
             }
         });
 
@@ -213,6 +238,13 @@ public class PostContentFragment extends Fragment implements PostContentAdapter.
             }
         });
 
+        btn_post_report.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setReportDialog();
+            }
+        });
+
         return view;
     }
 
@@ -221,7 +253,127 @@ public class PostContentFragment extends Fragment implements PostContentAdapter.
 
     }
 
-    public void setDialog(String message, Long postId) {
+    public void setReportDialog(){
+        int layoutId;
+        View dialogView;
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        LayoutInflater inflater = LayoutInflater.from(getContext());
+
+        Log.d(" 신고 포스트 아이디 2","신고 포스트 아이디 2 " + postId);
+        layoutId = R.layout.select_reporting_type_dialog;
+        dialogView = inflater.inflate(layoutId, null);
+        builder.setView(dialogView);
+        AlertDialog reportDialog = builder.create();
+        Log.d("AlertDialog", reportDialog.toString());
+        setupReportDialog(dialogView, reportDialog);
+        reportDialog.setContentView(R.layout.dialog_custom);
+        reportDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT)); //배경 투명하게 설정
+        reportDialog.show();
+    }
+
+    private void setupReportDialog(View dialogView, AlertDialog dialog) {
+
+        ToggleButton report_type_btn1 = dialogView.findViewById(R.id.report_type_btn1);
+        ToggleButton report_type_btn2 = dialogView.findViewById(R.id.report_type_btn2);
+        ToggleButton report_type_btn3 = dialogView.findViewById(R.id.report_type_btn3);
+        ToggleButton report_type_btn4 = dialogView.findViewById(R.id.report_type_btn4);
+        EditText reasons_edit_text = dialogView.findViewById(R.id.other_reasons_text);
+        TextView num_of_letter_text = dialogView.findViewById(R.id.num_of_letter);
+        TextView reporting_btn = dialogView.findViewById(R.id.reporting_btn);
+
+        //각 버튼 별 reportType(신고유형)과 기타에서의 option(기타 사유)
+        AtomicReference<String> reportType = new AtomicReference<>("");
+        AtomicReference<String> opinion = new AtomicReference<>("");
+
+        ImageView closeIcon = dialogView.findViewById(R.id.green_x_circle);
+
+        reasons_edit_text.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                opinion.set(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                int length = editable.length();
+                if(length > 200){
+                    editable.delete(200, length);
+                    Toast.makeText(getContext(), "최대 20자까지 입력 가능 합니다.", Toast.LENGTH_SHORT).show();
+                }
+
+                String opinionLength = editable.length() + "자/200자";
+                num_of_letter_text.setText(opinionLength);
+            }
+        });
+
+        report_type_btn1.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                report_type_btn2.setChecked(false);
+                report_type_btn3.setChecked(false);
+                report_type_btn4.setChecked(false);
+                reasons_edit_text.setVisibility(View.INVISIBLE);
+                num_of_letter_text.setVisibility(View.INVISIBLE);
+                reportType.set("부적절한 사진 사용");
+                opinion.set("");
+            }
+        });
+
+        report_type_btn2.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                report_type_btn1.setChecked(false);
+                report_type_btn3.setChecked(false);
+                report_type_btn4.setChecked(false);
+                reasons_edit_text.setVisibility(View.INVISIBLE);
+                num_of_letter_text.setVisibility(View.INVISIBLE);
+                reportType.set("부적절한 언어 사용");
+                opinion.set("");
+            }
+        });
+
+        report_type_btn3.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                report_type_btn1.setChecked(false);
+                report_type_btn2.setChecked(false);
+                report_type_btn4.setChecked(false);
+                reasons_edit_text.setVisibility(View.INVISIBLE);
+                num_of_letter_text.setVisibility(View.INVISIBLE);
+                reportType.set("허위 정보 기재");
+                opinion.set("");
+            }
+        });
+
+        report_type_btn4.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                report_type_btn1.setChecked(false);
+                report_type_btn2.setChecked(false);
+                report_type_btn3.setChecked(false);
+                reasons_edit_text.setVisibility(View.VISIBLE);
+                num_of_letter_text.setVisibility(View.VISIBLE);
+                reportType.set("기타");
+            }
+        });
+
+        // 완료 버튼을 눌렀을 때
+        reporting_btn.setOnClickListener(v -> {
+
+            PostReportRequestDTO requestDTO = new PostReportRequestDTO();
+            requestDTO.setContentType("게시글");
+            requestDTO.setTrollType(reportType.get());
+            requestDTO.setMemo(opinion.get());
+            activityViewModel.reportPost(postId, requestDTO);
+            dialog.dismiss(); // 다이얼로그 닫기
+            Log.d("게시글 신고","게시글 신고" + reportType.get() + opinion.get());
+        });
+
+        closeIcon.setOnClickListener(v -> dialog.dismiss());
+
+    }
+
+    public void setDeleteDialog(String message, Long postId) {
         Log.d(" 삭제 포스트 아이디 2","삭제 포스트 아이디 2 " + postId);
         dialog = new Dialog(getContext());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);

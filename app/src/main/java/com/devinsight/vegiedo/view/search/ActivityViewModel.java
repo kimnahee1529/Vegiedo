@@ -10,6 +10,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.devinsight.vegiedo.data.request.PostReportRequestDTO;
 import com.devinsight.vegiedo.data.request.ReviewModifyrRequestDTO;
 import com.devinsight.vegiedo.data.request.ReviewRegisterRequestDTO;
 import com.devinsight.vegiedo.data.request.ReviewReportRequestDTO;
@@ -1042,6 +1043,32 @@ public class ActivityViewModel extends ViewModel {
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 Log.e("post 추천 api 호출 실패 2 ","실패2" + t.getMessage());
+            }
+        });
+    }
+
+    public void reportPost(Long postId, PostReportRequestDTO requestDTO){
+        Log.d(" 신고 포스트 아이디", " 신고 포스트 아이디 " + postId);
+        postApiService.reportPost("Bearer " + token ,postId, requestDTO).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+                    Log.d("RetrofitRequestURL 성공", "Requested URL: " + call.request().url());
+                    Log.d("post 신고 api 호출 성공 ","성공" + response);
+                }else{
+                    Log.d("RetrofitRequestURL 실패", "Requested URL: " + call.request().url());
+                    Log.e("post 신고 api 호출 실패 1 ","실패1" + response);
+                    try {
+                        Log.e("post 신고 실패 1", "Error Body: " + response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.e("post 신고 api 호출 실패 2 ","실패2" + t.getMessage());
             }
         });
     }

@@ -127,6 +127,7 @@ public class MainActivity extends AppCompatActivity {
         List<String> initialTagList = userPrefRepository.loadTagList();
         int initialDistance = INITIAL_DISTANCE;
 
+        setLongSearchBar();
 
         //애드몹 초기화
         MobileAds.initialize(this, initializationStatus -> {});
@@ -173,6 +174,7 @@ public class MainActivity extends AppCompatActivity {
 
                     return true;
                 } else if (item.getItemId() == R.id.nav_home) {
+                    setLongSearchBar();
                     toolBar.setVisibility(View.VISIBLE);
 //                    transaction.replace(R.id.frame, storeDetailPageFragment,"homeMainFragment").addToBackStack("homeMainFragment").commit();
                                         transaction.replace(R.id.frame, homeMainFragment,"homeMainFragment").addToBackStack("homeMainFragment").commit();
@@ -180,6 +182,7 @@ public class MainActivity extends AppCompatActivity {
 
                     return true;
                 } else if (item.getItemId() == R.id.nav_map) {
+                    setLongSearchBar();
                     toolBar.setVisibility(View.VISIBLE);
                     transaction.replace(R.id.frame, mapMainFragment,"mapMainFragment").addToBackStack("mapMainFragment").commit();
 
