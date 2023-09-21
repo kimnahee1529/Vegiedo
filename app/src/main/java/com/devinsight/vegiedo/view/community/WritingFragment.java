@@ -201,7 +201,6 @@ public class WritingFragment extends Fragment {
             selectImageForView((ImageView) v);
             setLongClickListenerForImageView(mainImage2);
 
-
         });
 
         ImageView mainImage3 = rootView.findViewById(R.id.main_image3);
@@ -209,14 +208,12 @@ public class WritingFragment extends Fragment {
             selectImageForView((ImageView) v);
             setLongClickListenerForImageView(mainImage3);
 
-
         });
 
         ImageView mainImage4 = rootView.findViewById(R.id.main_image4);
         mainImage4.setOnClickListener(v -> {
             selectImageForView((ImageView) v);
             setLongClickListenerForImageView(mainImage4);
-
 
         });
 
@@ -239,6 +236,7 @@ public class WritingFragment extends Fragment {
                             ImageView imageView = rootView.findViewById(imageViews[i]);
                             Glide.with(getActivity()).load(imageUrlList.get(i)).into(imageView);
 
+                            /* URL과 인덱스를 이미지뷰에 데이터클래스 객체를 각각 태그값으로 넣어줍니다.*/
                             ImageViewData imageViewDataForModify = new ImageViewData();
                             imageViewDataForModify.setIndex(i);
                             imageViewDataForModify.setUrl(imageUrlList.get(i));
@@ -249,6 +247,7 @@ public class WritingFragment extends Fragment {
 
                             imageUrlListOrigin.add(imageUrlList.get(i));
                         } else {
+                            /* 기존 URL 리스트의 숫자보다 이미지뷰의 인덱스가 클 경우, url을 넣지 않습니다. */
                             ImageView imageView = rootView.findViewById(imageViews[i]);
                             imageViewDataForModify.setIndex(i);
                             imageViewDataForModify.setUrl(null);
@@ -273,7 +272,7 @@ public class WritingFragment extends Fragment {
         });
     }
 
-    /* */
+    /* 수정클릭이 아닌 경우, 이미지뷰에 태그는 0-4까지 인덱스만 넣습니다. */
     private void restoreSelectedImages() {
         int[] imageViews = {R.id.main_image1, R.id.main_image2, R.id.main_image3, R.id.main_image4, R.id.main_image5};
         for (int i = 0; i < selectedImageUris.size(); i++) {
@@ -355,11 +354,10 @@ public class WritingFragment extends Fragment {
                     new PostRegisterRequestDTO(titleText, contentText) :
                     new PostRegisterRequestDTO(titleText, contentText, selectedImageUris);
 
-
+            /* MultiPartBody 타입의 데이터를 담아 줄 리스트, 여기에 새로 추가 되는 사진 파일 넣어줌 */
             List<MultipartBody.Part> files = new ArrayList<>();
-            List<MultipartBody.Part> imageUrlFromServer = new ArrayList<>();
-            List<MultipartBody.Part> imageUrlFromServerJson = new ArrayList<>();
-//            imageUrlListForModify.clear();
+
+            /* 수정을 통한 등록인 경우 */
             if (isModify) {
 
                 Log.d(" no change imageUrlListToDelete.size()","size : " + imageUrlListToDelete.size());
@@ -392,15 +390,18 @@ public class WritingFragment extends Fragment {
 
 
                 /* 기존에 서버로 부터 받고, 수정 후에도 남아 있는 이미지 Url String 리스트 */
-                for (int i = 0; i < imageUrlListForModify.size(); i++) {
-                    String imageUrl = imageUrlListForModify.get(i);
-                    Log.d("imageUrl from server ", "url : " + imageUrl);
-                    RequestBody urlBody = RequestBody.create(MediaType.parse("text/plain"), imageUrl);
-                    String urlName = "url" + i;
-                    MultipartBody.Part filePart = MultipartBody.Part.createFormData("imageUrls", urlName, urlBody);
-                    imageUrlFromServer.add(filePart);
-                }
-
+//                for (int i = 0; i < imageUrlListForModify.size(); i++) {
+//                    String imageUrl = imageUrlListForModify.get(i);
+//                    Log.d("imageUrl from server ", "url : " + imageUrl);
+//                    RequestBody urlBody = RequestBody.create(MediaType.parse("text/plain"), imageUrl);
+//                    String urlName = "url" + i;
+//                    MultipartBody.Part filePart = MultipartBody.Part.createFormData("imageUrls", urlName, urlBody);
+//                    imageUrlFromServer.add(filePart);
+//                }
+                /* 사용 안함 ^^^^^*/
+                
+                
+                /* 기존에 서버로 부터 받고, 수정 후에도 남아 있는 이미지 Url String 리스트를 JSON으로 변환해서 담아줍니다. */
                 Gson gson = new Gson();
                 String serializedImageUrls = gson.toJson(imageUrlListForModify);
                 RequestBody imageUrlBody = RequestBody.create(serializedImageUrls, MediaType.parse("application/json"));
@@ -446,22 +447,32 @@ public class WritingFragment extends Fragment {
                 });
 
             } else {
+                /* 새로 등록 된 이미지 uri 의 리스트 갯수 만큼 파일을 생성 합니다. */
                 for (int i = 0; i < imageUrilist.size(); i++) {
+                    /* uri로부터 파일의 경로를 구합니다.*/
                     String filePath = getFilePath(getActivity(), imageUrilist.get(i));
-
                     if (filePath != null) {
-//                    RequestBody fileBody = RequestBody.create(MediaType.parse("image/*"), new File(filePath));
+                        /* uri가 null 이 아니 라면, 위에서 구한 경로에 있는 파일을 RequestBody에 넣어줍니다.  */
                         RequestBody fileBody = RequestBody.create(MediaType.parse("image/*"), new File(filePath));
+                        /* 파일의 이름을 설정합니다 ( 본인 자유 )*/
                         String fileName = "photo" + i + ".jpg";
+                        /* RequestBody를 MutiPart형식으로 바꿔줍니다.
+                        *  첫번째 파라미터 - "iamges" : 서버에서 정해준 변수 값
+                        *  두번째 파라미터 - fileName : 파일의 이름
+                        *  세번쨰 파라미터 - fileBody : 위에서 만든 RequestBody
+                        * */
                         MultipartBody.Part filePart = MultipartBody.Part.createFormData("images", fileName, fileBody);
                         files.add(filePart);
                     }
                 }
 
                 Log.d("files 리스트 크기", "크기: " + files.size());
+
+                /* RequestBody에 text 형식으로 제목의 String 값을 넣어준다.*/
                 RequestBody titleRequestBody = RequestBody.create(MediaType.parse("text/plain"), titleText);
                 MultipartBody.Part titlePart = MultipartBody.Part.createFormData("postTitle", titleText, titleRequestBody);
 
+                /* RequestBody에 text 형식으로 내용의 String 값을 넣어준다.*/
                 RequestBody contentRequestBody = RequestBody.create(MediaType.parse("text/plain"), contentText);
                 MultipartBody.Part contentPart = MultipartBody.Part.createFormData("content", contentText, contentRequestBody);
 
@@ -509,6 +520,7 @@ public class WritingFragment extends Fragment {
         });
     }
 
+    /*  Uri 로 부터 파일의 실제 경로를 구하기 위한 함수 */
     private String getFilePath(Context context, Uri uri) {
         String filePath = null;
         if (Build.VERSION.SDK_INT < 11) {
@@ -577,10 +589,11 @@ public class WritingFragment extends Fragment {
                 if (currentlySelectedImageView != null && selectedImageUri != null) {
                     currentlySelectedImageView.setImageURI(selectedImageUri);
                     currentlySelectedImageView.setBackground(null);
+
                     if (currentlySelectedImageView.getTag() instanceof ImageViewData) {
                         imageViewDataForModify = (ImageViewData) currentlySelectedImageView.getTag();
                         Log.d("imageView Data in activity:","data : " + imageViewDataForModify.getUrl());
-                        if(imageViewDataForModify != null ) { //이미지뷰의 태그 데이터의 url이 널이 아니면, delete에 넣고
+                        if(imageViewDataForModify != null ) { //이미지뷰의 태그 데이터의 url이 널이 아니면, imageUrlListToDelete에 넣고
                             imageUrlListToDelete.add(imageViewDataForModify.getUrl());
                             Log.d("DEBUG_TAG", "imageViewDataForModify is properly initialized.");
                             Log.d("DEBUG_TAG", "imageView id : " + currentlySelectedImageView.getId());
@@ -590,14 +603,7 @@ public class WritingFragment extends Fragment {
                             Log.d("this deleted url","url : " + imageViewDataForModify.getUrl());
                         }
                     }
-//                    if (currentlySelectedImageView.getTag() instanceof ImageViewData) {
-//                        int index = imageViewDataForModify.getIndex();
-//                        if (index < imageUriListForModify.size()) {
-//                            imageUriListForModify.set(index, selectedImageUri);
-//                        } else {
-//                            imageUriListForModify.add(selectedImageUri);
-//                        }
-//                    }
+                    /* 수정을 위해 새로 등록된 URI리스트에 선택한 사진의 uri 값을 넣습니다*/
                     imageUriListForModify.add(selectedImageUri);
                     Log.d("this is new ur III","ur II : " + selectedImageUri);
 

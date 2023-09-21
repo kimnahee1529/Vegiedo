@@ -22,6 +22,7 @@ import com.devinsight.vegiedo.data.response.ReviewListInquiryResponseDTO;
 import com.devinsight.vegiedo.data.response.StampBookInquiryResponseDTO;
 import com.devinsight.vegiedo.data.response.StoreInquiryResponseDTO;
 import com.devinsight.vegiedo.data.response.StoreListData;
+import com.devinsight.vegiedo.data.response.StoreListInquiryResponseDTO;
 import com.devinsight.vegiedo.data.ui.login.TagStatus;
 import com.devinsight.vegiedo.data.ui.map.MapStoreCardUiData;
 import com.devinsight.vegiedo.data.ui.search.SearchStorSummaryeUiData;
@@ -38,6 +39,7 @@ import com.devinsight.vegiedo.view.community.ClickedPostData;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -50,9 +52,12 @@ public class ActivityViewModel extends ViewModel {
     private MutableLiveData<List<SummaryData>> storeListSummaryLiveData = new MutableLiveData<>();
     /* 최근 검색 목록 리스트*/
     private MutableLiveData<List<SummaryData>> storeListCurrentLiveData = new MutableLiveData<>();
+    private MutableLiveData<List<SummaryData>> storeListCurrentLiveData2 = new MutableLiveData<>();
 
     /* 검색 창 클릭 시 간략하게 보여 줄 가게 데이터 */
     private MutableLiveData<List<SearchStorSummaryeUiData>> storeLiveData = new MutableLiveData<>();
+
+    private MutableLiveData<List<SummaryData>> clickedStoreLiveData = new MutableLiveData<>();
 
     /* 필터링을 끝 낸 라이브 데이터 */
     private MutableLiveData<List<StoreListData>> storeFilteredLiveData = new MutableLiveData<>();
@@ -62,7 +67,6 @@ public class ActivityViewModel extends ViewModel {
     private MutableLiveData<String> inputTextLiveData = new MutableLiveData<>();
 
     /* 서버에서 내려주는 가게 리스트 */
-
     private MutableLiveData<List<StoreListData>> storeListLiveData = new MutableLiveData<>();
     /* 유저 토큰 전달을 위한 라이브데이터 */
     private MutableLiveData<String> tokenLiveData = new MutableLiveData<>();
@@ -130,6 +134,9 @@ public class ActivityViewModel extends ViewModel {
     private float mapLong;
     private float latitude;
     private float longitude;
+
+    private float INITIAL_LAT = 37.4979f;
+    private float INITIAL_LONG = 127.0276f;
     private List<String> tags;
     private List<String> initialTags;
     private int distance;
@@ -142,6 +149,7 @@ public class ActivityViewModel extends ViewModel {
     private Long postId;
 
     private Long storeId;
+    private List<StoreInquiryResponseDTO> clickedStoreListData = new ArrayList<>();
 
 
     private List<Uri> imageUriList;
@@ -159,7 +167,6 @@ public class ActivityViewModel extends ViewModel {
     ReviewApiService reviewApiService = RetrofitClient.getReviewApiService();
     CommentApiService commentApiService = RetrofitClient.getCommentApiService();
     PostApiService postApiService = RetrofitClient.getPostApiService();
-
 
 
     public void tagContent(boolean isChecked, String content, int btnId) {
@@ -200,7 +207,6 @@ public class ActivityViewModel extends ViewModel {
     }
 
 
-
     /* 유저가 선택한 태그와, 거리를 가져옵니다.*/
     public void getFilterData(int distance, List<String> tags) {
         this.distance = distance;
@@ -224,7 +230,7 @@ public class ActivityViewModel extends ViewModel {
         Log.d("지도 위치", "지도 위치 " + "위도 : " + mapLat + "경도" + mapLong);
     }
 
-    public void getDistance( int distance){
+    public void getDistance(int distance) {
         this.distance = distance;
     }
 
@@ -241,13 +247,16 @@ public class ActivityViewModel extends ViewModel {
     public void storeApiData() {
         Log.d("api 가져오는 함수 ", "  public void storeApiData() ");
         boolean noMapLocation = mapLat + mapLong == 0.0f;
-
+        boolean noUserLocation = userCurrentLat + userCurrentLong == 0.0f;
         if (noMapLocation) {
             latitude = userCurrentLat;
             longitude = userCurrentLong;
-        } else {
+        } else if (noUserLocation){
             latitude = mapLat;
             longitude = mapLong;
+        } else if(noMapLocation && noUserLocation){
+            latitude = INITIAL_LAT;
+            longitude = INITIAL_LONG;
         }
 
         if (tags == null) {
@@ -257,24 +266,39 @@ public class ActivityViewModel extends ViewModel {
         if (distance == 0) {
             distance = initialDistance;
         }
+
+        Log.d(" 가게 호출 쿼리", "값" + tags + "위도 : " + latitude + "경도 : " + longitude + "거리 : " + distance + token);
+
         Log.d("여기까지 됨", "194번줄");
         Log.d("쿼리 재료","tag : " + tags + "latitude : " + latitude + "longitude : " + longitude );
         Log.e("store List 요청 동작", "store List 요청 동작");
 
-        storeApiService.getStoreLists(tags, latitude, longitude, distance*1000, keyword, 10, 0, "Bearer " +  token).enqueue(new Callback<List<StoreListData>>() {
+        storeApiService.getStoreLists(tags, latitude, longitude, distance * 1000, 10, 0, "Bearer " + token).enqueue(new Callback<List<StoreListData>>() {
             @Override
             public void onResponse(Call<List<StoreListData>> call, Response<List<StoreListData>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    Log.d(" 가게 호출 쿼리","값" + tags + latitude + longitude + "거리 : " + distance + keyword + token);
+                    Log.d("RetrofitRequestURL", "Requested URL: " + call.request().url());
+                    Log.d(" 가게 호출 쿼리", "값" + tags + "위도 : " + latitude + "경도 : " + longitude + "거리 : " + distance * 1000 + keyword + token);
                     List<StoreListData> data = response.body();
-                    if ( data != null ) {
-                        Log.e("store List 요청 성공","this is store List : ");
+                    Log.e("store List 요청 성공", "this is store List : " + response.body().toString());
+                    if (data != null) {
+                        for (int i = 0; i < data.size(); i++) {
+                            Log.e("store List 요청 성공", "this is store List : " + response.body().get(i).toString());
+                        }
                         storeListLiveData.setValue(data);
                         searchSummList();
                     } else {
-                        Log.d(" 해당하는 가게 리스트가 없습니다","해당하는 가게 리스트가 없습니다" + data.size());
+                        Log.d(" 해당하는 가게 리스트가 없습니다", "해당하는 가게 리스트가 없습니다" + data.size());
                     }
 
+                } else {
+                    // API 응답이 오류 상태일 때
+                    Log.e("store List 요청 실패 1", "Error Code: " + response.code() + ", Message: " + response.message());
+                    try {
+                        Log.e("store List 요청 실패 1", "Error Body: " + response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 
@@ -285,7 +309,8 @@ public class ActivityViewModel extends ViewModel {
 
         });
 
-        Log.e("store List 요청 동작", "store List 요청 동작");
+
+        Log.e("store List 요청 동작 ", "store List 요청 동작");
 
     }
 
@@ -296,8 +321,7 @@ public class ActivityViewModel extends ViewModel {
 
     /* 더미데이터에서 필요한 부분*/
     public void searchSummList() {
-//        List<StoreListData> storeListData = dummyData();
-        Log.d("필요 데이터 추출 함수"," public void searchSummList()");
+        Log.d("필요 데이터 추출 함수", " public void searchSummList()");
         List<StoreListData> storeListData = storeListLiveData.getValue();
         List<SummaryData> summaryList = new ArrayList<>();
         for (StoreListData data : storeListData) {
@@ -323,7 +347,7 @@ public class ActivityViewModel extends ViewModel {
 
     /* 최근검색어에 따른 리스트 */
     public void currentList() {
-        Log.d("최근 검색어에 따른 리스트 ","public void currentList()");
+        Log.d("최근 검색어에 따른 리스트 ", "public void currentList()");
         if (currentInput != null) {
             List<SummaryData> summaryList = storeListSummaryLiveData.getValue();
             List<SummaryData> currentList = new ArrayList<>();
@@ -339,9 +363,92 @@ public class ActivityViewModel extends ViewModel {
         }
     }
 
+    public void currentList2(List<Long> storeIdList) {
+        Log.d("최근 검색어에 따른 리스트 ", "public void currentList()");
+        if (storeIdList != null && storeListSummaryLiveData.getValue() != null) {
+            List<SummaryData> summaryList = storeListSummaryLiveData.getValue();
+            List<Long> storeIdLists = storeIdList;
+            List<SummaryData> selectedStoreList = new ArrayList<>();
+            for (SummaryData data : summaryList) {
+                if (storeIdLists.contains(data.getStoreId())) {
+                    selectedStoreList.add(data);
+                }
+            }
+            storeListCurrentLiveData2.setValue(selectedStoreList);
+        } else {
+            storeListCurrentLiveData2.setValue(null);
+        }
+
+    }
+
+    public void getClickedStore(List<Long> storeIdList) {
+        clickedStoreListData.clear();
+        CountDownLatch latch = new CountDownLatch(storeIdList.size());
+        for (Long id : storeIdList) {
+            storeApiService.readStore("Bearer " + token, id).enqueue(new Callback<StoreInquiryResponseDTO>() {
+                @Override
+                public void onResponse(Call<StoreInquiryResponseDTO> call, Response<StoreInquiryResponseDTO> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+
+                        Log.d(" 단일 가게 조회  요청 성공", "단일 가게 조회 요청 성공" + response.isSuccessful());
+                        StoreInquiryResponseDTO data = response.body();
+                        Log.d(" 단일 가게 조회  요청 성공", "단일 가게 조회 요청 성공" + data.getStoreId());
+                        clickedStoreListData.add(data);
+
+                    } else {
+                        // API 응답이 오류 상태일 때
+                        Log.e("단일 가게 조회 요청 실패 1", "Error Code: " + response.code() + ", Message: " + response.message());
+                        try {
+                            Log.e("단일 가게 조회 요청 실패 1", "Error Body: " + response.errorBody().string());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    latch.countDown();
+                }
+
+                @Override
+                public void onFailure(Call<StoreInquiryResponseDTO> call, Throwable t) {
+                    latch.countDown();
+                    Log.e("단일 가게 조회 요청 실패 2", "실패 2" + t.getMessage());
+                }
+            });
+
+        }
+
+        new Thread(() -> {
+            try {
+                latch.await();  // 모든 API 요청이 완료될 때까지 기다림
+                processStoreListData();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }).start();
+
+        Log.d("클릭된 가게 리스트", "클릭된 가게 리스트" + clickedStoreListData.size());
+
+    }
+
+    private void processStoreListData() {
+        List<SummaryData> summaryList = new ArrayList<>();
+
+        for (StoreInquiryResponseDTO data : clickedStoreListData) {
+            SummaryData summaryData = new SummaryData();
+            summaryData.setStoreImage(data.getStoreImage());
+            summaryData.setStoreName(data.getStoreName());
+            summaryData.setStoreAddress(data.getAddress());
+            summaryData.setStoreId(data.getStoreId());
+            summaryList.add(summaryData);
+        }
+
+        clickedStoreLiveData.postValue(summaryList);  // 주의: postValue()를 사용
+    }
+
+
+
     /* 요약리스트에서 실시간 검색 */
     public void searchSummaryListByKeyword(String input) {
-        Log.d("요약리스트 실시간 검색","public void searchSummaryListByKeyword(String input)");
+        Log.d("요약리스트 실시간 검색", "public void searchSummaryListByKeyword(String input)");
         if (storeListSummaryLiveData != null) {
             List<SummaryData> storeList = storeListSummaryLiveData.getValue();
             List<SummaryData> filteredList = new ArrayList<>();
@@ -402,13 +509,13 @@ public class ActivityViewModel extends ViewModel {
             /* 거리 필터 충족 */
             boolean storeDistance = userToStore < distance * 1000;
             storeList.get(i).setDistance((int) userToStore);
-            if(storeDistance) {
-                Log.d("거리필터링 성공","해당 범위 입니다" + i + (storeList.get(i).getDistance() < distance * 1000));
+            if (storeDistance) {
+                Log.d("거리필터링 성공", "해당 범위 입니다" + i + (storeList.get(i).getDistance() < distance * 1000));
 
             }
             if (keyword != null) {
                 List<String> storeTags = storeList.get(i).getTags();
-                if (storeTags == null){
+                if (storeTags == null) {
                 }
                 String tag1 = storeTags.size() > 0 ? storeTags.get(0) : "";
                 String tag2 = storeTags.size() > 1 ? storeTags.get(1) : "";
@@ -445,7 +552,7 @@ public class ActivityViewModel extends ViewModel {
 //                storeFilteredLiveData.setValue(filteredStoreList);
 //                Log.d("필터링1","필터링1" + filteredStoreList.get(i).getStoreName());
             } else {
-                Log.d("키워드가 없을 때"," 발동 !");
+                Log.d("키워드가 없을 때", " 발동 !");
                 boolean isTagMatched = false;
                 if (tags != null)
                     for (String userTag : tags) {
@@ -468,17 +575,17 @@ public class ActivityViewModel extends ViewModel {
             }
 
             storeFilteredLiveData.setValue(filteredStoreList);
-            Log.d(" 데이터 저장2 ","데이터 저장2" );
+            Log.d(" 데이터 저장2 ", "데이터 저장2");
 
-            for( int k = 0 ; k < filteredStoreList.size() ; k ++ ) {
-                Log.e("k","k " + k + " " + filteredStoreList.get(k).getDistance() + "필터링 거리 " + distance );
+            for (int k = 0; k < filteredStoreList.size(); k++) {
+                Log.e("k", "k " + k + " " + filteredStoreList.get(k).getDistance() + "필터링 거리 " + distance);
             }
         }
 
     }
 
     //가게 조회 API(StoreDetailPageFragment서 사용)
-    public void StoreInquiryData(Long storeId) {
+    public void StoreInquiryData(Long storeIdd) {
         Log.d("StoreAPI", token + " " + storeId);
         //가게 조회
         storeApiService.readStore("Bearer " + token, storeId).enqueue(new Callback<StoreInquiryResponseDTO>() {
@@ -507,11 +614,11 @@ public class ActivityViewModel extends ViewModel {
     //가게 신고(폐점)
     public void StoreReportData(Long storeId) {
         //가게 신고(폐점)
-        storeApiService.reportStore("Bearer " + token,storeId).enqueue(new Callback<Void>() {
+        storeApiService.reportStore("Bearer " + token, storeId).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
-                    Log.d("LOGAPI", "StoreReportAPI 호출 "+response.code());
+                    Log.d("LOGAPI", "StoreReportAPI 호출 " + response.code());
                     storeReportDataLiveData.setValue(response.code());
                 } else {
                     Log.d("LOGAPI", "StoreReportAPI 호출실패");
@@ -524,6 +631,7 @@ public class ActivityViewModel extends ViewModel {
             }
         });
     }
+
     public void resetStoreReportData() {
         storeReportDataLiveData.setValue(null);
     }
@@ -541,7 +649,7 @@ public class ActivityViewModel extends ViewModel {
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
                     storeStampLiveData.setValue(response.code());
-                    Log.d("stampAPI", ""+response);
+                    Log.d("stampAPI", "" + response);
                 } else {
                     storeStampLiveData.setValue(response.code());
                     Log.d("stampAPI", "STAMPAPI 호출실패");
@@ -563,10 +671,10 @@ public class ActivityViewModel extends ViewModel {
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
                     storeStampLiveData.setValue(response.code());
-                    Log.d("stampAPI", ""+response);
+                    Log.d("stampAPI", "" + response);
                 } else {
                     storeStampLiveData.setValue(response.code());
-                    Log.d("stampAPI", "STAMPAPI 호출실패 "+response);
+                    Log.d("stampAPI", "STAMPAPI 호출실패 " + response);
                 }
             }
 
@@ -586,20 +694,21 @@ public class ActivityViewModel extends ViewModel {
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
                     storeLikeLiveData.setValue(response.code());
-                    Log.d("찜버튼 api", ""+response.code());
+                    Log.d("찜버튼 api", "" + response.code());
                 } else {
                     storeLikeLiveData.setValue(response.code());
-                    Log.d("찜버튼 api", "LIKEAPI 호출실패 "+response);
+                    Log.d("찜버튼 api", "LIKEAPI 호출실패 " + response);
                 }
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 storeLikeLiveData.setValue(-1);
-                Log.d("찜버튼 api", "LIKEAPI 호출실패 "+t);
+                Log.d("찜버튼 api", "LIKEAPI 호출실패 " + t);
             }
         });
     }
+
     //가게 찜버튼 취소
     public void StoreInactiveLikeData(Long storeId) {
         //가게 찜버튼 취소
@@ -608,17 +717,17 @@ public class ActivityViewModel extends ViewModel {
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
                     storeLikeLiveData.setValue(response.code());
-                    Log.d("찜버튼취소 api", ""+response.code());
+                    Log.d("찜버튼취소 api", "" + response.code());
                 } else {
                     storeLikeLiveData.setValue(response.code());
-                    Log.d("찜버튼취소 api", "LIKEAPI 호출실패 "+response);
+                    Log.d("찜버튼취소 api", "LIKEAPI 호출실패 " + response);
                 }
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 storeLikeLiveData.setValue(-1);
-                Log.d("찜버튼취소 api", "LIKEAPI 호출실패 "+t);
+                Log.d("찜버튼취소 api", "LIKEAPI 호출실패 " + t);
             }
         });
     }
@@ -654,7 +763,7 @@ public class ActivityViewModel extends ViewModel {
             public void onResponse(Call<List<MapStoreListData>> call, Response<List<MapStoreListData>> response) {
                 if (response.isSuccessful()) {
                     mapStoreLiveData.setValue(response.body());
-                    Log.d("LOGAPIMapInquiryData", ""+response);
+                    Log.d("LOGAPIMapInquiryData", "" + response);
                 } else {
                     Log.d("LOGAPIMapInquiryData", "AMPAPI 호출실패");
                 }
@@ -676,12 +785,12 @@ public class ActivityViewModel extends ViewModel {
             @Override
             public void onResponse(Call<ReviewListInquiryResponseDTO> call, Response<ReviewListInquiryResponseDTO> response) {
                 if (response.isSuccessful()) {
-                    Log.d("LOGAPI", "ReviewAPI 호출성공1 "+response);
+                    Log.d("LOGAPI", "ReviewAPI 호출성공1 " + response);
                     ReviewListInquiryResponseDTO responseData = response.body();
-                    Log.d("LOGAPI", "ReviewAPI 호출성공2 "+ responseData.getReviews());
-                    if(blogReview){
+                    Log.d("LOGAPI", "ReviewAPI 호출성공2 " + responseData.getReviews());
+                    if (blogReview) {
                         blogReviewLiveData.setValue(responseData);
-                    }else{
+                    } else {
                         reviewLiveData.setValue(responseData);
                     }
                 } else {
@@ -706,8 +815,8 @@ public class ActivityViewModel extends ViewModel {
                 if (response.isSuccessful()) {
                     Void responseData = response.body();
                     Log.d("LOGAPIReviewRegisterData", response.toString());
-                } else{
-                    Log.d("LOGAPI", "ReviewRegisterData 호출실패1 "+response);
+                } else {
+                    Log.d("LOGAPI", "ReviewRegisterData 호출실패1 " + response);
                 }
             }
 
@@ -729,14 +838,14 @@ public class ActivityViewModel extends ViewModel {
                     Void responseData = response.body();
 //                    Log.d("LOGAPIReviewDeleteData", responseData.toString());
                     Log.d("LOGAPI", "ReviewDeleteData 호출성공 " + response);
-                } else{
+                } else {
                     Log.d("LOGAPI", "ReviewDeleteData 호출실패1 " + response);
                 }
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Log.d("LOGAPI", "ReviewDeleteData 호출실패2"+ t.getMessage());
+                Log.d("LOGAPI", "ReviewDeleteData 호출실패2" + t.getMessage());
             }
         });
     }
@@ -751,8 +860,8 @@ public class ActivityViewModel extends ViewModel {
                 if (response.isSuccessful()) {
                     Void responseData = response.body();
                     Log.d("LOGAPIReviewModifyData", response.toString());
-                } else{
-                    Log.d("LOGAPI", "ReviewModifyData 호출실패1 "+response);
+                } else {
+                    Log.d("LOGAPI", "ReviewModifyData 호출실패1 " + response);
                 }
             }
 
@@ -773,8 +882,8 @@ public class ActivityViewModel extends ViewModel {
                 if (response.isSuccessful()) {
                     Void responseData = response.body();
                     Log.d("LOGAPIReviewReportData", response.toString());
-                } else{
-                    Log.d("LOGAPIReviewReportData", "ReviewReportData 호출실패1 "+response);
+                } else {
+                    Log.d("LOGAPIReviewReportData", "ReviewReportData 호출실패1 " + response);
                 }
             }
 
@@ -837,61 +946,62 @@ public class ActivityViewModel extends ViewModel {
 
 
     /* true : 일반 게시글, false : 인기 게시글*/
-    public void setPostType(Boolean postType){
-        if(postType){
+    public void setPostType(Boolean postType) {
+        if (postType) {
             postTypeLiveData.setValue(true);
         } else {
             postTypeLiveData.setValue(false);
         }
     }
 
-    public void setClickedPostData(PostListData data){
+    public void setClickedPostData(PostListData data) {
         Long clickedPostId = data.getPostId();
         this.postId = clickedPostId;
         postClickedLiveData.setValue(data);
     }
 
-    public void getPostData(){
+    public void getPostData() {
         Call<PostInquiryResponseDTO> call = postApiService.getPost("Bearer " + token, postId);
-        Log.d("post id","post Id" + postId);
-        Log.d("this is token for post not list ","token : " + token);
+        Log.d("post id", "post Id" + postId);
+        Log.d("this is token for post not list ", "token : " + token);
         call.enqueue(new Callback<PostInquiryResponseDTO>() {
             @Override
             public void onResponse(Call<PostInquiryResponseDTO> call, Response<PostInquiryResponseDTO> response) {
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     PostInquiryResponseDTO data = response.body();
                     postContentLiveData.setValue(data);
                     postCommentLiveData.setValue(data.getCommentList());
                     postIdLiveData.setValue(data.getPostId());
-                    Log.d("클릭된 포스트 성공","this is post id: " + data.getPostId());
-                    Log.d("클릭된 포스트 성공","this is post userNAme: " + data.getUserName());
-                    Log.d("클릭된 포스트 성공","this is post userImage: " + data.getUserImageUrl());
-                    Log.d("클릭된 포스트 성공","this is post content: " + data.getContent());
+                    Log.d("클릭된 포스트 성공", "this is post id: " + data.getPostId());
+                    Log.d("클릭된 포스트 성공", "this is post userNAme: " + data.getUserName());
+                    Log.d("클릭된 포스트 성공", "this is post userImage: " + data.getUserImageUrl());
+                    Log.d("클릭된 포스트 성공", "this is post content: " + data.getContent());
 //                    Log.d("클릭된 포스트 성공","this is post userImage: " + data.getCommentList().size());
-                    Log.d("클릭된 포스트 성공","this is post title: " + data.getPostTitle());
+                    Log.d("클릭된 포스트 성공", "this is post title: " + data.getPostTitle());
 //                    Log.d("클릭된 포스트 성공","this is post userImage: " + data.getImages().get(0));
-                    Log.d("post 단일 조회 api 호출 성공 ","성공" + response);
-                }else{
-                    Log.e("post 단일 조회 api 호출 실패1  ","실패1" + response);
+                    Log.d("post 단일 조회 api 호출 성공 ", "성공" + response);
+                } else {
+                    Log.e("post 단일 조회 api 호출 실패1  ", "실패1" + response);
 
                 }
             }
+
             @Override
             public void onFailure(Call<PostInquiryResponseDTO> call, Throwable t) {
-                Log.e("post 단일 조회 api 호출 실패3 ","실패2" + t.getMessage());
+                Log.e("post 단일 조회 api 호출 실패3 ", "실패2" + t.getMessage());
             }
         });
 
     }
 
     public void deletePost(Long postId) {
-        Log.d(" 삭제 포스트 아이디","삭제 포스트 아이디 " + postId);
+        Log.d(" 삭제 포스트 아이디", "삭제 포스트 아이디 " + postId);
         Call<Void> call = postApiService.deletePost("Bearer " + token, postId);
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                if(response.isSuccessful()){
-                    Log.d("post 삭제 성공","post 삭제 성공");
+                if (response.isSuccessful()) {
+                    Log.d("post 삭제 성공", "post 삭제 성공");
                 } else {
                     // API 응답이 오류 상태일 때
                     Log.e("post 삭제 실패 1", "Error Code: " + response.code() + ", Message: " + response.message());
@@ -906,6 +1016,32 @@ public class ActivityViewModel extends ViewModel {
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 Log.e("post 삭제 실패 2", "실패 2" + t.getMessage());
+            }
+        });
+    }
+
+    public void recommendPost(Long postId){
+        Log.d(" 추천 포스트 아이디", "추천 포스트 아이디 " + postId);
+
+        postApiService.recommendPost("Bearer " + token, postId).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+                    Log.d("RetrofitRequestURL 성공", "Requested URL: " + call.request().url());
+                    Log.d("post 추천 api 호출 성공 ","성공" + response);
+                }else{
+                    Log.d("RetrofitRequestURL 실패", "Requested URL: " + call.request().url());
+                    Log.e("post 추천 api 호출 실패 1 ","실패1" + response);
+                    try {
+                        Log.e("post 추천 실패 1", "Error Body: " + response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.e("post 추천 api 호출 실패 2 ","실패2" + t.getMessage());
             }
         });
     }
@@ -942,6 +1078,7 @@ public class ActivityViewModel extends ViewModel {
     public LiveData<List<StoreListData>> getFilteredStoreListLiveData() {
         return storeFilteredLiveData;
     }
+
     /* 실시간 검색어 입력에 따른 가게 리스트 */
     public LiveData<List<SummaryData>> getStoreSearchListByKeywordLiveData() {
         return storeSearchLiveData;
@@ -950,16 +1087,26 @@ public class ActivityViewModel extends ViewModel {
     public LiveData<List<SummaryData>> getSummaryListLiveData() {
         return storeListSummaryLiveData;
     }
+
     /* 최근 검색어에 따른 가게 리스트*/
     public LiveData<List<SummaryData>> getCurrentListLiveData() {
         return storeListCurrentLiveData;
     }
 
+    public LiveData<List<SummaryData>> getCurrentListLiveData2() {
+        return storeListCurrentLiveData2;
+    }
+
+    public LiveData<List<SummaryData>> getClickedStoreLiveData() {
+        return clickedStoreLiveData;
+    }
+
     public LiveData<List<StoreListData>> getStoreListLiveData() {
         return storeListLiveData;
     }
+
     /* 커뮤니티 뷰 모델로 유저 토큰을 전달합니다.*/
-    public LiveData<String> getToken(){
+    public LiveData<String> getToken() {
         return tokenLiveData;
     }
 
@@ -973,23 +1120,23 @@ public class ActivityViewModel extends ViewModel {
         return storeIdLiveData;
     }
 
-    public LiveData<Boolean> getPostType(){
+    public LiveData<Boolean> getPostType() {
         return postTypeLiveData;
     }
 
-    public LiveData<PostListData> getClickedPostLiveData(){
+    public LiveData<PostListData> getClickedPostLiveData() {
         return postClickedLiveData;
     }
 
-    public LiveData<PostInquiryResponseDTO> getPostContentLiveData(){
+    public LiveData<PostInquiryResponseDTO> getPostContentLiveData() {
         return postContentLiveData;
     }
 
-    public LiveData<List<CommentListData>> getPostCommentLiveData(){
+    public LiveData<List<CommentListData>> getPostCommentLiveData() {
         return postCommentLiveData;
     }
 
-    public LiveData<Long> getPostIdLiveData(){
+    public LiveData<Long> getPostIdLiveData() {
         return postIdLiveData;
     }
 
@@ -1020,7 +1167,7 @@ public class ActivityViewModel extends ViewModel {
         this.storeReportDataLiveData = storeReportDataLiveData;
     }
 
-    public LiveData<List<String>> getImageUrlListForModifyLiveData(){
+    public LiveData<List<String>> getImageUrlListForModifyLiveData() {
         return imageUrlListForModifyLiveData;
     }
 
@@ -1051,6 +1198,7 @@ public class ActivityViewModel extends ViewModel {
     public void setStampBookDataLiveData(MutableLiveData<StampBookInquiryResponseDTO> stampBookDataLiveData) {
         this.stampBookDataLiveData = stampBookDataLiveData;
     }
+
     //리뷰 작성 여부
     public MutableLiveData<Boolean> getCanWriteReview() {
         return canWriteReview;
