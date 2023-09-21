@@ -291,7 +291,6 @@ public class WritingFragment extends Fragment {
                                         imageUriListForModify.remove(uriIndex);
                                         currentlySelectedImageView.setImageURI(null);
                                     }
-
                                 }
                             }
                         });

@@ -26,7 +26,6 @@ public class CommunityPostAdaptper extends RecyclerView.Adapter<CommunityPostAda
     public void setPostList(List<PostListData> list) {
         this.postList.clear();
         this.postList.addAll(list);
-        notifyDataSetChanged();
     }
 
     public void addPostList(List<PostListData> list) {
@@ -66,6 +65,7 @@ public class CommunityPostAdaptper extends RecyclerView.Adapter<CommunityPostAda
             Glide.with(context).load(imageUrl).into(holder.postImage);
         } else {
             holder.postImage.setVisibility(View.GONE);
+            holder.postCard.setVisibility(View.GONE);
         }
         holder.postTitle.setText(data.getPostTitle());
         holder.postCommentCount.setText(String.valueOf("[" + data.getCommentCount() + "]"));
@@ -97,13 +97,13 @@ public class CommunityPostAdaptper extends RecyclerView.Adapter<CommunityPostAda
             super(itemView);
 
             itemView.setOnClickListener(this);
-//            postCard = itemView.findViewById(R.id.post_card);
+            postCard = itemView.findViewById(R.id.post_card);
             postImage = itemView.findViewById(R.id.user_image);
             postTitle = itemView.findViewById(R.id.post_title);
             postCommentCount = itemView.findViewById(R.id.comment_count);
             postUserName = itemView.findViewById(R.id.user_name);
             postCreatedAt = itemView.findViewById(R.id.created_time);
-            postLikeCount = itemView.findViewById(R.id.like_count);
+            postLikeCount = itemView.findViewById(R.id.post_list_like_count);
         }
 
         @Override

@@ -265,7 +265,6 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
 
     /* 리사이클러뷰에 리스트 설정 */
     public void setPostList(List<PostListData> list) {
-
         adatper.setPostList(list);
         adatper.notifyDataSetChanged();
     }

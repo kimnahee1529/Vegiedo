@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel;
 import com.devinsight.vegiedo.data.response.PostListData;
 import com.devinsight.vegiedo.service.api.PostApiService;
 import com.devinsight.vegiedo.utill.RetrofitClient;
+import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.util.List;
@@ -97,20 +98,15 @@ public class CommunityViewModel extends ViewModel {
                     Log.d("일반 포스트 요청 성공"," 일반 포스트 요청 성공" + response.isSuccessful());
                     List<PostListData> data = response.body();
                     generalPostLiveData.setValue(data);
+
+                    Gson gson = new Gson();
+                    String jsonData = gson.toJson(data);
+                    Log.d("postList json data","" + jsonData);
                     if(!data.isEmpty()){
                         maxCursorLiveData.setValue(data.get(data.size() - 1).getTotalPage());
                         Log.d( "this is max cursor","max cursor" + data.get(data.size() - 1).getTotalPage());
                     }
                     Log.d("성공","this is post cursor : " + cursor);
-
-//                    Log.d("일반 포스트 리스트 성공","this is post : " + data.get(4*cursor).toString());
-//                    Log.d("일반 포스트 리스트 성공","this is post id: " + data.get(4*cursor).getPostId());
-//                    Log.d("일반 포스트 리스트 성공","this is post userNAme: " + data.get(4*cursor).getUserName());
-//                    Log.d("일반 포스트 리스트 성공","this is post time : " + data.get(4*cursor).getCreatedAt());
-//                    Log.d("일반 포스트 리스트 성공","this is post like : " + data.get(4*cursor).getLike());
-//                    Log.d("일반 포스트 리스트 성공","this is post imageUrl : " + data.get(4*cursor).getImageUrl());
-//                    Log.d("일반 포스트 리스트 성공","this is post comment : " + data.get(4*cursor).getCommentCount());
-//                    Log.d("일반 포스트 리스트 성공","this is post totalPage : " + data.get(4*cursor).getTotalPage());
 
                 }else {
                     // API 응답이 오류 상태일 때

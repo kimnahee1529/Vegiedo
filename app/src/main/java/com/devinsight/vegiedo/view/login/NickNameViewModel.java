@@ -1,4 +1,4 @@
-package com.devinsight.vegiedo.view.home.login;
+package com.devinsight.vegiedo.view.login;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

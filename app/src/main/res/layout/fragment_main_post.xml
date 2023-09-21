@@ -87,7 +87,7 @@
         />
 
     <TextView
-        android:id="@+id/like_count"
+        android:id="@+id/post_list_like_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
@@ -105,8 +105,8 @@
         android:layout_marginLeft="10dp"
         android:src="@drawable/alert_triangle"
         app:tint="@color/grey"
-        app:layout_constraintLeft_toRightOf="@+id/like_count"
-        app:layout_constraintBottom_toBottomOf="@id/like_count"/>
+        app:layout_constraintLeft_toRightOf="@+id/post_list_like_count"
+        app:layout_constraintBottom_toBottomOf="@id/post_list_like_count"/>
 
 
     <View

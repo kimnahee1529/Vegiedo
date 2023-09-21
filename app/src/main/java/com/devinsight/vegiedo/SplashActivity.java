@@ -11,7 +11,7 @@ import com.devinsight.vegiedo.repository.pref.AuthPrefRepository;
 import com.devinsight.vegiedo.repository.pref.UserPrefRepository;
 import com.devinsight.vegiedo.view.MainActivity;
 import com.devinsight.vegiedo.view.home.HomeMainFragment;
-import com.devinsight.vegiedo.view.home.login.LoginMainActivity;
+import com.devinsight.vegiedo.view.login.LoginMainActivity;
 
 public class SplashActivity extends AppCompatActivity {
 

@@ -2,7 +2,6 @@ package com.devinsight.vegiedo.view.community;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -32,9 +31,9 @@ import android.widget.ToggleButton;
 import com.bumptech.glide.Glide;
 import com.devinsight.vegiedo.R;
 import com.devinsight.vegiedo.data.request.PostReportRequestDTO;
-import com.devinsight.vegiedo.data.request.ReviewReportRequestDTO;
 import com.devinsight.vegiedo.data.response.ContentImage;
 import com.devinsight.vegiedo.data.response.PostInquiryResponseDTO;
+import com.devinsight.vegiedo.data.response.PostRecommendRequestDTO;
 import com.devinsight.vegiedo.repository.pref.AuthPrefRepository;
 import com.devinsight.vegiedo.repository.pref.UserPrefRepository;
 import com.devinsight.vegiedo.service.api.PostApiService;
@@ -78,6 +77,8 @@ public class PostContentFragment extends Fragment implements PostContentAdapter.
     Long postId;
     String token;
 
+    boolean isLike;
+
     Fragment communityMainFragment;
 
     ActivityViewModel activityViewModel;
@@ -111,7 +112,7 @@ public class PostContentFragment extends Fragment implements PostContentAdapter.
         post_title = view.findViewById(R.id.post_title);
         user_name = view.findViewById(R.id.user_name);
         created_time = view.findViewById(R.id.created_time);
-        like_count = view.findViewById(R.id.like_count);
+        like_count = view.findViewById(R.id.post_list_like_count);
         post_content = view.findViewById(R.id.post_content);
         post_recommend_count = view.findViewById(R.id.post_recommend_count);
         post_content_recommend = view.findViewById(R.id.post_content_recommend);
@@ -178,15 +179,66 @@ public class PostContentFragment extends Fragment implements PostContentAdapter.
                 }
                 post_content.setText(postData.getContent());
 
+                post_title.setText(postData.getPostTitle());
+                user_name.setText(postData.getUserName());
+                created_time.setText(postData.getCreatedAt());
+                like_count.setText(String.valueOf(postData.getLikeReceiveCnt()));
+                post_recommend_count.setText(String.valueOf(postData.getLikeReceiveCnt()));
                 Log.d("포스트 단일 조호 호출","포스트 단일 조회 호출" + postData.getContent());
+
+                if(postData.isReport()){
+                    btn_post_report.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            setDialog("이미 신고를 완료한 게시글 입니다.");
+                        }
+                    });
+
+                } else {
+                    btn_post_report.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            setReportDialog();
+                        }
+                    });
+                }
             }
         });
 
-        post_title.setText(postTitle);
-        user_name.setText(userName);
-        created_time.setText(createdAt);
-        like_count.setText(String.valueOf(likeReceiveCount));
-        post_recommend_count.setText(String.valueOf(likeReceiveCount));
+        recommend_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                activityViewModel.recommendPost(postId);
+
+            }
+        });
+
+        activityViewModel.getPostLikeReceiveLiveData().observe(getViewLifecycleOwner(), new Observer<PostRecommendRequestDTO>() {
+            @Override
+            public void onChanged(PostRecommendRequestDTO recommendData) {
+                int recommendCount = recommendData.getLikeReceiveCount();
+                like_count.setText(String.valueOf(recommendCount));
+                post_recommend_count.setText(String.valueOf(recommendCount));
+
+
+
+//                if(recommendData.isLike()){
+//                    setDialog("추천이 취소 되었습니다.");
+//                    like_count.setText(String.valueOf(recommendCount - 1));
+//                    post_recommend_count.setText(String.valueOf(recommendCount - 1));
+//                } else {
+//                    setDialog(" 이 게시글을 추천 했습니다!");
+//                    like_count.setText(String.valueOf(recommendCount + 1));
+//                    post_recommend_count.setText(String.valueOf(recommendCount + 1));
+//                }
+            }
+        });
+
+//        post_title.setText(postTitle);
+//        user_name.setText(userName);
+//        created_time.setText(createdAt);
+//        like_count.setText(String.valueOf(likeReceiveCount));
+//        post_recommend_count.setText(String.valueOf(likeReceiveCount));
 
 
 
@@ -231,19 +283,24 @@ public class PostContentFragment extends Fragment implements PostContentAdapter.
             }
         });
 
-        recommend_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                activityViewModel.recommendPost(postId);
-            }
-        });
 
-        btn_post_report.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setReportDialog();
-            }
-        });
+
+//        activityViewModel.getPostLikeReceiveLiveData().observe(getViewLifecycleOwner(), new Observer<Integer>() {
+//            @Override
+//            public void onChanged(Integer likeCount) {
+//                post_recommend_count.setText(String.valueOf(likeCount));
+//                like_count.setText(String.valueOf(likeCount));
+//            }
+//        });
+
+
+
+//        btn_post_report.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                setReportDialog();
+//            }
+//        });
 
         return view;
     }
@@ -251,6 +308,17 @@ public class PostContentFragment extends Fragment implements PostContentAdapter.
     @Override
     public void onImageClicked(View view, ContentImage image, int position) {
 
+    }
+
+    public void setDialog(String message) {
+        dialog = new Dialog(getContext());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setContentView(R.layout.dialog_custom);
+
+        TextView msg = dialog.findViewById(R.id.dialog);
+        msg.setText(message);
+        dialog.show();
     }
 
     public void setReportDialog(){
@@ -391,6 +459,36 @@ public class PostContentFragment extends Fragment implements PostContentAdapter.
                 activityViewModel.deletePost(postId);
                 getParentFragmentManager().beginTransaction().replace(R.id.frame, communityMainFragment).commit();
                 Log.d(" 삭제 포스트 아이디 3","삭제 포스트 아이디3 " + postId);
+                dialog.dismiss();
+            }
+        });
+
+        noDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
+
+    public void setDeleteRecommendDialog(String message, Long postId) {
+        Log.d(" 추천 삭제 포스트 아이디 2"," 추천 삭제 포스트 아이디 2 " + postId);
+        dialog = new Dialog(getContext());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setContentView(R.layout.delete_dialog);
+
+        Button yesDelete = dialog.findViewById(R.id.yes);
+        Button noDelete = dialog.findViewById(R.id.no);
+        TextView msg = dialog.findViewById(R.id.dialog);
+        msg.setText(message);
+
+        yesDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
                 dialog.dismiss();
             }
         });

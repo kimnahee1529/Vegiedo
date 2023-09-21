@@ -17,7 +17,7 @@ public class PostListData {
     @Expose
     @SerializedName("imageUrl")private String imageUrl;
     @Expose
-    @SerializedName("likeReceiveCount")private int like;
+    @SerializedName("likeReceiveCnt")private int like;
     @Expose
     @SerializedName("commentCount")private int commentCount;
     @Expose

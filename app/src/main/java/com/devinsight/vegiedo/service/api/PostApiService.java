@@ -5,6 +5,7 @@ import com.devinsight.vegiedo.data.request.PostReportRequestDTO;
 import com.devinsight.vegiedo.data.response.PostInquiryResponseDTO;
 import com.devinsight.vegiedo.data.response.PostListData;
 //import com.devinsight.vegiedo.data.response.
+import com.devinsight.vegiedo.data.response.PostRecommendRequestDTO;
 import com.devinsight.vegiedo.data.response.PostRegisterResponseDTO;
 
 import java.util.List;
@@ -69,6 +70,7 @@ public interface PostApiService {
             @Part("imageUrlsJson") String imageUrls
     );
 
+    //게시글 수정
     @Multipart
     @PATCH("/posts/{postId}")
     Call<PostInquiryResponseDTO> updatePost2(
@@ -90,7 +92,7 @@ public interface PostApiService {
 
     //게시글 추천
     @PATCH("/posts/{postId}/recommendations")
-    Call<Void> recommendPost(
+    Call<PostRecommendRequestDTO> recommendPost(
             @Header("Authorization") String token,
             @Path("postId") Long postId
     );

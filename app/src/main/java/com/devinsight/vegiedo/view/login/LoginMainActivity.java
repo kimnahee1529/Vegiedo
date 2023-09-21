@@ -1,4 +1,4 @@
-package com.devinsight.vegiedo.view.home.login;
+package com.devinsight.vegiedo.view.login;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;

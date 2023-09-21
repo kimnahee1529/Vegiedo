@@ -22,7 +22,7 @@
 
 
     <application
-        android:name=".view.home.login.VEGIEDO"
+        android:name=".view.login.VEGIEDO"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -56,13 +56,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".view.home.login.SelectTagActivity"
+            android:name=".view.login.SelectTagActivity"
             android:exported="false" />
         <activity
-            android:name=".view.home.login.NickNameActivity"
+            android:name=".view.login.NickNameActivity"
             android:exported="false" />
         <activity
-            android:name=".view.home.login.LoginMainActivity"
+            android:name=".view.login.LoginMainActivity"
             android:exported="false" />
         <activity
             android:name=".SplashActivity"

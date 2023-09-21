@@ -19,11 +19,11 @@ import com.devinsight.vegiedo.data.response.CommentListData;
 import com.devinsight.vegiedo.data.response.MapStoreListData;
 import com.devinsight.vegiedo.data.response.PostInquiryResponseDTO;
 import com.devinsight.vegiedo.data.response.PostListData;
+import com.devinsight.vegiedo.data.response.PostRecommendRequestDTO;
 import com.devinsight.vegiedo.data.response.ReviewListInquiryResponseDTO;
 import com.devinsight.vegiedo.data.response.StampBookInquiryResponseDTO;
 import com.devinsight.vegiedo.data.response.StoreInquiryResponseDTO;
 import com.devinsight.vegiedo.data.response.StoreListData;
-import com.devinsight.vegiedo.data.response.StoreListInquiryResponseDTO;
 import com.devinsight.vegiedo.data.ui.login.TagStatus;
 import com.devinsight.vegiedo.data.ui.map.MapStoreCardUiData;
 import com.devinsight.vegiedo.data.ui.search.SearchStorSummaryeUiData;
@@ -72,6 +72,7 @@ public class ActivityViewModel extends ViewModel {
     /* 유저 토큰 전달을 위한 라이브데이터 */
     private MutableLiveData<String> tokenLiveData = new MutableLiveData<>();
 
+
     AuthPrefRepository authPrefRepository;
 
     /* api 를 통해 서버로 부터 받은 가게 리스트 */
@@ -102,6 +103,9 @@ public class ActivityViewModel extends ViewModel {
     private MutableLiveData<ReviewListInquiryResponseDTO> blogReviewLiveData = new MutableLiveData<>();
     //리뷰-작성한 리뷰가 있는지 여부를 확인하는 라이브 데이터
     private final MutableLiveData<Boolean> canWriteReview = new MutableLiveData<>(true);
+
+    private final MutableLiveData<PostRecommendRequestDTO> postLikeReceiveLiveData = new MutableLiveData<>();
+
 
     //리뷰-리뷰 신고 API 호출에서 쓸 라이브 데이터
     private MutableLiveData reviewReportDataLiveData = new MutableLiveData<>();
@@ -1033,12 +1037,15 @@ public class ActivityViewModel extends ViewModel {
     public void recommendPost(Long postId){
         Log.d(" 추천 포스트 아이디", "추천 포스트 아이디 " + postId);
 
-        postApiService.recommendPost("Bearer " + token, postId).enqueue(new Callback<Void>() {
+        postApiService.recommendPost("Bearer " + token, postId).enqueue(new Callback<PostRecommendRequestDTO>() {
             @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
+            public void onResponse(Call<PostRecommendRequestDTO> call, Response<PostRecommendRequestDTO> response) {
                 if(response.isSuccessful()){
                     Log.d("RetrofitRequestURL 성공", "Requested URL: " + call.request().url());
                     Log.d("post 추천 api 호출 성공 ","성공" + response);
+                    PostRecommendRequestDTO data = response.body();
+                    postLikeReceiveLiveData.setValue(data);
+
                 }else{
                     Log.d("RetrofitRequestURL 실패", "Requested URL: " + call.request().url());
                     Log.e("post 추천 api 호출 실패 1 ","실패1" + response);
@@ -1050,7 +1057,7 @@ public class ActivityViewModel extends ViewModel {
                 }
             }
             @Override
-            public void onFailure(Call<Void> call, Throwable t) {
+            public void onFailure(Call<PostRecommendRequestDTO> call, Throwable t) {
                 Log.e("post 추천 api 호출 실패 2 ","실패2" + t.getMessage());
             }
         });
@@ -1246,6 +1253,10 @@ public class ActivityViewModel extends ViewModel {
 
     public MutableLiveData<Boolean> getIsDeleteLiveData() {
         return yesDeleteLiveData;
+    }
+
+    public LiveData<PostRecommendRequestDTO> getPostLikeReceiveLiveData() {
+        return postLikeReceiveLiveData;
     }
 
 

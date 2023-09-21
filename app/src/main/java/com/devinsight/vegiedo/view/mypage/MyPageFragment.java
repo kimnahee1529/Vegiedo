@@ -1,10 +1,7 @@
 package com.devinsight.vegiedo.view.mypage;
 
-import static android.content.Context.MODE_PRIVATE;
-
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -12,8 +9,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,11 +28,8 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.bumptech.glide.Glide;
 import com.devinsight.vegiedo.R;
-import com.devinsight.vegiedo.view.PermissionUtils;
-import com.devinsight.vegiedo.view.home.login.LoginMainActivity;
+import com.devinsight.vegiedo.view.login.LoginMainActivity;
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity;
-
-import org.w3c.dom.Text;
 
 // TODO : 로그아웃 기능 구현해야 함
 public class MyPageFragment extends Fragment {
