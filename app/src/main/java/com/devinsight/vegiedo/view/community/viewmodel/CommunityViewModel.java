@@ -95,7 +95,7 @@ public class CommunityViewModel extends ViewModel {
             @Override
             public void onResponse(Call<List<PostListData>> call, Response<List<PostListData>> response) {
                 if(response.isSuccessful() && response.body() != null ){
-                    Log.d("일반 포스트 요청 성공"," 일반 포스트 요청 성공" + response.isSuccessful());
+                    Log.d("일반 포스트 요청 성공"," 일반 포스트 요청 성공" + response.isSuccessful() + cursor);
                     List<PostListData> data = response.body();
                     generalPostLiveData.setValue(data);
 

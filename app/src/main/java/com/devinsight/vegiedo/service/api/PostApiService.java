@@ -1,7 +1,6 @@
 package com.devinsight.vegiedo.service.api;
 
-import com.devinsight.vegiedo.data.request.PostRegisterRequestDTO;
-import com.devinsight.vegiedo.data.request.PostReportRequestDTO;
+import com.devinsight.vegiedo.data.request.ReportRequestDTO;
 import com.devinsight.vegiedo.data.response.PostInquiryResponseDTO;
 import com.devinsight.vegiedo.data.response.PostListData;
 //import com.devinsight.vegiedo.data.response.
@@ -102,7 +101,7 @@ public interface PostApiService {
     Call<Void> reportPost(
             @Header("Authorization") String token,
             @Path("postId") Long postId,
-            @Body PostReportRequestDTO postReportRequestDTO
+            @Body ReportRequestDTO reportRequestDTO
     );
 
 

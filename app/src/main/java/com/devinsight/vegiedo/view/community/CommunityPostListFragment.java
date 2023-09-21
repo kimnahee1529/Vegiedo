@@ -143,7 +143,8 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
         scrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(@NonNull NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                /* 현재 Y 좌표가 이전 Y 좌표 보다 작다면 = 스크롤 내림*/
+                /* 현재 Y 좌표가 이전 Y 좌표 보다 작다면 = 스크롤이 위로 올라감*/
+                /* scrollY 값은 화면의 상단 에서 시작 하여 아래로 스크롤 될 때 커짐 */
                 isScrollingUp = scrollY < oldScrollY;
                 int childHeight = v.getChildAt(0).getMeasuredHeight();
                 int scrollViewHeight = v.getMeasuredHeight();
@@ -201,25 +202,37 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                long currentTime = System.currentTimeMillis();
-
-                if(currentTime - lastScrollEventTime < SCROLL_DEBOUNCE_TIME) {
-                    return; // Do not process if the time difference is less than debounce time.
+                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                int lastVisibleItemPosition = layoutManager.findLastCompletelyVisibleItemPosition(); // 화면에 보이는 마지막 아이템의 position
+                int itemTotalCount = recyclerView.getAdapter().getItemCount() - 1; // 어댑터에 등록된 아이템의 총 개수 -1
+                // 스크롤이 끝에 도달했는지 확인
+                if (lastVisibleItemPosition == itemTotalCount) {
+                    Log.d("게시글의 끝","게시글의 끝" + lastVisibleItemPosition + " : " + itemTotalCount);
                 }
 
-                lastScrollEventTime = currentTime;
 
-                if (!recyclerView.canScrollVertically(1)) { // Check if reached the last item
-                    Log.d("ScrollCheck", "Reached the last item");
-                    communityViewModel.getLastItem(true);
-                }
 
-                if (!recyclerView.canScrollVertically(-1)) {  // Check if reached the top
-                    Log.d("ScrollCheck", "Reached the top");
-                    communityViewModel.getFirstItem(true);
 
-                    // 여기에서 맨 위에 도달했을 때의 로직을 수행
-                }
+
+//                long currentTime = System.currentTimeMillis();
+//
+//                if(currentTime - lastScrollEventTime < SCROLL_DEBOUNCE_TIME) {
+//                    return; // Do not process if the time difference is less than debounce time.
+//                }
+//
+//                lastScrollEventTime = currentTime;
+//
+//                if (!recyclerView.canScrollVertically(1)) { // Check if reached the last item
+//                    Log.d("ScrollCheck", "Reached the last item");
+//                    communityViewModel.getLastItem(true);
+//                }
+//
+//                if (!recyclerView.canScrollVertically(-1)) {  // Check if reached the top
+//                    Log.d("ScrollCheck", "Reached the top");
+//                    communityViewModel.getFirstItem(true);
+//
+//                    // 여기에서 맨 위에 도달했을 때의 로직을 수행
+//                }
             }
         });
 
@@ -247,17 +260,22 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
 
         postContentFragment.setArguments(bundle);
 
-        PostCommentFragment postCommentFragment = new PostCommentFragment();
-        Bundle commentBundle = new Bundle();
-        commentBundle.putLong("postIdForComment", postList.get(position).getPostId());
-        postCommentFragment.setArguments(commentBundle);
+//        PostCommentFragment postCommentFragment = new PostCommentFragment();
+//
+//        Bundle commentBundle = new Bundle();
+//        commentBundle.putLong("postIdForComment", postList.get(position).getPostId());
+//
+//        postCommentFragment.setArguments(commentBundle);
 
         ((MainActivity) getActivity()).replaceFragment(postMainFragment);
 
         FragmentManager fragmentManager = ((MainActivity) getActivity()).getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.post_content_frame, postContentFragment);
-        transaction.replace(R.id.post_comment_frame, postCommentFragment).commit();
+        transaction.replace(R.id.post_content_frame, postContentFragment).commit();
+
+//        FragmentManager fragmentManager1 = ((MainActivity) getActivity()).getSupportFragmentManager();
+//        FragmentTransaction transaction1 = fragmentManager1.beginTransaction();
+//        transaction1.replace(R.id.post_comment_frame, postCommentFragment).commit();
 
         activityViewModel.setClickedPostData(postListData);
 

@@ -27,6 +27,10 @@ public class PostCommentAdapter extends RecyclerView.Adapter<PostCommentAdapter.
 
     UserPrefRepository userPrefRepository;
 
+    public void setInitialCommentList(List<CommentListData> list ) {
+        this.commentList.clear();
+        this.commentList.addAll(list);
+    }
     public void setCommentList(List<CommentListData> list ) {
         this.commentList.clear();
         this.commentList.addAll(list);

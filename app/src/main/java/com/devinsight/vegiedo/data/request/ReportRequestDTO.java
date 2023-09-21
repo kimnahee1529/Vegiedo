@@ -3,7 +3,7 @@ package com.devinsight.vegiedo.data.request;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class PostReportRequestDTO {
+public class ReportRequestDTO {
 
     @Expose
     @SerializedName("contentType")private String contentType;
@@ -12,12 +12,12 @@ public class PostReportRequestDTO {
     @Expose
     @SerializedName("memo")private String memo;
 
-    public PostReportRequestDTO(String contentType, String trollType, String memo) {
+    public ReportRequestDTO(String contentType, String trollType, String memo) {
         this.contentType = contentType;
         this.trollType = trollType;
         this.memo = memo;
     }
-    public PostReportRequestDTO() {
+    public ReportRequestDTO() {
 
     }
 

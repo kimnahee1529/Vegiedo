@@ -10,7 +10,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.devinsight.vegiedo.data.request.PostReportRequestDTO;
+import com.devinsight.vegiedo.data.request.ReportRequestDTO;
 import com.devinsight.vegiedo.data.request.ReviewModifyrRequestDTO;
 import com.devinsight.vegiedo.data.request.ReviewRegisterRequestDTO;
 import com.devinsight.vegiedo.data.request.ReviewReportRequestDTO;
@@ -986,13 +986,6 @@ public class ActivityViewModel extends ViewModel {
                     postContentLiveData.setValue(data);
                     postCommentLiveData.setValue(data.getCommentList());
                     postIdLiveData.setValue(data.getPostId());
-                    Log.d("클릭된 포스트 성공", "this is post id: " + data.getPostId());
-                    Log.d("클릭된 포스트 성공", "this is post userNAme: " + data.getUserName());
-                    Log.d("클릭된 포스트 성공", "this is post userImage: " + data.getUserImageUrl());
-                    Log.d("클릭된 포스트 성공", "this is post content: " + data.getContent());
-//                    Log.d("클릭된 포스트 성공","this is post userImage: " + data.getCommentList().size());
-                    Log.d("클릭된 포스트 성공", "this is post title: " + data.getPostTitle());
-//                    Log.d("클릭된 포스트 성공","this is post userImage: " + data.getImages().get(0));
                     Log.d("post 단일 조회 api 호출 성공 ", "성공" + response);
                 } else {
                     Log.e("post 단일 조회 api 호출 실패1  ", "실패1" + response);
@@ -1063,7 +1056,7 @@ public class ActivityViewModel extends ViewModel {
         });
     }
 
-    public void reportPost(Long postId, PostReportRequestDTO requestDTO){
+    public void reportPost(Long postId, ReportRequestDTO requestDTO){
         Log.d(" 신고 포스트 아이디", " 신고 포스트 아이디 " + postId);
         postApiService.reportPost("Bearer " + token ,postId, requestDTO).enqueue(new Callback<Void>() {
             @Override

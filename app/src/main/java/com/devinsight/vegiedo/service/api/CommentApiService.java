@@ -3,6 +3,7 @@ package com.devinsight.vegiedo.service.api;
 import com.devinsight.vegiedo.data.request.CommentModifyRequestDTO;
 import com.devinsight.vegiedo.data.request.CommentRegisterRequestDTO;
 import com.devinsight.vegiedo.data.request.CommentReportRequestDTO;
+import com.devinsight.vegiedo.data.request.ReportRequestDTO;
 import com.devinsight.vegiedo.data.response.CommentInquiryResponseDTO;
 import com.devinsight.vegiedo.data.response.CommentListData;
 import com.devinsight.vegiedo.data.response.CommentModifyResponseDTO;
@@ -30,7 +31,7 @@ public interface CommentApiService {
 
     //댓글 삭제
     @DELETE("/posts/{postId}/comments/{commentId}")
-    Call<Void > deleteComment(
+    Call<Void> deleteComment(
             @Header("Authorization") String token,
             @Path("postId") Long postId,
             @Path("commentId") Long commentId
@@ -38,12 +39,12 @@ public interface CommentApiService {
 
 
     //댓글 신고
-    @POST("/posts/{postId}/comments/{commentsId}/reports")
+    @POST("/posts/{postId}/comments/{commentId}/reports")
     Call<Void> reportComment(
             @Header("Authorization") String token,
             @Path("postId") Long postId,
             @Path("commentId") Long commentId,
-            @Body CommentReportRequestDTO reportComment
+            @Body ReportRequestDTO requestDTO
     );
 
 }

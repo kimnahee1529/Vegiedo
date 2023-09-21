@@ -30,7 +30,7 @@ import android.widget.ToggleButton;
 
 import com.bumptech.glide.Glide;
 import com.devinsight.vegiedo.R;
-import com.devinsight.vegiedo.data.request.PostReportRequestDTO;
+import com.devinsight.vegiedo.data.request.ReportRequestDTO;
 import com.devinsight.vegiedo.data.response.ContentImage;
 import com.devinsight.vegiedo.data.response.PostInquiryResponseDTO;
 import com.devinsight.vegiedo.data.response.PostRecommendRequestDTO;
@@ -427,7 +427,7 @@ public class PostContentFragment extends Fragment implements PostContentAdapter.
         // 완료 버튼을 눌렀을 때
         reporting_btn.setOnClickListener(v -> {
 
-            PostReportRequestDTO requestDTO = new PostReportRequestDTO();
+            ReportRequestDTO requestDTO = new ReportRequestDTO();
             requestDTO.setContentType("게시글");
             requestDTO.setTrollType(reportType.get());
             requestDTO.setMemo(opinion.get());

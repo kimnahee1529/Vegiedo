@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.devinsight.vegiedo.data.request.CommentRegisterRequestDTO;
+import com.devinsight.vegiedo.data.request.ReportRequestDTO;
 import com.devinsight.vegiedo.data.response.CommentInquiryResponseDTO;
 import com.devinsight.vegiedo.data.response.CommentListData;
 import com.devinsight.vegiedo.data.response.PostInquiryResponseDTO;
@@ -65,7 +66,7 @@ public class PostCommentViewModel extends ViewModel {
         });
     }
 
-    public void deleteComment(Long postId, Long commentId){
+    public void deleteComment(Long commentId){
         commentApiService.deleteComment("Bearer " + token, postId, commentId).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
@@ -81,6 +82,24 @@ public class PostCommentViewModel extends ViewModel {
             public void onFailure(Call<Void> call, Throwable t) {
                 Log.e("comment 삭제 api 호출 실패 2 ","실패2" + t.getMessage());
 
+            }
+        });
+    }
+
+    public void reportComment(Long commentId, ReportRequestDTO requestDTO){
+        commentApiService.reportComment("Bearer " + token, postId, commentId, requestDTO).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+                    Log.d("comment 신고 api 호출 성공 ","성공" + response);
+                }else{
+                    Log.e("comment 신고 api 호출 실패 1","실패1" + response);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.e("comment 신고 api 호출 실패 2 ","실패2" + t.getMessage());
             }
         });
     }
