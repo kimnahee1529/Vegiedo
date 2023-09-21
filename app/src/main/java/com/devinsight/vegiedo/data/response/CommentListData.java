@@ -13,6 +13,17 @@ public class CommentListData {
     @SerializedName("userName")private String userName;
     @Expose
     @SerializedName("createdAt")private String createdAt;
+    @Expose
+    @SerializedName("report")private boolean report;
+
+    public CommentListData(Long commentId, String commentContent, String userName, String createdAt, boolean report) {
+        this.commentId = commentId;
+        this.commentContent = commentContent;
+        this.userName = userName;
+        this.createdAt = createdAt;
+        this.report = report;
+    }
+
     public Long getCommentId() {
         return commentId;
     }
@@ -45,10 +56,11 @@ public class CommentListData {
         this.createdAt = createdAt;
     }
 
-    public CommentListData(Long commentId, String content, String userName, String createdAt) {
-        this.commentId = commentId;
-        this.commentContent = content;
-        this.userName = userName;
-        this.createdAt = createdAt;
+    public boolean isReport() {
+        return report;
+    }
+
+    public void setReport(boolean report) {
+        this.report = report;
     }
 }

@@ -1,7 +1,11 @@
 package com.devinsight.vegiedo.data.request;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 public class CommentRegisterRequestDTO {
-    private String content;
+    @Expose
+    @SerializedName("commentContent")private String content;
 
     public String getContent() {
         return content;

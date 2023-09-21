@@ -221,7 +221,6 @@ public class PostContentFragment extends Fragment implements PostContentAdapter.
                 post_recommend_count.setText(String.valueOf(recommendCount));
 
 
-
 //                if(recommendData.isLike()){
 //                    setDialog("추천이 취소 되었습니다.");
 //                    like_count.setText(String.valueOf(recommendCount - 1));

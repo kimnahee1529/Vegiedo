@@ -22,7 +22,7 @@ public class PostCommentAdapter extends RecyclerView.Adapter<PostCommentAdapter.
     protected CommentClickListener commentClickListener;
 
     public void setCommentList(List<CommentListData> list ) {
-        this.commentList = list;
+        this.commentList.clear();
         this.commentList.addAll(list);
     }
 
@@ -46,6 +46,7 @@ public class PostCommentAdapter extends RecyclerView.Adapter<PostCommentAdapter.
         holder.comment_user_name.setText(data.getUserName());
         holder.comment_created_at.setText(data.getCreatedAt());
         holder.comment_content.setText(data.getCommentContent());
+
 
     }
 

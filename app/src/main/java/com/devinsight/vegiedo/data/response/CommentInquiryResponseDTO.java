@@ -8,7 +8,7 @@ import java.util.List;
 public class CommentInquiryResponseDTO {
 
     @Expose
-    @SerializedName("comments")private List<CommentListData> comments;
+    @SerializedName("commentContent")private List<CommentListData> comments;
 
     public List<CommentListData> getComments() {
         return comments;

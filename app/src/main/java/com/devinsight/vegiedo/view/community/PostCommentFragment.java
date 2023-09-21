@@ -67,6 +67,13 @@ public class PostCommentFragment extends Fragment implements PostCommentAdapter.
                 commentViewModel.getToken(token);
             }
         });
+        activityViewModel.getPostIdLiveData().observe(getViewLifecycleOwner(), new Observer<Long>() {
+            @Override
+            public void onChanged(Long postId) {
+                commentViewModel.getPostId(postId);
+                Log.d("포스트 아이디", "포스트 아이디" + postId);
+            }
+        });
 
         activityViewModel.getPostCommentLiveData().observe(getViewLifecycleOwner(), new Observer<List<CommentListData>>() {
             @Override
@@ -79,19 +86,14 @@ public class PostCommentFragment extends Fragment implements PostCommentAdapter.
             }
         });
 
-        activityViewModel.getPostIdLiveData().observe(getViewLifecycleOwner(), new Observer<Long>() {
-            @Override
-            public void onChanged(Long postId) {
-                commentViewModel.getPostId(postId);
-                Log.d("포스트 아이디","포스트 아이디" + postId);
-            }
-        });
-
         btn_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String comment =  et_comment_input.getText().toString();
+                String comment = et_comment_input.getText().toString();
                 commentViewModel.getCommentContent(comment);
+                et_comment_input.setText("");
+
+
             }
         });
 
@@ -101,8 +103,10 @@ public class PostCommentFragment extends Fragment implements PostCommentAdapter.
                 adapter.setCommentList(commentList);
                 adapter.notifyDataSetChanged();
                 post_content_comment.setText("댓글 " + commentList.size());
+
             }
         });
+
 
         return view;
     }

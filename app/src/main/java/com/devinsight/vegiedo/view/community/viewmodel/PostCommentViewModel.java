@@ -12,6 +12,7 @@ import com.devinsight.vegiedo.data.response.CommentListData;
 import com.devinsight.vegiedo.data.response.PostInquiryResponseDTO;
 import com.devinsight.vegiedo.service.api.CommentApiService;
 import com.devinsight.vegiedo.utill.RetrofitClient;
+import com.google.gson.Gson;
 
 import org.w3c.dom.Comment;
 
@@ -39,35 +40,26 @@ public class PostCommentViewModel extends ViewModel {
 
     public void getCommentContent(String input){
         CommentRegisterRequestDTO commentRegisterRequestDTO = new CommentRegisterRequestDTO(input);
-        commentApiService.addComment(postId, "Bearer " + token, commentRegisterRequestDTO).enqueue(new Callback<Void>() {
+        commentRegisterRequestDTO.setContent(input);
+        commentApiService.addComment(postId, "Bearer " + token, commentRegisterRequestDTO).enqueue(new Callback<List<CommentListData>>() {
             @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
+            public void onResponse(Call<List<CommentListData>> call, Response<List<CommentListData>> response) {
                 if(response.isSuccessful()){
                     Log.d("comment 등록 api 호출 성공 ","성공" + response);
+
+                    List<CommentListData> data = response.body();
+                    Gson gson = new Gson();
+                    String jsonData = gson.toJson(data);
+
+                    commentListLiveData.setValue(data);
+                    Log.d("postList json data","" + jsonData);
                 }else{
                     Log.e("comment 등록 api 호출 실패 ","실패1" + response);
                 }
             }
             @Override
-            public void onFailure(Call<Void> call, Throwable t) {
+            public void onFailure(Call<List<CommentListData>> call, Throwable t) {
                 Log.e("comment 등록 api 호출 실패 ","실패2" + t.getMessage());
-            }
-        });
-
-        commentApiService.getCommentList("Bearer " + token, postId).enqueue(new Callback<CommentInquiryResponseDTO>() {
-            @Override
-            public void onResponse(Call<CommentInquiryResponseDTO> call, Response<CommentInquiryResponseDTO> response) {
-                if(response.isSuccessful()){
-                    CommentInquiryResponseDTO data = response.body();
-                    commentListLiveData.setValue(data.getComments());
-                    Log.d("comment 조회 api 호출 성공 ","성공" + response);
-                }else{
-                    Log.e("comment 조회 api 호출 실패 ","실패1" + response);
-                }
-            }
-            @Override
-            public void onFailure(Call<CommentInquiryResponseDTO> call, Throwable t) {
-                Log.e("comment 조회 api 호출 실패 ","실패2" + t.getMessage());
             }
         });
     }
