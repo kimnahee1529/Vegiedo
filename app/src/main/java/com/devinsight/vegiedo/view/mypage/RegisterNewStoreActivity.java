@@ -3,16 +3,21 @@ package com.devinsight.vegiedo.view.mypage;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,7 +27,9 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.devinsight.vegiedo.R;
+import com.devinsight.vegiedo.SplashActivity;
 import com.devinsight.vegiedo.data.request.StoreRegisterRequestDTO;
+import com.devinsight.vegiedo.view.community.WritingFragment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,7 +46,11 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class RegisterNewStoreActivity extends AppCompatActivity {
-
+    private enum DialogType {
+        ALLCONTENT,
+        COMPLETE,
+        TAG
+    }
     private EditText mEtAddress;
 
     private static final int REQUEST_IMAGE_PICK = 101;
@@ -149,16 +160,30 @@ public class RegisterNewStoreActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String address = mEtAddress.getText().toString().trim();
+                String storeName = storeNameEditText.getText().toString().trim();
+
                 if(!address.isEmpty()) {
                     fetchLatLngFromAddress(address);
-                } else {
+                }
+                else if(storeName.isEmpty()) {
+                    // 상호명이 비어있는 경우에 대한 처리 (예: Toast 메시지 표시)
+                    showDialog(DialogType.ALLCONTENT);
+                    Toast.makeText(RegisterNewStoreActivity.this, "상호명을 입력해주세요.", Toast.LENGTH_SHORT).show();
+                }
+                else if(address.isEmpty()){
                     // 주소가 비어있는 경우에 대한 처리 (예: Toast 메시지 표시)
+                    showDialog(DialogType.ALLCONTENT);
                     Toast.makeText(RegisterNewStoreActivity.this, "주소를 입력해주세요.", Toast.LENGTH_SHORT).show();
+                }else{
+                    showDialog(DialogType.COMPLETE);
+                    finish();
                 }
 
-                Log.d("주소 등록", "상호명:"+storeNameEditText.getText()+", 주소:"+mEtAddress.getText());
-                String storeName = storeNameEditText.getText().toString();
-                String storeAddress = mEtAddress.getText().toString();
+
+
+//                Log.d("주소 등록", "상호명:"+storeNameEditText.getText()+", 주소:"+mEtAddress.getText());
+//                String storeName = storeNameEditText.getText().toString();
+//                String storeAddress = mEtAddress.getText().toString();
 
 //                StoreRegisterRequestDTO requestDTO = new StoreRegisterRequestDTO(storeName,storeAddress,);
 //                requestDTO.setStoreName(storeName);
@@ -248,6 +273,46 @@ public class RegisterNewStoreActivity extends AppCompatActivity {
 //        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 //        startActivityForResult(intent, REQUEST_IMAGE_PICK);
 //    }
+
+//    private void showWithdrawalDialog() {
+//
+//        AlertDialog.Builder builder = new AlertDialog.Builder(this);  // 수정됨
+//        LayoutInflater inflater = this.getLayoutInflater();  // 수정됨
+//        View dialogView = inflater.inflate(R.layout.withdrawal_dialog, null);
+//        builder.setView(dialogView);
+//        final AlertDialog dialog = builder.create();
+//
+//        dialog.setContentView(R.layout.dialog_custom);
+//        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+//
+//        dialog.show();
+//    }
+
+    private void showDialog(DialogType type) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+
+        View dialogView;
+
+        if (type == DialogType.ALLCONTENT) {
+            dialogView = inflater.inflate(R.layout.request_input_blank_dialog, null);
+        } else if (type == DialogType.TAG) {
+            dialogView = inflater.inflate(R.layout.request_push_1tag_dialog, null);
+        } else {
+            dialogView = inflater.inflate(R.layout.complete_new_store_registration_dialog, null);
+        }
+
+        ImageView closeIcon = dialogView.findViewById(R.id.green_x_circle);
+
+        builder.setView(dialogView);
+        final AlertDialog dialog = builder.create();
+        dialog.setContentView(R.layout.dialog_custom);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+
+        closeIcon.setOnClickListener(v -> dialog.dismiss());
+        dialog.show();
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

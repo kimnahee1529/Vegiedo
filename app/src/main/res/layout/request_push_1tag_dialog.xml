@@ -30,7 +30,7 @@
                 android:id="@+id/put_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/push_3tag"
+                android:text="@string/push_1tag"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="15sp"
