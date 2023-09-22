@@ -119,6 +119,8 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
                         public void onChanged(List<PostListData> popularPostListData) {
                             if (popularPostListData != null) {
                                 setPostList(popularPostListData);
+//                                adatper.setList(popularPostListData);
+//                                adatper.notifyItemRangeInserted((cursor - 1)*5, 5);
                             } else {
                                 Log.d("CommunityPostListFragment", "list == null");
                             }
