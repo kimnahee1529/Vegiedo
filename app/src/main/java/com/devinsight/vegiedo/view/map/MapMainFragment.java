@@ -167,9 +167,11 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
     }
     private void onFloatingListButtonClick() {
         StoreListMainFragment storeListMainFragment  = new StoreListMainFragment();
-        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.frame, storeListMainFragment);
         transaction.commit();
+
+
     }
 
 

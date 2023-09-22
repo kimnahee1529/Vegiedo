@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,11 +26,21 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
 import com.devinsight.vegiedo.R;
+import com.devinsight.vegiedo.SplashActivity;
+import com.devinsight.vegiedo.view.PermissionUtils;
+import com.devinsight.vegiedo.view.search.ActivityViewModel;
 import com.devinsight.vegiedo.view.login.LoginMainActivity;
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity;
+
+import org.w3c.dom.Text;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 
 // TODO : 로그아웃 기능 구현해야 함
 public class MyPageFragment extends Fragment {
@@ -40,6 +51,29 @@ public class MyPageFragment extends Fragment {
     private TextView mypage_inquiry_text;
     private TextView mypage_policy_text;
     private TextView mypage_open_source_text;
+    private TextView withdrawal_text;
+    ActivityViewModel viewModel;
+    private String saveImageToInternalStorage(Uri imageUri) {
+        try {
+            InputStream inputStream = getActivity().getContentResolver().openInputStream(imageUri);
+            File file = new File(getActivity().getFilesDir(), "profileImage.jpg");
+            FileOutputStream outputStream = new FileOutputStream(file);
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
+            }
+            inputStream.close();
+            outputStream.close();
+
+            return file.getAbsolutePath();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -48,19 +82,36 @@ public class MyPageFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_my_page, container, false);
         MyPage_nickname = rootView.findViewById(R.id.MyPage_nickname);
         MyPage_profile_image = rootView.findViewById(R.id.MyPage_profile_image);
-
+        viewModel = new ViewModelProvider(requireActivity()).get(ActivityViewModel.class);
 
         // SharedPreferences 객체 얻기(회원가입 때 정한 닉네임, 태그 얻기 위함)
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_info", Context.MODE_PRIVATE);
-        // userName 값 읽기
         String userName = sharedPreferences.getString("userName", "기본값"); // "기본값"은 userName이 없을 때 반환되는 기본값입니다.
         String userProfile = sharedPreferences.getString("userProfile","null"); //디폴트는 null
 
         MyPage_nickname.setText(userName);
-        Glide.with(getContext())
-                .load(userProfile)
-                .circleCrop()
-                .into(MyPage_profile_image);
+
+        String savedImagePath = loadImagePathFromPreferences();
+
+        //내부 저장소에 저장된 사용자의 프로필 이미지 경로가 있는지 확인
+        if (savedImagePath != null) { //만약 null이 아니라면 사용자가 앱에서 프로필 이미지를 설정한 적이 있음
+            //저장된 이미지 경로로부터 이미지를 로드
+            Glide.with(getContext())
+                    .load(savedImagePath)
+                    .circleCrop()
+                    .into(MyPage_profile_image);
+        }
+        //저장된 이미지가 없고 img_sheep일 때 양 이미지를 로드
+        else if (userProfile.equals("img_sheep")) {
+            MyPage_profile_image.setImageResource(R.drawable.img_sheep);
+        }
+        //저장된 이미지가 없고 기본 이미지가 아니라면 저장된 경로에서 이미지를 가져옴
+        else {
+            Glide.with(getContext())
+                    .load(userProfile)
+                    .circleCrop()
+                    .into(MyPage_profile_image);
+        }
 
         ImageView mypageCamera = rootView.findViewById(R.id.my_page_camera_image);
         ImageView mypagePencil = rootView.findViewById(R.id.my_page_change_nickname_image);
@@ -87,6 +138,7 @@ public class MyPageFragment extends Fragment {
         mypagePencil.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d("닉네임 클릭", "MyPageFragment");
                 ChangeNicknameFragment changeNicknameFragment = new ChangeNicknameFragment();
 
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -173,7 +225,7 @@ public class MyPageFragment extends Fragment {
             public void onClick(View v) {
                 // 로그아웃 로직 (예: 사용자 정보, 세션, 토큰 삭제 등)
                 logoutUser();
-
+                viewModel.LogoutUser();
 
                 // LoginMainActivity로 이동
                 Activity activity = getActivity();
@@ -190,9 +242,10 @@ public class MyPageFragment extends Fragment {
             }
         });
 
-        TextView withdrawal = rootView.findViewById(R.id.withdrawal_text);  // 가정: withdrawal의 ID는 withdrawal입니다.
+        //회원탈퇴 텍스트 클릭
+        TextView withdrawal_text = rootView.findViewById(R.id.withdrawal_text);  // 가정: withdrawal의 ID는 withdrawal입니다.
 
-        withdrawal.setOnClickListener(new View.OnClickListener() {
+        withdrawal_text.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showWithdrawalDialog();
@@ -227,10 +280,13 @@ public class MyPageFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getActivity(), "기본이미지 선택하셨습니다.", Toast.LENGTH_SHORT).show();
+                MyPage_profile_image.setImageResource(R.drawable.img_sheep);
 
-                ImageView myImageView = getActivity().findViewById(R.id.MyPage_profile_image);
-                // 해당 ImageView에 img_sheep 이미지를 설정
-                myImageView.setImageResource(R.drawable.img_sheep);
+                // SharedPreferences에 "img_sheep" 저장
+                SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_info", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("userProfile", "img_sheep");
+                editor.apply();
 
                 dialog.dismiss();
             }
@@ -248,17 +304,6 @@ public class MyPageFragment extends Fragment {
                     // 권한이 허용되지 않은 상태: 권한 요청
                     requestPermission();
                 }
-
-//                if (PermissionUtils.checkPermission(getActivity())) {
-//                    // 권한이 이미 허용된 상태: 바로 관련 작업 수행
-//                    Toast.makeText(getActivity(), "앨범에서 이미지를 선택하세요.", Toast.LENGTH_SHORT).show();
-//                    ImagePickerUtil.selectImageFromGallery(MyPageFragment.this, REQUEST_IMAGE_PICK);
-//                    dialog.dismiss();  // Uncomment if you want the dialog to close after selecting album image
-//                } else {
-//                    // 권한이 허용되지 않은 상태: 권한 요청
-//                    PermissionUtils.requestPermission(getActivity(), PERMISSION_REQUEST_CODE);
-//                    requestPermission();
-//                }
             }
         });
 
@@ -291,6 +336,9 @@ public class MyPageFragment extends Fragment {
         builder.setView(dialogView);
         final AlertDialog dialog = builder.create();
 
+        dialog.setContentView(R.layout.dialog_custom);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
         Button yesBtn = dialogView.findViewById(R.id.yesBtn);
         Button noBtn = dialogView.findViewById(R.id.noBtn);
         ImageView closeImageView = dialogView.findViewById(R.id.green_x_circle);
@@ -300,6 +348,14 @@ public class MyPageFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getActivity(), "예 버튼입니다.", Toast.LENGTH_SHORT).show();
+                viewModel.DeleteUser();
+                // SplashActivity로 이동
+                Activity activity = getActivity();
+                if (activity != null) {
+                    Intent intent = new Intent(activity, SplashActivity.class);
+                    startActivity(intent);
+                    activity.finish();
+                }
                 dialog.dismiss();
             }
         });
@@ -321,28 +377,32 @@ public class MyPageFragment extends Fragment {
         dialog.show();
     }
 
-//    private void selectImageFromGallery() {
-//        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//        startActivityForResult(intent, REQUEST_IMAGE_PICK);
-//    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_IMAGE_PICK && resultCode == Activity.RESULT_OK) {
-
-            if (data != null) {
-
-                ImageView myImageView = getActivity().findViewById(R.id.MyPage_profile_image);
-                android.net.Uri selectedImageUri = data.getData();
-//                myImageView.setImageURI(selectedImageUri);
+            Uri selectedImageUri = data.getData();
+            String savedImagePath = saveImageToInternalStorage(selectedImageUri);
+            if (savedImagePath != null) {
                 Glide.with(this)
-                        .load(selectedImageUri)
-                        .circleCrop()  // 원형 이미지로 변환
-                        .into(myImageView);
+                        .load(savedImagePath)
+                        .circleCrop()
+                        .into(MyPage_profile_image);
+                saveImagePathToPreferences(savedImagePath);
             }
         }
+    }
+    private void saveImagePathToPreferences(String imagePath) {
+        SharedPreferences preferences = getActivity().getSharedPreferences("user_info", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("selectedImagePath", imagePath);
+        editor.apply();
+    }
+
+    private String loadImagePathFromPreferences() {
+        SharedPreferences preferences = getActivity().getSharedPreferences("user_info", Context.MODE_PRIVATE);
+        return preferences.getString("selectedImagePath", null);
     }
 
     //갤러리 접근 권한

@@ -124,6 +124,7 @@ public class StoreDetailPageFragment extends Fragment {
 //        callStoreAPI(viewModel.getStoreId().getValue());
         storeId = 3L;
 
+        //위에서 받아온 storeId를 리뷰 프래그먼트에 넘겨줌
         StoreReviewFragment initialFragment = StoreReviewFragment.newInstance(storeId);
         loadFragment(initialFragment);
 
