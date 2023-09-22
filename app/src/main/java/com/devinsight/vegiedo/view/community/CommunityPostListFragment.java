@@ -152,10 +152,10 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
                                 cursor++;
                                 Log.d("cursor scroll ", "cursor up" + cursor);
                                 addPostListFromApi(cursor);
-                                progressBar.setVisibility(View.VISIBLE);
+//                                progressBar.setVisibility(View.VISIBLE);
                             } else {
                                 Toast.makeText(getContext(), " 마지막 페이지 입니다 ", Toast.LENGTH_SHORT).show();
-                                progressBar.setVisibility(View.INVISIBLE);
+//                                progressBar.setVisibility(View.INVISIBLE);
                             }
                         }
                     });
