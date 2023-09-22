@@ -3,6 +3,7 @@ package com.devinsight.vegiedo.service.api;
 import com.devinsight.vegiedo.data.request.UserNicknameModifyRequestDTO;
 import com.devinsight.vegiedo.data.request.UserRegisterRequestDTO;
 
+import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -10,6 +11,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
 
 public interface UserApiService {
@@ -35,11 +37,6 @@ public interface UserApiService {
     );
 
 
-    //로그아웃
-    @DELETE("/session")
-    Call<Void> logoutUser(
-            @Header("Authorization") String token
-    );
 
     //로그인
     @POST("/session")
@@ -61,11 +58,18 @@ public interface UserApiService {
             @Header("Authorization") String token
     );
 
+    //로그아웃
+    @POST("userService/logout")
+    Call<Void> logoutUser(
+            @Header("Authorization") String token
+    );
+
     //프로필 사진 변경
     @POST("userService/profileImage")
     Call<Void> changeProfileImage(
             @Header("Authorization") String token,
-            @Body UserNicknameModifyRequestDTO userNicknameModifyRequestDTO
+            @Part MultipartBody.Part image
+//            @Body UserNicknameModifyRequestDTO userNicknameModifyRequestDTO
     );
 
     //닉네임 변경
@@ -74,5 +78,12 @@ public interface UserApiService {
             @Header("Authorization") String token,
             @Body UserNicknameModifyRequestDTO userNicknameModifyRequestDTO
     );
+
+    //유저 탈퇴
+    @DELETE("userService/deleteUser")
+    Call<Void> deleteUser(
+            @Header("Authorization") String token
+    );
+
 
 }

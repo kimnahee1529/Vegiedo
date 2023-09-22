@@ -943,6 +943,57 @@ public class ActivityViewModel extends ViewModel {
 //        });
 //    }
 
+    //유저-로그아웃
+    public void LogoutUser() {
+        Log.d("닉네임token", token);
+        //리뷰 수정
+        Call<Void> userLogoutRequestDTOCall = userApiService.logoutUser("Bearer " + token);
+        userLogoutRequestDTOCall.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+//                Log.d("뷰모델 닉네임 onResponse", String.valueOf(response.code()));
+                if (response.isSuccessful()) {
+                    Void responseData = response.body();
+                    Log.d("뷰모델에서 보낸 로그아웃 api 성공", response.toString());
+//                    userNickNameDataLiveData.setValue(response.code());
+                } else{
+                    Log.d("뷰모델에서 보낸 로그아웃 api", "UserNicknameChange 호출실패1 "+response);
+//                    userNickNameDataLiveData.setValue(response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("뷰모델에서 보낸 로그아웃 api", "UserNicknameChange 호출실패2 "+ t);
+            }
+        });
+    }
+
+    //유저-탈퇴
+    public void DeleteUser() {
+        Log.d("닉네임token", token);
+        //리뷰 수정
+        Call<Void> userDeleteRequestDTOCall = userApiService.deleteUser("Bearer " + token);
+        userDeleteRequestDTOCall.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+//                Log.d("뷰모델 닉네임 onResponse", String.valueOf(response.code()));
+                if (response.isSuccessful()) {
+                    Void responseData = response.body();
+                    Log.d("뷰모델에서 보낸 탈퇴 api 성공", response.toString());
+//                    userNickNameDataLiveData.setValue(response.code());
+                } else{
+                    Log.d("뷰모델에서 보낸 탈퇴 api", "UserNicknameChange 호출실패1 "+response);
+//                    userNickNameDataLiveData.setValue(response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("뷰모델에서 보낸 탈퇴 api", "UserNicknameChange 호출실패2 "+ t);
+            }
+        });
+    }
 
 
     /* true : 일반 게시글, false : 인기 게시글*/
