@@ -50,6 +50,7 @@
     <string name="input_blank">모든 빈칸을 입력해주세요.</string>
     <string name="complete_new_store_registration">신규 가게 등록 요청이 완료되었습니다.</string>
     <string name="push_3tag">태그를 3개이상 눌러주세요!</string>
+    <string name="push_1tag">태그를 1개이상 눌러주세요!</string>
     <string name="stamp_book">스탬프북</string>
 
 
