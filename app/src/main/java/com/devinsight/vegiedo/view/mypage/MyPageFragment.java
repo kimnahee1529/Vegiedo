@@ -309,7 +309,7 @@ public class MyPageFragment extends Fragment {
         defualt_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(), "기본이미지 선택하셨습니다.", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getActivity(), "기본이미지 선택하셨습니다.", Toast.LENGTH_SHORT).show();
                 MyPage_profile_image.setImageResource(R.drawable.img_sheep);
 
                 // SharedPreferences에 "img_sheep" 저장
@@ -369,7 +369,7 @@ public class MyPageFragment extends Fragment {
         album_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(), "앨범에서 이미지를 선택하세요.", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getActivity(), "앨범에서 이미지를 선택하세요.", Toast.LENGTH_SHORT).show();
                 if (checkPermission()) {
                     // 권한이 이미 허용된 상태: 바로 관련 작업 수행
                     ImagePickerUtil.selectImageFromGallery(MyPageFragment.this, REQUEST_IMAGE_PICK);
@@ -423,7 +423,7 @@ public class MyPageFragment extends Fragment {
         yesBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(), "예 버튼입니다.", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getActivity(), "예 버튼입니다.", Toast.LENGTH_SHORT).show();
                 viewModel.DeleteUser();
                 // SplashActivity로 이동
                 Activity activity = getActivity();
@@ -439,7 +439,7 @@ public class MyPageFragment extends Fragment {
         noBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(), "아니오 버튼입니다.", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getActivity(), "아니오 버튼입니다.", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();  // Uncomment if you want the dialog to close after selecting album image
             }
         });
