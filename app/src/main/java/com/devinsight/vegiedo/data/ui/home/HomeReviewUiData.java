@@ -1,26 +1,26 @@
 package com.devinsight.vegiedo.data.ui.home;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
+
 public class HomeReviewUiData {
 
-    private int storeImage;
-    private String storeName;
-    private int storeTag1;
-    private int storeTag2;
-    private int storeTag3;
+    @Expose
+    @SerializedName("images")private String storeImage;
+    @Expose
+    @SerializedName("storeName")private String storeName;
+    @Expose
+    @SerializedName("tags")private List<String> tags;
+    @Expose
+    @SerializedName("storeId")private Long storeId;
 
-    public HomeReviewUiData(int storeImage, String storeName, int storeTag1, int storeTag2, int storeTag3) {
-        this.storeImage = storeImage;
-        this.storeName = storeName;
-        this.storeTag1 = storeTag1;
-        this.storeTag2 = storeTag2;
-        this.storeTag3 = storeTag3;
-    }
-
-    public int getStoreImage() {
+    public String getStoreImage() {
         return storeImage;
     }
 
-    public void setStoreImage(int storeImage) {
+    public void setStoreImage(String storeImage) {
         this.storeImage = storeImage;
     }
 
@@ -32,27 +32,26 @@ public class HomeReviewUiData {
         this.storeName = storeName;
     }
 
-    public int getStoreTag1() {
-        return storeTag1;
+    public List<String> getTags() {
+        return tags;
     }
 
-    public void setStoreTag1(int storeTag1) {
-        this.storeTag1 = storeTag1;
+    public void setTags(List<String> tags) {
+        this.tags = tags;
     }
 
-    public int getStoreTag2() {
-        return storeTag2;
+    public Long getStoreId() {
+        return storeId;
     }
 
-    public void setStoreTag2(int storeTag2) {
-        this.storeTag2 = storeTag2;
+    public void setStoreId(Long storeId) {
+        this.storeId = storeId;
     }
 
-    public int getStoreTag3() {
-        return storeTag3;
-    }
-
-    public void setStoreTag3(int storeTag3) {
-        this.storeTag3 = storeTag3;
+    public HomeReviewUiData(String storeImage, String storeName, List<String> tags, Long storeId) {
+        this.storeImage = storeImage;
+        this.storeName = storeName;
+        this.tags = tags;
+        this.storeId = storeId;
     }
 }

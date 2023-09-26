@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.devinsight.vegiedo.R;
+import com.devinsight.vegiedo.data.response.PostListData;
 import com.devinsight.vegiedo.data.ui.home.HomeBannerData;
 import com.devinsight.vegiedo.view.search.SummaryData;
 
@@ -22,9 +23,12 @@ public class HomeBannerAdapter extends RecyclerView.Adapter<HomeBannerAdapter.Vi
     private List<HomeBannerData> bannerList;
     Context context;
 
-    HomeBannerAdapter(Context context, List<HomeBannerData> bannerList){
+    BannerItemListener bannerItemListener;
+
+    HomeBannerAdapter(Context context, List<HomeBannerData> bannerList, BannerItemListener bannerItemListener){
         this.bannerList = bannerList;
         this.context = context;
+        this.bannerItemListener = bannerItemListener;
     }
 
     public void setBannerList(List<HomeBannerData> list){
@@ -55,7 +59,7 @@ public class HomeBannerAdapter extends RecyclerView.Adapter<HomeBannerAdapter.Vi
     }
 
 
-    public static class ViewHolderPage extends RecyclerView.ViewHolder{
+    public class ViewHolderPage extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private ImageView bannerImage;
         private CardView cardView;
@@ -65,8 +69,19 @@ public class HomeBannerAdapter extends RecyclerView.Adapter<HomeBannerAdapter.Vi
             super(itemView);
             bannerImage = itemView.findViewById(R.id.home_banne_item);
             cardView = itemView.findViewById(R.id.card_banner);
+            itemView.setOnClickListener(this);
         }
 
+        @Override
+        public void onClick(View view) {
+            if(bannerItemListener != null ) {
+                bannerItemListener.onBannerClicked(view, bannerList.get(getLayoutPosition()), getLayoutPosition());
+            }
+        }
+    }
+
+    public interface BannerItemListener {
+        void onBannerClicked(View view, HomeBannerData homeBannerData, int position);
     }
 }
 

@@ -2,6 +2,8 @@ package com.devinsight.vegiedo.view.login;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -39,6 +41,7 @@ import com.kakao.sdk.user.model.User;
 
 import java.io.IOException;
 import java.security.MessageDigest;
+import java.util.concurrent.TimeUnit;
 
 import kotlin.Unit;
 import kotlin.jvm.functions.Function2;
@@ -85,7 +88,6 @@ public class LoginMainActivity extends AppCompatActivity {
                     // 토큰이 전달된다면 로그인이 성공한 것이고 토큰이 전달되지 않으면 로그인 실패한다.
 //                    updateKakaoLoginUi();
                     getKakaoAuth(oAuthToken.getAccessToken());
-
                     Log.d("카카오 토큰 ", " 카카오 토큰 : " + oAuthToken.getAccessToken().toString());
                     Intent intent = new Intent(getApplicationContext(), NickNameActivity.class);
                     startActivity(intent);
@@ -139,6 +141,8 @@ public class LoginMainActivity extends AppCompatActivity {
                 Log.d("구글 로그인 1", "googleSignIn(): 성공 ");
             }
         });
+
+
     }
 
     private void googleSignIn() {

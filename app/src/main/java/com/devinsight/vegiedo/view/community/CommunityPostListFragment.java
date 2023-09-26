@@ -22,8 +22,11 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.devinsight.vegiedo.R;
 import com.devinsight.vegiedo.data.response.PostListData;
+import com.devinsight.vegiedo.service.api.PostApiService;
+import com.devinsight.vegiedo.utill.RetrofitClient;
 import com.devinsight.vegiedo.view.MainActivity;
 import com.devinsight.vegiedo.view.community.adapter.CommunityPostAdaptper;
 import com.devinsight.vegiedo.view.community.viewmodel.CommunityViewModel;
@@ -183,6 +186,13 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
             }
         });
 
+        activityViewModel.getCommunityBanner();
+        activityViewModel.getCommunityBannerListLiveData().observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String bannerUrl) {
+                Glide.with(getActivity()).load(bannerUrl).into(community_banner);
+            }
+        });
 
 
 

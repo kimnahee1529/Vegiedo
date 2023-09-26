@@ -1,6 +1,7 @@
 package com.devinsight.vegiedo.service.api;
 
 import com.devinsight.vegiedo.data.request.ReportRequestDTO;
+import com.devinsight.vegiedo.data.response.CommunityBannerResponseDTO;
 import com.devinsight.vegiedo.data.response.PostInquiryResponseDTO;
 import com.devinsight.vegiedo.data.response.PostListData;
 //import com.devinsight.vegiedo.data.response.
@@ -104,5 +105,8 @@ public interface PostApiService {
             @Body ReportRequestDTO reportRequestDTO
     );
 
-
+    @GET("/posts/banner")
+    Call<CommunityBannerResponseDTO> getBanner(
+            @Header("Authorization") String token
+    );
 }
