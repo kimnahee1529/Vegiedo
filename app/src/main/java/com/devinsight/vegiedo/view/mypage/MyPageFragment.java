@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -31,6 +33,8 @@ import androidx.lifecycle.ViewModelProvider;
 import com.bumptech.glide.Glide;
 import com.devinsight.vegiedo.R;
 import com.devinsight.vegiedo.SplashActivity;
+import com.devinsight.vegiedo.service.api.UserApiService;
+import com.devinsight.vegiedo.utill.RetrofitClient;
 import com.devinsight.vegiedo.view.PermissionUtils;
 import com.devinsight.vegiedo.view.search.ActivityViewModel;
 import com.devinsight.vegiedo.view.login.LoginMainActivity;
@@ -38,9 +42,17 @@ import com.google.android.gms.oss.licenses.OssLicensesMenuActivity;
 
 import org.w3c.dom.Text;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 // TODO : 로그아웃 기능 구현해야 함
 public class MyPageFragment extends Fragment {
@@ -53,6 +65,7 @@ public class MyPageFragment extends Fragment {
     private TextView mypage_open_source_text;
     private TextView withdrawal_text;
     ActivityViewModel viewModel;
+    UserApiService userApiService = RetrofitClient.getUserApiService();
     private String saveImageToInternalStorage(Uri imageUri) {
         try {
             InputStream inputStream = getActivity().getContentResolver().openInputStream(imageUri);
@@ -168,10 +181,13 @@ public class MyPageFragment extends Fragment {
         newStoreRegisterText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String token = viewModel.getToken().getValue();
                 Intent intent = new Intent(getActivity(), RegisterNewStoreActivity.class);
+                intent.putExtra("TOKEN", token);  // 토큰 값을 Intent에 추가
                 startActivity(intent);
             }
         });
+
 
         //문의기능 텍스트 클릭
         mypage_inquiry_text = rootView.findViewById(R.id.mypage_inquiry_text);
@@ -287,6 +303,50 @@ public class MyPageFragment extends Fragment {
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("userProfile", "img_sheep");
                 editor.apply();
+
+                // img_sheep 리소스를 Bitmap으로 변환
+                Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.img_sheep);
+
+                // Bitmap을 ByteArrayOutputStream으로 변환
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                byte[] byteArray = baos.toByteArray();
+
+                // byte[]을 RequestBody로 변환
+//                RequestBody requestBody = RequestBody.create(
+//                        MediaType.parse("image/jpeg"), byteArray);
+                RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), byteArray);
+
+                // MultipartBody.Part 객체 생성
+                // MultiPartBody 타입의 데이터를 넣어줄 multipartBody. 여기에 변경할 사진 파일 넣어줌
+                MultipartBody.Part multipartBody = MultipartBody.Part.createFormData("image", "img_sheep.jpg", requestBody);
+
+                Log.d("이미지", "multipartBody:"+multipartBody.body().contentType());
+                // API 호출을 위해 token 가져오기 (예시)
+//                String token = sharedPreferences.getString("token", "");
+                String token = viewModel.getToken().getValue();
+                Log.d("이미지", token);
+                // 이미지 업로드 API 호출
+                Call<Void> call = userApiService.changeProfileImage("Bearer " + token, multipartBody);
+                call.enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        if(response.isSuccessful()) {
+                            Log.d("이미지", response.body().toString());
+                            Toast.makeText(getActivity(), "Image uploaded successfully", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Log.d("이미지", String.valueOf(response.code()));
+                            Toast.makeText(getActivity(), "Image upload failed: " + response.message(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        Log.d("이미지", String.valueOf(t));
+                        Toast.makeText(getActivity(), "Image upload failed: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
 
                 dialog.dismiss();
             }

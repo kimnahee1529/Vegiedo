@@ -6,15 +6,21 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,18 +35,27 @@ import android.widget.ToggleButton;
 import com.devinsight.vegiedo.R;
 import com.devinsight.vegiedo.SplashActivity;
 import com.devinsight.vegiedo.data.request.StoreRegisterRequestDTO;
+import com.devinsight.vegiedo.service.api.ReviewApiService;
+import com.devinsight.vegiedo.service.api.StoreApiService;
+import com.devinsight.vegiedo.utill.RetrofitClient;
+import com.devinsight.vegiedo.view.community.RealPathUtil;
 import com.devinsight.vegiedo.view.community.WritingFragment;
+import com.devinsight.vegiedo.view.search.ActivityViewModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -63,23 +78,34 @@ public class RegisterNewStoreActivity extends AppCompatActivity {
     private ToggleButton[] toggleButtons;
     private List<String> selectedDietList = new ArrayList<>();
     private String[] dietNames = {
-            "Fruittarian", "Vegan", "Lacto", "Ovo", "LactoOvo", "Pescatarian", "Pollo", "Keto", "GlutenFree"
+            "식물성 베이커리", "완전 비건", "대체육", "락토", "락토 오보", "페스코테리언", "폴로", "키토식단", "글루텐프리"
     };
 
     //Geocoding 사용
     private OkHttpClient client = new OkHttpClient();
     private String client_id = "g3rcpfm3dn";
     private String client_secret = "V7Kfjw9sRIutvedYLPpXbCRpOo9ysiFgnSWuhBin";
+    private float longitude;
+    private float latitude;
+    Uri selectedImageUri;
+    ActivityViewModel viewModel;
+    String token;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_new_store);
+        Intent intent = getIntent();
+        token = intent.getStringExtra("TOKEN");  // 토큰 값을 검색
+        Log.d("가게등록 넘어온 토큰", token);
+
+
+        viewModel = new ViewModelProvider(this).get(ActivityViewModel.class);
 
         toggleButtons = new ToggleButton[] {
-                findViewById(R.id.mypage_tbFruittarian),
-                findViewById(R.id.mypage_tbVegan),
-                findViewById(R.id.mypage_tbLacto),
-                findViewById(R.id.mypage_tbOvo),
+                findViewById(R.id.mypage_vegan_bakery),
+                findViewById(R.id.mypage_all_vegan),
+                findViewById(R.id.mypage_fake_meat),
+                findViewById(R.id.mypage_lacto),
                 findViewById(R.id.mypage_tbLactoOvo),
                 findViewById(R.id.mypage_tbPescatarian),
                 findViewById(R.id.mypage_tbPollo),
@@ -144,6 +170,24 @@ public class RegisterNewStoreActivity extends AppCompatActivity {
                 }
             }
         });
+        mEtAddress.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // 텍스트가 변경되기 전에 호출됩니다.
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // 텍스트가 변경되는 동안 호출됩니다.
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // 텍스트가 변경된 후에 위도, 경도를 받아옴.
+                fetchLatLngFromAddress(mEtAddress.getText().toString().trim());
+            }
+        });
+
 
         // 사진 추가
         storeImage = findViewById(R.id.storeImageView);
@@ -162,10 +206,8 @@ public class RegisterNewStoreActivity extends AppCompatActivity {
                 String address = mEtAddress.getText().toString().trim();
                 String storeName = storeNameEditText.getText().toString().trim();
 
-                if(!address.isEmpty()) {
-                    fetchLatLngFromAddress(address);
-                }
-                else if(storeName.isEmpty()) {
+                Log.d("태그 리스트", selectedDietList.toString()+", "+selectedDietList.size());
+                if(storeName.isEmpty()) {
                     // 상호명이 비어있는 경우에 대한 처리 (예: Toast 메시지 표시)
                     showDialog(DialogType.ALLCONTENT);
                     Toast.makeText(RegisterNewStoreActivity.this, "상호명을 입력해주세요.", Toast.LENGTH_SHORT).show();
@@ -174,30 +216,66 @@ public class RegisterNewStoreActivity extends AppCompatActivity {
                     // 주소가 비어있는 경우에 대한 처리 (예: Toast 메시지 표시)
                     showDialog(DialogType.ALLCONTENT);
                     Toast.makeText(RegisterNewStoreActivity.this, "주소를 입력해주세요.", Toast.LENGTH_SHORT).show();
+                }else if(selectedDietList.size()==0){
+                    showDialog(DialogType.TAG);
+                    Toast.makeText(RegisterNewStoreActivity.this, "태그를 1개이상 선택해주세요.", Toast.LENGTH_SHORT).show();
                 }else{
                     showDialog(DialogType.COMPLETE);
-                    finish();
+                    Log.d("가게등록", "상호명:"+storeName+", 주소:"+address+", uri:"+selectedImageUri+", 태그:"+selectedDietList+", 위도:"+latitude+", 경도:"+longitude);
+                    registerStoreOnServer(storeName,address, String.valueOf(selectedImageUri),selectedDietList,latitude,longitude);
                 }
-
-
-
-//                Log.d("주소 등록", "상호명:"+storeNameEditText.getText()+", 주소:"+mEtAddress.getText());
-//                String storeName = storeNameEditText.getText().toString();
-//                String storeAddress = mEtAddress.getText().toString();
-
-//                StoreRegisterRequestDTO requestDTO = new StoreRegisterRequestDTO(storeName,storeAddress,);
-//                requestDTO.setStoreName(storeName);
-//                requestDTO.setAddress(storeAddress);
-//                requestDTO.setTags(selectedDietList);
-//                requestDTO.setReportType(reportType.get());
-//                requestDTO.setOpinion(opinion.get());
-
-//                Log.d("주소 등록", requestDTO.getStoreName() + ", " + requestDTO.getAddress());
-                Log.d("태그 리스트", selectedDietList.toString());
             }
         });
 
     }
+
+    private void registerStoreOnServer(String storeName, String address, String imageUri, List<String> tags, float latitude, float longitude) {
+        Log.d("가게등록", "registerStoreOnServer로 들어오는 거임?");
+        Log.d("가게등록", "상호명:"+storeName+", 주소:"+address+", uri:"+imageUri+", 태그:"+tags+", 위도:"+latitude+", 경도:"+longitude);
+        StoreApiService storeApiService = RetrofitClient.getStoreApiService();
+        RequestBody storeNameBody = RequestBody.create(storeName, MediaType.parse("text/plain"));
+        RequestBody addressBody = RequestBody.create(address, MediaType.parse("text/plain"));
+
+        // 태그 리스트를 하나의 문자열로 연결
+        String tagsString = TextUtils.join(", ", tags);
+        RequestBody tagsBody = RequestBody.create(tagsString, MediaType.parse("text/plain"));
+
+        RequestBody latitudeBody = RequestBody.create(String.valueOf(latitude), MediaType.parse("text/plain"));
+        RequestBody longitudeBody = RequestBody.create(String.valueOf(longitude), MediaType.parse("text/plain"));
+
+        // 이미지 처리
+        Uri uri = Uri.parse(imageUri);
+        String filePath = getFilePath(this, uri);
+        MultipartBody.Part imagePart = null;
+        if (filePath != null) {
+            File file = new File(filePath);
+            RequestBody requestFile = RequestBody.create(file, MediaType.parse("image/*"));
+            imagePart = MultipartBody.Part.createFormData("images", file.getName(), requestFile);
+        }
+
+
+        Log.d("가게등록", "상호명:"+storeNameBody+", 주소:"+addressBody+", uri:"+imagePart+", 태그:"+tagsBody+", 위도:"+latitudeBody+", 경도:"+longitudeBody);
+        storeApiService.createStore("Bearer " + token, storeNameBody, addressBody, imagePart, tagsBody, latitudeBody, longitudeBody)
+                .enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        if (response.isSuccessful()) {
+                            // 요청 성공
+                            Log.d("가게등록성공", "Store registration success!");
+                        } else {
+                            // 서버에서 에러 응답
+                            Log.d("가게등록실패", "Server error: " + response.errorBody() + ", 에러코드" + response.code());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        // 네트워크 에러 또는 요청 실패
+                        Log.d("가게등록에러", "Request failure: " + t.getMessage());
+                    }
+                });
+    }
+
 
     private void updateDietList(String diet, boolean isChecked) {
         if (isChecked) {
@@ -231,8 +309,10 @@ public class RegisterNewStoreActivity extends AppCompatActivity {
 
                         String x = firstAddress.getString("x");
                         String y = firstAddress.getString("y");
+                        longitude = Float.parseFloat(x);
+                        latitude = Float.parseFloat(y);
 
-                        Log.d("APIJSONParsing", "경도: " + x + ", 위도: " + y);
+                        Log.d("가게등록", "경도: " + x + ", 위도: " + y);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -269,27 +349,7 @@ public class RegisterNewStoreActivity extends AppCompatActivity {
             }
     );
 
-//    private void selectImageFromGallery() {
-//        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//        startActivityForResult(intent, REQUEST_IMAGE_PICK);
-//    }
-
-//    private void showWithdrawalDialog() {
-//
-//        AlertDialog.Builder builder = new AlertDialog.Builder(this);  // 수정됨
-//        LayoutInflater inflater = this.getLayoutInflater();  // 수정됨
-//        View dialogView = inflater.inflate(R.layout.withdrawal_dialog, null);
-//        builder.setView(dialogView);
-//        final AlertDialog dialog = builder.create();
-//
-//        dialog.setContentView(R.layout.dialog_custom);
-//        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-//
-//        dialog.show();
-//    }
-
     private void showDialog(DialogType type) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = this.getLayoutInflater();
 
         View dialogView;
@@ -304,14 +364,20 @@ public class RegisterNewStoreActivity extends AppCompatActivity {
 
         ImageView closeIcon = dialogView.findViewById(R.id.green_x_circle);
 
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(dialogView);
         final AlertDialog dialog = builder.create();
         dialog.setContentView(R.layout.dialog_custom);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-
-        closeIcon.setOnClickListener(v -> dialog.dismiss());
+        closeIcon.setOnClickListener(v -> {
+            if(type == DialogType.COMPLETE) {
+                finish();
+            }
+            dialog.dismiss();
+        });
         dialog.show();
+
+
     }
 
     @Override
@@ -319,8 +385,23 @@ public class RegisterNewStoreActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_IMAGE_PICK && resultCode == RESULT_OK && data != null) {
-            Uri selectedImageUri = data.getData();
+            selectedImageUri = data.getData();
+            Log.d("가게 등록 이미지uri", String.valueOf(selectedImageUri));
             storeImage.setImageURI(selectedImageUri);
         }
     }
+
+    /*  Uri 로 부터 파일의 실제 경로를 구하기 위한 함수 */
+    private String getFilePath(Context context, Uri uri) {
+        String filePath = null;
+        if (Build.VERSION.SDK_INT < 11) {
+            filePath = RealPathUtil.getRealPathFromURI_BelowAPI11(context, uri);
+        } else if (Build.VERSION.SDK_INT < 19) {
+            filePath = RealPathUtil.getRealPathFromURI_API11to18(context, uri);
+        } else {
+            filePath = RealPathUtil.getRealPathFromURI_API19(context, uri);
+        }
+        return filePath;
+    }
+
 }
