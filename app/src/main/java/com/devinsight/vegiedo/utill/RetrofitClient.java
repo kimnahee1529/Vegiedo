@@ -1,5 +1,7 @@
 package com.devinsight.vegiedo.utill;
 
+import com.devinsight.vegiedo.service.ApiService;
+import com.devinsight.vegiedo.service.api.AdminApiService;
 import com.devinsight.vegiedo.service.api.CommentApiService;
 import com.devinsight.vegiedo.service.api.MapApiService;
 import com.devinsight.vegiedo.service.api.PostApiService;
@@ -50,6 +52,10 @@ public class RetrofitClient {
 
     public static MapApiService getMapApiService(){
         return getRetrofit("http://3.38.23.253:8080/").create(MapApiService.class);
+    }
+
+    public static AdminApiService getAdminApiService(){
+        return getRetrofit("http://3.38.23.253:8080/").create(AdminApiService.class);
     }
 
 
