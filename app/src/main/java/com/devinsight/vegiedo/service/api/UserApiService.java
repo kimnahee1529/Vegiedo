@@ -9,6 +9,7 @@ import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.Multipart;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
@@ -65,11 +66,11 @@ public interface UserApiService {
     );
 
     //프로필 사진 변경
+    @Multipart
     @POST("userService/profileImage")
     Call<Void> changeProfileImage(
             @Header("Authorization") String token,
-            @Part MultipartBody.Part image
-//            @Body UserNicknameModifyRequestDTO userNicknameModifyRequestDTO
+            @Part MultipartBody.Part profileImage
     );
 
     //닉네임 변경
