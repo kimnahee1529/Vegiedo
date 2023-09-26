@@ -16,7 +16,7 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
-            android:layout_width="330dp"
+            android:layout_width="370dp"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -26,46 +26,46 @@
             app:layout_constraintVertical_bias="0.287">
 
             <ToggleButton
-                android:id="@+id/mypage_tbFruittarian"
-                android:layout_width="100dp"
+                android:id="@+id/mypage_vegan_bakery"
+                android:layout_width="110dp"
                 android:layout_height="40dp"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/btn_toggle"
                 android:checked="false"
                 android:textColor="@drawable/btn_togle_text_color"
-                android:textOff="@string/tag_fruittarian"
-                android:textOn="@string/tag_fruittarian"/>
+                android:textOff="@string/tag_vegan_bakery"
+                android:textOn="@string/tag_vegan_bakery"/>
 
             <ToggleButton
-                android:id="@+id/mypage_tbVegan"
-                android:layout_width="100dp"
+                android:id="@+id/mypage_all_vegan"
+                android:layout_width="110dp"
                 android:layout_height="40dp"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/btn_toggle"
                 android:checked="false"
                 android:textColor="@drawable/btn_togle_text_color"
-                android:textOff="@string/tag_vegan"
-                android:textOn="@string/tag_vegan"/>
+                android:textOff="@string/tag_all_vegan"
+                android:textOn="@string/tag_all_vegan"/>
 
             <ToggleButton
-                android:id="@+id/mypage_tbLacto"
-                android:layout_width="100dp"
+                android:id="@+id/mypage_fake_meat"
+                android:layout_width="110dp"
                 android:layout_height="40dp"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/btn_toggle"
                 android:checked="false"
                 android:textColor="@drawable/btn_togle_text_color"
-                android:textOff="@string/tag_lacto"
-                android:textOn="@string/tag_lacto"/>
+                android:textOff="@string/tag_fake_meat"
+                android:textOn="@string/tag_fake_meat"/>
 
         </LinearLayout>
 
 
         <LinearLayout
-            android:layout_width="330dp"
+            android:layout_width="370dp"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -75,7 +75,7 @@
             app:layout_constraintVertical_bias="0.444">
 
             <ToggleButton
-                android:id="@+id/mypage_tbOvo"
+                android:id="@+id/mypage_lacto"
                 android:layout_width="100dp"
                 android:layout_height="40dp"
                 android:layout_margin="5dp"
@@ -83,8 +83,8 @@
                 android:background="@drawable/btn_toggle"
                 android:checked="false"
                 android:textColor="@drawable/btn_togle_text_color"
-                android:textOff="@string/tag_ovo"
-                android:textOn="@string/tag_ovo"/>
+                android:textOff="@string/tag_lacto"
+                android:textOn="@string/tag_lacto"/>
 
             <ToggleButton
                 android:id="@+id/mypage_tbLactoOvo"
@@ -113,7 +113,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="330dp"
+            android:layout_width="370dp"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"

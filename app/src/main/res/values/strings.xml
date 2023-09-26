@@ -21,13 +21,16 @@
     <string name="set_more_filter">추천태그를 눌러주거나 거리를 더 늘려보라메에에에</string>
 
     <string name="tag_fruittarian">#프루테리언</string>
+    <string name="tag_vegan_bakery">#식물성 베이커리</string>
     <string name="tag_vegan">#비건</string>
+    <string name="tag_all_vegan">#완전 비건</string>
+    <string name="tag_fake_meat">#대체육</string>
     <string name="tag_lacto">#락토</string>
     <string name="tag_ovo">#오보</string>
     <string name="tag_lacto_ovo">#락토 오보</string>
-    <string name="tag_pescatarian">#페스코</string>
+    <string name="tag_pescatarian">#페스코테리언</string>
     <string name="tag_pollo">#폴로</string>
-    <string name="tag_keto">#키토</string>
+    <string name="tag_keto">#키토 식단</string>
     <string name="tag_gluten_free">#글루텐프리</string>
 
     <string name="review">솔직 리뷰</string>
