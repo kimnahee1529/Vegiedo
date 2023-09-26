@@ -2,6 +2,8 @@ package com.devinsight.vegiedo.service.api;
 
 import com.devinsight.vegiedo.data.request.UserNicknameModifyRequestDTO;
 import com.devinsight.vegiedo.data.request.UserRegisterRequestDTO;
+import com.devinsight.vegiedo.data.response.NickNameDTO;
+import com.devinsight.vegiedo.data.response.StatusResponseDTO;
 
 import okhttp3.MultipartBody;
 import retrofit2.Call;
@@ -51,6 +53,12 @@ public interface UserApiService {
             @Body UserRegisterRequestDTO userInfoData
 
     );
+    //닉네임 중복 체크
+    @POST("/userService/nickName")
+    Call<StatusResponseDTO> sendNickName(
+            @Header("Authorization") String token,
+            @Body NickNameDTO nickNameDTO
+            );
 
     //파이어베이스에서 인증받은 idToken 서버로 전송
     @POST("/users/googleLogin")

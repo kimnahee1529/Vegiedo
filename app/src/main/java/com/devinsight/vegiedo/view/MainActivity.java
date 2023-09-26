@@ -123,7 +123,15 @@ public class MainActivity extends AppCompatActivity {
         viewModel = new ViewModelProvider(this).get(ActivityViewModel.class);
         userPrefRepository = new UserPrefRepository(this);
         authPrefRepository = new AuthPrefRepository(this);
-        String token = authPrefRepository.getAuthToken("KAKAO");
+
+
+        String social;
+        if( authPrefRepository.getAuthToken("KAKAO") != null) {
+            social = "KAKAO";
+        } else {
+            social = "GOOGLE";
+        }
+        String token = authPrefRepository.getAuthToken(social);
         List<String> initialTagList = userPrefRepository.loadTagList();
         int initialDistance = INITIAL_DISTANCE;
 

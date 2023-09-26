@@ -1,6 +1,7 @@
 package com.devinsight.vegiedo.view.login;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -20,11 +21,21 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.devinsight.vegiedo.R;
+import com.devinsight.vegiedo.data.response.NickNameDTO;
+import com.devinsight.vegiedo.data.response.StatusResponseDTO;
 import com.devinsight.vegiedo.data.ui.login.NickNameStatus;
+import com.devinsight.vegiedo.repository.pref.AuthPrefRepository;
+import com.devinsight.vegiedo.service.api.UserApiService;
+import com.devinsight.vegiedo.utill.RetrofitClient;
 import com.devinsight.vegiedo.utill.UserInfoTag;
 import com.devinsight.vegiedo.repository.pref.UserPrefRepository;
 
+import java.io.IOException;
 import java.util.regex.Pattern;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class NickNameActivity extends AppCompatActivity {
 
@@ -35,6 +46,12 @@ public class NickNameActivity extends AppCompatActivity {
     boolean isAvaiableName;
     private Dialog dialog;
     private UserPrefRepository userPrefRepository;
+    private AuthPrefRepository authPrefRepository;
+
+    private String nickName;
+    private int count;
+    private String token;
+    private  NickNameDTO nickNameDTO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +60,10 @@ public class NickNameActivity extends AppCompatActivity {
         btn_next = findViewById(R.id.tt_next);
         et_input_nick_name = findViewById(R.id.et_input_nick_name);
 
-        userPrefRepository = new UserPrefRepository(this);
+        userPrefRepository = new UserPrefRepository(NickNameActivity.this);
+        authPrefRepository = new AuthPrefRepository(NickNameActivity.this);
+
+
 
         /* 한글,영어,숫자만 입력받는 EditText 필터 생성 */
         InputFilter filter = new InputFilter() {
@@ -67,6 +87,16 @@ public class NickNameActivity extends AppCompatActivity {
         /* 뷰모델 */
         viewModel = new ViewModelProvider(this).get(NickNameViewModel.class);
 
+        String social;
+        if( authPrefRepository.getAuthToken("KAKAO") != null) {
+            social = "KAKAO";
+        } else {
+            social = "GOOGLE";
+        }
+       token = authPrefRepository.getAuthToken(social);
+        viewModel.getToken(token);
+
+
         /* text 내용 및 길이 입력받기*/
         et_input_nick_name.addTextChangedListener(new TextWatcher() {
             @Override
@@ -78,48 +108,100 @@ public class NickNameActivity extends AppCompatActivity {
             /* 입력 받은 닉네임 내용 및 길이 뷰모델로 전달 */
             @Override
             public void afterTextChanged(Editable editable) {
-                viewModel.setName(editable.toString(), editable.length());
+                nickName = editable.toString();
+                count = editable.length();
+                nickNameDTO = new NickNameDTO(nickName);
+
             }
         });
+
+
 
         /* 사용 가능한 닉네임인지 확인 */
         isAvaiableName = false;
-        viewModel.getNickNameLiveData().observe(this, new Observer<NickNameStatus>() {
-            @Override
-            public void onChanged(NickNameStatus nickNameStatus) {
-                if(nickNameStatus.getIsNicknameAvailable() == 0) {
-                    isAvaiableName = true;
-                } else if ( nickNameStatus.getIsNicknameAvailable() == 1 ||  nickNameStatus.getIsNicknameAvailable() == 2 ){
-                    isAvaiableName = false;
-                    /* 닉네임 불가 조건에 따른 메시지 입력 */
-                    if( nickNameStatus.getIsNicknameAvailable() == 1 ) {
-                        setDialog(nickNameStatus.getNickNameMessage());
-                    } else if ( nickNameStatus.getIsNicknameAvailable() == 2 ) {
-                        setDialog(nickNameStatus.getNickNameMessage());
-                    }
+//        viewModel.getNickNameLiveData().observe(this, new Observer<NickNameStatus>() {
+//            @Override
+//            public void onChanged(NickNameStatus nickNameStatus) {
+//                if(nickNameStatus.getIsNicknameAvailable() == 0) {
+//                    isAvaiableName = true;
+//                } else if ( nickNameStatus.getIsNicknameAvailable() == 1 ||  nickNameStatus.getIsNicknameAvailable() == 2 ){
+//                    isAvaiableName = false;
+//                    /* 닉네임 불가 조건에 따른 메시지 입력 */
+//                    if( nickNameStatus.getIsNicknameAvailable() == 1 ) {
+//                        setDialog(nickNameStatus.getNickNameMessage());
+//                    } else if ( nickNameStatus.getIsNicknameAvailable() == 2 ) {
+//                        setDialog(nickNameStatus.getNickNameMessage());
+//                    }
+//
+//                }
+//            }
+//        });
 
-                }
-            }
-        });
 
         btn_next.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(isAvaiableName == true) {
-                    String userName = et_input_nick_name.getText().toString();
-                    userPrefRepository.saveUserInfo(UserInfoTag.USER_NICKNAME.getInfoType(), userName);
-                    Intent intent = new Intent(getApplicationContext(), SelectTagActivity.class);
-                    startActivity(intent);
-                    finish();
-                    Log.d("사용자 이름","사용자 이름 : " + userName);
-                }else if(isAvaiableName == false) {
-                    if(dialog != null && !dialog.isShowing()){
-                        dialog.show();
+        @Override
+        public void onClick(View view) {
+            nickNameDTO = new NickNameDTO(nickName);
+            UserApiService userApiService = RetrofitClient.getUserApiService();
+            userApiService.sendNickName("Bearer " + token, nickNameDTO).enqueue(new Callback<StatusResponseDTO>() {
+                @Override
+                public void onResponse(Call<StatusResponseDTO> call, Response<StatusResponseDTO> response) {
+                    Log.d("닉네임","닉네임" + nickNameDTO.getNickName() + nickName);
+                    if(response.isSuccessful()){
+                        viewModel.setName(nickName, count, response.code());
+                        viewModel.getNickNameLiveData().observe(NickNameActivity.this, new Observer<NickNameStatus>() {
+                            @Override
+                            public void onChanged(NickNameStatus nickNameStatus) {
+                                if(nickNameStatus.getIsNicknameAvailable() == 0) {
+                                    isAvaiableName = true;
+                                    String userName = et_input_nick_name.getText().toString();
+                                    userPrefRepository.saveUserInfo(UserInfoTag.USER_NICKNAME.getInfoType(), userName);
+                                    Intent intent = new Intent(getApplicationContext(), SelectTagActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                    Log.d("사용자 이름","사용자 이름 : " + userName);
+                                } else if ( nickNameStatus.getIsNicknameAvailable() == 1 ||  nickNameStatus.getIsNicknameAvailable() == 2 ){
+                                    isAvaiableName = false;
+                                    /* 닉네임 불가 조건에 따른 메시지 입력 */
+                                    if( nickNameStatus.getIsNicknameAvailable() == 1 ) {
+                                        setDialog(nickNameStatus.getNickNameMessage());
+                                        dialog.show();
+                                    } else if ( nickNameStatus.getIsNicknameAvailable() == 2 ) {
+                                        setDialog(nickNameStatus.getNickNameMessage());
+                                        dialog.show();
+                                    }
+
+                                }
+                            }
+                        });
+                        Log.d("닉네임 관련","" + nickName + ", " + count);
+                        Log.d("RetrofitRequestURL 성공", "Requested URL: " + call.request().url());
+                        Log.d("닉네임 중복 체크 api 호출 성공 ","성공" + response);
+                    }else{
+                        Log.d("RetrofitRequestURL 실패", "Requested URL: " + call.request().url());
+                        Log.e("닉네임 중복 체크 api 호출 실패 1 ","실패1" + response);
+                        if(response.code() == 409){
+                            viewModel.setName(nickName, count, response.code());
+//                            setDialog("사용 중인 닉네임 입니다. 다시 적어 주세요!");
+//                            dialog.show();
+                        }
+                        try {
+                            Log.e("닉네임 중복 체크 실패 1", "Error Body: " + response.errorBody().string());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
-            }
-        });
-    }
+
+                @Override
+                public void onFailure(Call<StatusResponseDTO> call, Throwable t) {
+                    Log.e("닉네임 중복 체크 api 호출 실패 2 ","실패2" + t.getMessage());
+                }
+            });
+
+        }
+    });
+}
     public void setDialog(String message) {
         dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);

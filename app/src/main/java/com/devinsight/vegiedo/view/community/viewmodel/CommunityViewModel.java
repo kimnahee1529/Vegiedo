@@ -56,7 +56,7 @@ public class CommunityViewModel extends ViewModel {
     public void loadPopularPostList( int cursor ){
         Log.d("인기 포스트 요청을 위한 토큰"," 포스트 요청 토큰" + token);
 
-        postApiService.getPopularPostList(5,cursor, "Bearer " + token).enqueue(new Callback<List<PostListData>>() {
+        postApiService.getPopularPostList(10,cursor, "Bearer " + token).enqueue(new Callback<List<PostListData>>() {
             @Override
             public void onResponse(Call<List<PostListData>> call, Response<List<PostListData>> response) {
                 if(response.isSuccessful() && response.body() != null ){
@@ -91,7 +91,7 @@ public class CommunityViewModel extends ViewModel {
     public void loadGeneralPostList( int cursor ){
 
         Log.d("일반 포스트 요청을 위한 토큰"," 포스트 요청 토큰" + token);
-        postApiService.getGeneralPostList(5,cursor,"Bearer " + token).enqueue(new Callback<List<PostListData>>() {
+        postApiService.getGeneralPostList(10,cursor,"Bearer " + token).enqueue(new Callback<List<PostListData>>() {
             @Override
             public void onResponse(Call<List<PostListData>> call, Response<List<PostListData>> response) {
                 if(response.isSuccessful() && response.body() != null ){

@@ -48,6 +48,9 @@
                 android:nestedScrollingEnabled="false"
                 android:padding="20dp"
                 tools:listitem="@layout/fragment_post_recycler_item"
+                app:layout_constraintTop_toBottomOf="@id/community_card_banner"
+                app:layout_constraintBottom_toBottomOf="parent"
+
                 />
 <!--            <ProgressBar-->
 <!--                android:id="@+id/progressbar"-->

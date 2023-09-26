@@ -16,6 +16,7 @@ import com.devinsight.vegiedo.data.request.ReviewRegisterRequestDTO;
 import com.devinsight.vegiedo.data.request.ReviewReportRequestDTO;
 import com.devinsight.vegiedo.data.request.UserNicknameModifyRequestDTO;
 import com.devinsight.vegiedo.data.response.CommentListData;
+import com.devinsight.vegiedo.data.response.HomeBannerResponseDTO;
 import com.devinsight.vegiedo.data.response.MapStoreListData;
 import com.devinsight.vegiedo.data.response.PostInquiryResponseDTO;
 import com.devinsight.vegiedo.data.response.PostListData;
@@ -24,10 +25,12 @@ import com.devinsight.vegiedo.data.response.ReviewListInquiryResponseDTO;
 import com.devinsight.vegiedo.data.response.StampBookInquiryResponseDTO;
 import com.devinsight.vegiedo.data.response.StoreInquiryResponseDTO;
 import com.devinsight.vegiedo.data.response.StoreListData;
+import com.devinsight.vegiedo.data.ui.home.HomeBannerData;
 import com.devinsight.vegiedo.data.ui.login.TagStatus;
 import com.devinsight.vegiedo.data.ui.map.MapStoreCardUiData;
 import com.devinsight.vegiedo.data.ui.search.SearchStorSummaryeUiData;
 import com.devinsight.vegiedo.repository.pref.AuthPrefRepository;
+import com.devinsight.vegiedo.service.api.AdminApiService;
 import com.devinsight.vegiedo.service.api.CommentApiService;
 import com.devinsight.vegiedo.service.api.MapApiService;
 import com.devinsight.vegiedo.service.api.PostApiService;
@@ -132,6 +135,8 @@ public class ActivityViewModel extends ViewModel {
     private MutableLiveData<List<String>> imageUrlListForModifyLiveData = new MutableLiveData<>();
 
     private MutableLiveData<Boolean> yesDeleteLiveData = new MutableLiveData<>();
+
+    private MutableLiveData<List<HomeBannerData>> homeBannerListLiveData = new MutableLiveData<>();
 
 
     /* Query 요청 및 필터에 사용 하기 위한 전역 변수*/
@@ -262,17 +267,16 @@ public class ActivityViewModel extends ViewModel {
         Log.d("api 가져오는 함수 ", "  public void storeApiData() ");
         boolean noMapLocation = mapLat + mapLong == 0.0f;
         boolean noUserLocation = userCurrentLat + userCurrentLong == 0.0f;
-        if (noMapLocation) {
-            latitude = userCurrentLat;
-            longitude = userCurrentLong;
-        } else if (noUserLocation){
-            latitude = mapLat;
-            longitude = mapLong;
-        } else if(noMapLocation && noUserLocation){
+        if (noMapLocation && noUserLocation) {
             latitude = INITIAL_LAT;
             longitude = INITIAL_LONG;
+        }else if (noUserLocation){
+            latitude = mapLat;
+            longitude = mapLong;
+        } else if(noMapLocation) {
+            latitude = userCurrentLat;
+            longitude = userCurrentLong;
         }
-
         if (tags == null) {
             tags = initialTags;
         }
@@ -959,7 +963,7 @@ public class ActivityViewModel extends ViewModel {
 
     //유저-로그아웃
     public void LogoutUser() {
-        Log.d("닉네임token", token);
+//        Log.d("닉네임token", token);
         //리뷰 수정
         Call<Void> userLogoutRequestDTOCall = userApiService.logoutUser("Bearer " + token);
         userLogoutRequestDTOCall.enqueue(new Callback<Void>() {
@@ -1133,6 +1137,36 @@ public class ActivityViewModel extends ViewModel {
         });
     }
 
+    public void getHomeBanner(){
+        AdminApiService apiService = RetrofitClient.getAdminApiService();
+        apiService.getBanner("Bearer " + token).enqueue(new Callback<List<HomeBannerData>>() {
+            @Override
+            public void onResponse(Call<List<HomeBannerData>> call, Response<List<HomeBannerData>> response) {
+                if(response.isSuccessful()){
+                    Log.d("RetrofitRequestURL 성공", "Requested URL: " + call.request().url());
+                    Log.d("banner  api 호출 성공 ","성공" + response);
+                    List<HomeBannerData> data = response.body();
+                    homeBannerListLiveData.setValue(data);
+
+                }else{
+                    Log.d("RetrofitRequestURL 실패", "Requested URL: " + call.request().url());
+                    Log.e("banner  api 호출 실패 1 ","실패1" + response);
+                    try {
+                        Log.e("banner  실패 1", "Error Body: " + response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<HomeBannerData>> call, Throwable t) {
+                Log.e("banner api 호출 실패 2 ","실패2" + t.getMessage());
+
+            }
+        });
+    }
+
     public void setImageUrlForModify(List<String> list) {
         imageUrlListForModifyLiveData.setValue(list);
         Log.d("수정을 위해 넘어온 image url 4 ", "this is url" + list);
@@ -1301,6 +1335,10 @@ public class ActivityViewModel extends ViewModel {
 
     public LiveData<PostRecommendRequestDTO> getPostLikeReceiveLiveData() {
         return postLikeReceiveLiveData;
+    }
+
+    public MutableLiveData<List<HomeBannerData>> getHomeBannerListLiveData(){
+        return  homeBannerListLiveData;
     }
 
 

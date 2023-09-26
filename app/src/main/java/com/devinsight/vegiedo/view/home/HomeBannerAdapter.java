@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.devinsight.vegiedo.R;
 import com.devinsight.vegiedo.data.ui.home.HomeBannerData;
+import com.devinsight.vegiedo.view.search.SummaryData;
 
 import java.util.List;
 
@@ -24,6 +25,11 @@ public class HomeBannerAdapter extends RecyclerView.Adapter<HomeBannerAdapter.Vi
     HomeBannerAdapter(Context context, List<HomeBannerData> bannerList){
         this.bannerList = bannerList;
         this.context = context;
+    }
+
+    public void setBannerList(List<HomeBannerData> list){
+        this.bannerList.clear();
+        this.bannerList.addAll(list);
     }
 
     @NonNull

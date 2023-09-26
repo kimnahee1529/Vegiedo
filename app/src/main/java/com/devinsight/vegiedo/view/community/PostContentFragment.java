@@ -283,30 +283,31 @@ public class PostContentFragment extends Fragment implements PostContentAdapter.
         });
 
 
-
-//        activityViewModel.getPostLikeReceiveLiveData().observe(getViewLifecycleOwner(), new Observer<Integer>() {
-//            @Override
-//            public void onChanged(Integer likeCount) {
-//                post_recommend_count.setText(String.valueOf(likeCount));
-//                like_count.setText(String.valueOf(likeCount));
-//            }
-//        });
-
-
-
-//        btn_post_report.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                setReportDialog();
-//            }
-//        });
-
         return view;
     }
 
     @Override
     public void onImageClicked(View view, ContentImage image, int position) {
+        int layoutId;
+        String imageUrl = imageList.get(position).getImageUrl();
+        View dialogView;
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        LayoutInflater inflater = LayoutInflater.from(getContext());
 
+        layoutId = R.layout.fragment_clicked_image;
+        dialogView = inflater.inflate(layoutId, null);
+        builder.setView(dialogView);
+        AlertDialog imageDialog = builder.create();
+        Log.d("AlertDialog", imageDialog.toString());
+        setImageDialog(dialogView, imageDialog, imageUrl);
+        imageDialog.setContentView(R.layout.dialog_custom);
+        imageDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT)); //배경 투명하게 설정
+        imageDialog.show();
+    }
+
+    public void setImageDialog(View dialogView, AlertDialog dialog, String url){
+        ImageView  image = dialogView.findViewById(R.id.clicked_image);
+        Glide.with(getContext()).load(url).into(image);
     }
 
     public void setDialog(String message) {
