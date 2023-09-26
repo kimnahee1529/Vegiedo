@@ -206,6 +206,7 @@ public class WritingFragment extends Fragment {
         backwardBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                CommunityMainFragment communityMainFragment = new CommunityMainFragment();
                 getParentFragmentManager().beginTransaction().replace(R.id.frame, communityMainFragment).commit();
             }
         });
