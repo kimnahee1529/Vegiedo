@@ -74,8 +74,8 @@
                 android:background="@drawable/btn_toggle"
                 android:checked="false"
                 android:textColor="@drawable/btn_togle_text_color"
-                android:textOff="@string/tag_fruittarian"
-                android:textOn="@string/tag_fruittarian"/>
+                android:textOff="@string/tag_vegan_bakery"
+                android:textOn="@string/tag_vegan_bakery"/>
 
             <ToggleButton
                 android:id="@+id/tag_vegan"
@@ -86,8 +86,8 @@
                 android:background="@drawable/btn_toggle"
                 android:checked="false"
                 android:textColor="@drawable/btn_togle_text_color"
-                android:textOff="@string/tag_vegan"
-                android:textOn="@string/tag_vegan"/>
+                android:textOff="@string/tag_all_vegan"
+                android:textOn="@string/tag_all_vegan"/>
 
             <ToggleButton
                 android:id="@+id/tag_lacto"
