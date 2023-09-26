@@ -43,6 +43,7 @@ import com.devinsight.vegiedo.data.response.StoreInquiryResponseDTO;
 import com.devinsight.vegiedo.data.ui.login.NickNameStatus;
 import com.devinsight.vegiedo.repository.pref.StorePrefRepository;
 import com.devinsight.vegiedo.service.api.StoreApiService;
+import com.devinsight.vegiedo.view.MainActivity;
 import com.devinsight.vegiedo.view.search.ActivityViewModel;
 
 import java.io.IOException;
@@ -87,6 +88,17 @@ public class StoreDetailPageFragment extends Fragment {
     Long storeIdFromSummaryPage;
 
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((MainActivity) getActivity()).showToolbar(false);  // Toolbar 숨기기
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        ((MainActivity) getActivity()).showToolbar(true);  // Toolbar 표시
+    }
     /* 검색 리스트로 부터 storeId를 받아 옵니다. */
     @Override
     public void onCreate(Bundle savedInstanceState) {

@@ -349,6 +349,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void showToolbar(boolean show) {
+        if (toolBar != null) {
+            if (show) {
+                toolBar.setVisibility(View.VISIBLE);
+            } else {
+                toolBar.setVisibility(View.GONE);
+            }
+        }
+    }
 
 
 }
