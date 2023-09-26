@@ -1,6 +1,7 @@
 package com.devinsight.vegiedo.view.home;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,10 +12,13 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.devinsight.vegiedo.R;
+import com.devinsight.vegiedo.data.ui.home.HomeBannerData;
 import com.devinsight.vegiedo.data.ui.home.HomeReviewUiData;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class HomeReviewAdapter extends RecyclerView.Adapter<HomeReviewAdapter.ReviewViewHolder>{
 
@@ -27,6 +31,10 @@ public class HomeReviewAdapter extends RecyclerView.Adapter<HomeReviewAdapter.Re
         this.context = context;
         this.reviewItemListner = itemListner;
     }
+    public void setReviewList(List<HomeReviewUiData> reviewList){
+        this.reviewList.clear();
+        this.reviewList.addAll(reviewList);
+    }
 
     @NonNull
     @Override
@@ -37,7 +45,26 @@ public class HomeReviewAdapter extends RecyclerView.Adapter<HomeReviewAdapter.Re
 
     @Override
     public void onBindViewHolder(@NonNull ReviewViewHolder holder, int position) {
-        holder.setData(reviewList.get(position));
+        HomeReviewUiData data = reviewList.get(position);
+        holder.storeName.setText(data.getStoreName());
+        for( int i = 0 ; i < reviewList.size() ; i ++ ) {
+            List<String> tags = reviewList.get(i).getTags();
+            if(tags != null) {
+                if(tags.size() == 2) {
+                    holder.storeTag1.setText(tags.get(0));
+                    holder.storeTag2.setText(tags.get(1));
+                } else if(tags.size() == 1) {
+                    holder.storeTag2.setText(tags.get(0));
+                    holder.storeTag1.setText(null);
+                    holder.storeTag1.setVisibility(View.INVISIBLE);
+                } else if(tags.size() == 0) {
+                    Log.e("store tag is null", "store tag is null");
+                }
+            }
+        }
+       String imageUrl = data.getStoreImage();
+        Glide.with(context).load(imageUrl).into(holder.storeImage);
+
     }
 
     @Override
@@ -52,7 +79,6 @@ public class HomeReviewAdapter extends RecyclerView.Adapter<HomeReviewAdapter.Re
         private TextView storeName;
         private TextView storeTag1;
         private TextView storeTag2;
-        private TextView storeTag3;
         HomeReviewUiData reviewItem;
 
         public ReviewViewHolder(@NonNull View itemView) {
@@ -64,30 +90,19 @@ public class HomeReviewAdapter extends RecyclerView.Adapter<HomeReviewAdapter.Re
             storeName = itemView.findViewById(R.id.store_name);
             storeTag1 = itemView.findViewById(R.id.store_tag1);
             storeTag2 = itemView.findViewById(R.id.store_tag2);
-            storeTag3 = itemView.findViewById(R.id.store_tag3);
-
-        }
-        public void setData(HomeReviewUiData reviewItem){
-            this.reviewItem = reviewItem;
-
-            storeImage.setImageResource(reviewItem.getStoreImage());
-            storeName.setText(reviewItem.getStoreName());
-            storeTag1.setText(reviewItem.getStoreTag1());
-            storeTag2.setText(reviewItem.getStoreTag2());
-            storeTag3.setText(reviewItem.getStoreTag3());
 
         }
 
         @Override
         public void onClick(View view) {
             if(reviewItemListner != null){
-                reviewItemListner.onItemClick(reviewItem);
+                reviewItemListner.onReviewItemClick(view, reviewList.get(getLayoutPosition()), getLayoutPosition());
             }
         }
     }
 
     public interface reviewItemListner {
-        void onItemClick(HomeReviewUiData item);
+        void onReviewItemClick(View view, HomeReviewUiData item, int position);
 
     }
 

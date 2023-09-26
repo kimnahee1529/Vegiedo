@@ -16,7 +16,9 @@ import com.devinsight.vegiedo.data.request.ReviewRegisterRequestDTO;
 import com.devinsight.vegiedo.data.request.ReviewReportRequestDTO;
 import com.devinsight.vegiedo.data.request.UserNicknameModifyRequestDTO;
 import com.devinsight.vegiedo.data.response.CommentListData;
+import com.devinsight.vegiedo.data.response.CommunityBannerResponseDTO;
 import com.devinsight.vegiedo.data.response.HomeBannerResponseDTO;
+import com.devinsight.vegiedo.data.response.HomeReviewResponseDTO;
 import com.devinsight.vegiedo.data.response.MapStoreListData;
 import com.devinsight.vegiedo.data.response.PostInquiryResponseDTO;
 import com.devinsight.vegiedo.data.response.PostListData;
@@ -137,6 +139,12 @@ public class ActivityViewModel extends ViewModel {
     private MutableLiveData<Boolean> yesDeleteLiveData = new MutableLiveData<>();
 
     private MutableLiveData<List<HomeBannerData>> homeBannerListLiveData = new MutableLiveData<>();
+
+    private MutableLiveData<String> communityBannerLiveData = new MutableLiveData<>();
+
+
+    private MutableLiveData<HomeReviewResponseDTO> homeReviewLiveData = new MutableLiveData<>();
+
 
 
     /* Query 요청 및 필터에 사용 하기 위한 전역 변수*/
@@ -1183,6 +1191,60 @@ public class ActivityViewModel extends ViewModel {
             }
         });
     }
+    public void getCommunityBanner(){
+        postApiService.getBanner("Bearer " + token).enqueue(new Callback<CommunityBannerResponseDTO>() {
+            @Override
+            public void onResponse(Call<CommunityBannerResponseDTO> call, Response<CommunityBannerResponseDTO> response) {
+                if(response.isSuccessful()){
+                    Log.d("RetrofitRequestURL 성공", "Requested URL: " + call.request().url());
+                    Log.d(" 커뮤니티 banner  api 호출 성공 ","성공" + response);
+                    CommunityBannerResponseDTO data = response.body();
+                    communityBannerLiveData.setValue(data.getCommunityBannerUrl());
+
+                }else{
+                    Log.d("RetrofitRequestURL 실패", "Requested URL: " + call.request().url());
+                    Log.e("커뮤니티 banner  api 호출 실패 1 ","실패1" + response);
+                    try {
+                        Log.e("banner  실패 1", "Error Body: " + response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CommunityBannerResponseDTO> call, Throwable t) {
+                Log.e("커뮤니티 banner api 호출 실패 2 ","실패2" + t.getMessage());
+            }
+        });
+    }
+
+    public void getHomeReview(){
+        ReviewApiService reviewApiService = RetrofitClient.getReviewApiService();
+        reviewApiService.getHomeReview("Bearer " + token, 10,0).enqueue(new Callback<HomeReviewResponseDTO>() {
+            @Override
+            public void onResponse(Call<HomeReviewResponseDTO> call, Response<HomeReviewResponseDTO> response) {
+                if (response.isSuccessful()) {
+                    Log.d("홈 리뷰 요청 성공", "post 삭제 성공");
+                    HomeReviewResponseDTO data = response.body();
+                    homeReviewLiveData.setValue(data);
+                } else {
+                    // API 응답이 오류 상태일 때
+                    Log.e("홈 리뷰 요청 실패 1", "Error Code: " + response.code() + ", Message: " + response.message());
+                    try {
+                        Log.e("홈 리뷰 요청 실패 1", "Error Body: " + response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<HomeReviewResponseDTO> call, Throwable t) {
+                Log.e("홈 리뷰 요청 실패 2", "실패 2" + t.getMessage());
+            }
+        });
+    }
 
     public void setImageUrlForModify(List<String> list) {
         imageUrlListForModifyLiveData.setValue(list);
@@ -1358,6 +1420,14 @@ public class ActivityViewModel extends ViewModel {
         return  homeBannerListLiveData;
     }
 
+    public MutableLiveData<String> getCommunityBannerListLiveData(){
+        return  communityBannerLiveData;
+    }
+
+
+    public MutableLiveData<HomeReviewResponseDTO> getHomeReviewListLiveData(){
+        return  homeReviewLiveData;
+    }
 
 
 

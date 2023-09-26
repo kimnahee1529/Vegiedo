@@ -10,6 +10,8 @@ public class HomeBannerData {
     @SerializedName("bannerId")private Long bannerId;
     @Expose
     @SerializedName("seqeunce")private  byte sequence;
+    @Expose
+    @SerializedName("storeId")private Long storeId;
 
     public String getImages() {
         return images;
@@ -35,9 +37,18 @@ public class HomeBannerData {
         this.sequence = sequence;
     }
 
-    public HomeBannerData(String images, Long bannerId, byte sequence) {
+    public Long getStoreId() {
+        return storeId;
+    }
+
+    public void setStoreId(Long storeId) {
+        this.storeId = storeId;
+    }
+
+    public HomeBannerData(String images, Long bannerId, byte sequence, Long storeId) {
         this.images = images;
         this.bannerId = bannerId;
         this.sequence = sequence;
+        this.storeId = storeId;
     }
 }

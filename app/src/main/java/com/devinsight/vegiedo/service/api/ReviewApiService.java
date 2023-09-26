@@ -3,8 +3,10 @@ package com.devinsight.vegiedo.service.api;
 import com.devinsight.vegiedo.data.request.ReviewModifyrRequestDTO;
 import com.devinsight.vegiedo.data.request.ReviewRegisterRequestDTO;
 import com.devinsight.vegiedo.data.request.ReviewReportRequestDTO;
+import com.devinsight.vegiedo.data.response.HomeReviewResponseDTO;
 import com.devinsight.vegiedo.data.response.PostInquiryResponseDTO;
 import com.devinsight.vegiedo.data.response.ReviewListInquiryResponseDTO;
+import com.devinsight.vegiedo.data.ui.home.HomeReviewUiData;
 
 import java.util.List;
 
@@ -92,5 +94,12 @@ public interface ReviewApiService {
             @Path("storeId") Long storeId,
             @Path("reviewId") Long reviewId,
             @Body ReviewReportRequestDTO reviewReportRequestDTO
+    );
+
+    @GET("/reviews/random")
+    Call<HomeReviewResponseDTO> getHomeReview(
+            @Header("Authorization") String token,
+            @Query("count") Integer count,
+            @Query("cursor") Integer cursor
     );
 }
