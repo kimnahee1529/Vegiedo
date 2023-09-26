@@ -66,6 +66,6 @@ public class MapStoreCardViewFragment extends Fragment implements MapStoreCardAd
 
     @Override
     public void onCardClick(MapStoreCardUiData item) {
-        Toast.makeText(getContext(), item.getStoreName() + " is clicked", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getContext(), item.getStoreName() + " is clicked", Toast.LENGTH_SHORT).show();
     }
 }

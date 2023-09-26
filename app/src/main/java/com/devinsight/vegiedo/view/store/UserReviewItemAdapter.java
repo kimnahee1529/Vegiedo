@@ -420,7 +420,7 @@ public class UserReviewItemAdapter extends RecyclerView.Adapter<UserReviewItemAd
         ImageView closeIcon = dialogView.findViewById(R.id.green_x_circle);
 
         yesBtn.setOnClickListener(v -> {
-            Toast.makeText(context, "예 버튼입니다.", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(context, "예 버튼입니다.", Toast.LENGTH_SHORT).show();
             Log.d("LOG리뷰삭제", "예 " + storeId);
             reviewDeleteListener.ReviewDelete(storeId, reviewId);
             notifyDataSetChanged();
@@ -428,7 +428,7 @@ public class UserReviewItemAdapter extends RecyclerView.Adapter<UserReviewItemAd
         });
 
         noBtn.setOnClickListener(v -> {
-            Toast.makeText(context, "아니오 버튼입니다.", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(context, "아니오 버튼입니다.", Toast.LENGTH_SHORT).show();
             Log.d("LOG리뷰삭제", "아니오");
             dialog.dismiss();
         });

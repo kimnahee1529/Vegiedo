@@ -337,7 +337,7 @@ public class StoreDetailPageFragment extends Fragment {
                     fragmentTransaction.addToBackStack(null);
                     fragmentTransaction.commit();
                 }else{
-                    Toast.makeText(getContext(), " 이미 작성한 리뷰가 있음", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), " 이미 작성한 리뷰가 있습니다.", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -429,7 +429,7 @@ public class StoreDetailPageFragment extends Fragment {
         viewModel.StoreInquiryData();
     }
     private void onStampBtnClicked() {
-        Toast.makeText(getActivity(), "스탬프 버튼이 눌렸습니다.", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getActivity(), "스탬프 버튼이 눌렸습니다.", Toast.LENGTH_SHORT).show();
         if(isClickedStamp){
 //            sheep_circle.setVisibility(GONE);
 //            img_sheep.setVisibility(GONE);
@@ -456,11 +456,11 @@ public class StoreDetailPageFragment extends Fragment {
 
     private void onLikeBtnClicked() {
         if(isClickedLike){
-            Toast.makeText(getActivity(), "찜 버튼 취소시키기", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getActivity(), "찜 버튼 취소시키기", Toast.LENGTH_SHORT).show();
             callStoreLikeAPI(storeId, isClickedLike);
 //            isClickedLike = false;
         } else {
-            Toast.makeText(getActivity(), "찜 버튼 활성화시키기", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getActivity(), "찜 버튼 활성화시키기", Toast.LENGTH_SHORT).show();
             callStoreLikeAPI(storeId, isClickedLike);
 //            isClickedLike = true;
         }
