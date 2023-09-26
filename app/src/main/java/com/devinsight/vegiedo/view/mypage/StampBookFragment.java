@@ -18,6 +18,7 @@ import com.devinsight.vegiedo.R;
 import com.devinsight.vegiedo.data.response.StampBookInquiryResponseDTO;
 import com.devinsight.vegiedo.data.response.StoreInquiryResponseDTO;
 import com.devinsight.vegiedo.data.response.StoreStampDetailDTO;
+import com.devinsight.vegiedo.view.MainActivity;
 import com.devinsight.vegiedo.view.search.ActivityViewModel;
 
 import java.util.ArrayList;
@@ -29,6 +30,18 @@ public class StampBookFragment extends Fragment {
     private StampBookAdapter stampBookAdapter;
     private List<StampBookItem> stampBookItemList;
     ActivityViewModel viewModel;
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((MainActivity) getActivity()).showToolbar(false);  // Toolbar 숨기기
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        ((MainActivity) getActivity()).showToolbar(true);  // Toolbar 표시
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
