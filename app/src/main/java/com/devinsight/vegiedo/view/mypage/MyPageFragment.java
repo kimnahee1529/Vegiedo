@@ -1,5 +1,7 @@
 package com.devinsight.vegiedo.view.mypage;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -111,7 +113,7 @@ public class MyPageFragment extends Fragment {
         viewModel = new ViewModelProvider(requireActivity()).get(ActivityViewModel.class);
 
         // SharedPreferences 객체 얻기(회원가입 때 정한 닉네임, 태그 얻기 위함)
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_info", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_info", MODE_PRIVATE);
         String userName = sharedPreferences.getString("userName", "기본값"); // "기본값"은 userName이 없을 때 반환되는 기본값입니다.
         String userProfile = sharedPreferences.getString("userProfile","null"); //디폴트는 null
 
@@ -254,7 +256,6 @@ public class MyPageFragment extends Fragment {
             public void onClick(View v) {
                 // 로그아웃 로직 (예: 사용자 정보, 세션, 토큰 삭제 등)
                 logoutUser();
-                viewModel.LogoutUser();
 
                 // LoginMainActivity로 이동
                 Activity activity = getActivity();
@@ -312,7 +313,7 @@ public class MyPageFragment extends Fragment {
                 MyPage_profile_image.setImageResource(R.drawable.img_sheep);
 
                 // SharedPreferences에 "img_sheep" 저장
-                SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_info", Context.MODE_PRIVATE);
+                SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_info", MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("userProfile", "img_sheep");
                 editor.apply();
@@ -396,10 +397,12 @@ public class MyPageFragment extends Fragment {
         // 서버에 로그아웃 요청을 보내는 로직 등을 추가할 수 있습니다.
         // SharedPreferences 예제:
 
-//        SharedPreferences preferences = getSharedPreferences("userPrefs", MODE_PRIVATE);
-//        SharedPreferences.Editor editor = preferences.edit();
-//        editor.clear(); // 모든 데이터 삭제
-//        editor.apply();
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_info", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear();  // 모든 데이터 삭제
+        editor.apply();
+
+        viewModel.LogoutUser();
     }
 
     private void showWithdrawalDialog() {
@@ -425,7 +428,7 @@ public class MyPageFragment extends Fragment {
                 // SplashActivity로 이동
                 Activity activity = getActivity();
                 if (activity != null) {
-                    Intent intent = new Intent(activity, SplashActivity.class);
+                    Intent intent = new Intent(activity, LoginMainActivity.class);
                     startActivity(intent);
                     activity.finish();
                 }
@@ -467,14 +470,14 @@ public class MyPageFragment extends Fragment {
         }
     }
     private void saveImagePathToPreferences(String imagePath) {
-        SharedPreferences preferences = getActivity().getSharedPreferences("user_info", Context.MODE_PRIVATE);
+        SharedPreferences preferences = getActivity().getSharedPreferences("user_info", MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("selectedImagePath", imagePath);
         editor.apply();
     }
 
     private String loadImagePathFromPreferences() {
-        SharedPreferences preferences = getActivity().getSharedPreferences("user_info", Context.MODE_PRIVATE);
+        SharedPreferences preferences = getActivity().getSharedPreferences("user_info", MODE_PRIVATE);
         return preferences.getString("selectedImagePath", null);
     }
 
