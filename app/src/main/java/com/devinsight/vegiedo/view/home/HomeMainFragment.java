@@ -4,6 +4,8 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
@@ -18,6 +20,7 @@ import android.widget.Toast;
 import com.devinsight.vegiedo.R;
 import com.devinsight.vegiedo.data.ui.home.HomeBannerData;
 import com.devinsight.vegiedo.data.ui.home.HomeReviewUiData;
+import com.devinsight.vegiedo.view.search.ActivityViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +47,8 @@ public class HomeMainFragment extends Fragment implements HomeReviewAdapter.revi
     private RecyclerView recyclerView;
     private HomeReviewAdapter reviewAdapter;
     private ArrayList<HomeReviewUiData> reviewList;
+
+    ActivityViewModel viewModel;
 
     public HomeMainFragment() {
 
@@ -74,17 +79,24 @@ public class HomeMainFragment extends Fragment implements HomeReviewAdapter.revi
         Log.d("main home frag","onCreateView");
         View view = inflater.inflate(R.layout.fragment_main_home, container, false);
 
+        viewModel = new ViewModelProvider(requireActivity()).get(ActivityViewModel.class);
+
 //      홈화면 상단 배너
         viewPager = view.findViewById(R.id.viewpager_home);
 
         bannerList = new ArrayList<>();
-        bannerList.add(new HomeBannerData("https://cdn2.thecatapi.com/images/4gd.gif"));
-        bannerList.add(new HomeBannerData("https://cdn2.thecatapi.com/images/OmNwBvvUm.jpg"));
-        bannerList.add(new HomeBannerData("https://cdn2.thecatapi.com/images/MTUwMjU0OQ.jpg"));
-        bannerList.add(new HomeBannerData("https://cdn2.thecatapi.com/images/fG-wtktoL.jpg"));
-
         bannerAdapter = new HomeBannerAdapter(getContext(), bannerList);
         viewPager.setAdapter(bannerAdapter);
+
+        viewModel.getHomeBanner();
+        viewModel.getHomeBannerListLiveData().observe(getViewLifecycleOwner(), new Observer<List<HomeBannerData>>() {
+            @Override
+            public void onChanged(List<HomeBannerData> homeBannerData) {
+                bannerAdapter.setBannerList(homeBannerData);
+                bannerAdapter.notifyDataSetChanged();
+            }
+        });
+
 
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override

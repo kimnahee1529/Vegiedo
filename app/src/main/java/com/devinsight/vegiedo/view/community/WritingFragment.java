@@ -30,6 +30,8 @@ import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -110,6 +112,10 @@ public class WritingFragment extends Fragment {
     ImageViewData imageViewDataForModify;
     ImageViewData imageViewDataForRegister;
 
+    FragmentManager fragmentManager;
+    FragmentTransaction transaction;
+    Fragment communityMainFragment;
+
     Dialog dialog;
 
     private int actionOn;
@@ -150,6 +156,9 @@ public class WritingFragment extends Fragment {
         imageUrlListForModify = new ArrayList<>();
         imageViewDataForModify = new ImageViewData();
         imageViewDataList = new ArrayList<>();
+
+        fragmentManager = getChildFragmentManager();
+        transaction = fragmentManager.beginTransaction();
 
 //        imageViewDataForModify = new ImageViewData();
 
@@ -193,6 +202,13 @@ public class WritingFragment extends Fragment {
         registerBtn = rootView.findViewById(R.id.community_writing_register_button);
         backwardBtn = rootView.findViewById(R.id.backward_btn);
         backwardBtn.setOnClickListener(v -> goBack());
+
+        backwardBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getParentFragmentManager().beginTransaction().replace(R.id.frame, communityMainFragment).commit();
+            }
+        });
 
         mainImage = rootView.findViewById(R.id.main_image1);
         mainImage.setOnClickListener(v -> {
@@ -559,6 +575,7 @@ public class WritingFragment extends Fragment {
 
 
             Log.d("files", "files" + files.size());
+            getParentFragmentManager().beginTransaction().replace(R.id.frame, communityMainFragment).commit();
 
         });
     }

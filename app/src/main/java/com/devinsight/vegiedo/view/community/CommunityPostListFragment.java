@@ -52,6 +52,7 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
     FrameLayout community_Frame;
 
     int cursor = 1;
+    int popCursor = 1;
     int maxCursor;
 
     boolean isScrollingUp;
@@ -65,7 +66,6 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
         View view = inflater.inflate(R.layout.fragment_post_list, container, false);
         scrollView = view.findViewById(R.id.scrollView);
         community_banner = view.findViewById(R.id.community_banner);
-        progressBar = view.findViewById(R.id.progressbar);
         recyclerView = view.findViewById(R.id.post_recyclerview);
         postList = new ArrayList<>();
         adatper = new CommunityPostAdaptper(getContext(), postList, this);
@@ -103,7 +103,7 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
                             if (generalPostListData != null) {
 //                                setPostList(generalPostListData);
                                 adatper.setList(generalPostListData);
-                                adatper.notifyItemRangeInserted((cursor - 1)*5, 5);
+                                adatper.notifyItemRangeInserted((cursor - 1) * 10, 10);
 
                             } else {
                                 Log.d("CommunityPostListFragment", "list == null");
@@ -113,14 +113,14 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
 
                 } else {
                     /* postType : false -> 인기 게시글 */
-                    communityViewModel.loadPopularPostList(cursor);
+                    communityViewModel.loadPopularPostList(popCursor);
                     communityViewModel.getPopularPostList().observe(getViewLifecycleOwner(), new Observer<List<PostListData>>() {
                         @Override
                         public void onChanged(List<PostListData> popularPostListData) {
                             if (popularPostListData != null) {
                                 setPostList(popularPostListData);
-//                                adatper.setList(popularPostListData);
-//                                adatper.notifyItemRangeInserted((cursor - 1)*5, 5);
+                                adatper.setList(popularPostListData);
+                                adatper.notifyItemRangeInserted((popCursor - 1) * 10, 10);
                             } else {
                                 Log.d("CommunityPostListFragment", "list == null");
                             }
@@ -150,15 +150,32 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
                     communityViewModel.getMaxCursorLiveData().observe(getViewLifecycleOwner(), new Observer<Integer>() {
                         @Override
                         public void onChanged(Integer maxCursor) {
-                            if (cursor < maxCursor) {
-                                cursor++;
-                                Log.d("cursor scroll ", "cursor up" + cursor);
-                                addPostListFromApi(cursor);
-//                                progressBar.setVisibility(View.VISIBLE);
-                            } else {
-                                Toast.makeText(getContext(), " 마지막 페이지 입니다 ", Toast.LENGTH_SHORT).show();
-//                                progressBar.setVisibility(View.INVISIBLE);
-                            }
+
+                            activityViewModel.getPostType().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+                                @Override
+                                public void onChanged(Boolean postType) {
+                                    if (postType) {
+                                        if (cursor < maxCursor) {
+                                            cursor++;
+                                            Log.d("cursor scroll ", "cursor up" + cursor);
+                                            addPostListFromApi(cursor);
+                                        } else {
+                                            Toast.makeText(getContext(), " 마지막 페이지 입니다 ", Toast.LENGTH_SHORT).show();
+                                        }
+                                    } else {
+                                        if (popCursor < maxCursor) {
+                                            popCursor++;
+                                            Log.d("cursor scroll ", "cursor up" + popCursor);
+                                            addPostListFromApi(popCursor);
+                                        } else {
+                                            Toast.makeText(getContext(), " 마지막 페이지 입니다 ", Toast.LENGTH_SHORT).show();
+                                        }
+
+                                    }
+
+                                }
+                            });
+
                         }
                     });
 
@@ -223,7 +240,6 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
 //        });
 
 
-
         return view;
     }
 
@@ -243,52 +259,28 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
 
         postContentFragment.setArguments(bundle);
 
-//        PostCommentFragment postCommentFragment = new PostCommentFragment();
-//
-//        Bundle commentBundle = new Bundle();
-//        commentBundle.putLong("postIdForComment", postList.get(position).getPostId());
-//
-//        postCommentFragment.setArguments(commentBundle);
+        PostCommentFragment postCommentFragment = new PostCommentFragment();
+
+        Bundle commentBundle = new Bundle();
+        commentBundle.putLong("postIdForComment", postList.get(position).getPostId());
+
+        postCommentFragment.setArguments(commentBundle);
 
         ((MainActivity) getActivity()).replaceFragment(postMainFragment);
 
         FragmentManager fragmentManager = ((MainActivity) getActivity()).getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.post_content_frame, postContentFragment).commit();
-
-//        FragmentManager fragmentManager1 = ((MainActivity) getActivity()).getSupportFragmentManager();
-//        FragmentTransaction transaction1 = fragmentManager1.beginTransaction();
-//        transaction1.replace(R.id.post_comment_frame, postCommentFragment).commit();
+        transaction.replace(R.id.post_content_frame, postContentFragment);
+        transaction.replace(R.id.post_comment_frame, postCommentFragment).commit();
 
         activityViewModel.setClickedPostData(postListData);
 
-    }
-
-    public void openPostContent() {
-        transaction.replace(R.id.frame, postMainFragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
     }
 
     /* 리사이클러뷰에 리스트 설정 */
     public void setPostList(List<PostListData> list) {
         adatper.setPostList(list);
         adatper.notifyDataSetChanged();
-    }
-
-
-    public void previousPostListFromApi(int currentCursor) {
-        activityViewModel.getPostType().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean postType) {
-                if (postType) {
-                    communityViewModel.loadGeneralPostList(currentCursor);
-                } else {
-                    communityViewModel.loadPopularPostList(currentCursor);
-
-                }
-            }
-        });
     }
 
 
@@ -307,15 +299,5 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
             }
         });
     }
-
-    public void setCursor() {
-        if (postList != null) {
-            cursor = (postList.size() / 5) + 1;
-        } else {
-            cursor = 1;
-        }
-
-    }
-
 
 }
