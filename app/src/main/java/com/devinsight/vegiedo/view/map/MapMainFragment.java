@@ -5,7 +5,9 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.PointF;
 import android.os.Bundle;
 import android.util.Log;
@@ -39,6 +41,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.geometry.LatLngBounds;
 import com.naver.maps.map.CameraAnimation;
+import com.naver.maps.map.CameraPosition;
 import com.naver.maps.map.CameraUpdate;
 import com.naver.maps.map.MapView;
 import com.naver.maps.map.NaverMap;
@@ -69,6 +72,7 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
     private FloatingActionButton floatingMapLocationButton;
     private FloatingActionButton floatingMapStorePageButton;
     private FusedLocationProviderClient fusedLocationClient;
+    private Marker clusterMarker;
     private ArrayList<Marker> markersOnMap = new ArrayList<>();
     private MapApiService mapApiService = RetrofitClient.getMapApiService();
     ActivityViewModel viewModel;
@@ -396,6 +400,18 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
                 }
             }
         }
+
+        int visibleMarkerCount = markersOnMap.size();
+        Log.d("지도에 마커 몇개 있음?", String.valueOf(visibleMarkerCount));
+//        float currentZoom = (float) naverMap.getCameraPosition().zoom;
+//        Log.d("지도 확대 몇까지 함?", String.valueOf(currentZoom));
+//        // 예를 들어 zoom 수준이 15 이상일 때만 마커를 보이게 합니다.
+//        if (currentZoom >= 15) {
+//            currentLocationMarker.setMap(naverMap);
+//        } else {
+//            currentLocationMarker.setMap(null); // 마커를 지도에서 제거합니다.
+//        }
+
     }
 
 
@@ -414,6 +430,21 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
         Bitmap resizedBitmap = Bitmap.createScaledBitmap(originalBitmap, width, height, false);
         OverlayImage resizedImage = OverlayImage.fromBitmap(resizedBitmap);
         marker.setIcon(resizedImage);
+
+        int markerCount = markersOnMap.size();
+        float currentZoom = (float) naverMap.getCameraPosition().zoom;
+        Log.d("지도 확대 몇까지 함?", String.valueOf(currentZoom));
+        if (currentZoom >= 14) {
+            marker.setMap(naverMap);  // 각 마커에 대해 확대/축소 기능 적용
+            if (clusterMarker != null) {
+                clusterMarker.setMap(null);  // 이전 클러스터 마커를 제거합니다.
+            }
+        } else {
+            marker.setMap(null);  // 각 마커에 대해 확대/축소 기능 적용
+            // 데이터가 변경된 후
+            updateClusterMarker(markerCount, naverMap);
+
+        }
 
         // 마커 클릭 리스너 설정
         marker.setOnClickListener(overlay -> {
@@ -454,6 +485,48 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
         };
 
         naverMap.setOnMapClickListener(mapClickListener);
+    }
+
+    private OverlayImage createClusterIcon(int markerCount) {
+
+        // 이미지의 크기 설정
+        int width = 150;
+        int height = 150;
+
+        // 새 비트맵과 캔버스 생성
+        Bitmap clusterBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(clusterBitmap);
+
+        // 원 그리기
+        Paint circlePaint = new Paint();
+        circlePaint.setColor(Color.parseColor("#FC840D"));
+        circlePaint.setStyle(Paint.Style.FILL);
+        canvas.drawCircle(width / 2, height / 2, width / 2, circlePaint);
+
+        // 텍스트 그리기
+        Paint textPaint = new Paint();
+        textPaint.setColor(Color.WHITE);
+        textPaint.setTextSize(40);
+        textPaint.setTextAlign(Paint.Align.CENTER);
+        canvas.drawText(String.valueOf(markerCount), width / 2, (height / 2) - ((textPaint.descent() + textPaint.ascent()) / 2), textPaint);
+
+        // OverlayImage로 변환
+        return OverlayImage.fromBitmap(clusterBitmap);
+    }
+
+    private void updateClusterMarker(int markerCount, NaverMap naverMap) {
+
+        if (clusterMarker != null) {
+            clusterMarker.setMap(null);  // 이전 클러스터 마커를 제거합니다.
+        }
+
+        CameraPosition cameraPosition = naverMap.getCameraPosition();
+        LatLng centerPosition = cameraPosition.target;
+
+        clusterMarker = new Marker();
+        clusterMarker.setIcon(createClusterIcon(markerCount));
+        clusterMarker.setPosition(centerPosition);
+        clusterMarker.setMap(naverMap);
     }
 
 }
