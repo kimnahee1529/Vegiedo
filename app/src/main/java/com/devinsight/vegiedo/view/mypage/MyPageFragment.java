@@ -35,6 +35,7 @@ import com.devinsight.vegiedo.R;
 import com.devinsight.vegiedo.SplashActivity;
 import com.devinsight.vegiedo.service.api.UserApiService;
 import com.devinsight.vegiedo.utill.RetrofitClient;
+import com.devinsight.vegiedo.view.MainActivity;
 import com.devinsight.vegiedo.view.PermissionUtils;
 import com.devinsight.vegiedo.view.search.ActivityViewModel;
 import com.devinsight.vegiedo.view.login.LoginMainActivity;
@@ -66,6 +67,18 @@ public class MyPageFragment extends Fragment {
     private TextView withdrawal_text;
     ActivityViewModel viewModel;
     UserApiService userApiService = RetrofitClient.getUserApiService();
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((MainActivity) getActivity()).showToolbar(false);  // Toolbar 숨기기
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        ((MainActivity) getActivity()).showToolbar(true);  // Toolbar 표시
+    }
     private String saveImageToInternalStorage(Uri imageUri) {
         try {
             InputStream inputStream = getActivity().getContentResolver().openInputStream(imageUri);
