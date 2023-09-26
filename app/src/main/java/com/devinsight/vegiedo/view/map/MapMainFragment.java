@@ -32,6 +32,7 @@ import com.devinsight.vegiedo.service.api.MapApiService;
 import com.devinsight.vegiedo.utill.RetrofitClient;
 import com.devinsight.vegiedo.view.StoreListMainFragment;
 import com.devinsight.vegiedo.view.search.ActivityViewModel;
+import com.devinsight.vegiedo.view.store.StoreDetailPageFragment;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -142,7 +143,17 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void onCardClick(MapStoreCardUiData item, int position) {
-        Toast.makeText(getContext(), item.getStoreName() + " is clicked ", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), item.getStoreId() + " is clicked ", Toast.LENGTH_SHORT).show();
+        viewModel.setStoreIdLiveData(item.getStoreId());
+//        viewModel.getStoreIdLiveData().getValue();
+        StoreDetailPageFragment detailFragment = new StoreDetailPageFragment();
+
+        // 프래그먼트 트랜잭션 시작
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.frame, detailFragment);  // R.id.container는 당신의 FrameLayout 또는 호스트 뷰의 ID여야 합니다.
+        transaction.addToBackStack(null);
+        transaction.commit();
+
     }
 
     private void onFloatingLikeButtonClick() {
