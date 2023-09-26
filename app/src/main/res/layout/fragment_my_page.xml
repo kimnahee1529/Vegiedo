@@ -13,8 +13,8 @@
 
         <TextView
             android:id="@+id/withdrawal_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
             android:layout_marginStart="40dp"
             android:layout_marginTop="15dp"
             android:text="회원탈퇴"
@@ -26,8 +26,8 @@
 
         <TextView
             android:id="@+id/logout_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
             android:layout_marginTop="15dp"
             android:layout_marginStart="40dp"
             android:text="로그아웃"
@@ -52,8 +52,8 @@
 
         <TextView
             android:id="@+id/mypage_open_source_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
             android:layout_marginTop="15dp"
             android:layout_marginStart="40dp"
             android:text="@string/mypage_open_source"
@@ -80,19 +80,18 @@
             android:id="@+id/arrow5_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="40dp"
             android:layout_marginBottom="11dp"
             android:src="@drawable/arrow_right"
             app:layout_constraintBottom_toTopOf="@+id/my_page_gray_line5"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.864"
-            app:layout_constraintStart_toEndOf="@+id/mypage_open_source_text"
             app:layout_constraintTop_toBottomOf="@+id/my_page_gray_line4"
             app:layout_constraintVertical_bias="1.0" />
 
         <TextView
             android:id="@+id/mypage_policy_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
             android:layout_marginTop="15dp"
             android:layout_marginStart="40dp"
             android:text="@string/mypage_policy"
@@ -129,8 +128,8 @@
 
         <TextView
             android:id="@+id/mypage_inquiry_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
             android:layout_marginTop="15dp"
             android:layout_marginStart="40dp"
             android:text="@string/mypage_inquiry"
@@ -168,8 +167,8 @@
 
         <TextView
             android:id="@+id/new_store_register_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
             android:layout_marginStart="40dp"
             android:layout_marginTop="15dp"
             android:text="@string/mypage_register_new_store"
@@ -211,7 +210,6 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginStart="24dp"
-            android:layout_marginTop="15dp"
             android:layout_marginEnd="25dp"
             android:background="@drawable/gray_line_n"
             app:layout_constraintEnd_toEndOf="parent"
@@ -316,13 +314,13 @@
 
         <TextView
             android:id="@+id/stamp_book_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginStart="40dp"
             android:layout_marginTop="67dp"
-            android:textColor="@color/black"
             android:text="@string/stamp_book"
+            android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.111"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/MyPage_nickname" />
 
@@ -332,11 +330,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="67dp"
             android:layout_marginEnd="40dp"
-            android:layout_marginBottom="11dp"
             android:src="@drawable/arrow_right"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@+id/stamp_book_text"
             app:layout_constraintTop_toBottomOf="@+id/MyPage_nickname" />
 
 
