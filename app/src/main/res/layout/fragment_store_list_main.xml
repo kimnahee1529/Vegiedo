@@ -114,4 +114,17 @@
          />
 
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btn_go_map"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:src="@drawable/map"
+        app:backgroundTint="#FFFFFF"
+        app:fabCustomSize="45dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:tint="@null"/>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

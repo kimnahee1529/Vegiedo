@@ -21,7 +21,8 @@
              android:layout_width="350dp"
              android:layout_height="250dp"
              android:layout_gravity="center"
-             android:foregroundGravity="center_horizontal">
+             android:foregroundGravity="center_horizontal"
+             android:layout_marginTop="20dp">
 
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/viewpager_home"
@@ -52,17 +53,18 @@
              android:layout_gravity="center"
              android:orientation="vertical">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+            <ImageView
+                android:layout_width="120dp"
+                android:layout_height="40dp"
                 android:text="@string/review"
                 android:textSize="20sp"
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="20dp"
                 android:textColor="@color/black"
+                android:src="@drawable/review_icon"
                 >
 
-            </TextView>
+            </ImageView>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_review_home"

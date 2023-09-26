@@ -19,13 +19,16 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.devinsight.vegiedo.R;
 import com.devinsight.vegiedo.data.response.StoreListData;
+import com.devinsight.vegiedo.view.map.MapMainFragment;
 import com.devinsight.vegiedo.view.search.ActivityViewModel;
 import com.devinsight.vegiedo.view.search.StoreDetailListAdapter;
 import com.devinsight.vegiedo.view.store.StoreDetailPageDDFragment;
 import com.devinsight.vegiedo.view.store.StoreDetailPageFragment;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +53,10 @@ public class StoreListMainFragment extends Fragment implements StoreDetailListAd
     TextView tt_not_found;
     TextView tt_set_more_option;
 
+    FloatingActionButton btn_page_to_map;
+
     StoreDetailPageDDFragment storeDetailPageDDFragment;
+    Fragment mapMainFragment;
 
     public static StoreListMainFragment instance() {
         return new StoreListMainFragment();
@@ -88,6 +94,9 @@ public class StoreListMainFragment extends Fragment implements StoreDetailListAd
         sheep = view.findViewById(R.id.sheep);
         tt_not_found = view.findViewById(R.id.tt_not_found);
         tt_set_more_option = view.findViewById(R.id.tt_set_more_option);
+        btn_page_to_map = view.findViewById(R.id.btn_go_map);
+
+        mapMainFragment = new MapMainFragment();
 
         recyclerView = view.findViewById(R.id.recycler_store_list);
         storeList = new ArrayList<>();
@@ -119,26 +128,14 @@ public class StoreListMainFragment extends Fragment implements StoreDetailListAd
             }
         });
 
+        btn_page_to_map.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.frame, mapMainFragment,"mapMainFragment").addToBackStack("mapMainFragment").commit();
 
-//        viewModel.getFilteredStoreListLiveData().observe(getViewLifecycleOwner(), new Observer<List<StoreListData>>() {
-//            @Override
-//            public void onChanged(List<StoreListData> storeListData) {
-//
-//                if (storeListData.size() == 0) {
-//                    Log.d("검색 리스트 없음 ", " 검색리스트 갯수 : " + storeListData.size());
-//                    setNotificationVisible();
-//                } else {
-//                    Log.d("가게메인리스트4", "가게메인리스트4");
-//                    setNotificationInVisible();
-//                    storeDetailListAdapter.setStoreList(storeListData);
-//                    storeDetailListAdapter.notifyDataSetChanged();
-//
-//                }
-//            }
-//        });
-//
-//        viewModel.searchDetailList();
-//        Log.d("가게메인리스트3", "가게메인리스트3");
+            }
+        });
 
 
         return view;
