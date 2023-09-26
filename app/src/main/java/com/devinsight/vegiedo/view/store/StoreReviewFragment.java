@@ -72,9 +72,8 @@ public class StoreReviewFragment extends Fragment {
         setupRecyclerView();
 
         review_more_btn = view.findViewById(R.id.Review_moreButton);
-        canWriteReview = viewModel.getCanWriteReview().getValue();
-        Log.d("11리뷰 작성 가능함? reviewF", String.valueOf(viewModel.getStoreDataLiveData().getValue()));
-        Log.d("22리뷰 작성 가능함? reviewF", String.valueOf(canWriteReview));
+//        canWriteReview = viewModel.getCanWriteReview().getValue();
+//        Log.d("리뷰 작성 가능함? reviewF", String.valueOf(canWriteReview));
 
         //어댑터에서의 더보기 버튼 리스너
         adapter.setMoreItemsListener(new UserReviewItemAdapter.MoreItemsListener() {
@@ -113,8 +112,6 @@ public class StoreReviewFragment extends Fragment {
             }
         });
 
-//        adapter.
-
         review_more_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -143,9 +140,10 @@ public class StoreReviewFragment extends Fragment {
                     List<UserReviewItem> updatedItems = new ArrayList<>();
                     int reviewsSize = data.getReviews().size();
                     Log.d("리뷰 개수", String.valueOf(reviewsSize));
-
+                    //내가 쓴 리뷰가 없을 때일 경우를 대비해 무조건 쓸 수 있게(true)로 만들어놓고
+                    //내가 쓴 리뷰가 있을 때 false로 바꿈. 160줄
+                    viewModel.setCanWriteReview(true);
                     for (int i = 0; i < reviewsSize; i++) {
-//                        Log.d("LOGAPIreviews", String.valueOf(data.getReviews().get(i)));
                         String userName = data.getReviews().get(i).getUserName();
                         Integer star = data.getReviews().get(i).getStar();
                         String content = data.getReviews().get(i).getContent();
@@ -159,7 +157,6 @@ public class StoreReviewFragment extends Fragment {
                             viewModel.setCanWriteReview(false);
                         }else{
                             Log.d("내가 쓴 리뷰가 아님 reviewF", String.valueOf(isMine));
-//                            viewModel.setCanWriteReview(true);
                         }
                         UserReviewItem item = new UserReviewItem(reviewId, REVIEW_RC, userName, star, content, userReviewImageUrlList, isMine);
                         updatedItems.add(item);

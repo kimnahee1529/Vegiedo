@@ -6,6 +6,7 @@ import static com.devinsight.vegiedo.utill.RetrofitClient.getStoreApiService;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -149,6 +150,7 @@ public class StoreDetailPageFragment extends Fragment {
                         sheep_circle.setVisibility(View.VISIBLE);
                         img_sheep.setVisibility(View.VISIBLE);
                         storeDetail_user_nickname.setVisibility(View.VISIBLE);
+                        storeDetail_store_image.setColorFilter(Color.parseColor("#a0a0a0"), PorterDuff.Mode.MULTIPLY);
                     } else {
                         //스탬프가 안 눌려져있을 때 활성화 api 호출
                         Log.d("stampactive api", "stamp api 호출 성공");
@@ -159,6 +161,7 @@ public class StoreDetailPageFragment extends Fragment {
                         sheep_circle.setVisibility(View.INVISIBLE);
                         img_sheep.setVisibility(View.INVISIBLE);
                         storeDetail_user_nickname.setVisibility(View.INVISIBLE);
+                        storeDetail_store_image.setColorFilter(null);
                     }
                 }
             }
@@ -240,11 +243,15 @@ public class StoreDetailPageFragment extends Fragment {
         StoreDetail_closure_report_btn = view.findViewById(R.id.StoreDetail_closure_report_btn);
         reviewText.setTypeface(null, Typeface.BOLD); // 글자를 bold로 설정
         reviewText.setTextColor(getResources().getColor(android.R.color.black)); // 글자를 검정색으로 설정
+        canWriteReview = viewModel.getCanWriteReview().getValue();
+        Log.d("리뷰작성", "StoreDetail에 들어왔을 때 리뷰 작성 여부 "+canWriteReview);
         stampBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onStampBtnClicked();
+//                storeDetail_store_image.setColorFilter(Color.parseColor("#808080"), PorterDuff.Mode.MULTIPLY);
             }
+
         });
 
         //지도 버튼을 눌렀을 때 네이버 지도 deep-link로 이동
@@ -296,7 +303,6 @@ public class StoreDetailPageFragment extends Fragment {
             }
         });
 
-
         StoreDetail_review_writing_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -304,7 +310,7 @@ public class StoreDetailPageFragment extends Fragment {
                     @Override
                     public void onChanged(Boolean aBoolean) {
                         canWriteReview = viewModel.getCanWriteReview().getValue();
-                        Log.d("리뷰 작성 가능한지? DetailF", String.valueOf(canWriteReview));
+                        Log.d("리뷰작성 가능한지? DetailF", String.valueOf(canWriteReview));
                     }
                 });
                 if(canWriteReview){
@@ -315,7 +321,6 @@ public class StoreDetailPageFragment extends Fragment {
 
                     FragmentManager fragmentManager = ((FragmentActivity) view.getContext()).getSupportFragmentManager();
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
                     fragmentTransaction.replace(android.R.id.content, fragment);
                     fragmentTransaction.addToBackStack(null);
                     fragmentTransaction.commit();
@@ -381,6 +386,7 @@ public class StoreDetailPageFragment extends Fragment {
                     whiteStamp.setVisibility(View.INVISIBLE);
                     greenStampBackground.setVisibility(View.VISIBLE);
                     greenStamp.setVisibility(View.VISIBLE);
+                    storeDetail_store_image.setColorFilter(Color.parseColor("#a0a0a0"), PorterDuff.Mode.MULTIPLY);
                 } else {
                     sheep_circle.setVisibility(View.INVISIBLE);
                     img_sheep.setVisibility(View.INVISIBLE);
@@ -389,6 +395,7 @@ public class StoreDetailPageFragment extends Fragment {
                     greenStamp.setVisibility(View.INVISIBLE);
                     whiteStampBackground.setVisibility(View.VISIBLE);
                     whiteStamp.setVisibility(View.VISIBLE);
+                    storeDetail_store_image.setColorFilter(null);
                 }
 
                 if (isClickedLike) {
