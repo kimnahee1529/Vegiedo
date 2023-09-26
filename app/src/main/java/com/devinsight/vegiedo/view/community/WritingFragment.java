@@ -481,6 +481,10 @@ public class WritingFragment extends Fragment {
                             Log.d("내용", "content" + data.getContent());
                             Log.d("내용", "title" + data.getPostTitle());
                             Log.d("post 수정 api 호출 성공 ", "성공" + response);
+
+                            CommunityMainFragment communityMainFragment = new CommunityMainFragment();
+                            Log.d("files", "files" + files.size());
+                            getParentFragmentManager().beginTransaction().replace(R.id.frame, communityMainFragment).commit();
                         } else {
                             Log.e("post 수정 api 호출 실패1 ", "실패1" + response);
 
@@ -549,6 +553,10 @@ public class WritingFragment extends Fragment {
                             Log.d("내용", "content" + data.getContent());
                             Log.d("내용", "title" + data.getPostTitle());
 
+                            CommunityMainFragment communityMainFragment = new CommunityMainFragment();
+                            Log.d("files", "files" + files.size());
+                            getParentFragmentManager().beginTransaction().replace(R.id.frame, communityMainFragment).commit();
+
                             Log.d("post 등록 api 호출 성공 ", "성공" + response);
                         } else {
                             Log.e("post 등록 api 호출 실패 ", "실패1" + response);
@@ -574,8 +582,6 @@ public class WritingFragment extends Fragment {
             }
 
 
-            Log.d("files", "files" + files.size());
-            getParentFragmentManager().beginTransaction().replace(R.id.frame, communityMainFragment).commit();
 
         });
     }

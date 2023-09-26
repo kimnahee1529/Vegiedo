@@ -142,11 +142,7 @@ public class LoginMainActivity extends AppCompatActivity {
             }
         });
 
-        PeriodicWorkRequest refreshTokenWorkRequest =
-                new PeriodicWorkRequest.Builder(RefreshTokenWorker.class, 30, TimeUnit.DAYS)
-                        .build();
 
-        WorkManager.getInstance(this).enqueue(refreshTokenWorkRequest);
     }
 
     private void googleSignIn() {
