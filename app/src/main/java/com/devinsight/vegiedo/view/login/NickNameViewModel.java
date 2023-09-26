@@ -49,7 +49,13 @@ public class NickNameViewModel extends ViewModel {
 
             nickNameLiveData.setValue(nickNameStatus);
 
-        } else if (input != null && code == 409 ) {
+        } else if (count >=11 && code == 200){
+            nickNameStatus.setNickNameMessage("닉네임은 최대  10글자 까지 가능 합니다. ");
+            nickNameStatus.setIsNicknameAvailable(3);
+
+            nickNameLiveData.setValue(nickNameStatus);
+
+        }else if (input != null && code == 409 ) {
             nickNameStatus.setNickNameMessage(" 사용 중인 닉네임 입니다. 다시 적어주세요!");
             nickNameStatus.setIsNicknameAvailable(1);
 

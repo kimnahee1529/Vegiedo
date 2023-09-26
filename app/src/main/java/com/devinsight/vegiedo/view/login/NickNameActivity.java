@@ -169,6 +169,9 @@ public class NickNameActivity extends AppCompatActivity {
                                     } else if ( nickNameStatus.getIsNicknameAvailable() == 2 ) {
                                         setDialog(nickNameStatus.getNickNameMessage());
                                         dialog.show();
+                                    } else if ( nickNameStatus.getIsNicknameAvailable() == 3 ) {
+                                        setDialog(nickNameStatus.getNickNameMessage());
+                                        dialog.show();
                                     }
 
                                 }

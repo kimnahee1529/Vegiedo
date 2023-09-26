@@ -63,15 +63,13 @@ public class PostCommentAdapter extends RecyclerView.Adapter<PostCommentAdapter.
         holder.comment_created_at.setText(data.getCreatedAt());
         holder.comment_content.setText(data.getCommentContent());
 
-//TODO 아래 부분 주석 해제 하기.
-
-//        if(data.getUserName().equals(myName)){
-//            holder.btn_comment_report.setVisibility(View.INVISIBLE);
-//            holder.comment_delete.setVisibility(View.VISIBLE);
-//        } else {
-//            holder.btn_comment_report.setVisibility(View.VISIBLE);
-//            holder.comment_delete.setVisibility(View.INVISIBLE);
-//        }
+        if(data.getUserName().equals(myName)){
+            holder.btn_comment_report.setVisibility(View.INVISIBLE);
+            holder.comment_delete.setVisibility(View.VISIBLE);
+        } else {
+            holder.btn_comment_report.setVisibility(View.VISIBLE);
+            holder.comment_delete.setVisibility(View.INVISIBLE);
+        }
 
     }
 
