@@ -61,6 +61,12 @@ public class CommunityMainFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 setGeneralFontStyle();
+                CommunityPostListFragment newFragment = new CommunityPostListFragment();
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                // 프래그먼트 교체
+                transaction.replace(R.id.community_frame, newFragment, "communityPostListFragment")
+                        .addToBackStack("communityPostListFragment")
+                        .commit();
                 activityViewModel.setPostType(true);
             }
         });
@@ -69,6 +75,12 @@ public class CommunityMainFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 setPopuarFontStyle();
+                CommunityPostListFragment newFragment = new CommunityPostListFragment();
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                // 프래그먼트 교체
+                transaction.replace(R.id.community_frame, newFragment, "communityPostListFragment")
+                        .addToBackStack("communityPostListFragment")
+                        .commit();
                 activityViewModel.setPostType(false);
             }
         });

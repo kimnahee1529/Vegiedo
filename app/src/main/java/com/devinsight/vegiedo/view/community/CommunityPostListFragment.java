@@ -56,7 +56,6 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
 
     int cursor = 1;
     int popCursor = 1;
-    int maxCursor;
 
     boolean isScrollingUp;
     private long lastScrollEventTime = System.currentTimeMillis();
@@ -106,7 +105,11 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
                             if (generalPostListData != null) {
 //                                setPostList(generalPostListData);
                                 adatper.setList(generalPostListData);
-                                adatper.notifyItemRangeInserted((cursor - 1) * 10, 10);
+                                if(popCursor == 1){
+                                    adatper.notifyDataSetChanged();
+                                }else {
+                                    adatper.notifyItemRangeInserted((popCursor - 1) * 10, 10);
+                                }
 
                             } else {
                                 Log.d("CommunityPostListFragment", "list == null");
@@ -121,9 +124,14 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
                         @Override
                         public void onChanged(List<PostListData> popularPostListData) {
                             if (popularPostListData != null) {
-                                setPostList(popularPostListData);
+//                                setPostList(popularPostListData);
                                 adatper.setList(popularPostListData);
-                                adatper.notifyItemRangeInserted((popCursor - 1) * 10, 10);
+                                if(popCursor == 1){
+                                    adatper.notifyDataSetChanged();
+
+                                }else {
+                                    adatper.notifyItemRangeInserted((popCursor - 1) * 10, 10);
+                                }
                             } else {
                                 Log.d("CommunityPostListFragment", "list == null");
                             }
@@ -161,7 +169,8 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
                                         if (cursor < maxCursor) {
                                             cursor++;
                                             Log.d("cursor scroll ", "cursor up" + cursor);
-                                            addPostListFromApi(cursor);
+//                                            addPostListFromApi(cursor);
+                                            communityViewModel.loadGeneralPostList(cursor);
                                         } else {
                                             Toast.makeText(getContext(), " 마지막 페이지 입니다 ", Toast.LENGTH_SHORT).show();
                                         }
@@ -169,7 +178,8 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
                                         if (popCursor < maxCursor) {
                                             popCursor++;
                                             Log.d("cursor scroll ", "cursor up" + popCursor);
-                                            addPostListFromApi(popCursor);
+//                                            addPostListFromApi(popCursor);
+                                            communityViewModel.loadPopularPostList(popCursor);
                                         } else {
                                             Toast.makeText(getContext(), " 마지막 페이지 입니다 ", Toast.LENGTH_SHORT).show();
                                         }
@@ -194,60 +204,6 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
             }
         });
 
-
-
-        /* 스크롤 위치에 따른 게시글 호출 */
-//        scrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
-//            @Override
-//            public void onScrollChange(@NonNull NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-//                /* 현재 Y 좌표가 이전 Y 좌표 보다 작다면 = 스크롤이 위로 올라감*/
-//                /* scrollY 값은 화면의 상단 에서 시작 하여 아래로 스크롤 될 때 커짐 */
-//                isScrollingUp = scrollY < oldScrollY;
-//                int childHeight = v.getChildAt(0).getMeasuredHeight();
-//                int scrollViewHeight = v.getMeasuredHeight();
-//
-//                long currentTime = System.currentTimeMillis();
-//                communityViewModel.getIsLastItem().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
-//                    @Override
-//                    public void onChanged(Boolean aBoolean) {
-//                        Log.d("ScrollCheck", "Current Time: " + currentTime);
-//                        Log.d("ScrollCheck", "Last Scroll Time: " + lastScrollEventTime);
-//                        if (currentTime - lastScrollEventTime < SCROLL_DEBOUNCE_TIME) {
-//                            return;
-//                        }
-//                        lastScrollEventTime = currentTime;
-//                        Log.d("ScrollCheck", "Time Diff: " + (currentTime - lastScrollEventTime));
-//                    }
-//                });
-//
-//                communityViewModel.getMaxCursorLiveData().observe(getViewLifecycleOwner(), new Observer<Integer>() {
-//                    @Override
-//                    public void onChanged(Integer maxCursor) {
-//
-//                        if (scrollY == childHeight - scrollViewHeight && !isScrollingUp) {
-//                            if (cursor < maxCursor) {
-//                                cursor++;
-//                                Log.d("cursor scroll ", "cursor up" + cursor);
-//                                addPostListFromApi(cursor);
-//                                progressBar.setVisibility(View.VISIBLE);
-//                            } else {
-//                                Toast.makeText(getContext(), " 마지막 페이지 입니다 ", Toast.LENGTH_SHORT).show();
-//                                progressBar.setVisibility(View.INVISIBLE);
-//                            }
-//
-//                        } else if (isScrollingUp) {
-//                            if (cursor > 1) {
-//                                cursor--;
-//                                Log.d("cursor scroll", "cursor down" + cursor);
-//                                previousPostListFromApi(cursor);
-//                            }
-//
-//                        }
-//
-//                    }
-//                });
-//            }
-//        });
 
 
         return view;
@@ -309,5 +265,7 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
             }
         });
     }
+
+
 
 }

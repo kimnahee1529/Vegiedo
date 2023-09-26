@@ -48,6 +48,7 @@ public class CommunityPostAdaptper extends RecyclerView.Adapter<RecyclerView.Vie
     }
 
     public void setList(List<PostListData> list) {
+        this.postList.clear();
         this.postList.addAll(list);
         this.postList.add(new PostListData(null, "", " ", "", "",0, 0, 0)); // placeholder for progress bar
 
@@ -60,7 +61,8 @@ public class CommunityPostAdaptper extends RecyclerView.Adapter<RecyclerView.Vie
     }
     @Override
     public int getItemViewType(int position) {
-        return Objects.equals(postList.get(position).getUserName(), " ") ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
+//        return Objects.equals(postList.get(position).getUserName(), " ") ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
+        return postList.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
     }
 
     @NonNull
@@ -140,10 +142,13 @@ public class CommunityPostAdaptper extends RecyclerView.Adapter<RecyclerView.Vie
 
         @Override
         public void onClick(View view) {
-            if (postItemListnere != null) {
-                postItemListnere.onPostClicked(view, postList.get(getLayoutPosition()), getLayoutPosition());
+            int position = getLayoutPosition();
+            // Add this check
+            if (position != RecyclerView.NO_POSITION && position < postList.size()) {
+                if (postItemListnere != null) {
+                    postItemListnere.onPostClicked(view, postList.get(position), position);
+                }
             }
-
         }
     }
 
@@ -152,6 +157,11 @@ public class CommunityPostAdaptper extends RecyclerView.Adapter<RecyclerView.Vie
     }
 
     public void deleteLoading(){
-        postList.remove(postList.size() - 1);
+//        postList.remove(postList.size() - 1);
+        int position = postList.size() - 1;
+        if (position >= 0 && " ".equals(postList.get(position).getUserName())) {
+            postList.remove(position);
+            notifyItemRemoved(position);
+        }
     }
 }

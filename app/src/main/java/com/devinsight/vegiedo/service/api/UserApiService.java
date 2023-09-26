@@ -39,8 +39,6 @@ public interface UserApiService {
             @Path("userId") String userId
     );
 
-
-
     //로그인
     @POST("/session")
     Call<Void> loginUser(
