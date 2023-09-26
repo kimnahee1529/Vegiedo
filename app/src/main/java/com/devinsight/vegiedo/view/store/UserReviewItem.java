@@ -85,7 +85,12 @@ public class UserReviewItem {
     }
 
     public int getStars() {
-        return stars;
+        if (this.stars != null) {
+            return this.stars.intValue();
+        } else {
+            // 기본값 반환 또는 오류 처리
+            return 0; // 또는 적절한 기본값 또는 오류 처리
+        }
     }
 
     public void setStars(int stars) {

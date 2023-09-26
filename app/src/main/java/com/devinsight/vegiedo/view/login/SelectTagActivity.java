@@ -5,7 +5,9 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -38,7 +40,7 @@ import retrofit2.Response;
 
 public class SelectTagActivity extends AppCompatActivity {
 
-
+    private TextView select_tag_nickName;
     private TextView btn_complete;
     private TextView btn_later;
     private TextView tt_selet_tag;
@@ -63,6 +65,12 @@ public class SelectTagActivity extends AppCompatActivity {
         btn_complete = findViewById(R.id.btn_complete);
         btn_later = findViewById(R.id.tt_back);
         tt_selet_tag = findViewById(R.id.tt_select_tag);
+        select_tag_nickName = findViewById(R.id.select_tag_nickName);
+
+        SharedPreferences sharedPreferences = this.getSharedPreferences("user_info", Context.MODE_PRIVATE);
+        String userName = sharedPreferences.getString("userName", "기본값"); // "기본값"은 userName이 없을 때 반환되는 기본값입니다.
+
+        select_tag_nickName.setText(userName+"님");
 
         ToggleButton tagFruittarian = findViewById(VeganTag.FRUITTARIAN.getTagId());
         ToggleButton tagVegan = findViewById(VeganTag.VEGAN.getTagId());

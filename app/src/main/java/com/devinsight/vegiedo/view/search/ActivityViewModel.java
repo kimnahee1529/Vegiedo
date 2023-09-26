@@ -262,17 +262,16 @@ public class ActivityViewModel extends ViewModel {
         Log.d("api 가져오는 함수 ", "  public void storeApiData() ");
         boolean noMapLocation = mapLat + mapLong == 0.0f;
         boolean noUserLocation = userCurrentLat + userCurrentLong == 0.0f;
-        if (noMapLocation) {
-            latitude = userCurrentLat;
-            longitude = userCurrentLong;
-        } else if (noUserLocation){
-            latitude = mapLat;
-            longitude = mapLong;
-        } else if(noMapLocation && noUserLocation){
+        if (noMapLocation && noUserLocation) {
             latitude = INITIAL_LAT;
             longitude = INITIAL_LONG;
+        }else if (noUserLocation){
+            latitude = mapLat;
+            longitude = mapLong;
+        } else if(noMapLocation) {
+            latitude = userCurrentLat;
+            longitude = userCurrentLong;
         }
-
         if (tags == null) {
             tags = initialTags;
         }
@@ -292,7 +291,7 @@ public class ActivityViewModel extends ViewModel {
             public void onResponse(Call<List<StoreListData>> call, Response<List<StoreListData>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     Log.d("RetrofitRequestURL", "Requested URL: " + call.request().url());
-                    Log.d(" 가게 호출 쿼리", "값" + tags + "위도 : " + latitude + "경도 : " + longitude + "거리 : " + distance * 1000 + keyword + token);
+                    Log.d(" 가게 호출 쿼리2", "값" + tags + "위도 : " + latitude + "경도 : " + longitude + "거리 : " + distance * 1000 + keyword + token);
                     List<StoreListData> data = response.body();
                     Log.e("store List 요청 성공", "this is store List : " + response.body().toString());
                     if (data != null) {
@@ -599,7 +598,7 @@ public class ActivityViewModel extends ViewModel {
     }
 
     //가게 조회 API(StoreDetailPageFragment서 사용)
-    public void StoreInquiryData(Long storeIdd) {
+    public void StoreInquiryData() {
         Log.d("StoreAPI", token + " " + storeId);
         //가게 조회
         storeApiService.readStore("Bearer " + token, storeId).enqueue(new Callback<StoreInquiryResponseDTO>() {
@@ -607,7 +606,7 @@ public class ActivityViewModel extends ViewModel {
             public void onResponse(Call<StoreInquiryResponseDTO> call, Response<StoreInquiryResponseDTO> response) {
                 if (response.isSuccessful()) {
                     storeDataLiveData.setValue(response.body());
-                    Log.d("LOGAPI", "StoreAPI 호출");
+                    Log.d("StoreAPI", "StoreAPI 호출");
                 } else {
                     Log.e("StoreAPI실패 1", "Error Code: " + response.code() + ", Message: " + response.message());
                     try {
@@ -620,7 +619,7 @@ public class ActivityViewModel extends ViewModel {
 
             @Override
             public void onFailure(Call<StoreInquiryResponseDTO> call, Throwable t) {
-                Log.d("LOGAPI", "StoreAPI 호출실패2");
+                Log.d("StoreAPI", "StoreAPI 호출실패2"+ t);
             }
         });
     }
@@ -768,11 +767,28 @@ public class ActivityViewModel extends ViewModel {
 
     //지도 가게 조회 API(MapMainFragment에서 사용)
     public void MapInquiryData() {
-        float latitude = 37.5129174f;
-        float longitude = 127.0389008f;
-        Integer distance = 1500;
 
-        mapApiService.getStoresOnMap("Bearer " + token, latitude, longitude, distance).enqueue(new Callback<List<MapStoreListData>>() {
+        boolean noMapLocation = mapLat + mapLong == 0.0f;
+        boolean noUserLocation = userCurrentLat + userCurrentLong == 0.0f;
+
+        if (noMapLocation && noUserLocation) {
+            latitude = INITIAL_LAT;
+            longitude = INITIAL_LONG;
+        }else if (noUserLocation){
+            latitude = mapLat;
+            longitude = mapLong;
+        } else if(noMapLocation) {
+            latitude = userCurrentLat;
+            longitude = userCurrentLong;
+        }
+
+        if (distance == 0) {
+            distance = initialDistance;
+        }
+
+        Log.d("지도 가게", ""+latitude+", "+longitude +", "+distance);
+
+        mapApiService.getStoresOnMap("Bearer " + token, latitude, longitude, distance*1000).enqueue(new Callback<List<MapStoreListData>>() {
             @Override
             public void onResponse(Call<List<MapStoreListData>> call, Response<List<MapStoreListData>> response) {
                 if (response.isSuccessful()) {
@@ -819,27 +835,27 @@ public class ActivityViewModel extends ViewModel {
         });
     }
 
-    //리뷰 등록 API(WritingReviewFragment에서 사용)
-    public void ReviewRegisterData(Long storeId, ReviewRegisterRequestDTO requestDTO) {
-        //리뷰 등록
-        Call<Void> reviewRegisterRequestDTOCall = reviewApiService.postReview("Bearer " + token, storeId, requestDTO);
-        reviewRegisterRequestDTOCall.enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                if (response.isSuccessful()) {
-                    Void responseData = response.body();
-                    Log.d("LOGAPIReviewRegisterData", response.toString());
-                } else {
-                    Log.d("LOGAPI", "ReviewRegisterData 호출실패1 " + response);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                Log.d("LOGAPI", "ReviewRegisterData 호출실패2");
-            }
-        });
-    }
+//    //리뷰 등록 API(WritingReviewFragment에서 사용)
+//    public void ReviewRegisterData(Long storeId, ReviewRegisterRequestDTO requestDTO) {
+//        //리뷰 등록
+//        Call<Void> reviewRegisterRequestDTOCall = reviewApiService.postReview("Bearer " + token, storeId, requestDTO);
+//        reviewRegisterRequestDTOCall.enqueue(new Callback<Void>() {
+//            @Override
+//            public void onResponse(Call<Void> call, Response<Void> response) {
+//                if (response.isSuccessful()) {
+//                    Void responseData = response.body();
+//                    Log.d("LOGAPIReviewRegisterData", response.toString());
+//                } else {
+//                    Log.d("LOGAPI", "ReviewRegisterData 호출실패1 " + response);
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<Void> call, Throwable t) {
+//                Log.d("LOGAPI", "ReviewRegisterData 호출실패2");
+//            }
+//        });
+//    }
 
     //리뷰 삭제 API(WritingReviewFragment에서 사용)
     public void ReviewDeleteData(Long storeId, Long reviewId) {
@@ -864,27 +880,27 @@ public class ActivityViewModel extends ViewModel {
         });
     }
 
-    //리뷰 수정 API(WritingReviewFragment에서 사용)
-    public void ReviewModifyData(Long storeId, Long reviewId, ReviewModifyrRequestDTO requestDTO) {
-        //리뷰 수정
-        Call<Void> reviewModifyrRequestDTOCall = reviewApiService.modifyReview("Bearer " + token, storeId, reviewId, requestDTO);
-        reviewModifyrRequestDTOCall.enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                if (response.isSuccessful()) {
-                    Void responseData = response.body();
-                    Log.d("LOGAPIReviewModifyData", response.toString());
-                } else {
-                    Log.d("LOGAPI", "ReviewModifyData 호출실패1 " + response);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                Log.d("LOGAPI", "ReviewModifyData 호출실패2");
-            }
-        });
-    }
+//    //리뷰 수정 API(WritingReviewFragment에서 사용)
+//    public void ReviewModifyData(Long storeId, Long reviewId, ReviewModifyrRequestDTO requestDTO) {
+//        //리뷰 수정
+//        Call<Void> reviewModifyrRequestDTOCall = reviewApiService.modifyReview("Bearer " + token, storeId, reviewId, requestDTO);
+//        reviewModifyrRequestDTOCall.enqueue(new Callback<Void>() {
+//            @Override
+//            public void onResponse(Call<Void> call, Response<Void> response) {
+//                if (response.isSuccessful()) {
+//                    Void responseData = response.body();
+//                    Log.d("LOGAPIReviewModifyData", response.toString());
+//                } else {
+//                    Log.d("LOGAPI", "ReviewModifyData 호출실패1 " + response);
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<Void> call, Throwable t) {
+//                Log.d("LOGAPI", "ReviewModifyData 호출실패2");
+//            }
+//        });
+//    }
 
     //리뷰 신고 API(WritingReviewFragment에서 사용)
     public void ReviewReportData(Long storeId, Long reviewId, ReviewReportRequestDTO requestDTO) {
@@ -959,7 +975,7 @@ public class ActivityViewModel extends ViewModel {
 
     //유저-로그아웃
     public void LogoutUser() {
-        Log.d("닉네임token", token);
+//        Log.d("닉네임token", token);
         //리뷰 수정
         Call<Void> userLogoutRequestDTOCall = userApiService.logoutUser("Bearer " + token);
         userLogoutRequestDTOCall.enqueue(new Callback<Void>() {

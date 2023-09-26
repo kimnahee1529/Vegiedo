@@ -69,6 +69,7 @@ public class StoreDetailPageFragment extends Fragment {
     ImageView greenStampBackground;
     ImageView whiteStamp;
     ImageView whiteStampBackground;
+    TextView storeDetail_user_nickname;
     Boolean isClickedStamp;
     Boolean isClickedLike;
     ImageView storeDetail_default_heart;
@@ -120,16 +121,16 @@ public class StoreDetailPageFragment extends Fragment {
 
         initializeComponents(view);
         //TODO 이 전페이지에서 받아온 storeId를 넣어줘야 함
-//        storeId = viewModel.getStoreId().getValue();
+        storeId = viewModel.getStoreIdLiveData().getValue();
 //        callStoreAPI(viewModel.getStoreId().getValue());
-        storeId = 3L;
+//        storeId = 3L;
 
         //위에서 받아온 storeId를 리뷰 프래그먼트에 넘겨줌
         StoreReviewFragment initialFragment = StoreReviewFragment.newInstance(storeId);
         loadFragment(initialFragment);
 
         Log.d("LOGAPI storeId갖고 오는 거 맞나?", String.valueOf(storeId));
-        callStoreAPI(storeId);
+        callStoreAPI();
 
         // stamp 상태를 받아오고 넘겨주기 위한 LiveData Observer 설정
         viewModel.getStoreStampLiveData().observe(getViewLifecycleOwner(), new Observer() {
@@ -147,6 +148,7 @@ public class StoreDetailPageFragment extends Fragment {
                         greenStamp.setVisibility(View.VISIBLE);
                         sheep_circle.setVisibility(View.VISIBLE);
                         img_sheep.setVisibility(View.VISIBLE);
+                        storeDetail_user_nickname.setVisibility(View.VISIBLE);
                     } else {
                         //스탬프가 안 눌려져있을 때 활성화 api 호출
                         Log.d("stampactive api", "stamp api 호출 성공");
@@ -154,8 +156,9 @@ public class StoreDetailPageFragment extends Fragment {
                         greenStamp.setVisibility(View.INVISIBLE);
                         whiteStampBackground.setVisibility(View.VISIBLE);
                         whiteStamp.setVisibility(View.VISIBLE);
-                        sheep_circle.setVisibility(GONE);
-                        img_sheep.setVisibility(GONE);
+                        sheep_circle.setVisibility(View.INVISIBLE);
+                        img_sheep.setVisibility(View.INVISIBLE);
+                        storeDetail_user_nickname.setVisibility(View.INVISIBLE);
                     }
                 }
             }
@@ -190,15 +193,22 @@ public class StoreDetailPageFragment extends Fragment {
         viewModel.getStoreReportDataLiveData().observe(getViewLifecycleOwner(), new Observer() {
             @Override
             public void onChanged(Object o) {
-                Log.d("store api", "뷰모델에서 넘겨준 code : " + o.toString());
-                if ("200".equals(o.toString())) {
-                    showReportDialog();
-                    //200일 때 폐점가게 신고 버튼 숨기기
-//                    StoreDetail_closure_report_btn.setVisibility(GONE);
-                    viewModel.resetStoreReportData();  // LiveData 값을 재설정
+                try {
+                    Log.d("store api", "shuttingDown 확인1");
+                    if ("200".equals(o.toString())) {
+                        Log.d("store api", "shuttingDown 확인2");
+                        showReportDialog();
+                        //200일 때 폐점가게 신고 버튼 숨기기
+//                        StoreDetail_closure_report_btn.setVisibility(GONE);
+                        viewModel.resetStoreReportData();  // LiveData 값을 재설정
+                    }
+                } catch (Exception e) {
+                    // 예외를 로그에 출력
+                    Log.e("Error", "Exception occurred: ", e);
                 }
             }
         });
+
 
         return view;
     }
@@ -224,6 +234,7 @@ public class StoreDetailPageFragment extends Fragment {
         whiteStampBackground = view.findViewById(R.id.storeDetail_white_background_stamp_btn);
         whiteStamp = view.findViewById(R.id.storeDetail_white_stamp_btn);
         greenStampBackground = view.findViewById(R.id.storeDetail_green_background_stamp_btn);
+        storeDetail_user_nickname = view.findViewById(R.id.storeDetail_user_nickname);
         storeDetail_default_heart = view.findViewById(R.id.StoreDetail_default_heart);
         storeDetail_selected_heart = view.findViewById(R.id.StoreDetail_selected_heart);
         StoreDetail_closure_report_btn = view.findViewById(R.id.StoreDetail_closure_report_btn);
@@ -332,7 +343,7 @@ public class StoreDetailPageFragment extends Fragment {
     }
 
     //가게 조회 API-맨 처음 상세페이지로 들어왔을 때 보여줌
-    private void callStoreAPI(Long storeId){
+    private void callStoreAPI(){
         Log.d("StoreAPI", "가게 상세페이지로 들어옴");
         viewModel.getStoreDataLiveData().observe(getViewLifecycleOwner(), new Observer<StoreInquiryResponseDTO>() {
             @Override
@@ -365,13 +376,15 @@ public class StoreDetailPageFragment extends Fragment {
                 if (isClickedStamp) {  // 이 부분에서 isClickedStamp를 사용
                     sheep_circle.setVisibility(View.VISIBLE);
                     img_sheep.setVisibility(View.VISIBLE);
+                    storeDetail_user_nickname.setVisibility(View.VISIBLE);
                     whiteStampBackground.setVisibility(View.INVISIBLE);
                     whiteStamp.setVisibility(View.INVISIBLE);
                     greenStampBackground.setVisibility(View.VISIBLE);
                     greenStamp.setVisibility(View.VISIBLE);
                 } else {
-                    sheep_circle.setVisibility(GONE);
-                    img_sheep.setVisibility(GONE);
+                    sheep_circle.setVisibility(View.INVISIBLE);
+                    img_sheep.setVisibility(View.INVISIBLE);
+                    storeDetail_user_nickname.setVisibility(View.INVISIBLE);
                     greenStampBackground.setVisibility(View.INVISIBLE);
                     greenStamp.setVisibility(View.INVISIBLE);
                     whiteStampBackground.setVisibility(View.VISIBLE);
@@ -394,18 +407,18 @@ public class StoreDetailPageFragment extends Fragment {
         });
 
         // 데이터 로드
-        viewModel.StoreInquiryData(storeId);
+        viewModel.StoreInquiryData();
     }
     private void onStampBtnClicked() {
         Toast.makeText(getActivity(), "스탬프 버튼이 눌렸습니다.", Toast.LENGTH_SHORT).show();
         if(isClickedStamp){
-            sheep_circle.setVisibility(GONE);
-            img_sheep.setVisibility(GONE);
+//            sheep_circle.setVisibility(GONE);
+//            img_sheep.setVisibility(GONE);
             callStoreStampAPI(storeId, isClickedStamp);
             isClickedStamp = false;
         } else {
-            sheep_circle.setVisibility(View.VISIBLE);
-            img_sheep.setVisibility(View.VISIBLE);
+//            sheep_circle.setVisibility(View.VISIBLE);
+//            img_sheep.setVisibility(View.VISIBLE);
             callStoreStampAPI(storeId, isClickedStamp);
             isClickedStamp = true;
         }

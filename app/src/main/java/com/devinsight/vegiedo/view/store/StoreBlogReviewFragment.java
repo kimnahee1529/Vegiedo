@@ -34,6 +34,7 @@ public class StoreBlogReviewFragment extends Fragment {
 
     private static final String ARG_STORE_ID = "storeId";
     private Long mStoreId;
+    Button blog_review_more_btn;
     public static StoreBlogReviewFragment newInstance(Long storeId) {
         Log.d("리뷰", "블로그 리뷰화면에 들어옴");
         StoreBlogReviewFragment fragment = new StoreBlogReviewFragment();
@@ -67,12 +68,14 @@ public class StoreBlogReviewFragment extends Fragment {
         recyclerView = view.findViewById(R.id.store_review_blog_recycler_view);
         setupRecyclerView();
 
-        Button blog_review_more_btn = view.findViewById(R.id.BlogReview_moreButton);
+        blog_review_more_btn = view.findViewById(R.id.BlogReview_moreButton);
 
-        if(adapter.getItemCount() < 2){
-            blog_review_more_btn.setVisibility(View.GONE);  // "더보기" 버튼 숨기기
-            Log.d("blog더보기", "getItemCount<2");
-        }
+//        if(adapter.getItemCount() < 2){
+//            blog_review_more_btn.setVisibility(View.GONE);  // "더보기" 버튼 숨기기
+//            Log.d("blog더보기", "getItemCount<2");
+//        }
+
+        //어댑터에서의 더보기 버튼 리스너
         adapter.setMoreItemsListener(new UserReviewItemAdapter.MoreItemsListener() {
             @Override
             public void onHideMoreButton() {

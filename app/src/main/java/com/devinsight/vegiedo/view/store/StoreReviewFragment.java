@@ -30,12 +30,13 @@ import java.util.List;
 
 public class StoreReviewFragment extends Fragment {
     private RecyclerView recyclerView;
-    private List<UserReviewItem> userReviewItems;
+    private List<UserReviewItem> userReviewItems = new ArrayList<>();
     private UserReviewItemAdapter adapter;
     ActivityViewModel viewModel;
     private static final String ARG_STORE_ID = "storeId";
     private Long mStoreId;
     boolean canWriteReview;
+    Button review_more_btn;
 //    public boolean canWriteReview = true;
 
     public static StoreReviewFragment newInstance(Long storeId) {
@@ -70,18 +71,10 @@ public class StoreReviewFragment extends Fragment {
         recyclerView = view.findViewById(R.id.store_review_recycler_view);
         setupRecyclerView();
 
-        Button review_more_btn = view.findViewById(R.id.Review_moreButton);
-        TextView storeReview_modify_text = view.findViewById(R.id.storeReview_modify_text);
-        TextView storeReview_delete_text = view.findViewById(R.id.storeReview_delete_text);
-        ImageView storeReview_report_btn = view.findViewById(R.id.btn_comment_report);
+        review_more_btn = view.findViewById(R.id.Review_moreButton);
         canWriteReview = viewModel.getCanWriteReview().getValue();
-        Log.d("11리뷰 작성 가능함? reviewF", String.valueOf(canWriteReview));
-
-        //TODO 전체 리스트 사이즈 알아내서 이 부분 수정해야 할 듯,
-//        if(adapter.getItemCount() < 4){
-//            review_more_btn.setVisibility(View.GONE);  // "더보기" 버튼 숨기기
-//            Log.d("review더보기", "getItemCount<2");
-//        }
+        Log.d("11리뷰 작성 가능함? reviewF", String.valueOf(viewModel.getStoreDataLiveData().getValue()));
+        Log.d("22리뷰 작성 가능함? reviewF", String.valueOf(canWriteReview));
 
         //어댑터에서의 더보기 버튼 리스너
         adapter.setMoreItemsListener(new UserReviewItemAdapter.MoreItemsListener() {
@@ -98,9 +91,19 @@ public class StoreReviewFragment extends Fragment {
                 Log.d("리뷰삭제", "ReviewDelete");
                 viewModel.ReviewDeleteData(storeId, reviewId);
                 viewModel.setCanWriteReview(true);
-                adapter.notifyDataSetChanged();
+
+                // 삭제하면 아이템의 위치 부분을 알아내 바로 삭제되게 하는 부분
+                for (int i = 0; i < userReviewItems.size(); i++) {
+                    UserReviewItem item = userReviewItems.get(i);
+                    if (item.getReviewId() != null && item.getReviewId().equals(reviewId)) {
+                        userReviewItems.remove(i);
+                        adapter.notifyItemRemoved(i);  // Notify the adapter about the removed item.
+                        break;
+                    }
+                }
             }
         });
+
         //어댑터에서의 신고완료 버튼 리스너
         adapter.setReportListener(new UserReviewItemAdapter.ReportCompleteListener() {
             @Override
@@ -159,7 +162,6 @@ public class StoreReviewFragment extends Fragment {
 //                            viewModel.setCanWriteReview(true);
                         }
                         UserReviewItem item = new UserReviewItem(reviewId, REVIEW_RC, userName, star, content, userReviewImageUrlList, isMine);
-//                        item.setStoreId(reviewId);  // storeId 값을 설정합니다.
                         updatedItems.add(item);
                     }
 
@@ -169,9 +171,18 @@ public class StoreReviewFragment extends Fragment {
                         updatedItems.add(index, new UserReviewItem(UserReviewItem.ItemType.AD_BANNER));
                     }
 
+                    userReviewItems = updatedItems;
                     Log.d("어댑터로 보내는 updatedItems", updatedItems.toString());
                     adapter.setReviewItems(updatedItems);  // 어댑터에 데이터 전달
-                    adapter.notifyDataSetChanged();
+//                    adapter.notifyDataSetChanged();
+
+                    // 리뷰가 3개 미만일 때는 더보기 버튼 숨김
+                    if(userReviewItems.size() < 3){
+                        review_more_btn.setVisibility(View.GONE);
+                        Log.d("review더보기", "getItemCount<3");
+                    } else {
+                        review_more_btn.setVisibility(View.VISIBLE);  // Optional, to ensure the button is visible when there are 3 or more items
+                    }
                 }
             }
 

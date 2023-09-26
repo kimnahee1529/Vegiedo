@@ -61,9 +61,14 @@ public class StampBookFragment extends Fragment {
             // 클릭한 아이템의 storeId 가져오기
             Toast.makeText(getContext(), "storeId가 "+clickedStoreId+"인 스탬프 취소", Toast.LENGTH_SHORT).show();
 
-            viewModel.StoreInactiveStampData(clickedStoreId);
-            callStampBookAPI();
+            viewModel.StoreInactiveStampData(clickedStoreId);  // 서버에 삭제 요청을 보냅니다.
         });
+
+        viewModel.getStoreStampLiveData().observe(getViewLifecycleOwner(), newValue -> {
+            callStampBookAPI();  // 서버에서 업데이트된 리스트를 다시 가져옵니다.
+        });
+
+
 
         return view;
     }

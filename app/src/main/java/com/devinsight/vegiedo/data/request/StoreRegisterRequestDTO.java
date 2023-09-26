@@ -7,8 +7,8 @@ import java.util.List;
 public class StoreRegisterRequestDTO {
     private String storeName;
     private String address;
-    private List<String> images;
-    private List<VeganTag> tags;
+    private String images;
+    private List<String> tags;
     private float latitude;
     private float longitude;
 
@@ -28,19 +28,19 @@ public class StoreRegisterRequestDTO {
         this.address = address;
     }
 
-    public List<String> getImages() {
+    public String getImages() {
         return images;
     }
 
-    public void setImages(List<String> images) {
+    public void setImages(String images) {
         this.images = images;
     }
 
-    public List<VeganTag> getTags() {
+    public List<String> getTags() {
         return tags;
     }
 
-    public void setTags(List<VeganTag> tags) {
+    public void setTags(List<String> tags) {
         this.tags = tags;
     }
 
@@ -60,7 +60,7 @@ public class StoreRegisterRequestDTO {
         this.longitude = longitude;
     }
 
-    public StoreRegisterRequestDTO(String storeName, String address, List<String> images, List<VeganTag> tags, float latitude, float longitude) {
+    public StoreRegisterRequestDTO(String storeName, String address, String images, List<String> tags, float latitude, float longitude) {
         this.storeName = storeName;
         this.address = address;
         this.images = images;
@@ -68,7 +68,7 @@ public class StoreRegisterRequestDTO {
         this.latitude = latitude;
         this.longitude = longitude;
     }
-    public StoreRegisterRequestDTO(String storeName, String address, List<VeganTag> tags) {
+    public StoreRegisterRequestDTO(String storeName, String address, List<String> tags) {
         this.storeName = storeName;
         this.address = address;
         this.tags = tags;
