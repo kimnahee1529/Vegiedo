@@ -206,7 +206,7 @@ public class LoginMainActivity extends AppCompatActivity {
 
     }
 
-    /* 서버로부터 받은 커스텀 토큰으로 로그인 */
+    /* 서버로 부터 받은 커스텀 토큰으로 로그인 */
     private void getGoogleLogin(String customToken) {
         googleAuth.signInWithCustomToken(customToken)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -218,6 +218,9 @@ public class LoginMainActivity extends AppCompatActivity {
                             Log.e("토큰:커스텀 토큰 요청2","성공" + user);
                             String firebaseToken2 = task.getResult().getUser().getIdToken(false).getResult().getToken();
                             Log.e("토큰:커스텀 토큰 요청2","성공" + firebaseToken2);
+
+
+
                             Call<Void> call = RetrofitClient.getUserApiService().sendUserGoogleToken(firebaseToken2);
                             call.enqueue(new Callback<Void>() {
                                 @Override
@@ -226,8 +229,10 @@ public class LoginMainActivity extends AppCompatActivity {
                                     String userGoogleToken = response.headers().get("Authorization");
                                     Log.e("토큰:최종 구글 로그인1","성공" + response.headers());
                                     /* 최종적으로 구글 로그인 유저의 정보를 담은 토큰을 로컬에 저장합니다.*/
+                                    authPrefRepository.clearAuthToken();
                                     authPrefRepository.saveAuthToken("GOOGLE", userGoogleToken);
                                     Log.e("토큰:최종 구글 로그인2","성공" + userGoogleToken);
+
                                 }
                                 @Override
                                 public void onFailure(Call<Void> call, Throwable t) {
@@ -238,6 +243,7 @@ public class LoginMainActivity extends AppCompatActivity {
                             Intent intent = new Intent(getApplicationContext(), NickNameActivity.class);
                             startActivity(intent);
                             finish();
+
 
                         } else {
                             Log.e("커스텀 토큰 요청", "실패" + task.getException());
@@ -280,6 +286,7 @@ public class LoginMainActivity extends AppCompatActivity {
                     public void onResponse(Call<Void> call, Response<Void> response) {
                         if(response.isSuccessful()) {
                             String userKaKAoToken = response.headers().get("Authorization");
+                            authPrefRepository.clearAuthToken();
                             authPrefRepository.saveAuthToken("KAKAO",userKaKAoToken);
                             Log.e("KAKAO"," 서버토큰 " + userKaKAoToken);
                             Log.e("KAKAO", "연동성공" + kakaoAuth);

@@ -8,7 +8,7 @@
     android:gravity="center_horizontal"
     android:padding="5dp"
     android:layout_marginTop="80dp"
-    android:background="#FFFFFF">
+    android:background="@color/white">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/store_setting_message"
@@ -17,14 +17,15 @@
         android:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
-        <TextView
+        <Button
             android:id="@+id/tt_recomanded_tag"
             android:layout_width="wrap_content"
             android:layout_height="25dp"
             android:text="@string/recommended_tag"
             android:textSize="12sp"
+            android:background="@null"
             android:textColor="@color/black"
-            android:gravity="center_vertical"
+            android:gravity="center"
             android:paddingRight="10dp"/>
 
         <LinearLayout
@@ -34,14 +35,14 @@
             app:layout_constraintLeft_toRightOf="@id/tt_recomanded_tag">
 
             <TextView
-                android:layout_width="80dp"
+                android:layout_width="100dp"
                 android:layout_height="25dp"
                 android:textSize="12sp"
                 android:layout_marginRight="6dp"
                 android:gravity="center"
                 android:background="@drawable/btn_toggle"
                 android:textColor="@color/black"
-                android:text="@string/tag_fruittarian"
+                android:text="@string/tag_vegan_bakery"
                 />
 
             <TextView
@@ -52,7 +53,7 @@
                 android:gravity="center"
                 android:background="@drawable/btn_toggle"
                 android:textColor="@color/black"
-                android:text="@string/tag_vegan"/>
+                android:text="@string/tag_all_vegan"/>
 
             <TextView
                 android:layout_width="80dp"
@@ -62,7 +63,7 @@
                 android:gravity="center"
                 android:background="@drawable/btn_toggle"
                 android:textColor="@color/black"
-                android:text="@string/tag_lacto"/>
+                android:text="@string/tag_fake_meat"/>
 
         </LinearLayout>
 

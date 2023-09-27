@@ -12,6 +12,7 @@ import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -19,6 +20,7 @@ import com.devinsight.vegiedo.R;
 import com.devinsight.vegiedo.data.response.StoreListData;
 import com.devinsight.vegiedo.data.ui.map.MapStoreCardUiData;
 import com.devinsight.vegiedo.data.ui.search.SearchStorSummaryeUiData;
+import com.devinsight.vegiedo.view.map.MapStoreCardUiAdapter;
 
 import java.util.List;
 
@@ -27,6 +29,9 @@ public class StoreDetailListAdapter extends RecyclerView.Adapter<StoreDetailList
     private List<StoreListData> searchList;
     Context context;
     protected searchListner searchListner;
+
+    private LikeBtnListener likeBtnListener;
+    private CancleLikeBtnListener cancleLikeBtnListener;
 
     public StoreDetailListAdapter(Context cotnext, List<StoreListData> searchList, searchListner searchlistner) {
         this.searchList = searchList;
@@ -39,6 +44,23 @@ public class StoreDetailListAdapter extends RecyclerView.Adapter<StoreDetailList
         this.searchList.addAll(storeList);
     }
 
+    public interface LikeBtnListener {
+        void onLikeButton(Long storeId);
+    }
+    public interface CancleLikeBtnListener {
+        void onCancleLiketButton(Long storeId);
+    }
+
+    public void setLikeBtnListener(StoreDetailListAdapter.LikeBtnListener likeBtnListener) {
+        this.likeBtnListener = likeBtnListener;
+        Log.d("찜버튼리스너", "setLikeBtnListener");
+    }
+    public void setCancleLikeBtnListener(StoreDetailListAdapter.CancleLikeBtnListener cancleLikeBtnListener) {
+        this.cancleLikeBtnListener = cancleLikeBtnListener;
+        Log.d("찜버튼취소리스너", "setCancleLikeBtnListener");
+    }
+
+
     @NonNull
     @Override
     public StoreDetailListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -49,6 +71,7 @@ public class StoreDetailListAdapter extends RecyclerView.Adapter<StoreDetailList
     @Override
     public void onBindViewHolder(@NonNull StoreDetailListAdapter.ViewHolder holder, int position) {
         StoreListData data = searchList.get(position);
+        holder.searchData = data;
 
         String imageUrl = data.getImages();
         holder.storeName.setText(data.getStoreName());
@@ -81,6 +104,13 @@ public class StoreDetailListAdapter extends RecyclerView.Adapter<StoreDetailList
 
         holder.reviewers.setText(String.valueOf(data.getReviewCount()));
 
+        if(data.isLike()) {
+            holder.like.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.ic_heart_selected));
+        } else {
+            holder.like.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.ic_heart_default));
+        }
+
+
     }
 
     @Override
@@ -111,7 +141,26 @@ public class StoreDetailListAdapter extends RecyclerView.Adapter<StoreDetailList
             starRating = itemView.findViewById(R.id.map_ratingbar_star);
             distance = itemView.findViewById(R.id.store_distance);
             reviewers = itemView.findViewById(R.id.map_store_reviewes);
+            like = itemView.findViewById(R.id.like_btn);
             itemView.setOnClickListener(this);
+            like.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(searchData.isLike()){
+                        Log.d("찜버튼되어있음", String.valueOf(searchData.isLike())+", "+searchData.getStoreId());
+                        cancleLikeBtnListener.onCancleLiketButton(searchData.getStoreId());
+                        searchData.setLike(false);
+                        notifyDataSetChanged();
+                    }else{
+                        Log.d("찜버튼취소되어있었음", String.valueOf(searchData.isLike())+", "+searchData.getStoreId());
+                        likeBtnListener.onLikeButton(searchData.getStoreId());
+                        searchData.setLike(true);
+                        notifyDataSetChanged();
+                    }
+                }
+            });
+
+
 
         }
 

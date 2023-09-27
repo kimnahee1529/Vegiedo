@@ -76,8 +76,8 @@
                 android:background="@drawable/btn_toggle"
                 android:checked="false"
                 android:textColor="@drawable/btn_togle_text_color"
-                android:textOff="@string/tag_fruittarian"
-                android:textOn="@string/tag_fruittarian"></ToggleButton>
+                android:textOff="#식물성"
+                android:textOn="#식물성"></ToggleButton>
 
             <ToggleButton
                 android:id="@+id/tag_vegan"
@@ -122,8 +122,8 @@
                 android:background="@drawable/btn_toggle"
                 android:checked="false"
                 android:textColor="@drawable/btn_togle_text_color"
-                android:textOff="@string/tag_ovo"
-                android:textOn="@string/tag_ovo"></ToggleButton>
+                android:textOff="@string/tag_fake_meat"
+                android:textOn="@string/tag_fake_meat"></ToggleButton>
 
             <ToggleButton
                 android:id="@+id/tag_lacto_ovo"

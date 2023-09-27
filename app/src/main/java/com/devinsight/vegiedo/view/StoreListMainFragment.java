@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -23,11 +24,14 @@ import android.widget.ToggleButton;
 
 import com.devinsight.vegiedo.R;
 import com.devinsight.vegiedo.data.response.StoreListData;
+import com.devinsight.vegiedo.service.api.StoreApiService;
+import com.devinsight.vegiedo.utill.RetrofitClient;
 import com.devinsight.vegiedo.view.map.MapMainFragment;
 import com.devinsight.vegiedo.view.search.ActivityViewModel;
 import com.devinsight.vegiedo.view.search.StoreDetailListAdapter;
 import com.devinsight.vegiedo.view.store.StoreDetailPageDDFragment;
 import com.devinsight.vegiedo.view.store.StoreDetailPageFragment;
+import com.devinsight.vegiedo.view.store.filterData;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -52,6 +56,7 @@ public class StoreListMainFragment extends Fragment implements StoreDetailListAd
     ImageView sheep;
     TextView tt_not_found;
     TextView tt_set_more_option;
+    Button tt_recomanded_tag;
 
     FloatingActionButton btn_page_to_map;
 
@@ -95,6 +100,7 @@ public class StoreListMainFragment extends Fragment implements StoreDetailListAd
         tt_not_found = view.findViewById(R.id.tt_not_found);
         tt_set_more_option = view.findViewById(R.id.tt_set_more_option);
         btn_page_to_map = view.findViewById(R.id.btn_go_map);
+        tt_recomanded_tag = view.findViewById(R.id.tt_recomanded_tag);
 
         mapMainFragment = new MapMainFragment();
 
@@ -128,12 +134,61 @@ public class StoreListMainFragment extends Fragment implements StoreDetailListAd
             }
         });
 
+        storeDetailListAdapter.setLikeBtnListener(new StoreDetailListAdapter.LikeBtnListener() {
+            @Override
+            public void onLikeButton(Long storeId) {
+                viewModel.StoreActiveLikeData(storeId);
+            }
+        });
+
+        storeDetailListAdapter.setCancleLikeBtnListener(new StoreDetailListAdapter.CancleLikeBtnListener() {
+            @Override
+            public void onCancleLiketButton(Long storeId) {
+                viewModel.StoreInactiveLikeData(storeId);
+            }
+        });
+
         btn_page_to_map.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.replace(R.id.frame, mapMainFragment,"mapMainFragment").addToBackStack("mapMainFragment").commit();
+                viewModel.filterData();
+                viewModel.getFilterDataLiveData().observe(getViewLifecycleOwner(), new Observer<filterData>() {
+                    @Override
+                    public void onChanged(filterData filterData) {
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("distance",filterData.getDistance());
+                        bundle.putFloat("latitude", filterData.getLatitude());
+                        bundle.putFloat("longitude",filterData.getLongitude());
+                        bundle.putBoolean("fromList", true);
+                        mapMainFragment.setArguments(bundle);
+                        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                        transaction.replace(R.id.frame, mapMainFragment,"mapMainFragment").addToBackStack("mapMainFragment").commit();
+                    }
+                });
 
+
+            }
+        });
+
+        tt_recomanded_tag.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                viewModel.storeApiDataFromRecommand();
+                viewModel.getStoreListFromRecommendLiveData().observe(getViewLifecycleOwner(), new Observer<List<StoreListData>>() {
+                    @Override
+                    public void onChanged(List<StoreListData> storeListData) {
+                        if (storeListData.size() == 0) {
+                            Log.d("검색 리스트 없음 ", " 검색리스트 갯수 : " + storeListData.size());
+                            setNotificationVisible();
+                        } else {
+                            Log.d("가게메인리스트4", "가게메인리스트4");
+                            setNotificationInVisible();
+                            storeDetailListAdapter.setStoreList(storeListData);
+                            storeDetailListAdapter.notifyDataSetChanged();
+
+                        }
+                    }
+                });
             }
         });
 

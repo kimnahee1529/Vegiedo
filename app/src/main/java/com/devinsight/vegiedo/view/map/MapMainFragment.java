@@ -28,8 +28,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.devinsight.vegiedo.R;
 import com.devinsight.vegiedo.data.response.MapStoreListData;
+import com.devinsight.vegiedo.data.response.PostRecommendRequestDTO;
 import com.devinsight.vegiedo.data.response.StoreInquiryResponseDTO;
 import com.devinsight.vegiedo.data.ui.map.MapStoreCardUiData;
+import com.devinsight.vegiedo.repository.pref.AuthPrefRepository;
 import com.devinsight.vegiedo.service.api.MapApiService;
 import com.devinsight.vegiedo.utill.RetrofitClient;
 import com.devinsight.vegiedo.view.StoreListMainFragment;
@@ -50,8 +52,13 @@ import com.naver.maps.map.overlay.Marker;
 import com.naver.maps.map.overlay.OverlayImage;
 import com.naver.maps.map.util.FusedLocationSource;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MapMainFragment extends Fragment implements OnMapReadyCallback {
 
@@ -77,6 +84,25 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
     private MapApiService mapApiService = RetrofitClient.getMapApiService();
     ActivityViewModel viewModel;
 
+    private int distance;
+    private float latitude;
+    private float longitude;
+    private boolean fromList;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+
+        if (getArguments() != null) {
+            distance = getArguments().getInt("distance");
+            latitude = getArguments().getFloat("latitude");
+            longitude = getArguments().getFloat("longitude");
+            fromList = getArguments().getBoolean("fromList");
+            Log.d("검색 목록 기반 카드뷰","" + fromList);
+        }
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main_map, container, false);
@@ -87,7 +113,83 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
         setupRecyclerView(view);
         callMapAPI();
 
+        if(fromList){
+            getMpaDataBasedOnList(view);
+        }
+
         return view;
+    }
+
+    private void getMpaDataBasedOnList(View view){
+        ArrayList<MapStoreCardUiData> cardUiListBasedOnList = new ArrayList<>();
+        RecyclerView recyclerView = view.findViewById(R.id.rc_card);
+        MapStoreCardUiAdapter cardUiAdapter = new MapStoreCardUiAdapter(getContext(), cardUiListBasedOnList, this::onCardClick);
+        recyclerView.setAdapter(cardUiAdapter);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false);
+        recyclerView.setLayoutManager(linearLayoutManager);
+
+        //지도 어댑터에서의 찜버튼 리스너
+        //찜시킬 때
+        cardUiAdapter.setLikeBtnListener(new MapStoreCardUiAdapter.LikeBtnListener() {
+            @Override
+            public void onLikeButton(Long storeId) {
+                Log.d("찜버튼 시킬 때", "onLikeButton, storeId:"+storeId);
+                viewModel.StoreActiveLikeData(storeId);
+            }
+        });
+
+        //찜취소 시킬 때
+        cardUiAdapter.setCancleLikeBtnListener(new MapStoreCardUiAdapter.CancleLikeBtnListener() {
+            @Override
+            public void onCancleLiketButton(Long storeId) {
+                Log.d("찜버튼 취소 시킬 때", "onCancleLiketButton, storeId:"+storeId);
+                viewModel.StoreInactiveLikeData(storeId);
+            }
+        });
+        AuthPrefRepository authPrefRepository = new AuthPrefRepository(getContext());
+        String social;
+        if( authPrefRepository.getAuthToken("KAKAO") != null) {
+            social = "KAKAO";
+        } else {
+            social = "GOOGLE";
+        }
+        String token = authPrefRepository.getAuthToken(social);
+
+        Log.d(" 내용","" + latitude + "" +longitude +"" +distance);
+        mapApiService.getStoresOnMap("Bearer " + token, latitude, longitude, distance*1000).enqueue(new Callback<List<MapStoreListData>>() {
+            @Override
+            public void onResponse(Call<List<MapStoreListData>> call, Response<List<MapStoreListData>> response) {
+
+                if(response.isSuccessful()){
+                    Log.d("RetrofitRequestURL 성공", "Requested URL: " + call.request().url());
+                    Log.d("리스트 기반 지도 api 호출 성공 ","성공" + response);
+                    cardUiListBasedOnList.clear();
+
+                    // 데이터 변환 후 cardUiList에 추가
+                    for (MapStoreListData listData : response.body() ) {
+                        cardUiListBasedOnList.add(convertToCardUiData(listData));
+                    }
+
+                    cardUiAdapter.notifyDataSetChanged();  // 어댑터에 데이터 변경 알림
+
+                }else{
+                    Log.d("RetrofitRequestURL 실패", "Requested URL: " + call.request().url());
+                    Log.e("p리스트 기반 지도 api 호출 실패 1 ","실패1" + response);
+                    try {
+                        Log.e("리스트 기반 지도 실패 1", "Error Body: " + response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<List<MapStoreListData>> call, Throwable t) {
+                Log.e("리스트 기반 지도 호출 실패 2 ","실패2" + t.getMessage());
+
+            }
+        });
     }
 
     private void setupMapView(View view, Bundle savedInstanceState) {

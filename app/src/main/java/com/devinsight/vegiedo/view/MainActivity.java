@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
     UserPrefRepository userPrefRepository;
     AuthPrefRepository authPrefRepository;
 
-    int INITIAL_DISTANCE = 10;
+    int INITIAL_DISTANCE = 5;
 
     private InputMethodManager inputMethodManager;
 
@@ -170,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
         transaction.replace(R.id.frame, homeMainFragment,"homeMainFragment").addToBackStack("homeMainFragment").commit();
 
 
-
+        bottomNavigationView.setSelectedItemId(R.id.nav_home);
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -231,7 +231,6 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     setLongSearchBar();
                     getSupportFragmentManager().popBackStack();
-
                 }
             }
         });
@@ -283,6 +282,7 @@ public class MainActivity extends AppCompatActivity {
         btn_filter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                setShortSearchBar();
 //                inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.frame, searchFilterFragment,"searchFilterFragment").addToBackStack("searchFilterFragment").commit();
@@ -295,8 +295,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 setLongSearchBar();
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                fragmentManager.popBackStack("homeMainFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+//                FragmentManager fragmentManager = getSupportFragmentManager();
+//                fragmentManager.popBackStack("homeMainFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.frame, homeMainFragment).addToBackStack(null).commit();
