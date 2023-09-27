@@ -128,7 +128,6 @@ public class WritingReviewFragment extends Fragment {
 
         viewModel = new ViewModelProvider(requireActivity()).get(ActivityViewModel.class);
 
-        checkAndRequestPermissions();
 
         initializeViews(view);
         showReviewValues();
@@ -151,11 +150,15 @@ public class WritingReviewFragment extends Fragment {
             selectImageForView((ImageView) v);
 //            setLongClickListenerForImageView(mainImage2);
 
+            checkAndRequestPermissions();
+
         });
         imageView2 = view.findViewById(R.id.StoreDetail_image2);
         imageView2.setOnClickListener(v -> {
             selectImageForView((ImageView) v);
 //            setLongClickListenerForImageView(mainImage2);
+
+            checkAndRequestPermissions();
 
         });
 
@@ -164,12 +167,16 @@ public class WritingReviewFragment extends Fragment {
             selectImageForView((ImageView) v);
 //            setLongClickListenerForImageView(mainImage3);
 
+            checkAndRequestPermissions();
+
         });
 
         imageView4 = view.findViewById(R.id.StoreDetail_image4);
         imageView4.setOnClickListener(v -> {
             selectImageForView((ImageView) v);
 //            setLongClickListenerForImageView(mainImage4);
+
+            checkAndRequestPermissions();
 
         });
 
@@ -178,7 +185,20 @@ public class WritingReviewFragment extends Fragment {
             selectImageForView((ImageView) v);
 //            setLongClickListenerForImageView(mainImage5);
 
+            checkAndRequestPermissions();
+
         });
+
+        RatingBar ratingBar = view.findViewById(R.id.StoreDetail_ratingbar_star);
+        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                if (rating < 1.0f) {
+                    ratingBar.setRating(1.0f);  // 별점이 0으로 설정되려고 할 때 별점을 1로 재설정
+                }
+            }
+        });
+
 
     }
 
