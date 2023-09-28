@@ -5,6 +5,7 @@ import static com.devinsight.vegiedo.utill.RetrofitClient.getStoreApiService;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
@@ -272,15 +273,31 @@ public class StoreDetailPageFragment extends Fragment {
             public void onClick(View view) {
                 double lat = Latitude;
                 double lng = Longitude;
-                Log.d("LOGAPI 위도 경도 is",  lng+ " " + lat);
+                Log.d("LOGAPI 위도 경도 is",  lng + " " + lat);
 
                 String uriString = String.format("nmap://navigation?dlat=%s&dlng=%s&appname=vegiedo", lat, lng);
 
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uriString));
-                startActivity(intent);
-
+                PackageManager packageManager = requireActivity().getPackageManager();
+                if (intent.resolveActivity(packageManager) != null) {
+                    // 네이버 지도 앱이 설치되어 있으면 Intent 실행
+                    startActivity(intent);
+                } else {
+                    // 네이버 지도 앱이 설치되어 있지 않으면 구글 플레이 스토어로 이동
+                    Uri naverMapUri = Uri.parse("market://details?id=com.nhn.android.nmap");
+                    Intent naverMapIntent = new Intent(Intent.ACTION_VIEW, naverMapUri);
+                    if (naverMapIntent.resolveActivity(packageManager) != null) {
+                        startActivity(naverMapIntent);
+                    } else {
+                        // 만약에 사용자의 디바이스에 구글 플레이 스토어도 없을 경우 브라우저를 통해 연결
+                        Uri webUri = Uri.parse("https://play.google.com/store/apps/details?id=com.nhn.android.nmap");
+                        Intent webIntent = new Intent(Intent.ACTION_VIEW, webUri);
+                        startActivity(webIntent);
+                    }
+                }
             }
         });
+
         likeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

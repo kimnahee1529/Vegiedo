@@ -406,16 +406,7 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady(@NonNull NaverMap naverMap) {
         this.naverMap = naverMap;
 
-//         ViewModel에서 가져온 데이터로 UI를 업데이트
-//        viewModel.getMapStoreSummaryData().observe(getViewLifecycleOwner(), mapStoreUiLiveData -> {
-//            cardUiList.clear(); // Clear previous data
-//            cardUiList.addAll(mapStoreUiLiveData);
-//            cardUiAdapter.notifyDataSetChanged();
-//        });
-
-//        viewModel.getMapStoreSummaryData().observe(getViewLifecycleOwner(), mapStoreCardUiData -> {
-//
-//        });
+        naverMap.getUiSettings().setZoomControlEnabled(false);
 
         // 위치 권한 허용 여부 묻는 창
         checkAndRequestLocationPermission();
@@ -570,7 +561,7 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
         int markerCount = markersOnMap.size();
         float currentZoom = (float) naverMap.getCameraPosition().zoom;
         Log.d("지도 확대 몇까지 함?", String.valueOf(currentZoom));
-        if (currentZoom >= 14) {
+        if (currentZoom >= 13) {
             marker.setMap(naverMap);  // 각 마커에 대해 확대/축소 기능 적용
             if (clusterMarker != null) {
                 clusterMarker.setMap(null);  // 이전 클러스터 마커를 제거합니다.
