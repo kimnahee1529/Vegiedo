@@ -35,6 +35,7 @@ import com.devinsight.vegiedo.view.store.filterData;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class StoreListMainFragment extends Fragment implements StoreDetailListAdapter.searchListner {
@@ -48,6 +49,7 @@ public class StoreListMainFragment extends Fragment implements StoreDetailListAd
     private StoreDetailListAdapter storeDetailListAdapter;
 
     private List<StoreListData> storeList;
+    private List<Long> storeIdList;
     private ActivityViewModel viewModel;
 
     ConstraintLayout layout;
@@ -86,6 +88,14 @@ public class StoreListMainFragment extends Fragment implements StoreDetailListAd
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
+
+            // storeIdArray를 가져옴
+            Long[] storeIdArray = (Long[]) getArguments().getSerializable("storeIdArray");
+
+            // Long[]를 List<Long>으로 변환
+            if (storeIdArray != null) {
+                storeIdList = new ArrayList<>(Arrays.asList(storeIdArray));
+            }
         }
     }
 
@@ -93,6 +103,7 @@ public class StoreListMainFragment extends Fragment implements StoreDetailListAd
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_store_list_main, container, false);
+//        Log.d("넘어온 마커의 storeId", ""+storeIdList.size()+"개"+storeIdList);
         Log.d("가게메인리스트", "가게메인리스트");
 
         layout = view.findViewById(R.id.store_setting_message);
