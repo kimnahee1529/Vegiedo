@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.Image;
@@ -13,6 +14,7 @@ import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -27,6 +29,7 @@ import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.Manifest;
 
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
@@ -74,6 +77,10 @@ public class WritingFragment extends Fragment {
     private List<String> selectedImageUris = new ArrayList<>();
     private Button registerBtn;
     private ImageView mainImage;
+    private ImageView mainImage2;
+    private ImageView mainImage3;
+    private ImageView mainImage4;
+    private ImageView mainImage5;
     private static final int GALLERY_REQUEST_CODE = 123;
     private static final int PERMISSION_REQUEST_CODE = 200; // 권한 요청 코드
     private static final int MAX_IMAGE_COUNT = 5;
@@ -213,35 +220,40 @@ public class WritingFragment extends Fragment {
 
         mainImage = rootView.findViewById(R.id.main_image1);
         mainImage.setOnClickListener(v -> {
+            Log.d("이미지1", "눌려짐");
             selectImageForView((ImageView) v);
             setLongClickListenerForImageView(mainImage);
-
         });
 
 
-        ImageView mainImage2 = rootView.findViewById(R.id.main_image2);
+
+        mainImage2 = rootView.findViewById(R.id.main_image2);
         mainImage2.setOnClickListener(v -> {
+            Log.d("이미지2", "눌려짐");
             selectImageForView((ImageView) v);
             setLongClickListenerForImageView(mainImage2);
 
         });
 
-        ImageView mainImage3 = rootView.findViewById(R.id.main_image3);
+        mainImage3 = rootView.findViewById(R.id.main_image3);
         mainImage3.setOnClickListener(v -> {
+            Log.d("이미지3", "눌려짐");
             selectImageForView((ImageView) v);
             setLongClickListenerForImageView(mainImage3);
 
         });
 
-        ImageView mainImage4 = rootView.findViewById(R.id.main_image4);
+        mainImage4 = rootView.findViewById(R.id.main_image4);
         mainImage4.setOnClickListener(v -> {
+            Log.d("이미지4", "눌려짐");
             selectImageForView((ImageView) v);
             setLongClickListenerForImageView(mainImage4);
 
         });
 
-        ImageView mainImage5 = rootView.findViewById(R.id.main_image5);
+        mainImage5 = rootView.findViewById(R.id.main_image5);
         mainImage5.setOnClickListener(v -> {
+            Log.d("이미지5", "눌려짐");
             selectImageForView((ImageView) v);
             setLongClickListenerForImageView(mainImage5);
 
@@ -617,10 +629,13 @@ public class WritingFragment extends Fragment {
 
 
     private void selectImageForView(ImageView imageView) {
-
         currentlySelectedImageView = imageView;
 
+        Log.d("이미지", "selectImageForView");
+
         if (PermissionUtils.checkPermission(getActivity())) {
+
+            Log.d("이미지", "허용됨");
             // 권한이 이미 허용된 상태: 바로 관련 작업 수행
             Intent intent = new Intent();
             intent.setType("image/*");
@@ -628,16 +643,45 @@ public class WritingFragment extends Fragment {
             startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY_REQUEST_CODE);
         } else {
             // 권한이 허용되지 않은 상태: 권한 요청
-            requestGalleryPermission();
+            if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                Log.d("이미지", "허용되지 않음");
+                requestGalleryPermission();
+            } else {
+                // 사용자가 "다시 묻지 않음"을 선택했으므로 설정 페이지로 이동
+                Log.d("이미지", "다시 묻지 않음 선택");
+                showSettingsAlert();
+            }
         }
     }
 
+
     private void requestGalleryPermission() {
-        // 권한을 요청합니다.
-        ActivityCompat.requestPermissions(getActivity(),
-                new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE},
-                PERMISSION_REQUEST_CODE);
+        if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            // 사용자가 이전에 권한을 거부했지만 "다시 묻지 않음"을 선택하지 않았다면, 권한을 다시 요청
+            ActivityCompat.requestPermissions(getActivity(),
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    PERMISSION_REQUEST_CODE);
+        } else {
+            // 사용자가 "다시 묻지 않음"을 선택했다면, 설정 페이지로 이동하여 권한을 허용하도록 안내
+            showSettingsAlert();
+        }
     }
+
+    private void showSettingsAlert() {
+        new AlertDialog.Builder(getActivity())
+                .setMessage("이 기능을 사용하려면 저장소 권한이 필요합니다. 설정에서 권한을 허용해주세요.")
+                .setPositiveButton("설정으로 이동", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        Uri uri = Uri.fromParts("package", getActivity().getPackageName(), null);
+                        intent.setData(uri);
+                        startActivity(intent);
+                    }
+                })
+                .setNegativeButton("취소", null)
+                .show();
+    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
