@@ -134,7 +134,7 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
                                 int newPostsCount = popularPostListData.size(); // 새로 추가된 게시물의 개수
                                 int startPosition = postList.size(); // 기존에 로드된 게시물의 개수
                                 postList.addAll(popularPostListData); // 기존 리스트에 새로운 게시물 추가
-                                adatper.notifyItemRangeInserted(startPosition, newPostsCount); // 알림
+                                adatper.notifyItemRangeInserted(startPosition, newPostsCount); //
 //                                setPostList(popularPostListData);
 //                                adatper.setList(popularPostListData);
 //                                if(popCursor == 1){
