@@ -183,7 +183,7 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
                                             communityViewModel.loadGeneralPostList(cursor);
                                             recyclerView.scrollToPosition(postList.size() - 1);
                                         } else {
-                                            Toast.makeText(getContext(), "마지막 페이지 입니다.", Toast.LENGTH_SHORT).show();
+//                                            Toast.makeText(getContext(), "마지막 페이지 입니다.", Toast.LENGTH_SHORT).show();
                                         }
                                     } else {
                                         if (popCursor <= maxCursor) {
@@ -193,7 +193,7 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
                                             communityViewModel.loadPopularPostList(popCursor);
                                             recyclerView.scrollToPosition(postList.size() - 1);
                                         } else {
-                                            Toast.makeText(getContext(), "마지막 페이지 입니다.", Toast.LENGTH_SHORT).show();
+//                                            Toast.makeText(getContext(), "마지막 페이지 입니다.", Toast.LENGTH_SHORT).show();
                                         }
 
                                     }

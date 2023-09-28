@@ -284,7 +284,7 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
             LatLng currentMarkerPosition = currentLocationMarker.getPosition();
             naverMap.moveCamera(CameraUpdate.scrollTo(currentMarkerPosition).animate(CameraAnimation.Fly, 500));
         } else {
-            Toast.makeText(getContext(), "현재 위치가 설정되지 않았습니다.", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getContext(), "현재 위치가 설정되지 않았습니다.", Toast.LENGTH_SHORT).show();
         }
     }
     private void onFloatingListButtonClick() {

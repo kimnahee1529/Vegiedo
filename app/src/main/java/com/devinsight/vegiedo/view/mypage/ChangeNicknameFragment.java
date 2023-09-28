@@ -73,13 +73,13 @@ public class ChangeNicknameFragment extends Fragment {
                 Log.d("닉네임", String.valueOf(userNicknamedto.getNickName()));
 
                 if (enteredText.matches(".*[^a-zA-Z0-9가-힣].*")) {
-                    Toast.makeText(getActivity(), "특수문자를 사용할 수 없습니다.", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getActivity(), "특수문자를 사용할 수 없습니다.", Toast.LENGTH_SHORT).show();
                     changeNickname_rule.setTextColor(getResources().getColor(R.color.nickname_alert_red));
                     return;
                 }
 
                 if (enteredText.length() < 2 || enteredText.length() > 10) {
-                    Toast.makeText(getActivity(), "닉네임은 2~10 글자 사이이어야 합니다.", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getActivity(), "닉네임은 2~10 글자 사이이어야 합니다.", Toast.LENGTH_SHORT).show();
                     changeNickname_rule.setTextColor(getResources().getColor(R.color.nickname_alert_red));
                     return;
                 }

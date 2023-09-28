@@ -133,7 +133,7 @@ public class RegisterNewStoreActivity extends AppCompatActivity {
                     // 텍스트 길이가 20자를 초과하면, 글자 수를 20자로 제한하고 토스트 메시지를 표시
                     storeNameEditText.setText(s.subSequence(0, 20));
                     storeNameEditText.setSelection(20);  // 커서를 텍스트 끝으로 이동
-                    Toast.makeText(RegisterNewStoreActivity.this, "상호명은 20자를 초과할 수 없습니다.", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(RegisterNewStoreActivity.this, "상호명은 20자를 초과할 수 없습니다.", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -210,15 +210,15 @@ public class RegisterNewStoreActivity extends AppCompatActivity {
                 if(storeName.isEmpty()) {
                     // 상호명이 비어있는 경우에 대한 처리 (예: Toast 메시지 표시)
                     showDialog(DialogType.ALLCONTENT);
-                    Toast.makeText(RegisterNewStoreActivity.this, "상호명을 입력해주세요.", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(RegisterNewStoreActivity.this, "상호명을 입력해주세요.", Toast.LENGTH_SHORT).show();
                 }
                 else if(address.isEmpty()){
                     // 주소가 비어있는 경우에 대한 처리 (예: Toast 메시지 표시)
                     showDialog(DialogType.ALLCONTENT);
-                    Toast.makeText(RegisterNewStoreActivity.this, "주소를 입력해주세요.", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(RegisterNewStoreActivity.this, "주소를 입력해주세요.", Toast.LENGTH_SHORT).show();
                 }else if(selectedDietList.size()==0){
                     showDialog(DialogType.TAG);
-                    Toast.makeText(RegisterNewStoreActivity.this, "태그를 1개이상 선택해주세요.", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(RegisterNewStoreActivity.this, "태그를 1개이상 선택해주세요.", Toast.LENGTH_SHORT).show();
                 }else{
                     showDialog(DialogType.COMPLETE);
                     Log.d("가게등록", "상호명:"+storeName+", 주소:"+address+", uri:"+selectedImageUri+", 태그:"+selectedDietList+", 위도:"+latitude+", 경도:"+longitude);
@@ -327,7 +327,7 @@ public class RegisterNewStoreActivity extends AppCompatActivity {
                 Log.d("LOGAPI", "onFail 안");
                 e.printStackTrace();
                 runOnUiThread(() -> {
-                    Toast.makeText(RegisterNewStoreActivity.this, "위도, 경도 변환 실패", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(RegisterNewStoreActivity.this, "위도, 경도 변환 실패", Toast.LENGTH_SHORT).show();
                 });
             }
         });

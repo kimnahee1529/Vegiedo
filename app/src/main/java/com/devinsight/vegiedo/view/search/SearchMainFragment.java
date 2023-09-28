@@ -91,7 +91,7 @@ public class SearchMainFragment extends Fragment implements SearchSummaryListAda
                     searchAdapter.setSearchList(summaryDataList);
                     searchAdapter.notifyDataSetChanged();
                 } else {
-                    Toast.makeText(getContext(), "최근 검색어가 없습니다. ", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getContext(), "최근 검색어가 없습니다. ", Toast.LENGTH_SHORT).show();
                 }
             }
         });

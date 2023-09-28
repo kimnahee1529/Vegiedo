@@ -219,7 +219,7 @@ public class MyPageFragment extends Fragment {
                 if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
                     startActivity(intent);
                 } else {
-                    Toast.makeText(getActivity(), "No email client available", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getActivity(), "No email client available", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -347,17 +347,17 @@ public class MyPageFragment extends Fragment {
                     public void onResponse(Call<Void> call, Response<Void> response) {
                         if(response.isSuccessful()) {
                             Log.d("이미지", response.body().toString());
-                            Toast.makeText(getActivity(), "Image uploaded successfully", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(getActivity(), "Image uploaded successfully", Toast.LENGTH_SHORT).show();
                         } else {
                             Log.d("이미지", String.valueOf(response.code()));
-                            Toast.makeText(getActivity(), "Image upload failed: " + response.message(), Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(getActivity(), "Image upload failed: " + response.message(), Toast.LENGTH_SHORT).show();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) {
                         Log.d("이미지", String.valueOf(t));
-                        Toast.makeText(getActivity(), "Image upload failed: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(getActivity(), "Image upload failed: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -512,7 +512,7 @@ public class MyPageFragment extends Fragment {
                 // 권한이 허용되었으므로 바로 갤러리를 엽니다.
                 ImagePickerUtil.selectImageFromGallery(MyPageFragment.this, REQUEST_IMAGE_PICK);
             } else {
-                Toast.makeText(getActivity(), "권한이 거부되었습니다.", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getActivity(), "권한이 거부되었습니다.", Toast.LENGTH_SHORT).show();
             }
         }
     }

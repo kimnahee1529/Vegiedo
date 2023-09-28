@@ -248,7 +248,7 @@ public class WritingReviewFragment extends Fragment {
                 int length = s.length();
                 if (length > 300) {
                     s.delete(300, length);
-                    Toast.makeText(getContext(), "최대 300자까지 입력 가능합니다.", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getContext(), "최대 300자까지 입력 가능합니다.", Toast.LENGTH_SHORT).show();
                 }
 
                 String lengthString = s.length() + "자/300자";

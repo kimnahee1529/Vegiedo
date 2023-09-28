@@ -378,7 +378,7 @@ public class WritingFragment extends Fragment {
                 int length = s.length();
                 if (length > 1000) {
                     s.delete(1000, length);
-                    Toast.makeText(getContext(), "최대 1000자까지 입력 가능합니다.", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getContext(), "최대 1000자까지 입력 가능합니다.", Toast.LENGTH_SHORT).show();
                 }
 
                 String lengthString = s.length() + "자/1000자";
@@ -705,7 +705,7 @@ public class WritingFragment extends Fragment {
         switch (requestCode) {
             case PERMISSION_REQUEST_CODE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(getActivity(), "Permission Granted", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getActivity(), "Permission Granted", Toast.LENGTH_SHORT).show();
 
                     // Open the gallery now as permission is granted
                     currentlySelectedImageView = getView().findViewById(R.id.main_image1); // default view
@@ -714,7 +714,7 @@ public class WritingFragment extends Fragment {
                     intent.setAction(Intent.ACTION_GET_CONTENT);
                     startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY_REQUEST_CODE);
                 } else {
-                    Toast.makeText(getActivity(), "Permission Denied", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getActivity(), "Permission Denied", Toast.LENGTH_SHORT).show();
                 }
                 break;
         }

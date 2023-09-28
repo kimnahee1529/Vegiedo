@@ -195,7 +195,7 @@ public class PostCommentFragment extends Fragment implements PostCommentAdapter.
                 int length = editable.length();
                 if(length > 200){
                     editable.delete(200, length);
-                    Toast.makeText(getContext(), "최대 20자까지 입력 가능 합니다.", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getContext(), "최대 20자까지 입력 가능 합니다.", Toast.LENGTH_SHORT).show();
                 }
 
                 String opinionLength = editable.length() + "자/200자";
