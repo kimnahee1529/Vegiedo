@@ -61,6 +61,9 @@ public class StoreListMainFragment extends Fragment implements StoreDetailListAd
     Button tt_recomanded_tag;
 
     FloatingActionButton btn_page_to_map;
+    double centerLatitude;
+    double centerLongitude;
+    private boolean isBundleDataAvailable = false;
 
     StoreDetailPageDDFragment storeDetailPageDDFragment;
     Fragment mapMainFragment;
@@ -89,13 +92,24 @@ public class StoreListMainFragment extends Fragment implements StoreDetailListAd
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
 
-            // storeIdArray를 가져옴
-            Long[] storeIdArray = (Long[]) getArguments().getSerializable("storeIdArray");
+//            // storeIdArray를 가져옴
+//            Long[] storeIdArray = (Long[]) getArguments().getSerializable("storeIdArray");
+//            Log.d("Map", ""+storeIdArray);
+//
+//            // Long[]를 List<Long>으로 변환
+//            if (storeIdArray != null) {
+//                storeIdList = new ArrayList<>(Arrays.asList(storeIdArray));
+//            }
 
-            // Long[]를 List<Long>으로 변환
-            if (storeIdArray != null) {
-                storeIdList = new ArrayList<>(Arrays.asList(storeIdArray));
+            Bundle bundle = getArguments();
+            if (bundle != null) {
+                centerLatitude = bundle.getDouble("centerLatitude");
+                centerLongitude = bundle.getDouble("centerLongitude");
+                isBundleDataAvailable = true;
             }
+
+//            Log.d("넘어온 MapCenter", ""+centerLatitude+", "+centerLongitude);
+
         }
     }
 
@@ -103,7 +117,6 @@ public class StoreListMainFragment extends Fragment implements StoreDetailListAd
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_store_list_main, container, false);
-//        Log.d("넘어온 마커의 storeId", ""+storeIdList.size()+"개"+storeIdList);
         Log.d("가게메인리스트", "가게메인리스트");
 
         layout = view.findViewById(R.id.store_setting_message);
@@ -125,25 +138,44 @@ public class StoreListMainFragment extends Fragment implements StoreDetailListAd
         viewModel = new ViewModelProvider(requireActivity()).get(ActivityViewModel.class);
         Log.d("가게메인리스트2", "가게메인리스트2");
 
-        viewModel.storeApiData();
+        if (!isBundleDataAvailable) {
+            viewModel.storeApiData();
+            viewModel.getStoreListLiveData().observe(getViewLifecycleOwner(), new Observer<List<StoreListData>>() {
+                @Override
+                public void onChanged(List<StoreListData> storeListData) {
+                    if (storeListData.size() == 0) {
+                        Log.d("검색 리스트 없음 ", " 검색리스트 갯수 : " + storeListData.size());
+                        setNotificationVisible();
+                    } else {
+                        Log.d("가게메인리스트4", "가게메인리스트4");
+                        setNotificationInVisible();
+                        storeDetailListAdapter.setStoreList(storeListData);
+                        storeDetailListAdapter.notifyDataSetChanged();
+
+                    }
+                }
+            });
+        }else{
+            viewModel.storeMapApiData(centerLatitude,centerLongitude);
+            Log.d("넘어온 MapCenter", ""+centerLatitude+", "+centerLongitude);
+            viewModel.getStoreListLiveData().observe(getViewLifecycleOwner(), new Observer<List<StoreListData>>() {
+                @Override
+                public void onChanged(List<StoreListData> storeListData) {
+                    if (storeListData.size() == 0) {
+                        Log.d("검색 리스트 없음 ", " 검색리스트 갯수 : " + storeListData.size());
+                        setNotificationVisible();
+                    } else {
+                        Log.d("가게메인리스트4", "가게메인리스트4");
+                        setNotificationInVisible();
+                        storeDetailListAdapter.setStoreList(storeListData);
+                        storeDetailListAdapter.notifyDataSetChanged();
+
+                    }
+                }
+            });
+        }
 //        viewModel.searchDetailList();
 //        Log.d("가게메인리스트3", "가게메인리스트3");
-
-        viewModel.getStoreListLiveData().observe(getViewLifecycleOwner(), new Observer<List<StoreListData>>() {
-            @Override
-            public void onChanged(List<StoreListData> storeListData) {
-                if (storeListData.size() == 0) {
-                    Log.d("검색 리스트 없음 ", " 검색리스트 갯수 : " + storeListData.size());
-                    setNotificationVisible();
-                } else {
-                    Log.d("가게메인리스트4", "가게메인리스트4");
-                    setNotificationInVisible();
-                    storeDetailListAdapter.setStoreList(storeListData);
-                    storeDetailListAdapter.notifyDataSetChanged();
-
-                }
-            }
-        });
 
         storeDetailListAdapter.setLikeBtnListener(new StoreDetailListAdapter.LikeBtnListener() {
             @Override
@@ -176,8 +208,6 @@ public class StoreListMainFragment extends Fragment implements StoreDetailListAd
                         transaction.replace(R.id.frame, mapMainFragment,"mapMainFragment").addToBackStack("mapMainFragment").commit();
                     }
                 });
-
-
             }
         });
 

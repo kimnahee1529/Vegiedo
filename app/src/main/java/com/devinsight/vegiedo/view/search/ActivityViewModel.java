@@ -436,7 +436,9 @@ public class ActivityViewModel extends ViewModel {
     }
 
     //지도에서 가게리스트로 이동할 때 카메라 기준의 위도 경도 추가한 가게 리스트 API 호출
-    public void storeMapApiData(Long latitude, Long longitude) {
+    public void storeMapApiData(double latitude, double longitude) {
+        float latitudeFloat = (float) latitude;
+        float longitudeFloat = (float) longitude;
         Log.d("mapapi 가져오는 함수 ", "  public void storeApiData() ");
         if (tags == null) {
             tags = initialTags;
@@ -452,7 +454,7 @@ public class ActivityViewModel extends ViewModel {
         Log.d("쿼리 재료","tag : " + tags + "latitude : " + latitude + "longitude : " + longitude );
         Log.e("store List 요청 동작", "store List 요청 동작");
 
-        storeApiService.getStoreLists(tags, latitude, longitude, distance * 1000, 10, 0, "Bearer " + token).enqueue(new Callback<List<StoreListData>>() {
+        storeApiService.getStoreLists(tags, latitudeFloat, longitudeFloat, distance * 1000, 10, 0, "Bearer " + token).enqueue(new Callback<List<StoreListData>>() {
             @Override
             public void onResponse(Call<List<StoreListData>> call, Response<List<StoreListData>> response) {
                 if (response.isSuccessful() && response.body() != null) {

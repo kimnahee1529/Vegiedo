@@ -88,6 +88,7 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
     ActivityViewModel viewModel;
     private float latitude;
     private float longitude;
+    private LatLng center;
     private boolean fromList;
 
     @Override
@@ -299,12 +300,15 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
                 "글루텐프리"
         );
 
-        Log.d("마커의 storeId", ""+storeIdList.size()+"개"+storeIdList);
+        Log.d("이동하기 직전 MapCenter", "Center: " + center.latitude + ", " + center.longitude);
+//        Log.d("마커의 storeId", ""+storeIdList.size()+"개"+storeIdList);
         viewModel.getFilterData(distance, tags);
         StoreListMainFragment storeListMainFragment  = new StoreListMainFragment();
         Bundle bundle = new Bundle();
-        Long[] storeIdArray = storeIdList.toArray(new Long[0]);
-        bundle.putSerializable("storeIdArray", storeIdArray);
+//        Long[] storeIdArray = storeIdList.toArray(new Long[0]);
+//        bundle.putSerializable("storeIdArray", storeIdArray);
+        bundle.putDouble("centerLatitude", center.latitude);  // 위도를 번들에 추가
+        bundle.putDouble("centerLongitude", center.longitude);  // 경도를 번들에 추가
         storeListMainFragment.setArguments(bundle);
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.frame, storeListMainFragment);
@@ -418,6 +422,12 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
 
         // 지도가 멈출 때마다 가시적인 마커들을 표시
         naverMap.addOnCameraIdleListener(() -> displayVisibleMarkers(naverMap));
+
+        // 카메라의 위치가 변경될 때마다 호출될 리스너를 설정
+        naverMap.addOnCameraChangeListener((reason, animated) -> {
+            center = naverMap.getCameraPosition().target;
+            Log.d("MapCenter", "Center: " + center.latitude + ", " + center.longitude);
+        });
     }
 
     //권한 체크
