@@ -145,8 +145,6 @@ public class ActivityViewModel extends ViewModel {
 
     private MutableLiveData<HomeReviewResponseDTO> homeReviewLiveData = new MutableLiveData<>();
 
-
-
     /* Query 요청 및 필터에 사용 하기 위한 전역 변수*/
     private float userCurrentLat;
     private float userCurrentLong;
@@ -228,6 +226,26 @@ public class ActivityViewModel extends ViewModel {
         tokenLiveData.setValue(token);
     }
 
+    public int passDistance(){
+        Log.d("지도 거리 뷰모델 들어옴", String.valueOf(distance));
+        boolean noMapLocation = mapLat + mapLong == 0.0f;
+        boolean noUserLocation = userCurrentLat + userCurrentLong == 0.0f;
+        if (noMapLocation && noUserLocation) {
+            latitude = INITIAL_LAT;
+            longitude = INITIAL_LONG;
+        }else if (noUserLocation){
+            latitude = mapLat;
+            longitude = mapLong;
+        } else if(noMapLocation) {
+            latitude = userCurrentLat;
+            longitude = userCurrentLong;
+        }
+        if (distance == 0) {
+            distance = initialDistance;
+        }
+        Log.d("지도 거리 뷰모델", String.valueOf(distance));
+        return distance;
+    }
 
     /* 유저가 선택한 태그와, 거리를 가져옵니다.*/
     public void getFilterData(int distance, List<String> tags) {
@@ -285,6 +303,64 @@ public class ActivityViewModel extends ViewModel {
             latitude = userCurrentLat;
             longitude = userCurrentLong;
         }
+        if (tags == null) {
+            tags = initialTags;
+        }
+
+        if (distance == 0) {
+            distance = initialDistance;
+        }
+
+        Log.d(" 가게 호출 쿼리", "값" + tags + "위도 : " + latitude + "경도 : " + longitude + "거리 : " + distance + token);
+
+        Log.d("여기까지 됨", "194번줄");
+        Log.d("쿼리 재료","tag : " + tags + "latitude : " + latitude + "longitude : " + longitude );
+        Log.e("store List 요청 동작", "store List 요청 동작");
+
+        storeApiService.getStoreLists(tags, latitude, longitude, distance * 1000, 10, 0, "Bearer " + token).enqueue(new Callback<List<StoreListData>>() {
+            @Override
+            public void onResponse(Call<List<StoreListData>> call, Response<List<StoreListData>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    Log.d("RetrofitRequestURL", "Requested URL: " + call.request().url());
+                    Log.d(" 가게 호출 쿼리2", "값" + tags + "위도 : " + latitude + "경도 : " + longitude + "거리 : " + distance * 1000 + keyword + token);
+                    List<StoreListData> data = response.body();
+                    Log.e("store List 요청 성공", "this is store List : " + response.body().toString());
+                    if (data != null) {
+                        for (int i = 0; i < data.size(); i++) {
+                            Log.e("store List 요청 성공", "this is store List : " + response.body().get(i).toString());
+                        }
+                        storeListLiveData.setValue(data);
+                        searchSummList();
+                    } else {
+                        Log.d(" 해당하는 가게 리스트가 없습니다", "해당하는 가게 리스트가 없습니다" + data.size());
+                    }
+
+                } else {
+                    // API 응답이 오류 상태일 때
+                    Log.e("store List 요청 실패 1", "Error Code: " + response.code() + ", Message: " + response.message());
+                    try {
+                        Log.e("store List 요청 실패 1", "Error Body: " + response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<StoreListData>> call, Throwable t) {
+                Log.e("store List 요청 실패 2", "store List 요청 실패 2" + t.getMessage());
+            }
+
+        });
+
+
+        Log.e("store List 요청 동작 ", "store List 요청 동작");
+
+    }
+
+    //지도에서 가게리스트로 이동할 때 카메라 기준의 위도 경도 추가한 가게 리스트 API 호출
+    public void storeMapApiData(Long latitude, Long longitude) {
+        Log.d("mapapi 가져오는 함수 ", "  public void storeApiData() ");
         if (tags == null) {
             tags = initialTags;
         }
@@ -611,7 +687,7 @@ public class ActivityViewModel extends ViewModel {
     }
 
     //가게 조회 API(StoreDetailPageFragment서 사용)
-    public void StoreInquiryData() {
+    public void StoreInquiryData(Long storeId) {
         Log.d("StoreAPI", token + " " + storeId);
         //가게 조회
         storeApiService.readStore("Bearer " + token, storeId).enqueue(new Callback<StoreInquiryResponseDTO>() {
