@@ -425,6 +425,16 @@ public class MyPageFragment extends Fragment {
             public void onClick(View v) {
 //                Toast.makeText(getActivity(), "예 버튼입니다.", Toast.LENGTH_SHORT).show();
                 viewModel.DeleteUser();
+                SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_info", MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.clear();  // 모든 데이터 삭제
+                editor.apply();
+
+                SharedPreferences sharedPreferences1 = getActivity().getSharedPreferences("login_info",MODE_PRIVATE);
+                SharedPreferences.Editor editor1 = sharedPreferences.edit();
+                editor1.clear();  // 모든 데이터 삭제
+                editor1.apply();
+
                 // SplashActivity로 이동
                 Activity activity = getActivity();
                 if (activity != null) {

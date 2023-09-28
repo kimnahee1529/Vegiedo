@@ -34,6 +34,7 @@ import com.devinsight.vegiedo.view.MainActivity;
 import com.devinsight.vegiedo.view.StoreListMainFragment;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -142,6 +143,26 @@ public class SearchFilterFragment extends Fragment {
         ToggleButton tagPollo = view.findViewById(VeganTag.POLLO.getTagId());
         ToggleButton tagKeto = view.findViewById(VeganTag.KETO.getTagId());
         ToggleButton tagGluten = view.findViewById(VeganTag.GLUTEN_FREE.getTagId());
+
+//        List<Integer> buttons = Arrays.asList(VeganTag.FRUITTARIAN.getTagId(),VeganTag.VEGAN.getTagId(),VeganTag.LACTO.getTagId(), VeganTag.OVO.getTagId(),VeganTag.LACTO_OVO.getTagId(), VeganTag.PESCO.getTagId(), VeganTag.POLLO.getTagId(), VeganTag.KETO.getTagId(),VeganTag.GLUTEN_FREE.getTagId());
+
+        ToggleButton[] toggleButtons = new ToggleButton[]{
+                view.findViewById(VeganTag.FRUITTARIAN.getTagId()),
+                view.findViewById(VeganTag.VEGAN.getTagId()),
+                view.findViewById(VeganTag.LACTO.getTagId()),
+                view.findViewById(VeganTag.OVO.getTagId()),
+                view.findViewById(VeganTag.LACTO_OVO.getTagId()),
+                view.findViewById(VeganTag.PESCO.getTagId()),
+                view.findViewById(VeganTag.POLLO.getTagId()),
+                view.findViewById(VeganTag.KETO.getTagId()),
+                view.findViewById(VeganTag.GLUTEN_FREE.getTagId())
+        };
+        List<String> tags = Arrays.asList("식물성 베이커리", "완전 비건", "락토","대체육","락토 오보","페스코테리언",  "폴로", "키토식단",  "글루텐프리");
+        List<String> localTags = userPrefRepository.loadTagList();
+        for(int i = 0 ; i < toggleButtons.length; i ++) {
+            String tag = tags.get(i);
+            toggleButtons[i].setChecked(localTags.contains(tag));
+        }
 
         userTagList = new ArrayList<>();
 

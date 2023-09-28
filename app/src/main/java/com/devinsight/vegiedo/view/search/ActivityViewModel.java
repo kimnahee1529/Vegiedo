@@ -41,9 +41,11 @@ import com.devinsight.vegiedo.service.api.StoreApiService;
 import com.devinsight.vegiedo.service.api.UserApiService;
 import com.devinsight.vegiedo.utill.RetrofitClient;
 import com.devinsight.vegiedo.view.community.ClickedPostData;
+import com.devinsight.vegiedo.view.store.filterData;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
@@ -74,6 +76,7 @@ public class ActivityViewModel extends ViewModel {
 
     /* 서버에서 내려주는 가게 리스트 */
     private MutableLiveData<List<StoreListData>> storeListLiveData = new MutableLiveData<>();
+    private MutableLiveData<List<StoreListData>> storeListFromRecommendLiveData = new MutableLiveData<>();
     /* 유저 토큰 전달을 위한 라이브데이터 */
     private MutableLiveData<String> tokenLiveData = new MutableLiveData<>();
 
@@ -144,6 +147,10 @@ public class ActivityViewModel extends ViewModel {
 
 
     private MutableLiveData<HomeReviewResponseDTO> homeReviewLiveData = new MutableLiveData<>();
+
+    private MutableLiveData<Integer> distanceLiveData = new MutableLiveData<>();
+
+    private MutableLiveData<filterData> filterDataLiveData = new MutableLiveData<>();
 
 
 
@@ -233,6 +240,7 @@ public class ActivityViewModel extends ViewModel {
     public void getFilterData(int distance, List<String> tags) {
         this.distance = distance;
         this.tags = tags;
+        distanceLiveData.setValue(distance);
 
         Log.d("필터 데이터 2", "거리 : " + distance + "태그 : " + tags.toString());
     }
@@ -312,6 +320,73 @@ public class ActivityViewModel extends ViewModel {
                             Log.e("store List 요청 성공", "this is store List : " + response.body().get(i).toString());
                         }
                         storeListLiveData.setValue(data);
+                        searchSummList();
+                    } else {
+                        Log.d(" 해당하는 가게 리스트가 없습니다", "해당하는 가게 리스트가 없습니다" + data.size());
+                    }
+
+                } else {
+                    // API 응답이 오류 상태일 때
+                    Log.e("store List 요청 실패 1", "Error Code: " + response.code() + ", Message: " + response.message());
+                    try {
+                        Log.e("store List 요청 실패 1", "Error Body: " + response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<StoreListData>> call, Throwable t) {
+                Log.e("store List 요청 실패 2", "store List 요청 실패 2" + t.getMessage());
+            }
+
+        });
+
+
+        Log.e("store List 요청 동작 ", "store List 요청 동작");
+
+    }
+
+    public void storeApiDataFromRecommand() {
+        Log.d("api 가져오는 함수 ", "  public void storeApiData() ");
+        boolean noMapLocation = mapLat + mapLong == 0.0f;
+        boolean noUserLocation = userCurrentLat + userCurrentLong == 0.0f;
+        if (noMapLocation && noUserLocation) {
+            latitude = INITIAL_LAT;
+            longitude = INITIAL_LONG;
+        }else if (noUserLocation){
+            latitude = mapLat;
+            longitude = mapLong;
+        } else if(noMapLocation) {
+            latitude = userCurrentLat;
+            longitude = userCurrentLong;
+        }
+
+        List<String> recommendTags = Arrays.asList("식물성 베이커리","완전 비건", "대체육");
+        if (distance == 0) {
+            distance = initialDistance;
+        }
+
+        Log.d(" 가게 호출 쿼리", "값" + tags + "위도 : " + latitude + "경도 : " + longitude + "거리 : " + distance + token);
+
+        Log.d("여기까지 됨", "194번줄");
+        Log.d("쿼리 재료","tag : " + tags + "latitude : " + latitude + "longitude : " + longitude );
+        Log.e("store List 요청 동작", "store List 요청 동작");
+
+        storeApiService.getStoreLists(recommendTags, latitude, longitude, distance * 1000, 10, 0, "Bearer " + token).enqueue(new Callback<List<StoreListData>>() {
+            @Override
+            public void onResponse(Call<List<StoreListData>> call, Response<List<StoreListData>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    Log.d("RetrofitRequestURL", "Requested URL: " + call.request().url());
+                    Log.d(" 가게 호출 쿼리2", "값" + tags + "위도 : " + latitude + "경도 : " + longitude + "거리 : " + distance * 1000 + keyword + token);
+                    List<StoreListData> data = response.body();
+                    Log.e("store List 요청 성공", "this is store List : " + response.body().toString());
+                    if (data != null) {
+                        for (int i = 0; i < data.size(); i++) {
+                            Log.e("store List 요청 성공", "this is store List : " + response.body().get(i).toString());
+                        }
+                        storeListFromRecommendLiveData.setValue(data);
                         searchSummList();
                     } else {
                         Log.d(" 해당하는 가게 리스트가 없습니다", "해당하는 가게 리스트가 없습니다" + data.size());
@@ -775,6 +850,11 @@ public class ActivityViewModel extends ViewModel {
                 Log.d("stampAPI", "stampAPI 호출실패2");
             }
         });
+    }
+
+    public void filterData(){
+        filterData filterData = new filterData(distance, latitude, longitude, tags);
+        filterDataLiveData.setValue(filterData);
     }
 
 
@@ -1246,6 +1326,8 @@ public class ActivityViewModel extends ViewModel {
         });
     }
 
+
+
     public void setImageUrlForModify(List<String> list) {
         imageUrlListForModifyLiveData.setValue(list);
         Log.d("수정을 위해 넘어온 image url 4 ", "this is url" + list);
@@ -1303,6 +1385,10 @@ public class ActivityViewModel extends ViewModel {
 
     public LiveData<List<StoreListData>> getStoreListLiveData() {
         return storeListLiveData;
+    }
+
+    public LiveData<List<StoreListData>> getStoreListFromRecommendLiveData() {
+        return storeListFromRecommendLiveData;
     }
 
     /* 커뮤니티 뷰 모델로 유저 토큰을 전달합니다.*/
@@ -1429,6 +1515,12 @@ public class ActivityViewModel extends ViewModel {
         return  homeReviewLiveData;
     }
 
+    public MutableLiveData<Integer> getDistanceLiveData(){
+        return  distanceLiveData;
+    }
+    public MutableLiveData<filterData> getFilterDataLiveData(){
+        return  filterDataLiveData;
+    }
 
 
 }
