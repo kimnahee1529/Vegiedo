@@ -51,7 +51,7 @@ public class CommunityPostAdaptper extends RecyclerView.Adapter<RecyclerView.Vie
         this.postList.clear();
         this.postList.addAll(list);
         this.postList.add(new PostListData(null, "", " ", "", "",0, 0, 0)); // placeholder for progress bar
-
+        notifyItemRangeInserted(0, list.size()); // 이 부분을 추가하세요.
     }
 
     public CommunityPostAdaptper(Context context, List<PostListData> list, PostItemListnere postItemListnere) {
@@ -62,7 +62,8 @@ public class CommunityPostAdaptper extends RecyclerView.Adapter<RecyclerView.Vie
     @Override
     public int getItemViewType(int position) {
 //        return Objects.equals(postList.get(position).getUserName(), " ") ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
-        return postList.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
+//        return postList.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
+        return " ".equals(postList.get(position).getUserName()) ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
     }
 
     @NonNull

@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SimpleItemAnimator;
 
 import android.os.Handler;
 import android.util.Log;
@@ -66,7 +67,7 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_post_list, container, false);
-        scrollView = view.findViewById(R.id.scrollView);
+//        scrollView = view.findViewById(R.id.scrollView);
         community_banner = view.findViewById(R.id.community_banner);
         recyclerView = view.findViewById(R.id.post_recyclerview);
         postList = new ArrayList<>();
@@ -103,13 +104,19 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
                         @Override
                         public void onChanged(List<PostListData> generalPostListData) {
                             if (generalPostListData != null) {
+
+                                int newPostsCount = generalPostListData.size(); // 새로 추가된 게시물의 개수
+                                int startPosition = postList.size(); // 기존에 로드된 게시물의 개수
+                                postList.addAll(generalPostListData); // 기존 리스트에 새로운 게시물 추가
+                                adatper.notifyItemRangeInserted(startPosition, newPostsCount); // 알림
 //                                setPostList(generalPostListData);
-                                adatper.setList(generalPostListData);
-                                if(popCursor == 1){
-                                    adatper.notifyDataSetChanged();
-                                }else {
-                                    adatper.notifyItemRangeInserted((popCursor - 1) * 10, 10);
-                                }
+//                                adatper.setList(generalPostListData);
+//                                if(cursor == 1){
+//                                    adatper.notifyItemRangeInserted(0, 50);
+//                                } else {
+//                                    adatper.notifyItemRangeInserted((cursor - 1) * 50, 49);
+//                                    adatper.notifyDataSetChanged();
+//                                }
 
                             } else {
                                 Log.d("CommunityPostListFragment", "list == null");
@@ -124,14 +131,18 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
                         @Override
                         public void onChanged(List<PostListData> popularPostListData) {
                             if (popularPostListData != null) {
+                                int newPostsCount = popularPostListData.size(); // 새로 추가된 게시물의 개수
+                                int startPosition = postList.size(); // 기존에 로드된 게시물의 개수
+                                postList.addAll(popularPostListData); // 기존 리스트에 새로운 게시물 추가
+                                adatper.notifyItemRangeInserted(startPosition, newPostsCount); // 알림
 //                                setPostList(popularPostListData);
-                                adatper.setList(popularPostListData);
-                                if(popCursor == 1){
-                                    adatper.notifyDataSetChanged();
-
-                                }else {
-                                    adatper.notifyItemRangeInserted((popCursor - 1) * 10, 10);
-                                }
+//                                adatper.setList(popularPostListData);
+//                                if(popCursor == 1){
+//                                    adatper.notifyItemRangeInserted(0, 50);
+//                                }else {
+//                                    adatper.notifyItemRangeInserted((popCursor - 1) * 50, 49);
+//                                    adatper.notifyDataSetChanged();
+//                                }
                             } else {
                                 Log.d("CommunityPostListFragment", "list == null");
                             }
@@ -161,27 +172,28 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
                     communityViewModel.getMaxCursorLiveData().observe(getViewLifecycleOwner(), new Observer<Integer>() {
                         @Override
                         public void onChanged(Integer maxCursor) {
-
                             activityViewModel.getPostType().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
                                 @Override
                                 public void onChanged(Boolean postType) {
                                     if (postType) {
-                                        if (cursor < maxCursor) {
+                                        if (cursor <= maxCursor) {
                                             cursor++;
                                             Log.d("cursor scroll ", "cursor up" + cursor);
 //                                            addPostListFromApi(cursor);
                                             communityViewModel.loadGeneralPostList(cursor);
+                                            recyclerView.scrollToPosition(postList.size() - 1);
                                         } else {
-                                            Toast.makeText(getContext(), " 마지막 페이지 입니다 ", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getContext(), "마지막 페이지 입니다.", Toast.LENGTH_SHORT).show();
                                         }
                                     } else {
-                                        if (popCursor < maxCursor) {
+                                        if (popCursor <= maxCursor) {
                                             popCursor++;
                                             Log.d("cursor scroll ", "cursor up" + popCursor);
 //                                            addPostListFromApi(popCursor);
                                             communityViewModel.loadPopularPostList(popCursor);
+                                            recyclerView.scrollToPosition(postList.size() - 1);
                                         } else {
-                                            Toast.makeText(getContext(), " 마지막 페이지 입니다 ", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getContext(), "마지막 페이지 입니다.", Toast.LENGTH_SHORT).show();
                                         }
 
                                     }
