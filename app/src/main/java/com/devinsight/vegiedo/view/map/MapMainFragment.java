@@ -253,7 +253,7 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void onCardClick(MapStoreCardUiData item, int position) {
-        Toast.makeText(getContext(), item.getStoreId() + " is clicked ", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getContext(), item.getStoreId() + " is clicked ", Toast.LENGTH_SHORT).show();
         viewModel.setStoreIdLiveData(item.getStoreId());
 //        viewModel.getStoreIdLiveData().getValue();
         StoreDetailPageFragment detailFragment = new StoreDetailPageFragment();
