@@ -426,7 +426,7 @@ public class StoreDetailPageFragment extends Fragment {
         });
 
         // 데이터 로드
-        viewModel.StoreInquiryData();
+        viewModel.StoreInquiryData(storeId);
     }
     private void onStampBtnClicked() {
 //        Toast.makeText(getActivity(), "스탬프 버튼이 눌렸습니다.", Toast.LENGTH_SHORT).show();

@@ -54,6 +54,7 @@ import com.naver.maps.map.util.FusedLocationSource;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import retrofit2.Call;
@@ -80,11 +81,11 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
     private FloatingActionButton floatingMapStorePageButton;
     private FusedLocationProviderClient fusedLocationClient;
     private Marker clusterMarker;
+    private int distance;
+    List<Long> storeIdList = new ArrayList<>();
     private ArrayList<Marker> markersOnMap = new ArrayList<>();
     private MapApiService mapApiService = RetrofitClient.getMapApiService();
     ActivityViewModel viewModel;
-
-    private int distance;
     private float latitude;
     private float longitude;
     private boolean fromList;
@@ -105,6 +106,7 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.fragment_main_map, container, false);
         setupMapView(view, savedInstanceState); // mapView를 초기화하고, 비동기로 지도가 준비될 때까지 기다림
         setupViewModel(); // ViewModel을 초기화
@@ -202,6 +204,8 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
     private void setupViewModel() {
         // You mentioned to leave the viewModel part out, so this is just a placeholder.
         viewModel = new ViewModelProvider(requireActivity()).get(ActivityViewModel.class);
+        distance = viewModel.passDistance();
+        Log.d("지도 거리", String.valueOf(distance));
     }
 
     private void setupLocationSource() {
@@ -249,7 +253,7 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void onCardClick(MapStoreCardUiData item, int position) {
-//        Toast.makeText(getContext(), item.getStoreId() + " is clicked ", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), item.getStoreId() + " is clicked ", Toast.LENGTH_SHORT).show();
         viewModel.setStoreIdLiveData(item.getStoreId());
 //        viewModel.getStoreIdLiveData().getValue();
         StoreDetailPageFragment detailFragment = new StoreDetailPageFragment();
@@ -283,11 +287,28 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
         }
     }
     private void onFloatingListButtonClick() {
+        List<String> tags = Arrays.asList(
+                "완전 비건",
+                "락토 오보",
+                "키토식단",
+                "식물성 베이커리",
+                "대체육",
+                "폴로",
+                "락토",
+                "페스코테리언",
+                "글루텐프리"
+        );
+
+        Log.d("마커의 storeId", ""+storeIdList.size()+"개"+storeIdList);
+        viewModel.getFilterData(distance, tags);
         StoreListMainFragment storeListMainFragment  = new StoreListMainFragment();
+        Bundle bundle = new Bundle();
+        Long[] storeIdArray = storeIdList.toArray(new Long[0]);
+        bundle.putSerializable("storeIdArray", storeIdArray);
+        storeListMainFragment.setArguments(bundle);
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.frame, storeListMainFragment);
         transaction.commit();
-
 
     }
 
@@ -302,7 +323,10 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
 
                 // 데이터 변환 후 cardUiList에 추가
                 for (MapStoreListData listData : data) {
-                    cardUiList.add(convertToCardUiData(listData));
+                    // distance 값보다 작은 데이터만 cardUiList에 추가
+                    if (listData.getDistance() < distance * 1000) {
+                        cardUiList.add(convertToCardUiData(listData));
+                    }
                 }
 
                 cardUiAdapter.notifyDataSetChanged();  // 어댑터에 데이터 변경 알림
@@ -311,12 +335,14 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
 
         // 데이터 로드
         viewModel.MapInquiryData();
-
     }
+
 
     private MapStoreCardUiData convertToCardUiData(MapStoreListData listData) {
         String tag1 = "";
         String tag2 = "";
+//        float distance = listData.getDistance();
+
 
         // Check if we have enough tags for tag1 and tag2
         if(listData.getTags() != null && !listData.getTags().isEmpty()) {
@@ -486,11 +512,16 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
     //현재 지도 상의 가시 범위 내에 있는 위치에만 마커를 표시하는 메소드
     private void displayVisibleMarkers(NaverMap naverMap) {
         clearAllMarkers();
+        storeIdList.clear();
 
         LatLngBounds visibleBounds = naverMap.getContentBounds();
         for (MapStoreCardUiData map : cardUiList) {
             LatLng location = new LatLng(map.getLatitude(), map.getLongitude());
             if (visibleBounds.contains(location)) {
+                Long storeId = map.getStoreId();  // 이렇게 storeId를 가져올 수 있습니다.
+                storeIdList.add(storeId);  // 리스트에 storeId 추가
+
+//                Log.d("마커의 storeId", String.valueOf(storeId));  // storeId를 로그에 출력
                 if(isLikeButtonPressed) { // 버튼이 눌린 상태인 경우
                     if(map.isLike()) { // isLike 값이 true인 경우에만
                         addMarkerAtLocation(map, location, naverMap);
@@ -503,16 +534,9 @@ public class MapMainFragment extends Fragment implements OnMapReadyCallback {
             }
         }
 
+//        Log.d("마커의 storeId", ""+storeIdList.size()+"개, "+storeIdList);
         int visibleMarkerCount = markersOnMap.size();
         Log.d("지도에 마커 몇개 있음?", String.valueOf(visibleMarkerCount));
-//        float currentZoom = (float) naverMap.getCameraPosition().zoom;
-//        Log.d("지도 확대 몇까지 함?", String.valueOf(currentZoom));
-//        // 예를 들어 zoom 수준이 15 이상일 때만 마커를 보이게 합니다.
-//        if (currentZoom >= 15) {
-//            currentLocationMarker.setMap(naverMap);
-//        } else {
-//            currentLocationMarker.setMap(null); // 마커를 지도에서 제거합니다.
-//        }
 
     }
 

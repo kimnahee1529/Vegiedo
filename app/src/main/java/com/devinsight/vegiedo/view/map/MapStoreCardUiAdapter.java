@@ -9,6 +9,7 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
@@ -128,6 +129,8 @@ public class MapStoreCardUiAdapter extends RecyclerView.Adapter<MapStoreCardUiAd
 //            if(storeTag1.)
 
 
+//            storeTag1.setText("#"+ cardData.getStoreTag1());
+//            storeTag2.setText("#"+ cardData.getStoreTag2());
             storeTag1.setText(String.valueOf(cardData.getStoreTag1()));
             storeTag2.setText(String.valueOf(cardData.getStoreTag2()));
             address.setText(cardData.getAddress());
@@ -163,5 +166,6 @@ public class MapStoreCardUiAdapter extends RecyclerView.Adapter<MapStoreCardUiAd
 
     public interface mapCardItemListner {
         void onCardClick(MapStoreCardUiData item, int position);
+
     }
 }
