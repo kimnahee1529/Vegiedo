@@ -394,7 +394,7 @@ public class ActivityViewModel extends ViewModel {
         Log.d("쿼리 재료","tag : " + tags + "latitude : " + latitude + "longitude : " + longitude );
         Log.e("store List 요청 동작", "store List 요청 동작");
 
-        storeApiService.getStoreLists(recommendTags, latitude, longitude, distance * 1000, 10, 0, "Bearer " + token).enqueue(new Callback<List<StoreListData>>() {
+        storeApiService.getStoreLists(recommendTags, latitude, longitude, distance * 1000, 100, 0, "Bearer " + token).enqueue(new Callback<List<StoreListData>>() {
             @Override
             public void onResponse(Call<List<StoreListData>> call, Response<List<StoreListData>> response) {
                 if (response.isSuccessful() && response.body() != null) {
