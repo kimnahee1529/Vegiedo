@@ -170,16 +170,16 @@
 
                                 <ImageView
                                     android:id="@+id/storeDetail_white_stamp_btn"
-                                    android:layout_width="22dp"
-                                    android:layout_height="23dp"
+                                    android:layout_width="25dp"
+                                    android:layout_height="25dp"
                                     android:layout_centerHorizontal="true"
                                     android:layout_centerVertical="true"
                                     android:src="@drawable/green_stamp" />
 
                                 <ImageView
                                     android:id="@+id/storeDetail_green_stamp_btn"
-                                    android:layout_width="22dp"
-                                    android:layout_height="23dp"
+                                    android:layout_width="25dp"
+                                    android:layout_height="25dp"
                                     android:layout_centerHorizontal="true"
                                     android:layout_centerVertical="true"
                                     android:src="@drawable/white_stamp"
@@ -208,8 +208,8 @@
                                     android:src="@drawable/white_circle" />
 
                                 <ImageView
-                                    android:layout_width="22dp"
-                                    android:layout_height="23dp"
+                                    android:layout_width="25dp"
+                                    android:layout_height="25dp"
                                     android:layout_centerHorizontal="true"
                                     android:layout_centerVertical="true"
                                     android:src="@drawable/compass" />
@@ -237,16 +237,16 @@
 
                                 <ImageView
                                     android:id="@+id/StoreDetail_default_heart"
-                                    android:layout_width="23dp"
-                                    android:layout_height="23dp"
+                                    android:layout_width="27dp"
+                                    android:layout_height="27dp"
                                     android:layout_centerHorizontal="true"
                                     android:layout_centerVertical="true"
                                     android:src="@drawable/ic_heart_default"/>
 
                                 <ImageView
                                     android:id="@+id/StoreDetail_selected_heart"
-                                    android:layout_width="22dp"
-                                    android:layout_height="23dp"
+                                    android:layout_width="27dp"
+                                    android:layout_height="27dp"
                                     android:layout_centerHorizontal="true"
                                     android:layout_centerVertical="true"
                                     android:src="@drawable/ic_heart_selected" />
