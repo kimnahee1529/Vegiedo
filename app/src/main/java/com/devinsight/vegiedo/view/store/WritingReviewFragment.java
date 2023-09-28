@@ -3,6 +3,7 @@ package com.devinsight.vegiedo.view.store;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -10,6 +11,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -422,8 +424,7 @@ public class WritingReviewFragment extends Fragment {
         });
     }
 
-        private void selectImageForView(ImageView imageView) {
-
+    private void selectImageForView(ImageView imageView) {
         currentlySelectedImageView = imageView;
 
         if (PermissionUtils.checkPermission(getActivity())) {
@@ -434,14 +435,36 @@ public class WritingReviewFragment extends Fragment {
             startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY_REQUEST_CODE);
         } else {
             // 권한이 허용되지 않은 상태: 권한 요청
-            requestGalleryPermission();
+            requestPermission();
         }
     }
-    private void requestGalleryPermission() {
-        // 권한을 요청합니다.
-        ActivityCompat.requestPermissions(getActivity(),
-                new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE},
-                PERMISSION_REQUEST_CODE);
+
+    private void showSettingsAlert() {
+        Log.d("PermissionDebug", "showSettingsAlert() is called.");
+        new androidx.appcompat.app.AlertDialog.Builder(getActivity())
+                .setMessage("이 기능을 사용하려면 저장소 권한이 필요합니다. 설정에서 권한을 허용해주세요.")
+                .setPositiveButton("설정으로 이동", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        Uri uri = Uri.fromParts("package", getActivity().getPackageName(), null);
+                        intent.setData(uri);
+                        startActivity(intent);
+                    }
+                })
+                .setNegativeButton("취소", null)
+                .show();
+    }
+
+    private void requestPermission() {
+        if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            // 사용자가 이전에 권한을 거부했지만 "다시 묻지 않음"을 선택하지 않았다면, 권한을 다시 요청
+            ActivityCompat.requestPermissions(getActivity(),
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    PERMISSION_REQUEST_CODE);
+        } else {
+            // 사용자가 "다시 묻지 않음"을 선택했다면, 설정 페이지로 이동하여 권한을 허용하도록 안내
+            showSettingsAlert();
+        }
     }
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

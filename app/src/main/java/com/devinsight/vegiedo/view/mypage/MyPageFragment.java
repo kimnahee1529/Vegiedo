@@ -4,6 +4,7 @@ import static android.content.Context.MODE_PRIVATE;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -13,6 +14,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,6 +44,7 @@ import com.devinsight.vegiedo.view.PermissionUtils;
 import com.devinsight.vegiedo.view.search.ActivityViewModel;
 import com.devinsight.vegiedo.view.login.LoginMainActivity;
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity;
+import android.Manifest;
 
 import org.w3c.dom.Text;
 
@@ -151,13 +154,13 @@ public class MyPageFragment extends Fragment {
         mypageCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+//                requestPermission();
                 showProfileImageDialog();
 //                if (checkPermission()) {
 //                    // 권한이 이미 허용된 상태: 바로 관련 작업 수행
 //                    showProfileImageDialog();
 //                } else {
 //                    // 권한이 허용되지 않은 상태: 권한 요청
-//                    requestPermission();
 //                }
             }
         });
@@ -369,13 +372,11 @@ public class MyPageFragment extends Fragment {
         album_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Toast.makeText(getActivity(), "앨범에서 이미지를 선택하세요.", Toast.LENGTH_SHORT).show();
                 if (checkPermission()) {
                     // 권한이 이미 허용된 상태: 바로 관련 작업 수행
                     ImagePickerUtil.selectImageFromGallery(MyPageFragment.this, REQUEST_IMAGE_PICK);
                     dialog.dismiss();  // Uncomment if you want the dialog to close after selecting album image
                 } else {
-                    // 권한이 허용되지 않은 상태: 권한 요청
                     requestPermission();
                 }
             }
@@ -497,8 +498,17 @@ public class MyPageFragment extends Fragment {
         return result == PackageManager.PERMISSION_GRANTED;
     }
 
-    private void requestPermission() {
-        ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
+    public void requestPermission() {
+        if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            // 사용자가 이전에 권한을 거부했지만 "다시 묻지 않음"을 선택하지 않았다면, 권한을 다시 요청
+            ActivityCompat.requestPermissions(getActivity(),
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    PERMISSION_REQUEST_CODE);
+        } else {
+            // 사용자가 "다시 묻지 않음"을 선택했다면, 설정 페이지로 이동하여 권한을 허용하도록 안내
+            showSettingsAlert();
+
+        }
     }
 
     @Override
@@ -515,6 +525,20 @@ public class MyPageFragment extends Fragment {
 //                Toast.makeText(getActivity(), "권한이 거부되었습니다.", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+    private void showSettingsAlert() {
+        new AlertDialog.Builder(getActivity())
+                .setMessage("이 기능을 사용하려면 저장소 권한이 필요합니다. 설정에서 권한을 허용해주세요.")
+                .setPositiveButton("설정으로 이동", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        Uri uri = Uri.fromParts("package", getActivity().getPackageName(), null);
+                        intent.setData(uri);
+                        startActivity(intent);
+                    }
+                })
+                .setNegativeButton("취소", null)
+                .show();
     }
 
 }
