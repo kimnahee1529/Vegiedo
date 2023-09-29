@@ -258,7 +258,7 @@ public class MyPageFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 // 로그아웃 로직 (예: 사용자 정보, 세션, 토큰 삭제 등)
-                logoutUser();
+//                logoutUser();
 
                 // LoginMainActivity로 이동
                 Activity activity = getActivity();
@@ -282,6 +282,7 @@ public class MyPageFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 showWithdrawalDialog();
+
             }
         });
 
@@ -432,7 +433,7 @@ public class MyPageFragment extends Fragment {
                 editor.apply();
 
                 SharedPreferences sharedPreferences1 = getActivity().getSharedPreferences("login_info",MODE_PRIVATE);
-                SharedPreferences.Editor editor1 = sharedPreferences.edit();
+                SharedPreferences.Editor editor1 = sharedPreferences1.edit();
                 editor1.clear();  // 모든 데이터 삭제
                 editor1.apply();
 

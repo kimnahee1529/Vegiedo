@@ -20,6 +20,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -328,7 +329,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setLongSearchBar(){
         ConstraintLayout.LayoutParams toolBarParams = (ConstraintLayout.LayoutParams) toolBar.getLayoutParams();
-        toolBarParams.width = dpToPx(350);
+        toolBarParams.width = ConstraintLayout.LayoutParams.MATCH_PARENT;
         toolBar.setLayoutParams(toolBarParams);
         ViewGroup.LayoutParams searchViewParams = searchView.getLayoutParams();
         searchViewParams.width = dpToPx(250);  // 예: 너비를 200dp로 조정
@@ -338,7 +339,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setShortSearchBar(){
         ConstraintLayout.LayoutParams toolBarParams = (ConstraintLayout.LayoutParams) toolBar.getLayoutParams();
-        toolBarParams.width = dpToPx(320);
+        toolBarParams.width = getScreenWidth() - dpToPx(85);
         toolBar.setLayoutParams(toolBarParams);
         ViewGroup.LayoutParams searchViewParams = searchView.getLayoutParams();
         searchViewParams.width = dpToPx(200);  // 예: 너비를 200dp로 조정
@@ -349,6 +350,12 @@ public class MainActivity extends AppCompatActivity {
     private int dpToPx(int dp) {
         float density = getResources().getDisplayMetrics().density;
         return (int) (dp * density + 0.5f);
+    }
+
+    private int getScreenWidth() {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        return displayMetrics.widthPixels;
     }
 
     @Override
