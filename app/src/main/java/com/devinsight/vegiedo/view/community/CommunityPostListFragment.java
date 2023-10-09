@@ -1,5 +1,7 @@
 package com.devinsight.vegiedo.view.community;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -25,6 +27,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.devinsight.vegiedo.R;
+import com.devinsight.vegiedo.data.response.CommunityBannerResponseDTO;
 import com.devinsight.vegiedo.data.response.PostListData;
 import com.devinsight.vegiedo.service.api.PostApiService;
 import com.devinsight.vegiedo.utill.RetrofitClient;
@@ -209,10 +212,17 @@ public class CommunityPostListFragment extends Fragment implements CommunityPost
         });
 
         activityViewModel.getCommunityBanner();
-        activityViewModel.getCommunityBannerListLiveData().observe(getViewLifecycleOwner(), new Observer<String>() {
+        activityViewModel.getCommunityBannerListLiveData().observe(getViewLifecycleOwner(), new Observer<CommunityBannerResponseDTO>() {
             @Override
-            public void onChanged(String bannerUrl) {
-                Glide.with(getActivity()).load(bannerUrl).into(community_banner);
+            public void onChanged(CommunityBannerResponseDTO data) {
+                Glide.with(getActivity()).load(data.getCommunityBannerUrl()).into(community_banner);
+                community_banner.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(data.getUrl()));
+                        startActivity(browserIntent);
+                    }
+                });
             }
         });
 

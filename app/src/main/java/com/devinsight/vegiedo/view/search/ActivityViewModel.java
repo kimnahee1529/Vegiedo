@@ -143,7 +143,7 @@ public class ActivityViewModel extends ViewModel {
 
     private MutableLiveData<List<HomeBannerData>> homeBannerListLiveData = new MutableLiveData<>();
 
-    private MutableLiveData<String> communityBannerLiveData = new MutableLiveData<>();
+    private MutableLiveData<CommunityBannerResponseDTO> communityBannerLiveData = new MutableLiveData<>();
 
 
     private MutableLiveData<HomeReviewResponseDTO> homeReviewLiveData = new MutableLiveData<>();
@@ -1359,7 +1359,7 @@ public class ActivityViewModel extends ViewModel {
                     Log.d("RetrofitRequestURL 성공", "Requested URL: " + call.request().url());
                     Log.d(" 커뮤니티 banner  api 호출 성공 ","성공" + response);
                     CommunityBannerResponseDTO data = response.body();
-                    communityBannerLiveData.setValue(data.getCommunityBannerUrl());
+                    communityBannerLiveData.setValue(data);
 
                 }else{
                     Log.d("RetrofitRequestURL 실패", "Requested URL: " + call.request().url());
@@ -1586,7 +1586,7 @@ public class ActivityViewModel extends ViewModel {
         return  homeBannerListLiveData;
     }
 
-    public MutableLiveData<String> getCommunityBannerListLiveData(){
+    public MutableLiveData<CommunityBannerResponseDTO> getCommunityBannerListLiveData(){
         return  communityBannerLiveData;
     }
 
