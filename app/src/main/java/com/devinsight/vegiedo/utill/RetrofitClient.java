@@ -16,7 +16,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClient {
 
-    private static final String BASE_URL = "http://3.38.23.253:8080/";
+    private static final String BASE_URL = "http://43.202.88.184:8080/";
     private static Retrofit retrofit;
 
     public static Retrofit getRetrofit(String baseurl) {
@@ -31,31 +31,31 @@ public class RetrofitClient {
     }
 
     public static UserApiService getUserApiService(){
-        return getRetrofit("http://3.38.23.253:8080/").create(UserApiService.class);
+        return getRetrofit(BASE_URL).create(UserApiService.class);
     }
 
     public static StoreApiService getStoreApiService(){
-        return getRetrofit("http://3.38.23.253:8080/").create(StoreApiService.class);
+        return getRetrofit(BASE_URL).create(StoreApiService.class);
     }
 
     public static PostApiService getPostApiService(){
-        return getRetrofit("http://3.38.23.253:8080/").create(PostApiService.class);
+        return getRetrofit(BASE_URL).create(PostApiService.class);
     }
 
     public static ReviewApiService getReviewApiService(){
-        return getRetrofit("http://3.38.23.253:8080/").create(ReviewApiService.class);
+        return getRetrofit(BASE_URL).create(ReviewApiService.class);
     }
 
     public static CommentApiService getCommentApiService(){
-        return getRetrofit("http://3.38.23.253:8080/").create(CommentApiService.class);
+        return getRetrofit(BASE_URL).create(CommentApiService.class);
     }
 
     public static MapApiService getMapApiService(){
-        return getRetrofit("http://3.38.23.253:8080/").create(MapApiService.class);
+        return getRetrofit(BASE_URL).create(MapApiService.class);
     }
 
     public static AdminApiService getAdminApiService(){
-        return getRetrofit("http://3.38.23.253:8080/").create(AdminApiService.class);
+        return getRetrofit(BASE_URL).create(AdminApiService.class);
     }
 
 
