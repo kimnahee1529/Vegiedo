@@ -2,8 +2,6 @@ package com.devinsight.vegiedo.view.login;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.work.PeriodicWorkRequest;
-import androidx.work.WorkManager;
 
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -22,6 +20,8 @@ import com.devinsight.vegiedo.utill.RetrofitClient;
 import com.devinsight.vegiedo.utill.UserInfoTag;
 import com.devinsight.vegiedo.repository.pref.AuthPrefRepository;
 import com.devinsight.vegiedo.repository.pref.UserPrefRepository;
+import com.devinsight.vegiedo.view.MainActivity;
+import com.devinsight.vegiedo.view.home.HomeMainFragment;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -41,7 +41,6 @@ import com.kakao.sdk.user.model.User;
 
 import java.io.IOException;
 import java.security.MessageDigest;
-import java.util.concurrent.TimeUnit;
 
 import kotlin.Unit;
 import kotlin.jvm.functions.Function2;
@@ -57,6 +56,8 @@ public class LoginMainActivity extends AppCompatActivity {
     private GoogleSignInClient mGoogleSignInClient;
     private GoogleSignInAccount googleSignInAccount;
     private FirebaseAuth googleAuth;
+
+    private HomeMainFragment homeMainFragment;
 
     /* 로그인 토큰 저장 관련*/
     ConstLoginTokenType constLoginTokenType;
@@ -108,13 +109,24 @@ public class LoginMainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                // 해당 기기에 카카오톡이 설치되어 있는 확인
-                if (UserApiClient.getInstance().isKakaoTalkLoginAvailable(LoginMainActivity.this)) {
-                    UserApiClient.getInstance().loginWithKakaoTalk(LoginMainActivity.this, callback);
+                String kakaoAuth = authPrefRepository.getAuthToken("KAKAO");
+                Intent intent;
+                if (kakaoAuth != null) {
+                    intent = new Intent(getApplicationContext(), MainActivity.class);
+                    intent.putExtra("home", R.id.nav_home);
+                    startActivity(intent);
+                    finish();
                 } else {
-                    // 카카오톡이 설치되어 있지 않다면
-                    UserApiClient.getInstance().loginWithKakaoAccount(LoginMainActivity.this, callback);
+                    // 해당 기기에 카카오톡이 설치되어 있는 확인
+
+                    if (UserApiClient.getInstance().isKakaoTalkLoginAvailable(LoginMainActivity.this)) {
+                        UserApiClient.getInstance().loginWithKakaoTalk(LoginMainActivity.this, callback);
+                    } else {
+                        // 카카오톡이 설치되어 있지 않다면
+                        UserApiClient.getInstance().loginWithKakaoAccount(LoginMainActivity.this, callback);
+                    }
                 }
+
 
             }
         });
@@ -136,6 +148,9 @@ public class LoginMainActivity extends AppCompatActivity {
         btn_googleLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                googleLoginCheck();
+
                 googleSignInAccount = GoogleSignIn.getLastSignedInAccount(LoginMainActivity.this);
                 googleSignIn();
                 Log.d("구글 로그인 1", "googleSignIn(): 성공 ");
@@ -326,6 +341,32 @@ public class LoginMainActivity extends AppCompatActivity {
             }
         } catch (Exception e) {
             Log.e("Name not found", e.toString());
+        }
+
+    }
+
+    public void kaKaoLoginCheck(){
+        String kakaoAuth = authPrefRepository.getAuthToken("KAKAO");
+        homeMainFragment = new HomeMainFragment();
+        Intent intent;
+        if ((kakaoAuth != null)) {
+            intent = new Intent(getApplicationContext(), MainActivity.class);
+            intent.putExtra("home", R.id.nav_home);
+            startActivity(intent);
+            finish();
+        }
+
+    }
+
+    public void googleLoginCheck(){
+        String googleAuth = authPrefRepository.getAuthToken("GOOGLE");
+        homeMainFragment = new HomeMainFragment();
+        Intent intent;
+        if ((googleAuth != null)) {
+            intent = new Intent(getApplicationContext(), MainActivity.class);
+            intent.putExtra("home", R.id.nav_home);
+            startActivity(intent);
+            finish();
         }
 
     }

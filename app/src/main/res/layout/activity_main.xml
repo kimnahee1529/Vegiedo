@@ -18,19 +18,22 @@
     </FrameLayout>
     <View
         android:id="@id/center"
-        android:layout_margin="30dp"
+        android:layout_margin="15dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:visibility="invisible"/>
 
+
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolBar"
-        android:layout_width="350dp"
+        android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_gravity="center"
         android:layout_marginTop="30dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
         android:background="@drawable/bolder_tool_bar"
         android:elevation="8dp"
         android:gravity="center"
